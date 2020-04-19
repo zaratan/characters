@@ -19,6 +19,14 @@ const MyApp = ({ Component, pageProps }) => (
         name="viewport"
         content="width=device-width, initial-scale=1, shrink-to-fit=no"
       />
+      <link rel="preconnect" href="/CloisterBlack.ttf" />
+      <link
+        rel="preload"
+        href="/CloisterBlack.ttf"
+        as="font"
+        type="font/ttf"
+        crossOrigin="anonymous"
+      />
     </Head>
     <GlobalStyle />
     <Component {...pageProps} />
