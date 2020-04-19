@@ -1,24 +1,12 @@
 import Head from 'next/head';
 import styled from 'styled-components';
-import { AttributeLine, CapacityLine } from '../components/Line';
-
-const Title = styled.h1`
-  font-family: CloisterBlack;
-`;
-
-const HorizontalSection = styled.div<{ count?: number }>`
-  display: grid;
-  grid-template-columns: repeat(${props => props.count || 3}, auto);
-  column-gap: 50px;
-
-  @media screen and (max-width: 1260px) {
-    grid-template-columns: repeat(min(${props => props.count || 2}, 2), auto);
-  }
-
-  @media screen and (max-width: 840px) {
-    grid-template-columns: auto;
-  }
-`;
+import { AttributeLine, AbilityLine } from '../components/Line';
+import { EmptyLine, StyledLine } from '../styles/Lines';
+import { Title, ColumnTitle } from '../styles/Titles';
+import { HorizontalSection } from '../styles/Sections';
+import Abilities, { AbilitiesListType } from '../components/Abilities';
+import Attributes, { AttributesType } from '../components/Attributes';
+import Infos, { InfosType } from '../components/Infos';
 
 const SheetContainer = styled.main`
   margin: auto;
@@ -55,39 +43,90 @@ const PageTitle = styled.div`
   justify-content: center;
 `;
 
-const EmptyLine = styled.div`
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  width: 100%;
-`;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export async function getStaticProps(_context) {
+  const knowledges = [
+    { title: 'Érudition', value: 1 },
+    { title: 'Investigation', value: 1 },
+    { title: 'Droit', value: 1 },
+    { title: 'Linguistique', value: 1 },
+    { title: 'Médecine', value: 1 },
+    { title: 'Occulte', value: 1 },
+    { title: 'Sagesse pop.', value: 1 },
+    { title: 'Politique', value: 1 },
+    { title: 'Senechal', value: 1 },
+    { title: 'Theologie', value: 1 },
+  ];
+  const skills = [
+    { title: 'Animaux', value: 1 },
+    { title: 'Archerie', value: 1 },
+    { title: 'Artisanats', value: 1 },
+    { title: 'Equitation', value: 1 },
+    { title: 'Etiquette', value: 1 },
+    { title: 'Furtivite', value: 1 },
+    { title: 'Commerce', value: 1 },
+    { title: 'Melee', value: 1 },
+    { title: 'Représentation', value: 1 },
+    { title: 'Survie', value: 1 },
+  ];
+  const talents = [
+    { title: 'Expression', value: 1 },
+    { title: 'Vigilance', value: 3 },
+    { title: 'Athlétisme', value: 6 },
+    { title: 'Bagare', value: 6 },
+    { title: 'Conscience', value: 1 },
+    { title: 'Empathie', value: 1 },
+    { title: 'Intimidation', value: 1 },
+    { title: 'Passe-passe', value: 1 },
+    { title: 'Commandement', value: 1 },
+    { title: 'Subterfuge', value: 1 },
+  ];
+  const attributes = {
+    strength: 1,
+    dexterity: 3,
+    stamina: 6,
+    charisma: 1,
+    manipulation: 3,
+    appearance: 6,
+    perception: 1,
+    intelligence: 3,
+    wits: 6,
+  };
+  const infos = {
+    name: 'Sined Nisap',
+    playerName: 'Zaratan',
+    generation: 15,
+    nature: 'Pon',
+    sire: 'None',
+    demeanor: 'Test',
+    haven: 'Kyoto',
+    chronicle: 'Life',
+    clan: 'None',
+  };
 
-const BlackLine = styled.div`
-  background-color: black;
-  height: 0.3rem;
-  width: 100%;
-`;
+  return {
+    props: { attributes, talents, skills, knowledges, infos },
+  };
+}
 
-const SectionTitle = styled(Title)`
-  padding: 0 1rem;
-`;
-
-const ColumnTitle = styled(Title)`
-  text-align: center;
-`;
-
-const StyledLine = ({ title }: { title?: string }) => (
-  <EmptyLine>
-    <BlackLine />
-    {title ? <SectionTitle>{title}</SectionTitle> : null}
-    <BlackLine />
-  </EmptyLine>
-);
-
-const Home: React.FC = () => (
+const Home = ({
+  attributes,
+  talents,
+  skills,
+  knowledges,
+  infos,
+}: {
+  attributes: AttributesType;
+  talents: AbilitiesListType;
+  skills: AbilitiesListType;
+  knowledges: AbilitiesListType;
+  infos: InfosType;
+}) => (
   <SheetContainer>
     <Head>
-      <title>Feuille de Personnage</title>
+      <title>
+        {infos.name ? `${infos.name} - ` : null}Feuille de Personnage
+      </title>
       <link rel="icon" href="/favicon.ico" />
     </Head>
 
@@ -95,83 +134,30 @@ const Home: React.FC = () => (
       <img src="/title.png" alt="Vampire Dark Age" />
     </PageTitle>
 
-    <EmptyLine />
+    <Infos
+      name={infos.name}
+      playerName={infos.playerName}
+      chronicle={infos.chronicle}
+      nature={infos.nature}
+      demeanor={infos.demeanor}
+      clan={infos.clan}
+      generation={infos.generation}
+      haven={infos.haven}
+      sire={infos.sire}
+    />
 
-    <HorizontalSection>
-      <Title>Nom:</Title>
-      <Title>Joueur:</Title>
-      <Title>Chronique:</Title>
-      <Title>Nature:</Title>
-      <Title>Attitude:</Title>
-      <Title>Clan:</Title>
-      <Title>Génération:</Title>
-      <Title>Refuge:</Title>
-      <Title>Concept:</Title>
-    </HorizontalSection>
-
-    <StyledLine title="Attributs" />
-    <HorizontalSection>
-      <div>
-        <ColumnTitle>Physique</ColumnTitle>
-        <AttributeLine title="Force" value={1} />
-        <AttributeLine title="Dextrérité" value={3} />
-        <AttributeLine title="Vigueur" value={6} />
-      </div>
-      <div>
-        <ColumnTitle>Social</ColumnTitle>
-        <AttributeLine title="Charisme" value={1} />
-        <AttributeLine title="Manipulation" value={3} />
-        <AttributeLine title="Apparence" value={6} />
-      </div>
-      <div>
-        <ColumnTitle>Mental</ColumnTitle>
-        <AttributeLine title="Perception" value={1} />
-        <AttributeLine title="Intelligence" value={3} />
-        <AttributeLine title="Astuce" value={6} />
-      </div>
-    </HorizontalSection>
-    <StyledLine title="Capacités" />
-    <HorizontalSection>
-      <div>
-        <ColumnTitle>Talents</ColumnTitle>
-        <CapacityLine title="Expression" value={1} />
-        <CapacityLine title="Vigilance" value={3} />
-        <CapacityLine title="Athlétisme" value={6} />
-        <CapacityLine title="Bagare" value={6} />
-        <CapacityLine title="Conscience" value={1} />
-        <CapacityLine title="Empathie" value={1} />
-        <CapacityLine title="Intimidation" value={1} />
-        <CapacityLine title="Passe-passe" value={1} />
-        <CapacityLine title="Commandement" value={1} />
-        <CapacityLine title="Subterfuge" value={1} />
-      </div>
-      <div>
-        <ColumnTitle>Compétences</ColumnTitle>
-        <CapacityLine title="Animaux" value={1} />
-        <CapacityLine title="Archerie" value={1} />
-        <CapacityLine title="Artisanats" value={1} />
-        <CapacityLine title="Equitation" value={1} />
-        <CapacityLine title="Etiquette" value={1} />
-        <CapacityLine title="Furtivite" value={1} />
-        <CapacityLine title="Commerce" value={1} />
-        <CapacityLine title="Melee" value={1} />
-        <CapacityLine title="Représentation" value={1} />
-        <CapacityLine title="Survie" value={1} />
-      </div>
-      <div>
-        <ColumnTitle>Connaissances</ColumnTitle>
-        <CapacityLine title="Érudition" value={1} />
-        <CapacityLine title="Investigation" value={1} />
-        <CapacityLine title="Droit" value={1} />
-        <CapacityLine title="Linguistique" value={1} />
-        <CapacityLine title="Médecine" value={1} />
-        <CapacityLine title="Occulte" value={1} />
-        <CapacityLine title="Sagesse pop." value={1} />
-        <CapacityLine title="Politique" value={1} />
-        <CapacityLine title="Senechal" value={1} />
-        <CapacityLine title="Theologie" value={1} />
-      </div>
-    </HorizontalSection>
+    <Attributes
+      strength={attributes.strength}
+      dexterity={attributes.dexterity}
+      stamina={attributes.stamina}
+      charisma={attributes.charisma}
+      manipulation={attributes.manipulation}
+      appearance={attributes.appearance}
+      perception={attributes.perception}
+      intelligence={attributes.intelligence}
+      wits={attributes.wits}
+    />
+    <Abilities skills={skills} talents={talents} knowledges={knowledges} />
   </SheetContainer>
 );
 

@@ -22,7 +22,7 @@ module.exports = {
     "no-unused-vars": [
       1,
       {
-        "argsIgnorePattern": "res|next|Sequelize|^err"
+        "argsIgnorePattern": "res|next|Sequelize|^err|^_"
       }
     ],
     "prefer-const": [

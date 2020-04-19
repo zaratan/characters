@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Dot from './Dot';
-import { calcPexDiffAttribute, calcPexDiffCapacity } from '../helpers/pex';
+import { calcPexDiffAttribute, calcPexDiffAbility } from '../helpers/pex';
 
 const ColumnLine = styled.li`
   display: flex;
@@ -28,9 +28,18 @@ const Value = styled.span`
 
 const DotSeparator = styled.span`
   padding: 0.3rem;
+  height: 100%;
 
-  :hover ~ svg {
-    fill: #555 !important;
+  :hover ~ span {
+    svg {
+      fill: #555 !important;
+    }
+  }
+
+  :hover + span {
+    small {
+      display: inline;
+    }
   }
 
   :hover svg.full {
@@ -82,7 +91,7 @@ const Line = ({
             full={localValue >= 6}
             pexValue={diffPexCalc(value, 6)}
           />
-          <DotSeparator />
+          <DotSeparator onClick={onClickHandle(5)} />
           <Dot
             onClick={onClickHandle(5)}
             full={localValue >= 5}
@@ -122,12 +131,12 @@ export const AttributeLine = ({
   title: string;
 }) => <Line value={value} title={title} diffPexCalc={calcPexDiffAttribute} />;
 
-export const CapacityLine = ({
+export const AbilityLine = ({
   value,
   title,
 }: {
   value?: number;
   title: string;
-}) => <Line value={value} title={title} diffPexCalc={calcPexDiffCapacity} />;
+}) => <Line value={value} title={title} diffPexCalc={calcPexDiffAbility} />;
 
 export default Line;
