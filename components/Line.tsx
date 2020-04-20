@@ -53,9 +53,11 @@ const DotSeparator = styled.span`
 const Line = ({
   value,
   title,
+  maxLevel,
   diffPexCalc,
 }: {
   value?: number;
+  maxLevel: number;
   title: string;
   diffPexCalc: (from: number, to: number) => number;
 }) => {
@@ -77,6 +79,7 @@ const Line = ({
             pexValue={diffPexCalc(value, 9)}
             selectedValue={localValue === 9}
             baseValue={value === 9}
+            hidden={maxLevel < 9}
           />
           <Dot
             onClick={onClickHandle(8)}
@@ -84,6 +87,7 @@ const Line = ({
             pexValue={diffPexCalc(value, 8)}
             selectedValue={localValue === 8}
             baseValue={value === 8}
+            hidden={maxLevel < 8}
           />
           <Dot
             onClick={onClickHandle(7)}
@@ -91,6 +95,7 @@ const Line = ({
             pexValue={diffPexCalc(value, 7)}
             selectedValue={localValue === 7}
             baseValue={value === 7}
+            hidden={maxLevel < 7}
           />
           <Dot
             onClick={onClickHandle(6)}
@@ -98,6 +103,7 @@ const Line = ({
             pexValue={diffPexCalc(value, 6)}
             selectedValue={localValue === 6}
             baseValue={value === 6}
+            hidden={maxLevel < 6}
           />
           <DotSeparator onClick={onClickHandle(5)} />
           <Dot
@@ -144,17 +150,35 @@ const Line = ({
 export const AttributeLine = ({
   value,
   title,
+  maxLevel,
 }: {
   value?: number;
   title: string;
-}) => <Line value={value} title={title} diffPexCalc={calcPexDiffAttribute} />;
+  maxLevel: number;
+}) => (
+  <Line
+    value={value}
+    title={title}
+    diffPexCalc={calcPexDiffAttribute}
+    maxLevel={maxLevel}
+  />
+);
 
 export const AbilityLine = ({
   value,
   title,
+  maxLevel,
 }: {
   value?: number;
   title: string;
-}) => <Line value={value} title={title} diffPexCalc={calcPexDiffAbility} />;
+  maxLevel: number;
+}) => (
+  <Line
+    value={value}
+    title={title}
+    diffPexCalc={calcPexDiffAbility}
+    maxLevel={maxLevel}
+  />
+);
 
 export default Line;

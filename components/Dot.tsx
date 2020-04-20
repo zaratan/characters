@@ -52,6 +52,10 @@ const DotContainer = styled.span`
     display: inline;
     color: red;
   }
+
+  &.hidden {
+    display: none;
+  }
 `;
 
 const Dot = ({
@@ -59,17 +63,23 @@ const Dot = ({
   selectedValue,
   baseValue,
   pexValue,
+  hidden,
   onClick,
 }: {
   full?: boolean;
   selectedValue: boolean;
   baseValue: boolean;
+  hidden?: boolean;
   pexValue?: number;
   onClick?: () => void;
 }) => {
-  const containerClass = `${selectedValue ? 'selected' : ''} ${
-    baseValue ? 'base' : ''
-  }`;
+  console.log({ hidden });
+
+  const containerClass = `
+    ${selectedValue ? 'selected' : ''} 
+    ${baseValue ? 'base' : ''} 
+    ${hidden ? 'hidden' : ''}
+  `;
   return (
     <DotContainer className={containerClass}>
       <TextHelper>{pexValue}</TextHelper>

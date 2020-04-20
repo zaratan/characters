@@ -59,7 +59,7 @@ export async function getStaticProps(_context) {
     { title: 'Artisanats', value: 1 },
     { title: 'Equitation', value: 1 },
     { title: 'Etiquette', value: 1 },
-    { title: 'Furtivite', value: 1 },
+    { title: 'Furtivite', value: 0 },
     { title: 'Commerce', value: 1 },
     { title: 'Melee', value: 1 },
     { title: 'Représentation', value: 1 },
@@ -91,7 +91,7 @@ export async function getStaticProps(_context) {
   const infos = {
     name: 'Sined Nisap',
     playerName: 'Zaratan',
-    generation: 15,
+    generation: 4,
     nature: 'Pon',
     sire: 'None',
     demeanor: 'Test',
@@ -152,8 +152,14 @@ const Home = ({
       perception={attributes.perception}
       intelligence={attributes.intelligence}
       wits={attributes.wits}
+      generation={infos.generation}
     />
-    <Abilities skills={skills} talents={talents} knowledges={knowledges} />
+    <Abilities
+      skills={skills}
+      talents={talents}
+      knowledges={knowledges}
+      generation={infos.generation}
+    />
   </SheetContainer>
 );
 
