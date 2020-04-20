@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { HorizontalSection } from '../styles/Sections';
 import { EmptyLine } from '../styles/Lines';
 import { Title } from '../styles/Titles';
+import { HandLargeText } from '../styles/Texts';
 
 export interface InfosType {
   name?: string;
@@ -37,39 +38,39 @@ const Infos = ({
     <HorizontalSection>
       <span>
         <WritteableTitle>Nom: </WritteableTitle>
-        {name}
+        <HandLargeText>{name}</HandLargeText>
       </span>
       <span>
         <WritteableTitle>Joueur: </WritteableTitle>
-        {playerName}
+        <HandLargeText>{playerName}</HandLargeText>
       </span>
       <span>
         <WritteableTitle>Chronique: </WritteableTitle>
-        {chronicle}
+        <HandLargeText>{chronicle}</HandLargeText>
       </span>
       <span>
         <WritteableTitle>Nature: </WritteableTitle>
-        {nature}
+        <HandLargeText>{nature}</HandLargeText>
       </span>
       <span>
         <WritteableTitle>Attitude: </WritteableTitle>
-        {demeanor}
+        <HandLargeText>{demeanor}</HandLargeText>
       </span>
       <span>
         <WritteableTitle>Clan: </WritteableTitle>
-        {clan}
+        <HandLargeText>{clan}</HandLargeText>
       </span>
       <span>
         <WritteableTitle>Génération: </WritteableTitle>
-        {generation}
+        <HandLargeText>{generation}</HandLargeText>
       </span>
       <span>
         <WritteableTitle>Refuge: </WritteableTitle>
-        {haven}
+        <HandLargeText>{haven}</HandLargeText>
       </span>
       <span>
         <WritteableTitle>Sire: </WritteableTitle>
-        {sire}
+        <HandLargeText>{sire}</HandLargeText>
       </span>
     </HorizontalSection>
   </>
