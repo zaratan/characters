@@ -73,8 +73,6 @@ const Dot = ({
   pexValue?: number;
   onClick?: () => void;
 }) => {
-  console.log({ hidden });
-
   const containerClass = `
     ${selectedValue ? 'selected' : ''} 
     ${baseValue ? 'base' : ''} 
