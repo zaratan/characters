@@ -1,9 +1,5 @@
 import Head from 'next/head';
 import styled from 'styled-components';
-import { AttributeLine, AbilityLine } from '../components/Line';
-import { EmptyLine, StyledLine } from '../styles/Lines';
-import { Title, ColumnTitle } from '../styles/Titles';
-import { HorizontalSection } from '../styles/Sections';
 import Abilities, { AbilitiesListType } from '../components/Abilities';
 import Attributes, { AttributesType } from '../components/Attributes';
 import Infos, { InfosType } from '../components/Infos';

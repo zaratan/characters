@@ -1,9 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
 
-const DotStyle2 = styled.svg<{ full?: boolean }>`
+const DotStyle = styled.svg`
   padding: 0 0.05rem;
-  fill: ${props => (props.full ? '#555' : 'transparent')};
+  fill: transparent;
+  &.full {
+    fill: #555;
+  }
   width: 24px;
   height: 36px;
   transition: fill 0.2s ease-in-out;
@@ -15,7 +18,7 @@ const DotStyle2 = styled.svg<{ full?: boolean }>`
 
 const TextHelper = styled.small`
   position: absolute;
-  top: -10px;
+  top: -6px;
   width: 100%;
   text-align: center;
   font-size: 0.6rem;
@@ -25,35 +28,63 @@ const TextHelper = styled.small`
 
 const DotContainer = styled.span`
   position: relative;
+  height: 36px;
   :hover ~ span {
     svg {
       fill: #555 !important;
     }
   }
+
   :hover small {
     display: inline;
+  }
+
+  :not(.selected) {
+    cursor: pointer;
+  }
+
+  &.base.selected small {
+    display: none;
+    color: red;
+  }
+
+  &.selected small {
+    display: inline;
+    color: red;
   }
 `;
 
 const Dot = ({
   full,
+  selectedValue,
+  baseValue,
   pexValue,
   onClick,
 }: {
   full?: boolean;
+  selectedValue: boolean;
+  baseValue: boolean;
   pexValue?: number;
-  onClick?: (MouseEvent) => void;
-}) => (
-  <DotContainer>
-    <TextHelper>{pexValue}</TextHelper>
-    <DotStyle2
-      onClick={onClick}
-      full={full}
-      className={full ? 'full' : 'not-full'}
-    >
-      <ellipse cx="11" cy="18" rx="9" ry="11" stroke="black" strokeWidth="2" />
-    </DotStyle2>
-  </DotContainer>
-);
+  onClick?: () => void;
+}) => {
+  const containerClass = `${selectedValue ? 'selected' : ''} ${
+    baseValue ? 'base' : ''
+  }`;
+  return (
+    <DotContainer className={containerClass}>
+      <TextHelper>{pexValue}</TextHelper>
+      <DotStyle onClick={onClick} className={full ? 'full' : 'not-full'}>
+        <ellipse
+          cx="11"
+          cy="18"
+          rx="9"
+          ry="11"
+          stroke="black"
+          strokeWidth="2"
+        />
+      </DotStyle>
+    </DotContainer>
+  );
+};
 
 export default Dot;
