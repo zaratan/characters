@@ -6,11 +6,11 @@ export const HorizontalSection = styled.div<{ count?: number }>`
   column-gap: 50px;
   grid-auto-rows: auto;
 
-  @media screen and (max-width: 1260px) {
+  @media screen and (max-width: 1304px) {
     grid-template-columns: repeat(min(${props => props.count || 2}, 2), auto);
   }
 
-  @media screen and (max-width: 840px) {
+  @media screen and (max-width: 859px) {
     grid-template-columns: auto;
   }
 `;

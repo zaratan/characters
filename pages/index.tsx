@@ -13,24 +13,20 @@ const SheetContainer = styled.main`
     width: 95%;
   }
 
-  @media screen and (max-width: 1260px) {
+  @media screen and (max-width: 1304px) {
     width: 80%;
   }
 
-  @media screen and (max-width: 1000px) {
+  @media screen and (max-width: 1022px) {
     width: 95%;
   }
 
-  @media screen and (max-width: 840px) {
+  @media screen and (max-width: 859px) {
     width: 80%;
   }
 
   @media screen and (max-width: 600px) {
     width: 90%;
-  }
-
-  @media screen and (max-width: 500px) {
-    width: 96%;
   }
 `;
 
@@ -53,6 +49,7 @@ export async function getStaticProps(_context) {
     { title: 'Senechal', value: 1 },
     { title: 'Theologie', value: 1 },
   ];
+
   const skills = [
     { title: 'Animaux', value: 1 },
     { title: 'Archerie', value: 1 },
@@ -65,6 +62,7 @@ export async function getStaticProps(_context) {
     { title: 'Représentation', value: 1 },
     { title: 'Survie', value: 1 },
   ];
+
   const talents = [
     { title: 'Expression', value: 1 },
     { title: 'Vigilance', value: 3 },
@@ -77,6 +75,7 @@ export async function getStaticProps(_context) {
     { title: 'Commandement', value: 1 },
     { title: 'Subterfuge', value: 1 },
   ];
+
   const attributes = {
     strength: 1,
     dexterity: 3,
@@ -88,6 +87,7 @@ export async function getStaticProps(_context) {
     intelligence: 3,
     wits: 6,
   };
+
   const infos = {
     name: 'Sined Nisap',
     playerName: 'Zaratan',

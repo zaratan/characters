@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 
-import Dot from './Dot';
+import Dot, { EmptyGlyph } from './Dot';
 import { calcPexDiffAttribute, calcPexDiffAbility } from '../helpers/pex';
 
 const ColumnLine = styled.li`
@@ -54,10 +54,12 @@ const Line = ({
   value,
   title,
   maxLevel,
+  minLevel = 0,
   diffPexCalc,
 }: {
   value?: number;
   maxLevel: number;
+  minLevel?: number;
   title: string;
   diffPexCalc: (from: number, to: number) => number;
 }) => {
@@ -74,12 +76,22 @@ const Line = ({
         <DotSeparator />
         <Value>
           <Dot
+            onClick={onClickHandle(10)}
+            full={localValue >= 10}
+            pexValue={diffPexCalc(value, 10)}
+            selectedValue={localValue === 10}
+            baseValue={value === 10}
+            hidden={maxLevel < 10}
+            locked={minLevel > 10}
+          />
+          <Dot
             onClick={onClickHandle(9)}
             full={localValue >= 9}
             pexValue={diffPexCalc(value, 9)}
             selectedValue={localValue === 9}
             baseValue={value === 9}
             hidden={maxLevel < 9}
+            locked={minLevel > 8}
           />
           <Dot
             onClick={onClickHandle(8)}
@@ -88,6 +100,7 @@ const Line = ({
             selectedValue={localValue === 8}
             baseValue={value === 8}
             hidden={maxLevel < 8}
+            locked={minLevel > 7}
           />
           <Dot
             onClick={onClickHandle(7)}
@@ -96,6 +109,7 @@ const Line = ({
             selectedValue={localValue === 7}
             baseValue={value === 7}
             hidden={maxLevel < 7}
+            locked={minLevel > 6}
           />
           <Dot
             onClick={onClickHandle(6)}
@@ -104,6 +118,7 @@ const Line = ({
             selectedValue={localValue === 6}
             baseValue={value === 6}
             hidden={maxLevel < 6}
+            locked={minLevel > 5}
           />
           <DotSeparator onClick={onClickHandle(5)} />
           <Dot
@@ -112,6 +127,7 @@ const Line = ({
             pexValue={diffPexCalc(value, 5)}
             selectedValue={localValue === 5}
             baseValue={value === 5}
+            locked={minLevel > 4}
           />
           <Dot
             onClick={onClickHandle(4)}
@@ -119,6 +135,7 @@ const Line = ({
             pexValue={diffPexCalc(value, 4)}
             selectedValue={localValue === 4}
             baseValue={value === 4}
+            locked={minLevel > 3}
           />
           <Dot
             onClick={onClickHandle(3)}
@@ -126,6 +143,7 @@ const Line = ({
             pexValue={diffPexCalc(value, 3)}
             selectedValue={localValue === 3}
             baseValue={value === 3}
+            locked={minLevel > 2}
           />
           <Dot
             onClick={onClickHandle(2)}
@@ -133,6 +151,7 @@ const Line = ({
             pexValue={diffPexCalc(value, 2)}
             selectedValue={localValue === 2}
             baseValue={value === 2}
+            locked={minLevel > 1}
           />
           <Dot
             onClick={onClickHandle(1)}
@@ -140,6 +159,13 @@ const Line = ({
             pexValue={diffPexCalc(value, 1)}
             selectedValue={localValue === 1}
             baseValue={value === 1}
+            locked={minLevel > 0}
+          />
+          <EmptyGlyph
+            selected={localValue === 0}
+            baseValue={value === 0}
+            pexValue={diffPexCalc(value, minLevel)}
+            onClick={onClickHandle(minLevel)}
           />
         </Value>
       </ColumnLine>
@@ -161,6 +187,7 @@ export const AttributeLine = ({
     title={title}
     diffPexCalc={calcPexDiffAttribute}
     maxLevel={maxLevel}
+    minLevel={1}
   />
 );
 

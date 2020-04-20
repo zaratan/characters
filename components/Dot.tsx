@@ -10,8 +10,7 @@ const DotStyle = styled.svg`
   width: 24px;
   height: 36px;
   transition: fill 0.2s ease-in-out;
-  :hover,
-  :hover ~ svg {
+  :hover {
     fill: #555 !important;
   }
 `;
@@ -26,6 +25,12 @@ const TextHelper = styled.small`
   transition: display 0.2s ease-in-out;
 `;
 
+const EmptyGlyphText = styled.span`
+  font-size: 21px;
+  padding-right: 2px;
+  cursor: pointer;
+`;
+
 const DotContainer = styled.span`
   position: relative;
   height: 36px;
@@ -35,17 +40,24 @@ const DotContainer = styled.span`
     }
   }
 
+  &.locked svg {
+    fill: #555 !important;
+  }
+
   :hover small {
     display: inline;
   }
 
-  :not(.selected) {
+  :not(.selected):not(.locked) {
     cursor: pointer;
   }
 
-  &.base.selected small {
-    display: none;
-    color: red;
+  &.base.selected,
+  &.locked {
+    small {
+      display: none;
+      color: red;
+    }
   }
 
   &.selected small {
@@ -58,23 +70,66 @@ const DotContainer = styled.span`
   }
 `;
 
+const GlyphContainer = styled.span`
+  position: relative;
+  :hover small {
+    display: inline;
+  }
+  &.base.selected {
+    small {
+      display: none;
+      color: red;
+    }
+  }
+  &.selected small {
+    display: inline;
+    color: red;
+  }
+`;
+
+export const EmptyGlyph = ({
+  pexValue,
+  onClick,
+  selected,
+  baseValue,
+}: {
+  selected: boolean;
+  pexValue: number;
+  baseValue: boolean;
+  onClick: () => void;
+}) => {
+  const containerClass = `
+    ${selected ? 'selected' : ''} 
+    ${baseValue ? 'base' : ''} 
+  `;
+  return (
+    <GlyphContainer onClick={onClick} className={containerClass}>
+      <TextHelper>{pexValue}</TextHelper>
+      <EmptyGlyphText>ø</EmptyGlyphText>
+    </GlyphContainer>
+  );
+};
+
 const Dot = ({
   full,
   selectedValue,
   baseValue,
   pexValue,
+  locked,
   hidden,
   onClick,
 }: {
   full?: boolean;
   selectedValue: boolean;
   baseValue: boolean;
+  locked?: boolean;
   hidden?: boolean;
   pexValue?: number;
   onClick?: () => void;
 }) => {
   const containerClass = `
     ${selectedValue ? 'selected' : ''} 
+    ${locked ? 'locked' : ''} 
     ${baseValue ? 'base' : ''} 
     ${hidden ? 'hidden' : ''}
   `;
@@ -83,10 +138,10 @@ const Dot = ({
       <TextHelper>{pexValue}</TextHelper>
       <DotStyle onClick={onClick} className={full ? 'full' : 'not-full'}>
         <ellipse
-          cx="11"
-          cy="18"
-          rx="9"
-          ry="11"
+          cx="50%"
+          cy="50%"
+          rx="40%"
+          ry="30%"
           stroke="black"
           strokeWidth="2"
         />
