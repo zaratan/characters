@@ -7,6 +7,10 @@ import { calcPexDiffAttribute, calcPexDiffAbility } from '../helpers/pex';
 const ColumnLine = styled.li`
   display: flex;
   justify-content: space-between;
+  @media screen and (max-width: 500px) {
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const SubTitle = styled.h2`
@@ -45,8 +49,13 @@ const DotSeparator = styled.span`
   :hover svg.full {
     fill: transparent;
   }
+
   svg.full {
     color: #555;
+  }
+
+  &.hidden {
+    display: none;
   }
 `;
 
@@ -72,8 +81,10 @@ const Line = ({
   return (
     <ul>
       <ColumnLine>
-        <SubTitle>{title}</SubTitle>
-        <DotSeparator />
+        <span>
+          <SubTitle>{title}</SubTitle>
+          <DotSeparator />
+        </span>
         <Value>
           <Dot
             onClick={onClickHandle(10)}
@@ -120,7 +131,10 @@ const Line = ({
             hidden={maxLevel < 6}
             locked={minLevel > 5}
           />
-          <DotSeparator onClick={onClickHandle(5)} />
+          <DotSeparator
+            onClick={onClickHandle(5)}
+            className={maxLevel < 6 ? 'hidden' : ''}
+          />
           <Dot
             onClick={onClickHandle(5)}
             full={localValue >= 5}
