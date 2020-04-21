@@ -18,17 +18,17 @@ const SquareStyle = styled.svg`
   width: 24px;
   height: 36px;
   fill: transparent;
+  path {
+    stroke-dasharray: 33.95, 33.95;
+    stroke-dashoffset: 33.95;
+  }
   path.first {
-    stroke-dasharray: 50.92, 50.92;
-    stroke-dashoffset: 50.92;
     &.checked {
       stroke-dashoffset: 0;
       transition: stroke-dashoffset 0.2s ease-in-out;
     }
   }
   path.second {
-    stroke-dasharray: 50.92, 50.92;
-    stroke-dashoffset: 50.92;
     &.checked {
       stroke-dashoffset: 0;
     }
@@ -40,8 +40,6 @@ const SquareStyle = styled.svg`
     }
   }
   path.third {
-    stroke-dasharray: 50.92, 50.92;
-    stroke-dashoffset: 50.92;
     &.checked {
       stroke-dashoffset: 0;
       transition: stroke-dashoffset 0.2s ease-in-out;
