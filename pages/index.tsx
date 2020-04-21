@@ -91,7 +91,7 @@ export async function getStaticProps(_context) {
   const infos = {
     name: 'Sined Nisap',
     playerName: 'Zaratan',
-    generation: 4,
+    generation: 7,
     nature: 'Pon',
     sire: 'None',
     demeanor: 'Test',
