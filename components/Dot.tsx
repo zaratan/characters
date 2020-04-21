@@ -41,6 +41,11 @@ const DotContainer = styled.span`
         fill: #555 !important;
       }
     }
+    ~ span.locked {
+      svg {
+        fill: black !important;
+      }
+    }
   }
 
   :focus {
@@ -54,7 +59,7 @@ const DotContainer = styled.span`
   }
 
   &.locked svg {
-    fill: #555 !important;
+    fill: black !important;
   }
 
   :hover,
@@ -64,12 +69,11 @@ const DotContainer = styled.span`
     }
   }
 
-  :not(.selected):not(.locked) {
+  :not(.selected) {
     cursor: pointer;
   }
 
-  &.base.selected,
-  &.locked {
+  &.base.selected {
     small {
       display: none;
       color: red;

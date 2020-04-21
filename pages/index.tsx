@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Abilities, { AbilitiesListType } from '../components/Abilities';
 import Attributes, { AttributesType } from '../components/Attributes';
 import Infos, { InfosType } from '../components/Infos';
+import MiscElem from '../components/MiscElem';
 
 const SheetContainer = styled.main`
   margin: auto;
@@ -91,7 +92,7 @@ export async function getStaticProps(_context) {
   const infos = {
     name: 'Sined Nisap',
     playerName: 'Zaratan',
-    generation: 7,
+    generation: 4,
     nature: 'Pon',
     sire: 'None',
     demeanor: 'Test',
@@ -160,6 +161,7 @@ const Home = ({
       knowledges={knowledges}
       generation={infos.generation}
     />
+    <MiscElem />
   </SheetContainer>
 );
 

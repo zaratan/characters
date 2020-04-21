@@ -2,15 +2,16 @@
 /* eslint-disable react/prop-types */
 // import App from 'next/app'
 
-// import '@fortawesome/fontawesome-svg-core/styles.css';
-// import { library, config } from '@fortawesome/fontawesome-svg-core';
-// import { faCircle } from '@fortawesome/free-regular-svg-icons';
+import '@fortawesome/fontawesome-svg-core/styles.css';
+import { library, config } from '@fortawesome/fontawesome-svg-core';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { faCircle, faSquare } from '@fortawesome/free-regular-svg-icons';
 import Head from 'next/head';
 import GlobalStyle from '../styles/GlobalStyle';
 
 // See https://github.com/FortAwesome/react-fontawesome#integrating-with-other-tools-and-frameworks
-// config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
-// library.add(faCircle);
+config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
+library.add(faCircle, faSquare, faTimes);
 
 const MyApp = ({ Component, pageProps }) => (
   <>

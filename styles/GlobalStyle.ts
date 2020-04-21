@@ -81,6 +81,26 @@ select {
     scroll-behavior: auto !important;
   }
 }
+
+@keyframes fill-stroke {
+  /* to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes second-fill-stroke { */
+  0% {
+    stroke-dashoffset: 1000;
+  }
+  
+  50% {
+    stroke-dashoffset: 1000;
+  }
+  
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
 `;
 
 export default GlobalStyle;

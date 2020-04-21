@@ -21,7 +21,7 @@ const SectionTitle = styled(Title)`
 export const StyledLine = ({ title }: { title?: string }) => (
   <EmptyLine>
     <BlackLine />
-    {title ? <SectionTitle>{title}</SectionTitle> : null}
+    {title ? <SectionTitle>{title}</SectionTitle> : ''}
     <BlackLine />
   </EmptyLine>
 );

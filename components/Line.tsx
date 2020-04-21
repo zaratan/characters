@@ -72,7 +72,7 @@ const Line = ({
   value?: number;
   maxLevel: number;
   minLevel?: number;
-  title: string;
+  title?: string;
   diffPexCalc: (from: number, to: number) => number;
 }) => {
   const [localValue, setValue] = useState(value);
@@ -84,10 +84,12 @@ const Line = ({
   return (
     <ul>
       <ColumnLine>
-        <span>
-          <SubTitle>{title}</SubTitle>
-          <DotSeparator />
-        </span>
+        {title ? (
+          <span>
+            <SubTitle>{title}</SubTitle>
+            <DotSeparator />
+          </span>
+        ) : null}
         <Value role="radiogroup">
           <Dot
             onClick={onClickHandle(10)}
@@ -202,13 +204,15 @@ const Line = ({
             value={1}
             name={title}
           />
-          <EmptyGlyph
-            selected={localValue === 0}
-            baseValue={value === 0}
-            pexValue={diffPexCalc(value, minLevel)}
-            onClick={onClickHandle(minLevel)}
-            name={title}
-          />
+          {minLevel === 0 ? (
+            <EmptyGlyph
+              selected={localValue === 0}
+              baseValue={value === 0}
+              pexValue={diffPexCalc(value, minLevel)}
+              onClick={onClickHandle(minLevel)}
+              name={title}
+            />
+          ) : null}
         </Value>
       </ColumnLine>
     </ul>
