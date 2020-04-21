@@ -46,8 +46,11 @@ const DotSeparator = styled.span`
     }
   }
 
-  :hover svg.full {
-    fill: transparent;
+  :hover,
+  :focus {
+    svg.full {
+      fill: transparent;
+    }
   }
 
   svg.full {
@@ -85,7 +88,7 @@ const Line = ({
           <SubTitle>{title}</SubTitle>
           <DotSeparator />
         </span>
-        <Value>
+        <Value role="radiogroup">
           <Dot
             onClick={onClickHandle(10)}
             full={localValue >= 10}
@@ -94,6 +97,8 @@ const Line = ({
             baseValue={value === 10}
             hidden={maxLevel < 10}
             locked={minLevel > 10}
+            value={10}
+            name={title}
           />
           <Dot
             onClick={onClickHandle(9)}
@@ -103,6 +108,8 @@ const Line = ({
             baseValue={value === 9}
             hidden={maxLevel < 9}
             locked={minLevel > 8}
+            value={9}
+            name={title}
           />
           <Dot
             onClick={onClickHandle(8)}
@@ -112,6 +119,8 @@ const Line = ({
             baseValue={value === 8}
             hidden={maxLevel < 8}
             locked={minLevel > 7}
+            value={8}
+            name={title}
           />
           <Dot
             onClick={onClickHandle(7)}
@@ -121,6 +130,8 @@ const Line = ({
             baseValue={value === 7}
             hidden={maxLevel < 7}
             locked={minLevel > 6}
+            value={7}
+            name={title}
           />
           <Dot
             onClick={onClickHandle(6)}
@@ -130,9 +141,15 @@ const Line = ({
             baseValue={value === 6}
             hidden={maxLevel < 6}
             locked={minLevel > 5}
+            value={6}
+            name={title}
           />
           <DotSeparator
             onClick={onClickHandle(5)}
+            onKeyPress={onClickHandle(5)}
+            tabIndex={-1}
+            aria-label={`${title} dot separator`}
+            role="button"
             className={maxLevel < 6 ? 'hidden' : ''}
           />
           <Dot
@@ -142,6 +159,8 @@ const Line = ({
             selectedValue={localValue === 5}
             baseValue={value === 5}
             locked={minLevel > 4}
+            value={5}
+            name={title}
           />
           <Dot
             onClick={onClickHandle(4)}
@@ -150,6 +169,8 @@ const Line = ({
             selectedValue={localValue === 4}
             baseValue={value === 4}
             locked={minLevel > 3}
+            value={4}
+            name={title}
           />
           <Dot
             onClick={onClickHandle(3)}
@@ -158,6 +179,8 @@ const Line = ({
             selectedValue={localValue === 3}
             baseValue={value === 3}
             locked={minLevel > 2}
+            value={3}
+            name={title}
           />
           <Dot
             onClick={onClickHandle(2)}
@@ -166,6 +189,8 @@ const Line = ({
             selectedValue={localValue === 2}
             baseValue={value === 2}
             locked={minLevel > 1}
+            value={2}
+            name={title}
           />
           <Dot
             onClick={onClickHandle(1)}
@@ -174,12 +199,15 @@ const Line = ({
             selectedValue={localValue === 1}
             baseValue={value === 1}
             locked={minLevel > 0}
+            value={1}
+            name={title}
           />
           <EmptyGlyph
             selected={localValue === 0}
             baseValue={value === 0}
             pexValue={diffPexCalc(value, minLevel)}
             onClick={onClickHandle(minLevel)}
+            name={title}
           />
         </Value>
       </ColumnLine>

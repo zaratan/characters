@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEvent, KeyboardEvent } from 'react';
 import styled from 'styled-components';
 
 const DotStyle = styled.svg`
@@ -10,9 +10,6 @@ const DotStyle = styled.svg`
   width: 24px;
   height: 36px;
   transition: fill 0.2s ease-in-out;
-  :hover {
-    fill: #555 !important;
-  }
 `;
 
 const TextHelper = styled.small`
@@ -34,9 +31,25 @@ const EmptyGlyphText = styled.span`
 const DotContainer = styled.span`
   position: relative;
   height: 36px;
-  :hover ~ span {
+  :hover,
+  :focus {
     svg {
       fill: #555 !important;
+    }
+    ~ span {
+      svg {
+        fill: #555 !important;
+      }
+    }
+  }
+
+  :focus {
+    outline: none;
+    svg {
+      ellipse {
+        stroke: darkcyan;
+        stroke-width: 3px;
+      }
     }
   }
 
@@ -44,8 +57,11 @@ const DotContainer = styled.span`
     fill: #555 !important;
   }
 
-  :hover small {
-    display: inline;
+  :hover,
+  :focus {
+    small {
+      display: inline;
+    }
   }
 
   :not(.selected):not(.locked) {
@@ -76,8 +92,15 @@ const DotContainer = styled.span`
 
 const GlyphContainer = styled.span`
   position: relative;
-  :hover small {
-    display: inline;
+  :hover,
+  :focus {
+    small {
+      display: inline;
+    }
+  }
+  :focus {
+    outline: none;
+    color: darkcyan;
   }
   &.base.selected {
     small {
@@ -96,18 +119,44 @@ export const EmptyGlyph = ({
   onClick,
   selected,
   baseValue,
+  name,
 }: {
   selected: boolean;
   pexValue: number;
   baseValue: boolean;
   onClick: () => void;
+  name: string;
 }) => {
   const containerClass = `
     ${selected ? 'selected' : ''} 
     ${baseValue ? 'base' : ''} 
   `;
+  const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
+    onClick();
+    e.currentTarget.blur();
+  };
+
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (
+      e.keyCode !== 32 &&
+      e.keyCode !== 13 &&
+      e.charCode !== 32 &&
+      e.charCode !== 13
+    ) {
+      return;
+    }
+    e.preventDefault();
+    onClick();
+  };
   return (
-    <GlyphContainer onClick={onClick} className={containerClass}>
+    <GlyphContainer
+      onClick={handleClick}
+      onKeyPress={handleKeyPress}
+      className={containerClass}
+      role="button"
+      tabIndex={0}
+      aria-label={`${name} 0`}
+    >
       <TextHelper>{pexValue}</TextHelper>
       <EmptyGlyphText>ø</EmptyGlyphText>
     </GlyphContainer>
@@ -116,6 +165,8 @@ export const EmptyGlyph = ({
 
 const Dot = ({
   full,
+  value,
+  name,
   selectedValue,
   baseValue,
   pexValue,
@@ -124,6 +175,8 @@ const Dot = ({
   onClick,
 }: {
   full?: boolean;
+  value: number;
+  name: string;
   selectedValue: boolean;
   baseValue: boolean;
   locked?: boolean;
@@ -137,10 +190,37 @@ const Dot = ({
     ${baseValue ? 'base' : ''} 
     ${hidden ? 'hidden' : ''}
   `;
+
+  const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
+    onClick();
+    e.currentTarget.blur();
+  };
+
+  const handleKeyPress = (e: KeyboardEvent) => {
+    if (
+      e.keyCode !== 32 &&
+      e.keyCode !== 13 &&
+      e.charCode !== 32 &&
+      e.charCode !== 13
+    ) {
+      return;
+    }
+    e.preventDefault();
+    onClick();
+  };
+
   return (
-    <DotContainer className={containerClass}>
+    <DotContainer
+      className={containerClass}
+      onClick={handleClick}
+      onKeyPress={handleKeyPress}
+      role="radio"
+      tabIndex={selectedValue ? -1 : 0}
+      aria-checked={full}
+      aria-label={`${name} ${value}`}
+    >
       <TextHelper>{pexValue}</TextHelper>
-      <DotStyle onClick={onClick} className={full ? 'full' : 'not-full'}>
+      <DotStyle className={full ? 'full' : 'not-full'}>
         <ellipse
           cx="50%"
           cy="50%"

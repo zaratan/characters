@@ -23,6 +23,7 @@ const AbilitiesColumn = ({
         title={ability.title}
         value={ability.value}
         maxLevel={maxLevel}
+        key={ability.title}
       />
     ))}
   </div>

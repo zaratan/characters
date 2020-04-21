@@ -9,6 +9,7 @@ module.exports = {
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
+    'plugin:styled-components-a11y/recommended',
   ],
   env: {
     browser: true,
@@ -104,5 +105,5 @@ module.exports = {
     "react-hooks/exhaustive-deps": "warn",
     "@typescript-eslint/explicit-function-return-type": 0
   },
-  plugins: ["prettier", "react-hooks", '@typescript-eslint']
+  plugins: ["prettier", "react-hooks", '@typescript-eslint', 'styled-components-a11y']
 }
