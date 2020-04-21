@@ -68,6 +68,10 @@ const DotContainer = styled.span`
   &.hidden {
     display: none;
   }
+
+  &.base:not(.selected) svg {
+    fill: #bbb !important;
+  }
 `;
 
 const GlyphContainer = styled.span`
