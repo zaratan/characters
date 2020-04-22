@@ -3,12 +3,13 @@ import styled from 'styled-components';
 import Abilities, { AbilitiesListType } from '../components/Abilities';
 import Attributes, { AttributesType } from '../components/Attributes';
 import Infos, { InfosType } from '../components/Infos';
-import MiscElem from '../components/MiscElem';
+import Mind, { MindType } from '../components/Mind';
 
 const SheetContainer = styled.main`
   margin: auto;
   margin-top: 20px;
   width: 80%;
+  max-width: 2000px;
 
   @media screen and (max-width: 1500px) {
     width: 95%;
@@ -101,8 +102,25 @@ export async function getStaticProps(_context) {
     clan: 'None',
   };
 
+  const mind = {
+    willpower: 4,
+    tempWillpower: 4,
+    bloodSpent: 6,
+    conscience: 4,
+    selfControl: 2,
+    courage: 4,
+    path: 6,
+    bruised: 3,
+    hurt: 2,
+    injured: 2,
+    wounded: 1,
+    mauled: 0,
+    crippled: 0,
+    incapacitated: 0,
+  };
+
   return {
-    props: { attributes, talents, skills, knowledges, infos },
+    props: { attributes, talents, skills, knowledges, infos, mind },
   };
 }
 
@@ -112,12 +130,14 @@ const Home = ({
   skills,
   knowledges,
   infos,
+  mind,
 }: {
   attributes: AttributesType;
   talents: AbilitiesListType;
   skills: AbilitiesListType;
   knowledges: AbilitiesListType;
   infos: InfosType;
+  mind: MindType;
 }) => (
   <SheetContainer>
     <Head>
@@ -161,7 +181,24 @@ const Home = ({
       knowledges={knowledges}
       generation={infos.generation}
     />
-    <MiscElem />
+    <Mind
+      willpower={mind.willpower}
+      tempWillpower={mind.tempWillpower}
+      bloodSpent={mind.bloodSpent}
+      conscience={mind.conscience}
+      selfControl={mind.selfControl}
+      courage={mind.courage}
+      path={mind.path}
+      extraBruised={mind.extraBruised}
+      bruised={mind.bruised}
+      hurt={mind.hurt}
+      injured={mind.injured}
+      wounded={mind.wounded}
+      mauled={mind.mauled}
+      crippled={mind.crippled}
+      incapacitated={mind.incapacitated}
+      generation={infos.generation}
+    />
   </SheetContainer>
 );
 

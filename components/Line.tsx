@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from './Dot';
 import { calcPexDiffAttribute, calcPexDiffAbility } from '../helpers/pex';
+import { SubTitle } from '../styles/Titles';
 
 const ColumnLine = styled.li`
   display: flex;
@@ -13,17 +14,15 @@ const ColumnLine = styled.li`
   }
 `;
 
-const SubTitle = styled.h2`
-  font-family: CloisterBlack;
-  color: gray;
-  display: inline;
-  white-space: nowrap;
-`;
-
 const Value = styled.span`
   display: flex;
   flex-direction: row-reverse;
-  align-items: center;
+  justify-content: center;
+
+  &.only-dots {
+    width: 100%;
+    justify-self: center;
+  }
 
   :hover svg {
     fill: transparent;
@@ -33,6 +32,7 @@ const Value = styled.span`
 const DotSeparator = styled.span`
   padding: 0.3rem;
   height: 100%;
+  outline: none;
 
   :hover ~ span {
     svg {
@@ -90,7 +90,7 @@ const Line = ({
             <DotSeparator />
           </span>
         ) : null}
-        <Value role="radiogroup">
+        <Value role="radiogroup" className={title ? '' : 'only-dots'}>
           <Dot
             onClick={onClickHandle(10)}
             full={localValue >= 10}

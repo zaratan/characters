@@ -11,3 +11,10 @@ export const SectionTitle = styled(Title)`
 export const ColumnTitle = styled(Title)`
   text-align: center;
 `;
+
+export const SubTitle = styled.h2`
+  font-family: CloisterBlack;
+  color: gray;
+  display: inline;
+  white-space: nowrap;
+`;

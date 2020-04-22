@@ -1,15 +1,50 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
 import Square from './Square';
+import { SubTitle } from '../styles/Titles';
 
-const NamedSquare = ({ value }: { value: number }) => {
-  const [localValue, setLocalValue] = useState(value);
+const NamedSquareContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 3rem;
+`;
+
+const Separator = styled.span`
+  width: 4rem;
+`;
+
+const Container = styled.span`
+  display: flex;
+  justify-content: space-between;
+  width: 70%;
+`;
+
+const AloneSquare = styled(Square)``;
+
+const NamedSquare = ({
+  value,
+  title,
+  subtitle,
+  setValue,
+}: {
+  value: number;
+  title: string;
+  subtitle?: string;
+  setValue: (value: number) => void;
+}) => {
   const changeValue = () => {
-    setLocalValue((localValue + 1) % 4);
+    setValue((value + 1) % 4);
   };
   return (
-    <div>
-      <Square checked={localValue} onClick={changeValue} />
-    </div>
+    <NamedSquareContainer>
+      <Container>
+        <SubTitle>{title}</SubTitle>
+        <Separator />
+        <span>{subtitle}</span>
+      </Container>
+      <AloneSquare checked={value} onClick={changeValue} />
+    </NamedSquareContainer>
   );
 };
 

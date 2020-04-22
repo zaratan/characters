@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Title } from './Titles';
+import { SectionTitle } from './Titles';
 
 export const EmptyLine = styled.div`
   height: 3rem;
@@ -12,10 +12,6 @@ export const BlackLine = styled.div`
   background-color: black;
   height: 0.3rem;
   width: 100%;
-`;
-
-const SectionTitle = styled(Title)`
-  padding: 0 1rem;
 `;
 
 export const StyledLine = ({ title }: { title?: string }) => (
