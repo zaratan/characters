@@ -1,5 +1,9 @@
-import React, { MouseEvent } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import {
+  generateHandleClick,
+  generateHandleKeypress,
+} from '../helpers/handlers';
 
 const SquareContainer = styled.span`
   height: 36px;
@@ -10,6 +14,13 @@ const SquareContainer = styled.span`
       path.second {
         stroke-dashoffset: 0 !important;
       }
+    }
+  }
+  :focus {
+    outline: none;
+    rect {
+      stroke: darkcyan;
+      stroke-width: 3px;
     }
   }
 `;
@@ -56,12 +67,15 @@ const Square = ({
 }) => {
   const timeChecked = checked === true ? 2 : Number(checked);
   const hoverCheck = checked === true || checked === false;
-  const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
-    onClick();
-    e.currentTarget.blur();
-  };
+  const handleClick = generateHandleClick(onClick);
+  const handleKeypress = generateHandleKeypress(onClick);
   return (
-    <SquareContainer onClick={handleClick}>
+    <SquareContainer
+      onClick={handleClick}
+      onKeyPress={handleKeypress}
+      role="button"
+      tabIndex={0}
+    >
       <SquareStyle className={hoverCheck ? 'hover-check' : ''}>
         <rect
           x="3"
@@ -80,7 +94,7 @@ const Square = ({
         <path
           d="M18 12 L6 24 Z"
           className={`second ${timeChecked >= 2 ? 'checked' : ''} ${
-            hoverCheck ? 'slow-checkded' : ''
+            hoverCheck ? 'slow-checked' : ''
           }`}
           stroke="black"
           strokeWidth="2"

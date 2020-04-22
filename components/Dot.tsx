@@ -1,5 +1,9 @@
-import React, { MouseEvent, KeyboardEvent } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import {
+  generateHandleClick,
+  generateHandleKeypress,
+} from '../helpers/handlers';
 
 const DotStyle = styled.svg`
   padding: 0 0.05rem;
@@ -135,23 +139,9 @@ export const EmptyGlyph = ({
     ${selected ? 'selected' : ''} 
     ${baseValue ? 'base' : ''} 
   `;
-  const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
-    onClick();
-    e.currentTarget.blur();
-  };
+  const handleClick = generateHandleClick(onClick);
 
-  const handleKeyPress = (e: KeyboardEvent) => {
-    if (
-      e.keyCode !== 32 &&
-      e.keyCode !== 13 &&
-      e.charCode !== 32 &&
-      e.charCode !== 13
-    ) {
-      return;
-    }
-    e.preventDefault();
-    onClick();
-  };
+  const handleKeyPress = generateHandleKeypress(onClick);
   return (
     <GlyphContainer
       onClick={handleClick}
@@ -195,23 +185,9 @@ const Dot = ({
     ${hidden ? 'hidden' : ''}
   `;
 
-  const handleClick = (e: MouseEvent<HTMLSpanElement>) => {
-    onClick();
-    e.currentTarget.blur();
-  };
+  const handleClick = generateHandleClick(onClick);
 
-  const handleKeyPress = (e: KeyboardEvent) => {
-    if (
-      e.keyCode !== 32 &&
-      e.keyCode !== 13 &&
-      e.charCode !== 32 &&
-      e.charCode !== 13
-    ) {
-      return;
-    }
-    e.preventDefault();
-    onClick();
-  };
+  const handleKeyPress = generateHandleKeypress(onClick);
 
   return (
     <DotContainer
