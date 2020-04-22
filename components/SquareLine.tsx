@@ -23,16 +23,16 @@ const SquareLineContainer = styled.div`
   &.must-wrap {
     display: grid;
     grid-template-columns:
-      repeat(5, 24px) 0.3rem
-      repeat(5, 24px) 0.3rem
+      repeat(5, 24px) 0.6rem
+      repeat(5, 24px) 0.6rem
       repeat(5, 24px);
-    width: calc(15 * 24px + 0.6rem);
+    width: calc(15 * 24px + 1.2rem);
     margin: 0 auto;
     @media screen and (max-width: 500px) {
       grid-template-columns:
-        repeat(5, 24px) 0.3rem
+        repeat(5, 24px) 0.6rem
         repeat(5, 24px);
-      width: calc(10 * 24px + 0.3rem);
+      width: calc(10 * 24px + 0.6rem);
     }
   }
   :not(.must-wrap) {
