@@ -58,6 +58,44 @@ const SquareStyle = styled.svg`
   }
 `;
 
+const EmptyGlyphText = styled.span`
+  font-size: 21px;
+  padding-right: 2px;
+  cursor: pointer;
+  position: absolute;
+  z-index: 1;
+  outline: none;
+  left: -1rem;
+  :hover,
+  :focus {
+    color: darkcyan;
+  }
+`;
+
+export const EmptyGlyph = ({
+  onClick,
+  selected,
+  baseValue,
+}: {
+  onClick: () => void;
+  selected: boolean;
+  baseValue: boolean;
+}) => {
+  const handleClick = generateHandleClick(onClick);
+  const handleKeypress = generateHandleKeypress(onClick);
+
+  return (
+    <EmptyGlyphText
+      onClick={handleClick}
+      onKeyPress={handleKeypress}
+      role="button"
+      tabIndex={0}
+    >
+      ø
+    </EmptyGlyphText>
+  );
+};
+
 const Square = ({
   checked,
   onClick,

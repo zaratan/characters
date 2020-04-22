@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Square from './Square';
+import Square, { EmptyGlyph } from './Square';
 
 const SquareSeparator = styled.span`
   padding: 0.3rem;
@@ -20,6 +20,9 @@ const SquareSeparator = styled.span`
 `;
 
 const SquareLineContainer = styled.div`
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
   &.must-wrap {
     display: grid;
     grid-template-columns:
@@ -41,6 +44,10 @@ const SquareLineContainer = styled.div`
   }
 `;
 
+const Container = styled.div`
+  position: relative;
+`;
+
 const SquareLine = ({
   number,
   numberChecked,
@@ -50,26 +57,33 @@ const SquareLine = ({
 }) => {
   const [localNumberChecked, setLocalNumberChecked] = useState(numberChecked);
   return (
-    <SquareLineContainer className={number > 15 ? 'must-wrap' : ''}>
-      {Array.from(Array(number)).map((_, i) => (
-        <>
-          <Square
-            checked={i < localNumberChecked}
-            onClick={() => {
-              setLocalNumberChecked(i + 1);
-            }}
-          />
-          {i % 5 === 4 && i !== number - 1 ? (
-            <SquareSeparator
-              className={`
+    <Container>
+      <SquareLineContainer className={number > 15 ? 'must-wrap' : ''}>
+        <EmptyGlyph
+          baseValue={numberChecked === 0}
+          selected={localNumberChecked === 0}
+          onClick={() => setLocalNumberChecked(0)}
+        />
+        {Array.from(Array(number)).map((_, i) => (
+          <>
+            <Square
+              checked={i < localNumberChecked}
+              onClick={() => {
+                setLocalNumberChecked(i + 1);
+              }}
+            />
+            {i % 5 === 4 && i !== number - 1 ? (
+              <SquareSeparator
+                className={`
               ${i % 10 === 9 ? 'xs-invisible' : ''} 
               ${i % 15 === 14 ? 'xs-visible' : ''}
               `}
-            />
-          ) : null}
-        </>
-      ))}
-    </SquareLineContainer>
+              />
+            ) : null}
+          </>
+        ))}
+      </SquareLineContainer>
+    </Container>
   );
 };
 

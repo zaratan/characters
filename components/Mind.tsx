@@ -55,7 +55,7 @@ const Mind = ({
           minLevel={1}
           diffPexCalc={calcPexDiffWillpower}
         />
-        <SquareLine number={10} numberChecked={tempWillpower} />
+        <SquareLine number={willpower} numberChecked={tempWillpower} />
         <ColumnTitle>Réserve de Sang</ColumnTitle>
         <SquareLine
           number={maxBlood(generation)}

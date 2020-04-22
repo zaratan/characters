@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Square from './Square';
+import Square, { EmptyGlyph } from './Square';
 import { SubTitle } from '../styles/Titles';
 
 const NamedSquareContainer = styled.div`
@@ -34,7 +34,7 @@ const NamedSquare = ({
   setValue: (value: number) => void;
 }) => {
   const changeValue = () => {
-    setValue((value + 1) % 4);
+    setValue(value < 3 ? value + 1 : 3);
   };
   return (
     <NamedSquareContainer>
@@ -43,7 +43,14 @@ const NamedSquare = ({
         <Separator />
         <span>{subtitle}</span>
       </Container>
-      <AloneSquare checked={value} onClick={changeValue} />
+      <span style={{ position: 'relative' }}>
+        <EmptyGlyph
+          onClick={() => setValue(0)}
+          baseValue={false}
+          selected={false}
+        />
+        <AloneSquare checked={value} onClick={changeValue} />
+      </span>
     </NamedSquareContainer>
   );
 };
