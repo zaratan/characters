@@ -60,9 +60,8 @@ const SquareLine = ({
     <Container>
       <SquareLineContainer className={number > 15 ? 'must-wrap' : ''}>
         <EmptyGlyph
-          baseValue={numberChecked === 0}
-          selected={localNumberChecked === 0}
           onClick={() => setLocalNumberChecked(0)}
+          inactive={localNumberChecked === 0}
         />
         {Array.from(Array(number)).map((_, i) => (
           <>
@@ -71,6 +70,7 @@ const SquareLine = ({
               onClick={() => {
                 setLocalNumberChecked(i + 1);
               }}
+              inactive={i + 1 === localNumberChecked}
             />
             {i % 5 === 4 && i !== number - 1 ? (
               <SquareSeparator

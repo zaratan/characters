@@ -20,8 +20,6 @@ const Container = styled.span`
   width: 70%;
 `;
 
-const AloneSquare = styled(Square)``;
-
 const NamedSquare = ({
   value,
   title,
@@ -44,12 +42,8 @@ const NamedSquare = ({
         <span>{subtitle}</span>
       </Container>
       <span style={{ position: 'relative' }}>
-        <EmptyGlyph
-          onClick={() => setValue(0)}
-          baseValue={false}
-          selected={false}
-        />
-        <AloneSquare checked={value} onClick={changeValue} />
+        <EmptyGlyph onClick={() => setValue(0)} inactive={value === 0} />
+        <Square checked={value} onClick={changeValue} inactive={value === 3} />
       </span>
     </NamedSquareContainer>
   );

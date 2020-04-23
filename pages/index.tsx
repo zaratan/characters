@@ -93,7 +93,7 @@ export async function getStaticProps(_context) {
   const infos = {
     name: 'Sined Nisap',
     playerName: 'Zaratan',
-    generation: 4,
+    generation: 6,
     nature: 'Pon',
     sire: 'None',
     demeanor: 'Test',
@@ -103,13 +103,14 @@ export async function getStaticProps(_context) {
   };
 
   const mind = {
-    willpower: 4,
+    willpower: 6,
     tempWillpower: 4,
     bloodSpent: 6,
     conscience: 4,
     selfControl: 2,
     courage: 4,
     path: 6,
+    extraBruised: 3,
     bruised: 3,
     hurt: 2,
     injured: 2,

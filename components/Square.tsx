@@ -16,11 +16,22 @@ const SquareContainer = styled.span`
       }
     }
   }
-  :focus {
+  :focus,
+  :hover {
     outline: none;
     rect {
       stroke: darkcyan;
       stroke-width: 3px;
+    }
+  }
+  &.inactive {
+    cursor: default;
+    :focus,
+    :hover {
+      rect {
+        stroke: black;
+        stroke-width: 2px;
+      }
     }
   }
 `;
@@ -70,16 +81,21 @@ const EmptyGlyphText = styled.span`
   :focus {
     color: darkcyan;
   }
+  &.inactive {
+    cursor: default;
+    :hover,
+    :focus {
+      color: black;
+    }
+  }
 `;
 
 export const EmptyGlyph = ({
   onClick,
-  selected,
-  baseValue,
+  inactive,
 }: {
   onClick: () => void;
-  selected: boolean;
-  baseValue: boolean;
+  inactive?: boolean;
 }) => {
   const handleClick = generateHandleClick(onClick);
   const handleKeypress = generateHandleKeypress(onClick);
@@ -89,7 +105,8 @@ export const EmptyGlyph = ({
       onClick={handleClick}
       onKeyPress={handleKeypress}
       role="button"
-      tabIndex={0}
+      tabIndex={inactive ? -1 : 0}
+      className={inactive ? 'inactive' : ''}
     >
       ø
     </EmptyGlyphText>
@@ -99,7 +116,9 @@ export const EmptyGlyph = ({
 const Square = ({
   checked,
   onClick,
+  inactive,
 }: {
+  inactive?: boolean;
   checked: boolean | number;
   onClick: () => void;
 }) => {
@@ -112,7 +131,8 @@ const Square = ({
       onClick={handleClick}
       onKeyPress={handleKeypress}
       role="button"
-      tabIndex={0}
+      tabIndex={inactive ? -1 : 0}
+      className={inactive ? 'inactive' : ''}
     >
       <SquareStyle className={hoverCheck ? 'hover-check' : ''}>
         <rect
