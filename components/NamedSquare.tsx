@@ -8,6 +8,9 @@ const NamedSquareContainer = styled.div`
   justify-content: space-between;
   width: 100%;
   padding: 0 3rem;
+  @media screen and (max-width: 400px) {
+    padding: 0;
+  }
 `;
 
 const Separator = styled.span`

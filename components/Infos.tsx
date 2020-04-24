@@ -17,12 +17,11 @@ export interface InfosType {
   sire?: string;
 }
 
-const WritteableTitle = styled(Title)`
-  display: inline;
-`;
-
-const InfoContainer = styled.span`
+const InfoContainer = styled.div`
   display: flex;
+  @media screen and (max-width: 500px) {
+    display: block;
+  }
 `;
 
 const Separator = styled.span`
@@ -63,7 +62,7 @@ const Infos = ({
 
       <HorizontalSection>
         <InfoContainer>
-          <WritteableTitle>Nom:</WritteableTitle>
+          <Title>Nom:</Title>
           <Separator />
           <HandLargeEditableText
             type="text"
@@ -72,7 +71,7 @@ const Infos = ({
           />
         </InfoContainer>
         <InfoContainer>
-          <WritteableTitle>Joueur: </WritteableTitle>
+          <Title>Joueur: </Title>
           <Separator />
           <HandLargeEditableText
             type="text"
@@ -81,7 +80,7 @@ const Infos = ({
           />
         </InfoContainer>
         <InfoContainer>
-          <WritteableTitle>Chronique: </WritteableTitle>
+          <Title>Chronique: </Title>
           <Separator />
           <HandLargeEditableText
             type="text"
@@ -90,7 +89,7 @@ const Infos = ({
           />
         </InfoContainer>
         <InfoContainer>
-          <WritteableTitle>Nature: </WritteableTitle>
+          <Title>Nature: </Title>
           <Separator />
           <HandLargeEditableText
             type="text"
@@ -99,7 +98,7 @@ const Infos = ({
           />
         </InfoContainer>
         <InfoContainer>
-          <WritteableTitle>Attitude: </WritteableTitle>
+          <Title>Attitude: </Title>
           <Separator />
           <HandLargeEditableText
             type="text"
@@ -108,7 +107,7 @@ const Infos = ({
           />
         </InfoContainer>
         <InfoContainer>
-          <WritteableTitle>Clan: </WritteableTitle>
+          <Title>Clan: </Title>
           <Separator />
           <HandLargeEditableText
             type="text"
@@ -117,7 +116,7 @@ const Infos = ({
           />
         </InfoContainer>
         <InfoContainer>
-          <WritteableTitle>Génération: </WritteableTitle>
+          <Title>Génération: </Title>
           <Separator />
           <HandLargeEditableText
             type="number"
@@ -128,7 +127,7 @@ const Infos = ({
           />
         </InfoContainer>
         <InfoContainer>
-          <WritteableTitle>Refuge: </WritteableTitle>
+          <Title>Refuge: </Title>
           <Separator />
           <HandLargeEditableText
             type="text"
@@ -137,7 +136,7 @@ const Infos = ({
           />
         </InfoContainer>
         <InfoContainer>
-          <WritteableTitle>Sire: </WritteableTitle>
+          <Title>Sire: </Title>
           <Separator />
           <HandLargeEditableText
             type="text"
