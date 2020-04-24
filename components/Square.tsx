@@ -88,6 +88,9 @@ const EmptyGlyphText = styled.span`
       color: black;
     }
   }
+  @media screen and (max-width: 500px) {
+    left: -1.5rem;
+  }
 `;
 
 export const EmptyGlyph = ({
