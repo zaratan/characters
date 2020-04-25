@@ -18,6 +18,10 @@ export const HandLargeEditableText = styled.input`
     outline: none;
   }
   @media screen and (max-width: 500px) {
+    padding-left: 2rem;
     width: 100%;
+  }
+  &.left-padded {
+    padding-left: 2rem;
   }
 `;

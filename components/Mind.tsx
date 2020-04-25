@@ -7,6 +7,7 @@ import { calcPexDiffWillpower, calcPexDiffPathOrVirtue } from '../helpers/pex';
 import SquareLine from './SquareLine';
 import Health from './Health';
 import { maxBlood } from '../helpers/maxLevels';
+import UnderlinedHandLargeEditableText from './UnderlinedHandLargeEditableText';
 
 export type MindType = {
   willpower: number;
@@ -15,6 +16,7 @@ export type MindType = {
   conscience: number;
   selfControl: number;
   courage: number;
+  pathName: string;
   path: number;
   extraBruised?: number;
   bruised: number;
@@ -33,6 +35,7 @@ const Mind = ({
   conscience,
   selfControl,
   courage,
+  pathName,
   path,
   extraBruised,
   bruised,
@@ -57,10 +60,7 @@ const Mind = ({
         />
         <SquareLine number={willpower} numberChecked={tempWillpower} />
         <ColumnTitle>Réserve de Sang</ColumnTitle>
-        <SquareLine
-          number={maxBlood(generation)}
-          numberChecked={tempWillpower}
-        />
+        <SquareLine number={maxBlood(generation)} numberChecked={bloodSpent} />
       </div>
       <div>
         <ColumnTitle>Vertues</ColumnTitle>
@@ -86,6 +86,7 @@ const Mind = ({
           diffPexCalc={calcPexDiffPathOrVirtue}
         />
         <ColumnTitle>Voie</ColumnTitle>
+        <UnderlinedHandLargeEditableText value={pathName} />
         <Line
           value={path}
           maxLevel={10}

@@ -6,12 +6,18 @@ export const EmptyLine = styled.div`
   display: flex;
   align-items: center;
   width: 100%;
+  &.thin {
+    height: 1rem;
+  }
 `;
 
 export const BlackLine = styled.div`
   background-color: black;
   height: 0.3rem;
   width: 100%;
+  &.thin {
+    height: 0.1rem;
+  }
 `;
 
 export const StyledLine = ({ title }: { title?: string }) => (

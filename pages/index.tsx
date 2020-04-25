@@ -109,6 +109,7 @@ export async function getStaticProps(_context) {
     conscience: 4,
     selfControl: 2,
     courage: 4,
+    pathName: 'Roi (Vizir)',
     path: 6,
     extraBruised: 3,
     bruised: 3,
@@ -189,6 +190,7 @@ const Home = ({
       conscience={mind.conscience}
       selfControl={mind.selfControl}
       courage={mind.courage}
+      pathName={mind.pathName}
       path={mind.path}
       extraBruised={mind.extraBruised}
       bruised={mind.bruised}
