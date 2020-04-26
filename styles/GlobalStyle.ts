@@ -83,12 +83,6 @@ select {
 }
 
 @keyframes fill-stroke {
-  /* to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes second-fill-stroke { */
   0% {
     stroke-dashoffset: 1000;
   }
@@ -99,6 +93,19 @@ select {
   
   100% {
     stroke-dashoffset: 0;
+  }
+}
+
+@keyframes slide-in {
+  0% {
+    opacity: 0;
+    width: 0;
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    width: inherit;
   }
 }
 `;

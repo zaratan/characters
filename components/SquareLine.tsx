@@ -49,9 +49,11 @@ const Container = styled.div`
 `;
 
 const SquareLine = ({
+  type,
   number,
   numberChecked,
 }: {
+  type: string;
   number: number;
   numberChecked: number;
 }) => {
@@ -60,6 +62,7 @@ const SquareLine = ({
     <Container>
       <SquareLineContainer className={number > 15 ? 'must-wrap' : ''}>
         <EmptyGlyph
+          type={type}
           onClick={() => setLocalNumberChecked(0)}
           inactive={localNumberChecked === 0}
         />
@@ -70,6 +73,7 @@ const SquareLine = ({
               onClick={() => {
                 setLocalNumberChecked(i + 1);
               }}
+              name={`${type} ${i}`}
               inactive={i + 1 === localNumberChecked}
             />
             {i % 5 === 4 && i !== number - 1 ? (
@@ -78,6 +82,7 @@ const SquareLine = ({
               ${i % 10 === 9 ? 'xs-invisible' : ''} 
               ${i % 15 === 14 ? 'xs-visible' : ''}
               `}
+                key={`type-${i}`}
               />
             ) : null}
           </>

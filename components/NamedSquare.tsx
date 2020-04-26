@@ -45,8 +45,17 @@ const NamedSquare = ({
         <span>{subtitle}</span>
       </Container>
       <span style={{ position: 'relative' }}>
-        <EmptyGlyph onClick={() => setValue(0)} inactive={value === 0} />
-        <Square checked={value} onClick={changeValue} inactive={value === 3} />
+        <EmptyGlyph
+          type={title}
+          onClick={() => setValue(0)}
+          inactive={value === 0}
+        />
+        <Square
+          checked={value}
+          onClick={changeValue}
+          inactive={value === 3}
+          name={`${title}`}
+        />
       </span>
     </NamedSquareContainer>
   );

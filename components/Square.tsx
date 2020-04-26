@@ -4,6 +4,7 @@ import {
   generateHandleClick,
   generateHandleKeypress,
 } from '../helpers/handlers';
+import { Glyph } from './Glyph';
 
 const SquareContainer = styled.span`
   height: 36px;
@@ -69,58 +70,32 @@ const SquareStyle = styled.svg`
   }
 `;
 
-const EmptyGlyphText = styled.span`
-  font-size: 21px;
-  padding-right: 2px;
-  cursor: pointer;
-  position: absolute;
-  z-index: 1;
-  outline: none;
-  left: -1rem;
-  :hover,
-  :focus {
-    color: darkcyan;
-  }
-  &.inactive {
-    cursor: default;
-    :hover,
-    :focus {
-      color: black;
-    }
-  }
-  @media screen and (max-width: 500px) {
-    left: -1.5rem;
-  }
-`;
-
 export const EmptyGlyph = ({
   onClick,
   inactive,
+  type,
 }: {
   onClick: () => void;
-  inactive?: boolean;
-}) => {
-  const handleClick = generateHandleClick(onClick);
-  const handleKeypress = generateHandleKeypress(onClick);
-
-  return (
-    <EmptyGlyphText
-      onClick={handleClick}
-      onKeyPress={handleKeypress}
-      role="button"
-      tabIndex={inactive ? -1 : 0}
-      className={inactive ? 'inactive' : ''}
-    >
-      ø
-    </EmptyGlyphText>
-  );
-};
+  inactive: boolean;
+  type: string;
+}) => (
+  <Glyph
+    name={`Vider ${type}`}
+    onClick={onClick}
+    inactive={inactive}
+    absolutePosition
+  >
+    ø
+  </Glyph>
+);
 
 const Square = ({
   checked,
   onClick,
   inactive,
+  name,
 }: {
+  name: string;
   inactive?: boolean;
   checked: boolean | number;
   onClick: () => void;
@@ -131,6 +106,7 @@ const Square = ({
   const handleKeypress = generateHandleKeypress(onClick);
   return (
     <SquareContainer
+      aria-label={name}
       onClick={handleClick}
       onKeyPress={handleKeypress}
       role="button"

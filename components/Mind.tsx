@@ -8,6 +8,7 @@ import SquareLine from './SquareLine';
 import Health from './Health';
 import { maxBlood } from '../helpers/maxLevels';
 import UnderlinedHandLargeEditableText from './UnderlinedHandLargeEditableText';
+import ColumnTitleWithOptions from './ColumnTitleWithOptions';
 
 export type MindType = {
   willpower: number;
@@ -57,19 +58,35 @@ const Mind = ({
           maxLevel={10}
           minLevel={1}
           diffPexCalc={calcPexDiffWillpower}
+          name="Volonté"
         />
-        <SquareLine number={willpower} numberChecked={tempWillpower} />
+        <SquareLine
+          type="Volonté temporaire"
+          number={willpower}
+          numberChecked={tempWillpower}
+        />
         <ColumnTitle>Réserve de Sang</ColumnTitle>
-        <SquareLine number={maxBlood(generation)} numberChecked={bloodSpent} />
+        <SquareLine
+          type="Sang"
+          number={maxBlood(generation)}
+          numberChecked={bloodSpent}
+        />
       </div>
       <div>
-        <ColumnTitle>Vertues</ColumnTitle>
+        <ColumnTitleWithOptions
+          title="Vertues"
+          options={[
+            { name: 'Voie avec Conviction', value: false },
+            { name: 'Voie avec Instinct', value: false },
+          ]}
+        />
         <Line
           title="Conscience"
           value={conscience}
           maxLevel={5}
           minLevel={1}
           diffPexCalc={calcPexDiffPathOrVirtue}
+          name="Conscience"
         />
         <Line
           title="Maitrise de soi"
@@ -77,6 +94,7 @@ const Mind = ({
           maxLevel={5}
           minLevel={1}
           diffPexCalc={calcPexDiffPathOrVirtue}
+          name="Maitrise de soi"
         />
         <Line
           title="Courage"
@@ -84,6 +102,7 @@ const Mind = ({
           maxLevel={5}
           minLevel={1}
           diffPexCalc={calcPexDiffPathOrVirtue}
+          name="Courage"
         />
         <ColumnTitle>Voie</ColumnTitle>
         <UnderlinedHandLargeEditableText value={pathName} />
@@ -92,6 +111,7 @@ const Mind = ({
           maxLevel={10}
           minLevel={1}
           diffPexCalc={calcPexDiffPathOrVirtue}
+          name="Voie"
         />
       </div>
       <Health

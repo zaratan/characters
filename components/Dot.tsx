@@ -4,6 +4,7 @@ import {
   generateHandleClick,
   generateHandleKeypress,
 } from '../helpers/handlers';
+import { Glyph } from './Glyph';
 
 const DotStyle = styled.svg`
   padding: 0 0.05rem;
@@ -24,12 +25,12 @@ const TextHelper = styled.small`
   font-size: 0.6rem;
   display: none;
   transition: display 0.2s ease-in-out;
-`;
-
-const EmptyGlyphText = styled.span`
-  font-size: 21px;
-  padding-right: 2px;
-  cursor: pointer;
+  &.left-aligned {
+    left: -1rem;
+    @media screen and (max-width: 500px) {
+      left: -1.5rem;
+    }
+  }
 `;
 
 const DotContainer = styled.span`
@@ -100,16 +101,6 @@ const DotContainer = styled.span`
 
 const GlyphContainer = styled.span`
   position: relative;
-  :hover,
-  :focus {
-    small {
-      display: inline;
-    }
-  }
-  :focus {
-    outline: none;
-    color: darkcyan;
-  }
   &.base.selected {
     small {
       display: none;
@@ -139,20 +130,12 @@ export const EmptyGlyph = ({
     ${selected ? 'selected' : ''} 
     ${baseValue ? 'base' : ''} 
   `;
-  const handleClick = generateHandleClick(onClick);
-
-  const handleKeyPress = generateHandleKeypress(onClick);
   return (
-    <GlyphContainer
-      onClick={handleClick}
-      onKeyPress={handleKeyPress}
-      className={containerClass}
-      role="button"
-      tabIndex={0}
-      aria-label={`${name} 0`}
-    >
-      <TextHelper>{pexValue}</TextHelper>
-      <EmptyGlyphText>ø</EmptyGlyphText>
+    <GlyphContainer className={containerClass}>
+      <Glyph onClick={onClick} name={`${name} 0`} absolutePosition>
+        ø
+      </Glyph>
+      <TextHelper className="left-aligned">{pexValue}</TextHelper>
     </GlyphContainer>
   );
 };

@@ -18,7 +18,7 @@ const AbilitiesColumn = ({
 }) => (
   <div>
     <ColumnTitle>{title}</ColumnTitle>
-    {abilities.map(ability => (
+    {abilities.map((ability) => (
       <AbilityLine
         title={ability.title}
         value={ability.value}

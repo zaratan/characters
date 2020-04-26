@@ -65,11 +65,13 @@ const DotSeparator = styled.span`
 const Line = ({
   value,
   title,
+  name,
   maxLevel,
   minLevel = 0,
   diffPexCalc,
 }: {
   value?: number;
+  name: string;
   maxLevel: number;
   minLevel?: number;
   title?: string;
@@ -100,7 +102,7 @@ const Line = ({
             hidden={maxLevel < 10}
             locked={minLevel > 10}
             value={10}
-            name={title}
+            name={name}
           />
           <Dot
             onClick={onClickHandle(9)}
@@ -111,7 +113,7 @@ const Line = ({
             hidden={maxLevel < 9}
             locked={minLevel > 8}
             value={9}
-            name={title}
+            name={name}
           />
           <Dot
             onClick={onClickHandle(8)}
@@ -122,7 +124,7 @@ const Line = ({
             hidden={maxLevel < 8}
             locked={minLevel > 7}
             value={8}
-            name={title}
+            name={name}
           />
           <Dot
             onClick={onClickHandle(7)}
@@ -133,7 +135,7 @@ const Line = ({
             hidden={maxLevel < 7}
             locked={minLevel > 6}
             value={7}
-            name={title}
+            name={name}
           />
           <Dot
             onClick={onClickHandle(6)}
@@ -144,13 +146,13 @@ const Line = ({
             hidden={maxLevel < 6}
             locked={minLevel > 5}
             value={6}
-            name={title}
+            name={name}
           />
           <DotSeparator
             onClick={onClickHandle(5)}
             onKeyPress={onClickHandle(5)}
             tabIndex={-1}
-            aria-label={`${title} dot separator`}
+            aria-label={`${name} dot separator`}
             role="button"
             className={maxLevel < 6 ? 'hidden' : ''}
           />
@@ -162,7 +164,7 @@ const Line = ({
             baseValue={value === 5}
             locked={minLevel > 4}
             value={5}
-            name={title}
+            name={name}
           />
           <Dot
             onClick={onClickHandle(4)}
@@ -172,7 +174,7 @@ const Line = ({
             baseValue={value === 4}
             locked={minLevel > 3}
             value={4}
-            name={title}
+            name={name}
           />
           <Dot
             onClick={onClickHandle(3)}
@@ -182,7 +184,7 @@ const Line = ({
             baseValue={value === 3}
             locked={minLevel > 2}
             value={3}
-            name={title}
+            name={name}
           />
           <Dot
             onClick={onClickHandle(2)}
@@ -192,7 +194,7 @@ const Line = ({
             baseValue={value === 2}
             locked={minLevel > 1}
             value={2}
-            name={title}
+            name={name}
           />
           <Dot
             onClick={onClickHandle(1)}
@@ -202,7 +204,7 @@ const Line = ({
             baseValue={value === 1}
             locked={minLevel > 0}
             value={1}
-            name={title}
+            name={name}
           />
           {minLevel === 0 ? (
             <EmptyGlyph
@@ -210,7 +212,7 @@ const Line = ({
               baseValue={value === 0}
               pexValue={diffPexCalc(value, minLevel)}
               onClick={onClickHandle(minLevel)}
-              name={title}
+              name={name}
             />
           ) : null}
         </Value>
@@ -234,6 +236,7 @@ export const AttributeLine = ({
     diffPexCalc={calcPexDiffAttribute}
     maxLevel={maxLevel}
     minLevel={1}
+    name={title}
   />
 );
 
@@ -251,6 +254,7 @@ export const AbilityLine = ({
     title={title}
     diffPexCalc={calcPexDiffAbility}
     maxLevel={maxLevel}
+    name={title}
   />
 );
 

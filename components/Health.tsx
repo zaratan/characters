@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ColumnTitle } from '../styles/Titles';
 import NamedSquare from './NamedSquare';
+import ColumnTitleWithOptions from './ColumnTitleWithOptions';
 
 const Health = ({
   extraSquare,
@@ -44,7 +45,10 @@ const Health = ({
   };
   return (
     <div>
-      <ColumnTitle>Santé</ColumnTitle>
+      <ColumnTitleWithOptions
+        title="Santé"
+        options={[{ name: 'Extra Contusion', value: true }]}
+      />
       {extraSquare !== undefined ? (
         <NamedSquare
           title="Contusion"

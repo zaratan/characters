@@ -9,7 +9,9 @@ export const SectionTitle = styled(Title)`
 `;
 
 export const ColumnTitle = styled(Title)`
-  text-align: center;
+  position: relative;
+  margin: 0 auto;
+  width: fit-content;
 `;
 
 export const SubTitle = styled.h2`
