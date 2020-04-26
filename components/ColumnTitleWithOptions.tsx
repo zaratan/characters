@@ -65,18 +65,10 @@ const ColumnTitleWithOptions = ({
   actions = [],
 }: {
   title: string;
-  options?: Array<{ name: string; value: boolean }>;
+  options?: Array<{ name: string; value: boolean; onClick: () => void }>;
   actions?: Array<{ name: string; value: () => void }>;
 }) => {
   const [open, setOpen] = useState(false);
-  const [localOptions, setLocalOptions] = useState(options);
-  const optionToggle = (name: string) => {
-    setLocalOptions(
-      localOptions.map((option) =>
-        option.name !== name ? option : { name, value: !option.value }
-      )
-    );
-  };
   return (
     <div>
       <ColumnTitle>
@@ -94,18 +86,18 @@ const ColumnTitleWithOptions = ({
       </ColumnTitle>
       <OptionsContainer
         className={open ? 'opened' : ''}
-        elemCount={localOptions.length}
+        elemCount={options.length}
         actionCount={actions.length}
       >
         <ul>
-          {localOptions.map(({ name, value }) => (
+          {options.map(({ name, value, onClick }) => (
             <OptionItem>
               <span>{`${name}: ${value ? 'Oui' : 'Non'}`}</span>
               {value ? (
                 <Glyph
                   onClick={() => {
                     if (!value) return;
-                    optionToggle(name);
+                    onClick();
                   }}
                   inactive={!value}
                   name={`${name}: Non`}
@@ -115,9 +107,8 @@ const ColumnTitleWithOptions = ({
               ) : (
                 <Glyph
                   onClick={() => {
-                    console.log({ name, value });
                     if (value) return;
-                    optionToggle(name);
+                    onClick();
                   }}
                   inactive={value}
                   name={`${name}: Oui`}

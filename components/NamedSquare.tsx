@@ -23,6 +23,16 @@ const Container = styled.span`
   width: 70%;
 `;
 
+const Indicator = styled.span`
+  position: relative;
+  top: 9px;
+`;
+
+const SquareContainer = styled.span`
+  position: relative;
+  top: 3px;
+`;
+
 const NamedSquare = ({
   value,
   title,
@@ -42,9 +52,9 @@ const NamedSquare = ({
       <Container>
         <SubTitle>{title}</SubTitle>
         <Separator />
-        <span>{subtitle}</span>
+        <Indicator>{subtitle}</Indicator>
       </Container>
-      <span style={{ position: 'relative' }}>
+      <SquareContainer>
         <EmptyGlyph
           type={title}
           onClick={() => setValue(0)}
@@ -56,7 +66,7 @@ const NamedSquare = ({
           inactive={value === 3}
           name={`${title}`}
         />
-      </span>
+      </SquareContainer>
     </NamedSquareContainer>
   );
 };

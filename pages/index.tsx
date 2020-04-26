@@ -116,10 +116,13 @@ export async function getStaticProps(_context) {
     tempWillpower: 4,
     bloodSpent: 6,
     conscience: 4,
+    isConviction: true,
     selfControl: 2,
+    isInstinct: false,
     courage: 4,
     pathName: 'Roi (Vizir)',
     path: 6,
+    isExtraBruisable: true,
     extraBruised: 3,
     bruised: 3,
     hurt: 2,
@@ -216,10 +219,13 @@ const Home = ({
       tempWillpower={mind.tempWillpower}
       bloodSpent={mind.bloodSpent}
       conscience={mind.conscience}
+      isConviction={mind.isConviction}
       selfControl={mind.selfControl}
+      isInstinct={mind.isInstinct}
       courage={mind.courage}
       pathName={mind.pathName}
       path={mind.path}
+      isExtraBruisable={mind.isExtraBruisable}
       extraBruised={mind.extraBruised}
       bruised={mind.bruised}
       hurt={mind.hurt}

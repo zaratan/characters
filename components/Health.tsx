@@ -4,6 +4,8 @@ import NamedSquare from './NamedSquare';
 import ColumnTitleWithOptions from './ColumnTitleWithOptions';
 
 const Health = ({
+  isExtraBruisable,
+  changeIsExtraBruisable,
   extraSquare,
   bruised,
   hurt,
@@ -13,6 +15,8 @@ const Health = ({
   crippled,
   incapacitated,
 }: {
+  isExtraBruisable: boolean;
+  changeIsExtraBruisable: () => void;
   extraSquare?: number;
   bruised: number;
   hurt: number;
@@ -22,21 +26,20 @@ const Health = ({
   crippled: number;
   incapacitated: number;
 }) => {
-  const health =
-    extraSquare !== undefined
-      ? [
-          extraSquare,
-          bruised,
-          hurt,
-          injured,
-          wounded,
-          mauled,
-          crippled,
-          incapacitated,
-        ]
-      : [bruised, hurt, injured, wounded, mauled, crippled, incapacitated];
+  const health = isExtraBruisable
+    ? [
+        extraSquare,
+        bruised,
+        hurt,
+        injured,
+        wounded,
+        mauled,
+        crippled,
+        incapacitated,
+      ]
+    : [bruised, hurt, injured, wounded, mauled, crippled, incapacitated];
   const [localHealth, setLocalHealth] = useState(health);
-  const offset = extraSquare === undefined ? 0 : 1;
+  const offset = isExtraBruisable ? 1 : 0;
   const genSetValue = (rank: number) => (value: number) => {
     const newHealth = [...localHealth];
     newHealth[rank] = value;
@@ -47,9 +50,15 @@ const Health = ({
     <div>
       <ColumnTitleWithOptions
         title="Santé"
-        options={[{ name: 'Extra Contusion', value: true }]}
+        options={[
+          {
+            name: 'Extra Contusion',
+            value: isExtraBruisable,
+            onClick: changeIsExtraBruisable,
+          },
+        ]}
       />
-      {extraSquare !== undefined ? (
+      {isExtraBruisable ? (
         <NamedSquare
           title="Contusion"
           value={localHealth[0]}
