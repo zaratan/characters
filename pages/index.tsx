@@ -1,6 +1,9 @@
 import Head from 'next/head';
 import styled from 'styled-components';
-import Abilities, { AbilitiesListType } from '../components/Abilities';
+import Abilities, {
+  AbilitiesListType,
+  CustomAbilitiesListType,
+} from '../components/Abilities';
 import Attributes, { AttributesType } from '../components/Attributes';
 import Infos, { InfosType } from '../components/Infos';
 import Mind, { MindType } from '../components/Mind';
@@ -52,6 +55,8 @@ export async function getStaticProps(_context) {
     { title: 'Theologie', value: 1 },
   ];
 
+  const customKnowledges = [{ title: 'Énigme', value: 1, key: 'Énigme' }];
+
   const skills = [
     { title: 'Animaux', value: 1 },
     { title: 'Archerie', value: 1 },
@@ -65,6 +70,8 @@ export async function getStaticProps(_context) {
     { title: 'Survie', value: 1 },
   ];
 
+  const customSkills = [{ title: 'Stratégie', value: 4, key: 'Stratégie' }];
+
   const talents = [
     { title: 'Expression', value: 1 },
     { title: 'Vigilance', value: 3 },
@@ -77,6 +84,8 @@ export async function getStaticProps(_context) {
     { title: 'Commandement', value: 1 },
     { title: 'Subterfuge', value: 1 },
   ];
+
+  const customTalents = [];
 
   const attributes = {
     strength: 1,
@@ -122,22 +131,38 @@ export async function getStaticProps(_context) {
   };
 
   return {
-    props: { attributes, talents, skills, knowledges, infos, mind },
+    props: {
+      attributes,
+      talents,
+      customTalents,
+      skills,
+      customSkills,
+      knowledges,
+      customKnowledges,
+      infos,
+      mind,
+    },
   };
 }
 
 const Home = ({
   attributes,
   talents,
+  customTalents,
   skills,
+  customSkills,
   knowledges,
+  customKnowledges,
   infos,
   mind,
 }: {
   attributes: AttributesType;
   talents: AbilitiesListType;
+  customTalents: CustomAbilitiesListType;
   skills: AbilitiesListType;
+  customSkills: CustomAbilitiesListType;
   knowledges: AbilitiesListType;
+  customKnowledges: CustomAbilitiesListType;
   infos: InfosType;
   mind: MindType;
 }) => (
@@ -182,6 +207,9 @@ const Home = ({
       talents={talents}
       knowledges={knowledges}
       generation={infos.generation}
+      customKnowkedges={customKnowledges}
+      customSkills={customSkills}
+      customTalents={customTalents}
     />
     <Mind
       willpower={mind.willpower}

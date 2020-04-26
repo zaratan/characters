@@ -4,6 +4,9 @@ import styled from 'styled-components';
 import Dot, { EmptyGlyph } from './Dot';
 import { calcPexDiffAttribute, calcPexDiffAbility } from '../helpers/pex';
 import { SubTitle } from '../styles/Titles';
+import { HandEditableText } from '../styles/Texts';
+import { BlackLine, EmptyLine } from '../styles/Lines';
+import { Glyph } from './Glyph';
 
 const ColumnLine = styled.li`
   display: flex;
@@ -62,6 +65,76 @@ const DotSeparator = styled.span`
   }
 `;
 
+const CustomTitleContainer = styled.span`
+  display: flex;
+  :hover,
+  :focus {
+    .remove-glyph {
+      display: inherit;
+    }
+  }
+`;
+
+const RemoveContainer = styled.span`
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 4px;
+  z-index: 1;
+`;
+const CustomTitle = styled.span`
+  position: relative;
+  input {
+    text-indent: 1px;
+  }
+  @media screen and (max-width: 500px) {
+    input {
+      text-align: center;
+      padding: 0;
+      text-indent: 0;
+    }
+  }
+`;
+
+const LineTitle = ({
+  custom,
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  changeName = () => {},
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  remove = () => {},
+  title,
+}: {
+  custom?: boolean;
+  changeName?: (newValue: string) => void;
+  remove?: () => void;
+  title?: string;
+}) => {
+  if (title === undefined) return null;
+  return custom ? (
+    <CustomTitleContainer>
+      <CustomTitle>
+        <HandEditableText
+          value={title}
+          onChange={(e) => changeName(e.currentTarget.value)}
+          placeholder="Nouveau Nom…"
+        />
+        <RemoveContainer className="remove-glyph">
+          <Glyph onClick={remove} name={`Remove ${title}`}>
+            ✘
+          </Glyph>
+        </RemoveContainer>
+        <BlackLine className="thin" />
+      </CustomTitle>
+      <DotSeparator />
+    </CustomTitleContainer>
+  ) : (
+    <span>
+      <SubTitle>{title}</SubTitle>
+      <DotSeparator />
+    </span>
+  );
+};
+
 const Line = ({
   value,
   title,
@@ -69,6 +142,9 @@ const Line = ({
   maxLevel,
   minLevel = 0,
   diffPexCalc,
+  custom,
+  changeName,
+  remove,
 }: {
   value?: number;
   name: string;
@@ -76,8 +152,12 @@ const Line = ({
   minLevel?: number;
   title?: string;
   diffPexCalc: (from: number, to: number) => number;
+  custom?: boolean;
+  changeName?: (newValue: string) => void;
+  remove?: () => void;
 }) => {
   const [localValue, setValue] = useState(value);
+  console.log({ remove });
 
   const onClickHandle = (val: number) => () => {
     setValue(val);
@@ -86,13 +166,13 @@ const Line = ({
   return (
     <ul>
       <ColumnLine>
-        {title ? (
-          <span>
-            <SubTitle>{title}</SubTitle>
-            <DotSeparator />
-          </span>
-        ) : null}
-        <Value role="radiogroup" className={title ? '' : 'only-dots'}>
+        <LineTitle
+          custom={custom}
+          changeName={changeName}
+          title={title}
+          remove={remove}
+        />
+        <Value role="radiogroup" className={title || custom ? '' : 'only-dots'}>
           <Dot
             onClick={onClickHandle(10)}
             full={localValue >= 10}
@@ -244,10 +324,16 @@ export const AbilityLine = ({
   value,
   title,
   maxLevel,
+  custom,
+  changeTitle,
+  remove,
 }: {
   value?: number;
   title: string;
   maxLevel: number;
+  custom?: boolean;
+  changeTitle?: (value: string) => void;
+  remove?: () => void;
 }) => (
   <Line
     value={value}
@@ -255,6 +341,9 @@ export const AbilityLine = ({
     diffPexCalc={calcPexDiffAbility}
     maxLevel={maxLevel}
     name={title}
+    custom={custom}
+    changeName={changeTitle}
+    remove={remove}
   />
 );
 

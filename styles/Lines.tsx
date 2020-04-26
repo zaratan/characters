@@ -13,10 +13,10 @@ export const EmptyLine = styled.div`
 
 export const BlackLine = styled.div`
   background-color: black;
-  height: 0.3rem;
+  height: 3px;
   width: 100%;
   &.thin {
-    height: 0.1rem;
+    height: 1px;
   }
 `;
 

@@ -2,6 +2,10 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { ColumnTitle } from '../styles/Titles';
 import { Glyph } from './Glyph';
+import {
+  generateHandleKeypress,
+  generateHandleClick,
+} from '../helpers/handlers';
 
 const GlyphContainer = styled.span`
   span {
@@ -12,11 +16,12 @@ const GlyphContainer = styled.span`
   right: -1.5rem;
 `;
 
-const OptionsContainer = styled.div<{ elemCount: number }>`
+const OptionsContainer = styled.div<{ elemCount: number; actionCount: number }>`
   max-height: 0;
   opacity: 0;
   &.opened {
-    max-height: ${(props) => `${props.elemCount * 24 + 20}px`};
+    max-height: ${(props) =>
+      `${props.elemCount * 24 + props.actionCount * 41 + 20}px`};
     opacity: 1;
   }
   transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
@@ -30,12 +35,38 @@ const OptionItem = styled.li`
   justify-content: space-between;
 `;
 
+const ActionItem = styled.li`
+  display: inline-block;
+  padding: 0.5rem;
+  border: solid 1px #333;
+  border-radius: 5px;
+  margin: 0 auto;
+  text-align: center;
+  margin-left: 1rem;
+  cursor: pointer;
+  outline: none;
+  position: relative;
+  :focus,
+  :hover {
+    box-shadow: 1px 1px 1px;
+    /* border-color: darkcyan; */
+  }
+  :active {
+    box-shadow: none;
+    background-color: #f7f7f7;
+    top: 1px;
+    left: 1px;
+  }
+`;
+
 const ColumnTitleWithOptions = ({
   title,
-  options,
+  options = [],
+  actions = [],
 }: {
   title: string;
-  options: Array<{ name: string; value: boolean }>;
+  options?: Array<{ name: string; value: boolean }>;
+  actions?: Array<{ name: string; value: () => void }>;
 }) => {
   const [open, setOpen] = useState(false);
   const [localOptions, setLocalOptions] = useState(options);
@@ -64,6 +95,7 @@ const ColumnTitleWithOptions = ({
       <OptionsContainer
         className={open ? 'opened' : ''}
         elemCount={localOptions.length}
+        actionCount={actions.length}
       >
         <ul>
           {localOptions.map(({ name, value }) => (
@@ -95,6 +127,21 @@ const ColumnTitleWithOptions = ({
               )}
             </OptionItem>
           ))}
+          {actions.map((action) => {
+            const handleClick = generateHandleClick(action.value);
+            const handleKeypress = generateHandleKeypress(action.value);
+            return (
+              // eslint-disable-next-line styled-components-a11y/no-noninteractive-element-to-interactive-role
+              <ActionItem
+                onClick={handleClick}
+                onKeyPress={handleKeypress}
+                role="button"
+                tabIndex={0}
+              >
+                {action.name}
+              </ActionItem>
+            );
+          })}
         </ul>
         <OptionsSeparator />
       </OptionsContainer>
