@@ -23,7 +23,7 @@ module.exports = {
     "no-unused-vars": [
       1,
       {
-        "argsIgnorePattern": "res|next|Sequelize|^err|^_"
+        "argsIgnorePattern": "res|next|Sequelize|^err|^_.*"
       }
     ],
     "prefer-const": [
@@ -103,7 +103,13 @@ module.exports = {
     ],
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
-    "@typescript-eslint/explicit-function-return-type": 0
+    "@typescript-eslint/explicit-function-return-type": 0,
+    "@typescript-eslint/no-unused-vars": [
+      1,
+      {
+        "argsIgnorePattern": "res|next|Sequelize|^err|^_.*"
+      }
+    ],
   },
   plugins: ["prettier", "react-hooks", '@typescript-eslint', 'styled-components-a11y']
 }

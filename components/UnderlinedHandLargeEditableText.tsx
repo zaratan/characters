@@ -1,23 +1,25 @@
-import React, { FormEvent, useState } from 'react';
+import React, { FormEvent } from 'react';
 import { HandLargeEditableText } from '../styles/Texts';
 import { BlackLine, EmptyLine } from '../styles/Lines';
+import { TempElemType } from '../types/TempElemType';
 
-const UnderlinedHandLargeEditableText = ({ value }: { value: string }) => {
-  const [localValue, setLocalValue] = useState(value);
-  return (
-    <div>
-      <HandLargeEditableText
-        onChange={(e: FormEvent<HTMLInputElement>) => {
-          setLocalValue(e.currentTarget.value);
-        }}
-        value={localValue}
-        type="text"
-        className="left-padded"
-      />
-      <BlackLine className="thin" />
-      <EmptyLine className="thin" />
-    </div>
-  );
-};
+const UnderlinedHandLargeEditableText = ({
+  elem,
+}: {
+  elem: TempElemType<string>;
+}) => (
+  <div>
+    <HandLargeEditableText
+      onChange={(e: FormEvent<HTMLInputElement>) => {
+        elem.set(e.currentTarget.value);
+      }}
+      value={elem.value}
+      type="text"
+      className="left-padded"
+    />
+    <BlackLine className="thin" />
+    <EmptyLine className="thin" />
+  </div>
+);
 
 export default UnderlinedHandLargeEditableText;

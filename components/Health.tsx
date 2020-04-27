@@ -1,50 +1,19 @@
-import React, { useState } from 'react';
-import { ColumnTitle } from '../styles/Titles';
+import React, { useContext } from 'react';
 import NamedSquare from './NamedSquare';
 import ColumnTitleWithOptions from './ColumnTitleWithOptions';
+import MindContext from '../contexts/MindContext';
 
-const Health = ({
-  isExtraBruisable,
-  changeIsExtraBruisable,
-  extraSquare,
-  bruised,
-  hurt,
-  injured,
-  wounded,
-  mauled,
-  crippled,
-  incapacitated,
-}: {
-  isExtraBruisable: boolean;
-  changeIsExtraBruisable: () => void;
-  extraSquare?: number;
-  bruised: number;
-  hurt: number;
-  injured: number;
-  wounded: number;
-  mauled: number;
-  crippled: number;
-  incapacitated: number;
-}) => {
-  const health = isExtraBruisable
-    ? [
-        extraSquare,
-        bruised,
-        hurt,
-        injured,
-        wounded,
-        mauled,
-        crippled,
-        incapacitated,
-      ]
-    : [bruised, hurt, injured, wounded, mauled, crippled, incapacitated];
-  const [localHealth, setLocalHealth] = useState(health);
+const Health = () => {
+  const { isExtraBruisable, health } = useContext(MindContext);
+  const changeIsExtraBruisable = () =>
+    isExtraBruisable.set(!isExtraBruisable.value);
+
   const offset = isExtraBruisable ? 1 : 0;
   const genSetValue = (rank: number) => (value: number) => {
-    const newHealth = [...localHealth];
+    const newHealth = [...health.value];
     newHealth[rank] = value;
     newHealth.sort((a, b) => b - a);
-    setLocalHealth(newHealth);
+    health.set(newHealth);
   };
   return (
     <div>
@@ -53,56 +22,56 @@ const Health = ({
         options={[
           {
             name: 'Extra Contusion',
-            value: isExtraBruisable,
+            value: isExtraBruisable.value,
             onClick: changeIsExtraBruisable,
           },
         ]}
       />
-      {isExtraBruisable ? (
+      {isExtraBruisable.value ? (
         <NamedSquare
           title="Contusion"
-          value={localHealth[0]}
+          value={health.value[0]}
           setValue={genSetValue(0)}
         />
       ) : null}
       <NamedSquare
         title="Contusion"
-        value={localHealth[offset]}
+        value={health.value[offset]}
         setValue={genSetValue(offset)}
       />
       <NamedSquare
         title="Blessure légère"
         subtitle="-1"
-        value={localHealth[offset + 1]}
+        value={health.value[offset + 1]}
         setValue={genSetValue(offset + 1)}
       />
       <NamedSquare
         title="Blessure moyenne"
         subtitle="-1"
-        value={localHealth[offset + 2]}
+        value={health.value[offset + 2]}
         setValue={genSetValue(offset + 2)}
       />
       <NamedSquare
         title="Blessure grave"
         subtitle="-2"
-        value={localHealth[offset + 3]}
+        value={health.value[offset + 3]}
         setValue={genSetValue(offset + 3)}
       />
       <NamedSquare
         title="Handicap"
         subtitle="-2"
-        value={localHealth[offset + 4]}
+        value={health.value[offset + 4]}
         setValue={genSetValue(offset + 4)}
       />
       <NamedSquare
         title="Infirmité"
         subtitle="-5"
-        value={localHealth[offset + 5]}
+        value={health.value[offset + 5]}
         setValue={genSetValue(offset + 5)}
       />
       <NamedSquare
         title="Invalidité"
-        value={localHealth[offset + 6]}
+        value={health.value[offset + 6]}
         setValue={genSetValue(offset + 6)}
       />
     </div>

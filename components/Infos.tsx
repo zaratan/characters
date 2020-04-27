@@ -1,21 +1,10 @@
-import React, { useState, FormEvent } from 'react';
+import React, { FormEvent, useContext } from 'react';
 import styled from 'styled-components';
 import { HorizontalSection } from '../styles/Sections';
 import { EmptyLine } from '../styles/Lines';
 import { Title } from '../styles/Titles';
 import { HandLargeEditableText } from '../styles/Texts';
-
-export interface InfosType {
-  name?: string;
-  playerName?: string;
-  chronicle?: string;
-  nature?: string;
-  demeanor?: string;
-  clan?: string;
-  generation?: number;
-  haven?: string;
-  sire?: string;
-}
+import InfosContext from '../contexts/InfosContext';
 
 const InfoContainer = styled.div`
   display: flex;
@@ -28,33 +17,25 @@ const Separator = styled.span`
   width: 1rem;
 `;
 
-const Infos = ({
-  name,
-  playerName,
-  chronicle,
-  nature,
-  demeanor,
-  clan,
-  generation,
-  haven,
-  sire,
-}: InfosType) => {
-  const [localName, setLocalName] = useState(name);
-  const [localPlayerName, setLocalPlayerName] = useState(playerName);
-  const [localChronicle, setLocalChronicle] = useState(chronicle);
-  const [localNature, setLocalNature] = useState(nature);
-  const [localDemeanor, setLocalDemeanor] = useState(demeanor);
-  const [localClan, setLocalClan] = useState(clan);
-  const [localGeneration, setLocalGeneration] = useState(generation);
-  const [localHaven, setLocalHaven] = useState(haven);
-  const [localSire, setLocalSire] = useState(sire);
+const Infos = () => {
+  const {
+    name,
+    playerName,
+    chronicle,
+    clan,
+    demeanor,
+    generation,
+    haven,
+    nature,
+    sire,
+  } = useContext(InfosContext);
   const handleChange = (changeFunction: (val: string) => void) => (
     event: FormEvent<HTMLInputElement>
   ) => {
     changeFunction(event.currentTarget.value);
   };
   const handleChangeGeneration = (event: FormEvent<HTMLInputElement>) => {
-    setLocalGeneration(Number(event.currentTarget.value));
+    generation.set(Number(event.currentTarget.value));
   };
   return (
     <>
@@ -66,8 +47,8 @@ const Infos = ({
           <Separator />
           <HandLargeEditableText
             type="text"
-            value={localName}
-            onChange={handleChange(setLocalName)}
+            value={name.value}
+            onChange={handleChange(name.set)}
           />
         </InfoContainer>
         <InfoContainer>
@@ -75,8 +56,8 @@ const Infos = ({
           <Separator />
           <HandLargeEditableText
             type="text"
-            value={localPlayerName}
-            onChange={handleChange(setLocalPlayerName)}
+            value={playerName.value}
+            onChange={handleChange(playerName.set)}
           />
         </InfoContainer>
         <InfoContainer>
@@ -84,8 +65,8 @@ const Infos = ({
           <Separator />
           <HandLargeEditableText
             type="text"
-            onChange={handleChange(setLocalChronicle)}
-            value={localChronicle}
+            onChange={handleChange(chronicle.set)}
+            value={chronicle.value}
           />
         </InfoContainer>
         <InfoContainer>
@@ -93,8 +74,8 @@ const Infos = ({
           <Separator />
           <HandLargeEditableText
             type="text"
-            onChange={handleChange(setLocalNature)}
-            value={localNature}
+            onChange={handleChange(nature.set)}
+            value={nature.value}
           />
         </InfoContainer>
         <InfoContainer>
@@ -102,8 +83,8 @@ const Infos = ({
           <Separator />
           <HandLargeEditableText
             type="text"
-            onChange={handleChange(setLocalDemeanor)}
-            value={localDemeanor}
+            onChange={handleChange(demeanor.set)}
+            value={demeanor.value}
           />
         </InfoContainer>
         <InfoContainer>
@@ -111,8 +92,8 @@ const Infos = ({
           <Separator />
           <HandLargeEditableText
             type="text"
-            onChange={handleChange(setLocalClan)}
-            value={localClan}
+            onChange={handleChange(clan.set)}
+            value={clan.value}
           />
         </InfoContainer>
         <InfoContainer>
@@ -122,7 +103,7 @@ const Infos = ({
             type="number"
             max={15}
             min={3}
-            value={localGeneration}
+            value={generation.value}
             onChange={handleChangeGeneration}
           />
         </InfoContainer>
@@ -131,8 +112,8 @@ const Infos = ({
           <Separator />
           <HandLargeEditableText
             type="text"
-            onChange={handleChange(setLocalHaven)}
-            value={localHaven}
+            onChange={handleChange(haven.set)}
+            value={haven.value}
           />
         </InfoContainer>
         <InfoContainer>
@@ -140,8 +121,8 @@ const Infos = ({
           <Separator />
           <HandLargeEditableText
             type="text"
-            onChange={handleChange(setLocalSire)}
-            value={localSire}
+            onChange={handleChange(sire.set)}
+            value={sire.value}
           />
         </InfoContainer>
       </HorizontalSection>

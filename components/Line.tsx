@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from './Dot';
 import { calcPexDiffAttribute, calcPexDiffAbility } from '../helpers/pex';
 import { SubTitle } from '../styles/Titles';
 import { HandEditableText } from '../styles/Texts';
-import { BlackLine, EmptyLine } from '../styles/Lines';
+import { BlackLine } from '../styles/Lines';
 import { Glyph } from './Glyph';
+import { TempElemType } from '../types/TempElemType';
 
 const ColumnLine = styled.li`
   display: flex;
@@ -136,7 +137,7 @@ const LineTitle = ({
 };
 
 const Line = ({
-  value,
+  elem,
   title,
   name,
   maxLevel,
@@ -146,7 +147,7 @@ const Line = ({
   changeName,
   remove,
 }: {
-  value?: number;
+  elem: TempElemType<number>;
   name: string;
   maxLevel: number;
   minLevel?: number;
@@ -156,11 +157,10 @@ const Line = ({
   changeName?: (newValue: string) => void;
   remove?: () => void;
 }) => {
-  const [localValue, setValue] = useState(value);
-  console.log({ remove });
+  console.log({ elem });
 
   const onClickHandle = (val: number) => () => {
-    setValue(val);
+    elem.set(val);
   };
 
   return (
@@ -175,10 +175,10 @@ const Line = ({
         <Value role="radiogroup" className={title || custom ? '' : 'only-dots'}>
           <Dot
             onClick={onClickHandle(10)}
-            full={localValue >= 10}
-            pexValue={diffPexCalc(value, 10)}
-            selectedValue={localValue === 10}
-            baseValue={value === 10}
+            full={elem.value >= 10}
+            pexValue={diffPexCalc(elem.baseValue, 10)}
+            selectedValue={elem.value === 10}
+            baseValue={elem.baseValue === 10}
             hidden={maxLevel < 10}
             locked={minLevel > 10}
             value={10}
@@ -186,10 +186,10 @@ const Line = ({
           />
           <Dot
             onClick={onClickHandle(9)}
-            full={localValue >= 9}
-            pexValue={diffPexCalc(value, 9)}
-            selectedValue={localValue === 9}
-            baseValue={value === 9}
+            full={elem.value >= 9}
+            pexValue={diffPexCalc(elem.baseValue, 9)}
+            selectedValue={elem.value === 9}
+            baseValue={elem.baseValue === 9}
             hidden={maxLevel < 9}
             locked={minLevel > 8}
             value={9}
@@ -197,10 +197,10 @@ const Line = ({
           />
           <Dot
             onClick={onClickHandle(8)}
-            full={localValue >= 8}
-            pexValue={diffPexCalc(value, 8)}
-            selectedValue={localValue === 8}
-            baseValue={value === 8}
+            full={elem.value >= 8}
+            pexValue={diffPexCalc(elem.baseValue, 8)}
+            selectedValue={elem.value === 8}
+            baseValue={elem.baseValue === 8}
             hidden={maxLevel < 8}
             locked={minLevel > 7}
             value={8}
@@ -208,10 +208,10 @@ const Line = ({
           />
           <Dot
             onClick={onClickHandle(7)}
-            full={localValue >= 7}
-            pexValue={diffPexCalc(value, 7)}
-            selectedValue={localValue === 7}
-            baseValue={value === 7}
+            full={elem.value >= 7}
+            pexValue={diffPexCalc(elem.baseValue, 7)}
+            selectedValue={elem.value === 7}
+            baseValue={elem.baseValue === 7}
             hidden={maxLevel < 7}
             locked={minLevel > 6}
             value={7}
@@ -219,10 +219,10 @@ const Line = ({
           />
           <Dot
             onClick={onClickHandle(6)}
-            full={localValue >= 6}
-            pexValue={diffPexCalc(value, 6)}
-            selectedValue={localValue === 6}
-            baseValue={value === 6}
+            full={elem.value >= 6}
+            pexValue={diffPexCalc(elem.baseValue, 6)}
+            selectedValue={elem.value === 6}
+            baseValue={elem.baseValue === 6}
             hidden={maxLevel < 6}
             locked={minLevel > 5}
             value={6}
@@ -238,59 +238,59 @@ const Line = ({
           />
           <Dot
             onClick={onClickHandle(5)}
-            full={localValue >= 5}
-            pexValue={diffPexCalc(value, 5)}
-            selectedValue={localValue === 5}
-            baseValue={value === 5}
+            full={elem.value >= 5}
+            pexValue={diffPexCalc(elem.baseValue, 5)}
+            selectedValue={elem.value === 5}
+            baseValue={elem.baseValue === 5}
             locked={minLevel > 4}
             value={5}
             name={name}
           />
           <Dot
             onClick={onClickHandle(4)}
-            full={localValue >= 4}
-            pexValue={diffPexCalc(value, 4)}
-            selectedValue={localValue === 4}
-            baseValue={value === 4}
+            full={elem.value >= 4}
+            pexValue={diffPexCalc(elem.baseValue, 4)}
+            selectedValue={elem.value === 4}
+            baseValue={elem.baseValue === 4}
             locked={minLevel > 3}
             value={4}
             name={name}
           />
           <Dot
             onClick={onClickHandle(3)}
-            full={localValue >= 3}
-            pexValue={diffPexCalc(value, 3)}
-            selectedValue={localValue === 3}
-            baseValue={value === 3}
+            full={elem.value >= 3}
+            pexValue={diffPexCalc(elem.baseValue, 3)}
+            selectedValue={elem.value === 3}
+            baseValue={elem.baseValue === 3}
             locked={minLevel > 2}
             value={3}
             name={name}
           />
           <Dot
             onClick={onClickHandle(2)}
-            full={localValue >= 2}
-            pexValue={diffPexCalc(value, 2)}
-            selectedValue={localValue === 2}
-            baseValue={value === 2}
+            full={elem.value >= 2}
+            pexValue={diffPexCalc(elem.baseValue, 2)}
+            selectedValue={elem.value === 2}
+            baseValue={elem.baseValue === 2}
             locked={minLevel > 1}
             value={2}
             name={name}
           />
           <Dot
             onClick={onClickHandle(1)}
-            full={localValue >= 1}
-            pexValue={diffPexCalc(value, 1)}
-            selectedValue={localValue === 1}
-            baseValue={value === 1}
+            full={elem.value >= 1}
+            pexValue={diffPexCalc(elem.baseValue, 1)}
+            selectedValue={elem.value === 1}
+            baseValue={elem.baseValue === 1}
             locked={minLevel > 0}
             value={1}
             name={name}
           />
           {minLevel === 0 ? (
             <EmptyGlyph
-              selected={localValue === 0}
-              baseValue={value === 0}
-              pexValue={diffPexCalc(value, minLevel)}
+              selected={elem.value === 0}
+              baseValue={elem.baseValue === 0}
+              pexValue={diffPexCalc(elem.baseValue, minLevel)}
               onClick={onClickHandle(minLevel)}
               name={name}
             />
@@ -302,16 +302,16 @@ const Line = ({
 };
 
 export const AttributeLine = ({
-  value,
+  elem,
   title,
   maxLevel,
 }: {
-  value?: number;
+  elem: TempElemType<number>;
   title: string;
   maxLevel: number;
 }) => (
   <Line
-    value={value}
+    elem={elem}
     title={title}
     diffPexCalc={calcPexDiffAttribute}
     maxLevel={maxLevel}
@@ -321,14 +321,14 @@ export const AttributeLine = ({
 );
 
 export const AbilityLine = ({
-  value,
+  elem,
   title,
   maxLevel,
   custom,
   changeTitle,
   remove,
 }: {
-  value?: number;
+  elem: TempElemType<number>;
   title: string;
   maxLevel: number;
   custom?: boolean;
@@ -336,7 +336,7 @@ export const AbilityLine = ({
   remove?: () => void;
 }) => (
   <Line
-    value={value}
+    elem={elem}
     title={title}
     diffPexCalc={calcPexDiffAbility}
     maxLevel={maxLevel}

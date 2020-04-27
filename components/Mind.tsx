@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { StyledLine } from '../styles/Lines';
 import { HorizontalSection } from '../styles/Sections';
 import { ColumnTitle } from '../styles/Titles';
@@ -9,56 +9,23 @@ import Health from './Health';
 import { maxBlood } from '../helpers/maxLevels';
 import UnderlinedHandLargeEditableText from './UnderlinedHandLargeEditableText';
 import ColumnTitleWithOptions from './ColumnTitleWithOptions';
+import InfosContext from '../contexts/InfosContext';
+import MindContext from '../contexts/MindContext';
 
-export type MindType = {
-  willpower: number;
-  tempWillpower: number;
-  bloodSpent: number;
-  conscience: number;
-  isConviction: boolean;
-  isInstinct: boolean;
-  selfControl: number;
-  courage: number;
-  pathName: string;
-  path: number;
-  isExtraBruisable: boolean;
-  extraBruised?: number;
-  bruised: number;
-  hurt: number;
-  injured: number;
-  wounded: number;
-  mauled: number;
-  crippled: number;
-  incapacitated: number;
-};
-
-const Mind = ({
-  willpower,
-  tempWillpower,
-  bloodSpent,
-  conscience,
-  isConviction,
-  selfControl,
-  isInstinct,
-  courage,
-  pathName,
-  path,
-  isExtraBruisable,
-  extraBruised,
-  bruised,
-  hurt,
-  injured,
-  wounded,
-  mauled,
-  crippled,
-  incapacitated,
-  generation,
-}: MindType & { generation: number }) => {
-  const [localIsExtraBruisable, setLocalIsExtraBruisable] = useState(
-    isExtraBruisable
-  );
-  const [localIsConviction, setLocalIsConviction] = useState(isConviction);
-  const [localIsInstinct, setLocalIsInstinct] = useState(isInstinct);
+const Mind = () => {
+  const {
+    willpower,
+    tempWillpower,
+    bloodSpent,
+    conscience,
+    courage,
+    isConviction,
+    isInstinct,
+    path,
+    pathName,
+    selfControl,
+  } = useContext(MindContext);
+  const { generation } = useContext(InfosContext);
   return (
     <>
       <StyledLine />
@@ -66,7 +33,7 @@ const Mind = ({
         <div>
           <ColumnTitle>Volonté</ColumnTitle>
           <Line
-            value={willpower}
+            elem={willpower}
             maxLevel={10}
             minLevel={1}
             diffPexCalc={calcPexDiffWillpower}
@@ -74,13 +41,13 @@ const Mind = ({
           />
           <SquareLine
             type="Volonté temporaire"
-            number={willpower}
+            number={willpower.value}
             numberChecked={tempWillpower}
           />
           <ColumnTitle>Réserve de Sang</ColumnTitle>
           <SquareLine
             type="Sang"
-            number={maxBlood(generation)}
+            number={maxBlood(generation.value)}
             numberChecked={bloodSpent}
           />
         </div>
@@ -90,27 +57,27 @@ const Mind = ({
             options={[
               {
                 name: 'Voie avec Conviction',
-                value: localIsConviction,
-                onClick: () => setLocalIsConviction(!localIsConviction),
+                value: isConviction.value,
+                onClick: () => isConviction.set(!isConviction.value),
               },
               {
                 name: 'Voie avec Instinct',
-                value: localIsInstinct,
-                onClick: () => setLocalIsInstinct(!localIsInstinct),
+                value: isInstinct.value,
+                onClick: () => isInstinct.set(!isInstinct.value),
               },
             ]}
           />
           <Line
-            title={localIsConviction ? 'Conviction' : 'Conscience'}
-            value={conscience}
+            title={isConviction.value ? 'Conviction' : 'Conscience'}
+            elem={conscience}
             maxLevel={5}
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Conscience"
           />
           <Line
-            title={localIsInstinct ? 'Instinct' : 'Maitrise de soi'}
-            value={selfControl}
+            title={isInstinct.value ? 'Instinct' : 'Maitrise de soi'}
+            elem={selfControl}
             maxLevel={5}
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
@@ -118,36 +85,23 @@ const Mind = ({
           />
           <Line
             title="Courage"
-            value={courage}
+            elem={courage}
             maxLevel={5}
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Courage"
           />
           <ColumnTitle>Voie</ColumnTitle>
-          <UnderlinedHandLargeEditableText value={pathName} />
+          <UnderlinedHandLargeEditableText elem={pathName} />
           <Line
-            value={path}
+            elem={path}
             maxLevel={10}
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Voie"
           />
         </div>
-        <Health
-          isExtraBruisable={localIsExtraBruisable}
-          changeIsExtraBruisable={() =>
-            setLocalIsExtraBruisable(!localIsExtraBruisable)
-          }
-          extraSquare={extraBruised}
-          bruised={bruised}
-          hurt={hurt}
-          injured={injured}
-          wounded={wounded}
-          mauled={mauled}
-          crippled={crippled}
-          incapacitated={incapacitated}
-        />
+        <Health />
       </HorizontalSection>
     </>
   );

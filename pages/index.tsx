@@ -1,12 +1,19 @@
 import Head from 'next/head';
 import styled from 'styled-components';
-import Abilities, {
-  AbilitiesListType,
-  CustomAbilitiesListType,
-} from '../components/Abilities';
-import Attributes, { AttributesType } from '../components/Attributes';
-import Infos, { InfosType } from '../components/Infos';
-import Mind, { MindType } from '../components/Mind';
+import Attributes from '../components/Attributes';
+import Infos from '../components/Infos';
+import Mind from '../components/Mind';
+import {
+  RawAbilitiesListType,
+  AbilitiesProvider,
+} from '../contexts/AbilitiesContext';
+import Abilities from '../components/Abilities';
+import { InfosType, InfosProvider } from '../contexts/InfosContext';
+import {
+  AttributesType,
+  AttributesProvider,
+} from '../contexts/AttributesContext';
+import { MindType, MindProvider } from '../contexts/MindContext';
 
 const SheetContainer = styled.main`
   margin: auto;
@@ -123,14 +130,7 @@ export async function getStaticProps(_context) {
     pathName: 'Roi (Vizir)',
     path: 6,
     isExtraBruisable: true,
-    extraBruised: 3,
-    bruised: 3,
-    hurt: 2,
-    injured: 2,
-    wounded: 1,
-    mauled: 0,
-    crippled: 0,
-    incapacitated: 0,
+    health: [3, 3, 2, 2, 1, 0, 0, 0],
   };
 
   return {
@@ -160,83 +160,47 @@ const Home = ({
   mind,
 }: {
   attributes: AttributesType;
-  talents: AbilitiesListType;
-  customTalents: CustomAbilitiesListType;
-  skills: AbilitiesListType;
-  customSkills: CustomAbilitiesListType;
-  knowledges: AbilitiesListType;
-  customKnowledges: CustomAbilitiesListType;
+  talents: RawAbilitiesListType;
+  customTalents: RawAbilitiesListType;
+  skills: RawAbilitiesListType;
+  customSkills: RawAbilitiesListType;
+  knowledges: RawAbilitiesListType;
+  customKnowledges: RawAbilitiesListType;
   infos: InfosType;
   mind: MindType;
 }) => (
-  <SheetContainer>
-    <Head>
-      <title>
-        {infos.name ? `${infos.name} - ` : null}Feuille de Personnage
-      </title>
-      <link rel="icon" href="/favicon.ico" />
-    </Head>
+  <InfosProvider infos={infos}>
+    <AttributesProvider attributes={attributes}>
+      <MindProvider mind={mind}>
+        <AbilitiesProvider
+          talents={talents}
+          customTalents={customTalents}
+          skills={skills}
+          customSkills={customSkills}
+          knowledges={knowledges}
+          customKnowledges={customKnowledges}
+        >
+          <SheetContainer>
+            <Head>
+              <title>
+                {infos.name ? `${infos.name} - ` : null}Feuille de Personnage
+              </title>
+              <link rel="icon" href="/favicon.ico" />
+            </Head>
 
-    <PageTitle>
-      <img src="/title.png" alt="Vampire Dark Age" />
-    </PageTitle>
+            <PageTitle>
+              <img src="/title.png" alt="Vampire Dark Age" />
+            </PageTitle>
 
-    <Infos
-      name={infos.name}
-      playerName={infos.playerName}
-      chronicle={infos.chronicle}
-      nature={infos.nature}
-      demeanor={infos.demeanor}
-      clan={infos.clan}
-      generation={infos.generation}
-      haven={infos.haven}
-      sire={infos.sire}
-    />
-
-    <Attributes
-      strength={attributes.strength}
-      dexterity={attributes.dexterity}
-      stamina={attributes.stamina}
-      charisma={attributes.charisma}
-      manipulation={attributes.manipulation}
-      appearance={attributes.appearance}
-      perception={attributes.perception}
-      intelligence={attributes.intelligence}
-      wits={attributes.wits}
-      generation={infos.generation}
-    />
-    <Abilities
-      skills={skills}
-      talents={talents}
-      knowledges={knowledges}
-      generation={infos.generation}
-      customKnowkedges={customKnowledges}
-      customSkills={customSkills}
-      customTalents={customTalents}
-    />
-    <Mind
-      willpower={mind.willpower}
-      tempWillpower={mind.tempWillpower}
-      bloodSpent={mind.bloodSpent}
-      conscience={mind.conscience}
-      isConviction={mind.isConviction}
-      selfControl={mind.selfControl}
-      isInstinct={mind.isInstinct}
-      courage={mind.courage}
-      pathName={mind.pathName}
-      path={mind.path}
-      isExtraBruisable={mind.isExtraBruisable}
-      extraBruised={mind.extraBruised}
-      bruised={mind.bruised}
-      hurt={mind.hurt}
-      injured={mind.injured}
-      wounded={mind.wounded}
-      mauled={mind.mauled}
-      crippled={mind.crippled}
-      incapacitated={mind.incapacitated}
-      generation={infos.generation}
-    />
-  </SheetContainer>
+            <Infos />
+            <Attributes />
+            <Abilities />
+            <Mind />
+          </SheetContainer>
+        </AbilitiesProvider>
+      </MindProvider>
+    </AttributesProvider>
+  </InfosProvider>
 );
 
 export default Home;

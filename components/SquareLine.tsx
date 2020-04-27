@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Square, { EmptyGlyph } from './Square';
+import { TempElemType } from '../types/TempElemType';
 
 const SquareSeparator = styled.span`
   padding: 0.3rem;
@@ -55,41 +56,38 @@ const SquareLine = ({
 }: {
   type: string;
   number: number;
-  numberChecked: number;
-}) => {
-  const [localNumberChecked, setLocalNumberChecked] = useState(numberChecked);
-  return (
-    <Container>
-      <SquareLineContainer className={number > 15 ? 'must-wrap' : ''}>
-        <EmptyGlyph
-          type={type}
-          onClick={() => setLocalNumberChecked(0)}
-          inactive={localNumberChecked === 0}
-        />
-        {Array.from(Array(number)).map((_, i) => (
-          <>
-            <Square
-              checked={i < localNumberChecked}
-              onClick={() => {
-                setLocalNumberChecked(i + 1);
-              }}
-              name={`${type} ${i}`}
-              inactive={i + 1 === localNumberChecked}
-            />
-            {i % 5 === 4 && i !== number - 1 ? (
-              <SquareSeparator
-                className={`
+  numberChecked: TempElemType<number>;
+}) => (
+  <Container>
+    <SquareLineContainer className={number > 15 ? 'must-wrap' : ''}>
+      <EmptyGlyph
+        type={type}
+        onClick={() => numberChecked.set(0)}
+        inactive={numberChecked.value === 0}
+      />
+      {Array.from(Array(number)).map((_, i) => (
+        <>
+          <Square
+            checked={i < numberChecked.value}
+            onClick={() => {
+              numberChecked.set(i + 1);
+            }}
+            name={`${type} ${i}`}
+            inactive={i + 1 === numberChecked.value}
+          />
+          {i % 5 === 4 && i !== number - 1 ? (
+            <SquareSeparator
+              className={`
               ${i % 10 === 9 ? 'xs-invisible' : ''} 
               ${i % 15 === 14 ? 'xs-visible' : ''}
               `}
-                key={`type-${i}`}
-              />
-            ) : null}
-          </>
-        ))}
-      </SquareLineContainer>
-    </Container>
-  );
-};
+              key={`type-${i}`}
+            />
+          ) : null}
+        </>
+      ))}
+    </SquareLineContainer>
+  </Container>
+);
 
 export default SquareLine;

@@ -1,64 +1,52 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { StyledLine } from '../styles/Lines';
 import { HorizontalSection } from '../styles/Sections';
 import { ColumnTitle } from '../styles/Titles';
 import { AttributeLine } from './Line';
 import { maxDot } from '../helpers/maxLevels';
+import InfosContext from '../contexts/InfosContext';
+import AttributesContext from '../contexts/AttributesContext';
 
-export interface AttributesType {
-  strength: number;
-  dexterity: number;
-  stamina: number;
-  charisma: number;
-  manipulation: number;
-  appearance: number;
-  perception: number;
-  intelligence: number;
-  wits: number;
-}
+const Attributes = () => {
+  const {
+    strength,
+    dexterity,
+    stamina,
+    charisma,
+    manipulation,
+    appearance,
+    perception,
+    intelligence,
+    wits,
+  } = useContext(AttributesContext);
+  const { generation } = useContext(InfosContext);
+  const maxLevel = maxDot(generation.value);
 
-const Attributes = ({
-  strength,
-  dexterity,
-  stamina,
-  charisma,
-  manipulation,
-  appearance,
-  perception,
-  intelligence,
-  wits,
-  generation = 12,
-}: { generation?: number } & AttributesType) => {
-  const maxLevel = maxDot(generation);
   return (
     <>
       <StyledLine title="Attributs" />
       <HorizontalSection>
         <div>
           <ColumnTitle>Physique</ColumnTitle>
-          <AttributeLine title="Force" value={strength} maxLevel={maxLevel} />
+          <AttributeLine title="Force" elem={strength} maxLevel={maxLevel} />
           <AttributeLine
             title="Dextrérité"
-            value={dexterity}
+            elem={dexterity}
             maxLevel={maxLevel}
           />
-          <AttributeLine title="Vigueur" value={stamina} maxLevel={maxLevel} />
+          <AttributeLine title="Vigueur" elem={stamina} maxLevel={maxLevel} />
         </div>
         <div>
           <ColumnTitle>Social</ColumnTitle>
-          <AttributeLine
-            title="Charisme"
-            value={charisma}
-            maxLevel={maxLevel}
-          />
+          <AttributeLine title="Charisme" elem={charisma} maxLevel={maxLevel} />
           <AttributeLine
             title="Manipulation"
-            value={manipulation}
+            elem={manipulation}
             maxLevel={maxLevel}
           />
           <AttributeLine
             title="Apparence"
-            value={appearance}
+            elem={appearance}
             maxLevel={maxLevel}
           />
         </div>
@@ -66,15 +54,15 @@ const Attributes = ({
           <ColumnTitle>Mental</ColumnTitle>
           <AttributeLine
             title="Perception"
-            value={perception}
+            elem={perception}
             maxLevel={maxLevel}
           />
           <AttributeLine
             title="Intelligence"
-            value={intelligence}
+            elem={intelligence}
             maxLevel={maxLevel}
           />
-          <AttributeLine title="Astuce" value={wits} maxLevel={maxLevel} />
+          <AttributeLine title="Astuce" elem={wits} maxLevel={maxLevel} />
         </div>
       </HorizontalSection>
     </>
