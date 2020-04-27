@@ -96,10 +96,10 @@ const ColumnTitleWithOptions = ({
               {value ? (
                 <Glyph
                   onClick={() => {
-                    if (!value) return;
+                    if (!value || !open) return;
                     onClick();
                   }}
-                  inactive={!value}
+                  inactive={!value || !open}
                   name={`${name}: Non`}
                 >
                   ✘
@@ -107,10 +107,10 @@ const ColumnTitleWithOptions = ({
               ) : (
                 <Glyph
                   onClick={() => {
-                    if (value) return;
+                    if (value || !open) return;
                     onClick();
                   }}
-                  inactive={value}
+                  inactive={value || !open}
                   name={`${name}: Oui`}
                 >
                   ✔

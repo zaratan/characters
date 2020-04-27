@@ -150,7 +150,6 @@ export const AbilitiesProvider = ({
   customKnowledges: RawAbilitiesListType;
 }) => {
   const [tmpTalents, setTmpTalents] = useState(talents);
-  console.log(talents);
   const talentsCap = convertRawAbilitiesToAbilities(
     talents,
     tmpTalents,

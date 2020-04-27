@@ -157,8 +157,6 @@ const Line = ({
   changeName?: (newValue: string) => void;
   remove?: () => void;
 }) => {
-  console.log({ elem });
-
   const onClickHandle = (val: number) => () => {
     elem.set(val);
   };
