@@ -14,6 +14,12 @@ import {
   AttributesProvider,
 } from '../contexts/AttributesContext';
 import { MindType, MindProvider } from '../contexts/MindContext';
+import {
+  DisciplinesList,
+  CombinedDisciplinesList,
+  DisciplinesProvider,
+} from '../contexts/DisciplinesContext';
+import Disciplines from '../components/Disciplines';
 
 const SheetContainer = styled.main`
   margin: auto;
@@ -133,6 +139,41 @@ export async function getStaticProps(_context) {
     health: [3, 3, 2, 2, 1, 0, 0, 0],
   };
 
+  const clanDisciplines = [
+    { title: 'Protéan', value: 6, key: 'grotean', isThaumaturgy: false },
+    { title: 'Endurance', value: 3, key: 'schtonk', isThaumaturgy: false },
+  ];
+
+  const outClanDisciplines = [
+    {
+      title: 'Thaumaturgie',
+      value: 2,
+      key: 'gromaturgie',
+      isThaumaturgy: true,
+      mainPathName: 'Voie du Sang',
+      paths: [{ title: 'Voie de Mercure', value: 1, key: 'rnd' }],
+      rituals: [
+        { title: 'Defense de havre sacré', value: 1, key: 'it protects' },
+      ],
+      ritualMulti: 1,
+    },
+    {
+      title: 'Thaumaturgie Sétite',
+      value: 1,
+      key: 'gromaturgie-set',
+      isThaumaturgy: true,
+      mainPathName: 'Voie de Ptah',
+      paths: [{ title: 'Voie de Thoth', value: 1, key: 'rnd-thot' }],
+      rituals: [{ title: 'Ecrire le nom de Set', value: 1, key: 'it write' }],
+      ritualMulti: 2,
+    },
+    { title: 'Auspex', value: 5, key: 'ISEETHINGS', isThaumaturgy: false },
+  ];
+
+  const combinedDisciplines = [
+    { title: 'Griffes de Fenrir', value: 21, key: 'graou' },
+  ];
+
   return {
     props: {
       attributes,
@@ -144,6 +185,9 @@ export async function getStaticProps(_context) {
       customKnowledges,
       infos,
       mind,
+      clanDisciplines,
+      outClanDisciplines,
+      combinedDisciplines,
     },
   };
 }
@@ -158,6 +202,9 @@ const Home = ({
   customKnowledges,
   infos,
   mind,
+  clanDisciplines,
+  outClanDisciplines,
+  combinedDisciplines,
 }: {
   attributes: AttributesType;
   talents: RawAbilitiesListType;
@@ -168,6 +215,9 @@ const Home = ({
   customKnowledges: RawAbilitiesListType;
   infos: InfosType;
   mind: MindType;
+  clanDisciplines: DisciplinesList;
+  outClanDisciplines: DisciplinesList;
+  combinedDisciplines: CombinedDisciplinesList;
 }) => (
   <InfosProvider infos={infos}>
     <AttributesProvider attributes={attributes}>
@@ -180,23 +230,30 @@ const Home = ({
           knowledges={knowledges}
           customKnowledges={customKnowledges}
         >
-          <SheetContainer>
-            <Head>
-              <title>
-                {infos.name ? `${infos.name} - ` : null}Feuille de Personnage
-              </title>
-              <link rel="icon" href="/favicon.ico" />
-            </Head>
+          <DisciplinesProvider
+            clanDisciplines={clanDisciplines}
+            outClanDisciplines={outClanDisciplines}
+            combinedDisciplines={combinedDisciplines}
+          >
+            <SheetContainer>
+              <Head>
+                <title>
+                  {infos.name ? `${infos.name} - ` : null}Feuille de Personnage
+                </title>
+                <link rel="icon" href="/favicon.ico" />
+              </Head>
 
-            <PageTitle>
-              <img src="/title.png" alt="Vampire Dark Age" />
-            </PageTitle>
+              <PageTitle>
+                <img src="/title.png" alt="Vampire Dark Age" />
+              </PageTitle>
 
-            <Infos />
-            <Attributes />
-            <Abilities />
-            <Mind />
-          </SheetContainer>
+              <Infos />
+              <Attributes />
+              <Abilities />
+              <Mind />
+              <Disciplines />
+            </SheetContainer>
+          </DisciplinesProvider>
         </AbilitiesProvider>
       </MindProvider>
     </AttributesProvider>

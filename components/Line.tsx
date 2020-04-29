@@ -68,6 +68,8 @@ const DotSeparator = styled.span`
 
 const CustomTitleContainer = styled.span`
   display: flex;
+  flex-grow: 1;
+  max-width: 70%;
   :hover,
   :focus {
     .remove-glyph {
@@ -85,7 +87,12 @@ const RemoveContainer = styled.span`
 `;
 const CustomTitle = styled.span`
   position: relative;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-width: 90%;
   input {
+    flex-grow: 1;
     text-indent: 1px;
   }
   @media screen and (max-width: 500px) {
@@ -136,6 +143,41 @@ const LineTitle = ({
   );
 };
 
+export const LineValue = ({
+  elem,
+  title,
+  maxValue,
+  diffPexCalc,
+  changeName,
+  remove,
+}: {
+  elem: TempElemType<number>;
+  name: string;
+  maxValue?: number;
+  title: string;
+  diffPexCalc: (from: number, to: number) => number;
+  changeName: (newValue: string) => void;
+  remove: () => void;
+}) => (
+  <div>
+    <ColumnLine>
+      <LineTitle custom changeName={changeName} title={title} remove={remove} />
+      <div>
+        <HandEditableText
+          size={3}
+          maxLength={3}
+          value={elem.value}
+          onChange={(e) => elem.set(Number(e.currentTarget.value))}
+          type="number"
+          max={maxValue}
+          className="small"
+        />
+        <BlackLine className="thin" />
+      </div>
+    </ColumnLine>
+  </div>
+);
+
 const Line = ({
   elem,
   title,
@@ -146,6 +188,7 @@ const Line = ({
   custom,
   changeName,
   remove,
+  interactive = true,
 }: {
   elem: TempElemType<number>;
   name: string;
@@ -156,6 +199,7 @@ const Line = ({
   custom?: boolean;
   changeName?: (newValue: string) => void;
   remove?: () => void;
+  interactive?: boolean;
 }) => {
   const onClickHandle = (val: number) => () => {
     elem.set(val);
@@ -179,6 +223,7 @@ const Line = ({
             baseValue={elem.baseValue === 10}
             hidden={maxLevel < 10}
             locked={minLevel > 10}
+            interactive={interactive}
             value={10}
             name={name}
           />
@@ -190,6 +235,7 @@ const Line = ({
             baseValue={elem.baseValue === 9}
             hidden={maxLevel < 9}
             locked={minLevel > 8}
+            interactive={interactive}
             value={9}
             name={name}
           />
@@ -201,6 +247,7 @@ const Line = ({
             baseValue={elem.baseValue === 8}
             hidden={maxLevel < 8}
             locked={minLevel > 7}
+            interactive={interactive}
             value={8}
             name={name}
           />
@@ -212,6 +259,7 @@ const Line = ({
             baseValue={elem.baseValue === 7}
             hidden={maxLevel < 7}
             locked={minLevel > 6}
+            interactive={interactive}
             value={7}
             name={name}
           />
@@ -223,6 +271,7 @@ const Line = ({
             baseValue={elem.baseValue === 6}
             hidden={maxLevel < 6}
             locked={minLevel > 5}
+            interactive={interactive}
             value={6}
             name={name}
           />
@@ -240,7 +289,9 @@ const Line = ({
             pexValue={diffPexCalc(elem.baseValue, 5)}
             selectedValue={elem.value === 5}
             baseValue={elem.baseValue === 5}
+            hidden={maxLevel < 5}
             locked={minLevel > 4}
+            interactive={interactive}
             value={5}
             name={name}
           />
@@ -250,7 +301,9 @@ const Line = ({
             pexValue={diffPexCalc(elem.baseValue, 4)}
             selectedValue={elem.value === 4}
             baseValue={elem.baseValue === 4}
+            hidden={maxLevel < 4}
             locked={minLevel > 3}
+            interactive={interactive}
             value={4}
             name={name}
           />
@@ -260,7 +313,9 @@ const Line = ({
             pexValue={diffPexCalc(elem.baseValue, 3)}
             selectedValue={elem.value === 3}
             baseValue={elem.baseValue === 3}
+            hidden={maxLevel < 3}
             locked={minLevel > 2}
+            interactive={interactive}
             value={3}
             name={name}
           />
@@ -270,7 +325,9 @@ const Line = ({
             pexValue={diffPexCalc(elem.baseValue, 2)}
             selectedValue={elem.value === 2}
             baseValue={elem.baseValue === 2}
+            hidden={maxLevel < 2}
             locked={minLevel > 1}
+            interactive={interactive}
             value={2}
             name={name}
           />
@@ -280,11 +337,13 @@ const Line = ({
             pexValue={diffPexCalc(elem.baseValue, 1)}
             selectedValue={elem.value === 1}
             baseValue={elem.baseValue === 1}
+            hidden={maxLevel < 1}
             locked={minLevel > 0}
+            interactive={interactive}
             value={1}
             name={name}
           />
-          {minLevel === 0 ? (
+          {minLevel === 0 && interactive ? (
             <EmptyGlyph
               selected={elem.value === 0}
               baseValue={elem.baseValue === 0}

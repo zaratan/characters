@@ -21,17 +21,31 @@ export const convertRawAbilitiesToAbilities = (
   tmpAbilities: RawAbilitiesListType,
   setter: (newAbilities: RawAbilitiesListType) => void
 ) =>
-  tmpAbilities.map((ability, i) => ({
-    ...ability,
-    set: (value: number) => {
-      setter(
-        tmpAbilities.map((a) =>
-          a.title === ability.title ? { ...a, value } : a
-        )
-      );
-    },
-    baseValue: (baseAbilities[i] && baseAbilities[i].value) || 0,
-  }));
+  tmpAbilities.map((ability) => {
+    const baseAbility = baseAbilities.find((abi) =>
+      ability.key === undefined
+        ? ability.title === abi.title
+        : abi.key === ability.key
+    );
+
+    return {
+      ...ability,
+      set: (value: number) => {
+        setter(
+          tmpAbilities.map((a) =>
+            (
+              ability.key === undefined
+                ? a.title === ability.title
+                : ability.key === a.key
+            )
+              ? { ...a, value }
+              : a
+          )
+        );
+      },
+      baseValue: (baseAbility && baseAbility.value) || 0,
+    };
+  });
 
 const generateAddNewCustomAbility: (
   customAbilities: RawAbilitiesListType,

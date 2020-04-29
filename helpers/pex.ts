@@ -38,3 +38,10 @@ export const calcPexDiffOutOfClanDiscipline = (from: number, to: number) =>
 
 export const calcPexDiffThaumaturgyPath = (from: number, to: number) =>
   calcPexThaumaturgyPath(to) - calcPexThaumaturgyPath(from);
+
+export const calcPexDiffThaumaturgyRitual = (
+  from: number,
+  to: number,
+  multi: number
+) =>
+  calcPexThaumaturgyRitual(to, multi) - calcPexThaumaturgyRitual(from, multi);

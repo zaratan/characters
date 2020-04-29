@@ -45,4 +45,7 @@ export const HandEditableText = styled.input`
   &.left-padded {
     padding-left: 2rem;
   }
+  &.small {
+    max-width: 5rem;
+  }
 `;

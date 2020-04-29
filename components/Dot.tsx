@@ -67,6 +67,29 @@ const DotContainer = styled.span`
     fill: black !important;
   }
 
+  &.disabled {
+    cursor: auto !important;
+    svg.full {
+      fill: black !important;
+    }
+    :focus {
+      outline: none;
+      svg {
+        ellipse {
+          stroke: black !important;
+          stroke-width: 2px !important;
+        }
+      }
+    }
+    cursor: auto !important;
+    svg.not-full {
+      fill: transparent !important;
+    }
+    small {
+      display: none !important;
+    }
+  }
+
   :hover,
   :focus {
     small {
@@ -149,6 +172,7 @@ const Dot = ({
   pexValue,
   locked,
   hidden,
+  interactive = true,
   onClick,
 }: {
   full?: boolean;
@@ -158,12 +182,14 @@ const Dot = ({
   baseValue: boolean;
   locked?: boolean;
   hidden?: boolean;
+  interactive?: boolean;
   pexValue?: number;
   onClick?: () => void;
 }) => {
   const containerClass = `
     ${selectedValue ? 'selected' : ''} 
     ${locked ? 'locked' : ''} 
+    ${interactive ? '' : 'disabled'} 
     ${baseValue ? 'base' : ''} 
     ${hidden ? 'hidden' : ''}
   `;
@@ -178,7 +204,7 @@ const Dot = ({
       onClick={handleClick}
       onKeyPress={handleKeyPress}
       role="radio"
-      tabIndex={selectedValue ? -1 : 0}
+      tabIndex={selectedValue || !interactive ? -1 : 0}
       aria-checked={full}
       aria-label={`${name} ${value}`}
     >
