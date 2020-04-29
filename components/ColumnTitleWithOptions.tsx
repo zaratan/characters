@@ -23,8 +23,10 @@ const OptionsContainer = styled.div<{ elemCount: number; actionCount: number }>`
     max-height: ${(props) =>
       `${props.elemCount * 24 + props.actionCount * 41 + 20}px`};
     opacity: 1;
+    /* animation: 0.5s slide-in; */
   }
   transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  /* animation: 0.5s slide-out; */
 `;
 const OptionsSeparator = styled.div`
   height: 20px;
@@ -91,7 +93,7 @@ const ColumnTitleWithOptions = ({
       >
         <ul>
           {options.map(({ name, value, onClick }) => (
-            <OptionItem>
+            <OptionItem key={`option-${name}`}>
               <span>{`${name}: ${value ? 'Oui' : 'Non'}`}</span>
               {value ? (
                 <Glyph
@@ -128,6 +130,7 @@ const ColumnTitleWithOptions = ({
                 onKeyPress={handleKeypress}
                 role="button"
                 tabIndex={0}
+                key={action.name}
               >
                 {action.name}
               </ActionItem>

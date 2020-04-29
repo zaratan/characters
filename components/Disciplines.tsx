@@ -5,11 +5,9 @@ import { StyledLine } from '../styles/Lines';
 import { HorizontalSection } from '../styles/Sections';
 import ColumnTitleWithOptions from './ColumnTitleWithOptions';
 import DisciplinesContext, {
-  ThaumaturgyType,
   TempThaumaturgyElemType,
 } from '../contexts/DisciplinesContext';
 import Line, { LineValue } from './Line';
-import Mind from './Mind';
 import {
   calcPexDiffThaumaturgyPath,
   calcPexDiffInClanDiscipline,
@@ -118,87 +116,82 @@ const Disciplines = () => {
         </div>
         {[...clanDisciplines, ...outClanDisciplines]
           .filter((disc) => disc.isThaumaturgy)
-          .map((thau: TempThaumaturgyElemType) => (
-            <>
-              <div>
-                <ColumnTitleWithOptions
-                  title={`Voies de ${thau.title}`}
-                  actions={[
-                    {
-                      name: 'Ajouter une nouvelle Voie',
-                      value: thau.addNewPath,
-                    },
-                  ]}
-                />
-                <ul>
-                  <li>
+          .map((thau: TempThaumaturgyElemType) => [
+            <div key={`${thau.key}-paths`}>
+              <ColumnTitleWithOptions
+                title={`Voies de ${thau.title}`}
+                actions={[
+                  {
+                    name: 'Ajouter une nouvelle Voie',
+                    value: thau.addNewPath,
+                  },
+                ]}
+              />
+              <ul>
+                <li>
+                  <Line
+                    elem={{
+                      value: thau.value,
+                      baseValue: thau.baseValue,
+                      // eslint-disable-next-line @typescript-eslint/no-empty-function
+                      set: () => {},
+                    }}
+                    maxLevel={5}
+                    name={thau.mainPathName}
+                    title={thau.mainPathName}
+                    diffPexCalc={() => 0}
+                    key={thau.key}
+                    interactive={false}
+                    changeName={thau.changeMainPathName}
+                    custom
+                  />
+                </li>
+                {thau.paths.map((path) => (
+                  <li key={path.key}>
                     <Line
-                      elem={{
-                        value: thau.value,
-                        baseValue: thau.baseValue,
-                        set: () => {},
-                      }}
-                      maxLevel={5}
-                      name={thau.mainPathName}
-                      title={thau.mainPathName}
-                      diffPexCalc={() => 0}
-                      key={thau.key}
-                      interactive={false}
-                      changeName={thau.changeMainPathName}
+                      elem={path}
+                      maxLevel={Math.min(thau.value, 5)}
+                      name={path.title}
+                      title={path.title}
+                      diffPexCalc={calcPexDiffThaumaturgyPath}
+                      key={path.key}
+                      changeName={path.setTitle}
                       custom
+                      remove={() => thau.removePath(path.key)}
                     />
                   </li>
-                  {thau.paths.map((path) => (
-                    <li key={path.key}>
-                      <Line
-                        elem={path}
-                        maxLevel={Math.min(thau.value, 5)}
-                        name={path.title}
-                        title={path.title}
-                        diffPexCalc={calcPexDiffThaumaturgyPath}
-                        key={path.key}
-                        changeName={path.setTitle}
-                        custom
-                        remove={() => thau.removePath(path.key)}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              <div>
-                <ColumnTitleWithOptions
-                  title={`Rituels de ${thau.title}`}
-                  actions={[
-                    {
-                      name: 'Ajouter une nouveau Rituel',
-                      value: thau.addNewRitual,
-                    },
-                  ]}
-                />
-                <ul>
-                  {thau.rituals.map((ritual) => (
-                    <li key={ritual.key}>
-                      <LineValue
-                        changeName={ritual.setTitle}
-                        diffPexCalc={(from: number, to: number) =>
-                          calcPexDiffThaumaturgyRitual(
-                            from,
-                            to,
-                            thau.ritualMulti
-                          )
-                        }
-                        elem={ritual}
-                        name={ritual.title}
-                        title={ritual.title}
-                        maxValue={thau.value}
-                        remove={() => thau.removeRitual(ritual.key)}
-                      />
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </>
-          ))}
+                ))}
+              </ul>
+            </div>,
+            <div key={`${thau.key}-rituals`}>
+              <ColumnTitleWithOptions
+                title={`Rituels de ${thau.title}`}
+                actions={[
+                  {
+                    name: 'Ajouter une nouveau Rituel',
+                    value: thau.addNewRitual,
+                  },
+                ]}
+              />
+              <ul>
+                {thau.rituals.map((ritual) => (
+                  <li key={ritual.key}>
+                    <LineValue
+                      changeName={ritual.setTitle}
+                      diffPexCalc={(from: number, to: number) =>
+                        calcPexDiffThaumaturgyRitual(from, to, thau.ritualMulti)
+                      }
+                      elem={ritual}
+                      name={ritual.title}
+                      title={ritual.title}
+                      maxValue={thau.value}
+                      remove={() => thau.removeRitual(ritual.key)}
+                    />
+                  </li>
+                ))}
+              </ul>
+            </div>,
+          ])}
       </HorizontalSection>
     </>
   );

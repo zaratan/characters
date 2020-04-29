@@ -65,27 +65,26 @@ const SquareLine = ({
         onClick={() => numberChecked.set(0)}
         inactive={numberChecked.value === 0}
       />
-      {Array.from(Array(number)).map((_, i) => (
-        <>
-          <Square
-            checked={i < numberChecked.value}
-            onClick={() => {
-              numberChecked.set(i + 1);
-            }}
-            name={`${type} ${i}`}
-            inactive={i + 1 === numberChecked.value}
-          />
-          {i % 5 === 4 && i !== number - 1 ? (
-            <SquareSeparator
-              className={`
+      {Array.from(Array(number)).map((_, i) => [
+        <Square
+          checked={i < numberChecked.value}
+          onClick={() => {
+            numberChecked.set(i + 1);
+          }}
+          name={`${type} ${i}`}
+          inactive={i + 1 === numberChecked.value}
+          key={`${type} ${i}`}
+        />,
+        i % 5 === 4 && i !== number - 1 ? (
+          <SquareSeparator
+            className={`
               ${i % 10 === 9 ? 'xs-invisible' : ''} 
               ${i % 15 === 14 ? 'xs-visible' : ''}
               `}
-              key={`type-${i}`}
-            />
-          ) : null}
-        </>
-      ))}
+            key={`type-${i}`}
+          />
+        ) : null,
+      ])}
     </SquareLineContainer>
   </Container>
 );

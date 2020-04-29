@@ -111,11 +111,13 @@ const LineTitle = ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   remove = () => {},
   title,
+  interactive = true,
 }: {
   custom?: boolean;
   changeName?: (newValue: string) => void;
   remove?: () => void;
   title?: string;
+  interactive?: boolean;
 }) => {
   if (title === undefined) return null;
   return custom ? (
@@ -126,11 +128,13 @@ const LineTitle = ({
           onChange={(e) => changeName(e.currentTarget.value)}
           placeholder="Nouveau Nom…"
         />
-        <RemoveContainer className="remove-glyph">
-          <Glyph onClick={remove} name={`Remove ${title}`}>
-            ✘
-          </Glyph>
-        </RemoveContainer>
+        {interactive ? (
+          <RemoveContainer className="remove-glyph">
+            <Glyph onClick={remove} name={`Remove ${title}`}>
+              ✘
+            </Glyph>
+          </RemoveContainer>
+        ) : null}
         <BlackLine className="thin" />
       </CustomTitle>
       <DotSeparator />
@@ -159,7 +163,7 @@ export const LineValue = ({
   changeName: (newValue: string) => void;
   remove: () => void;
 }) => (
-  <div>
+  <ul>
     <ColumnLine>
       <LineTitle custom changeName={changeName} title={title} remove={remove} />
       <div>
@@ -175,7 +179,7 @@ export const LineValue = ({
         <BlackLine className="thin" />
       </div>
     </ColumnLine>
-  </div>
+  </ul>
 );
 
 const Line = ({
@@ -213,6 +217,7 @@ const Line = ({
           changeName={changeName}
           title={title}
           remove={remove}
+          interactive={interactive}
         />
         <Value role="radiogroup" className={title || custom ? '' : 'only-dots'}>
           <Dot

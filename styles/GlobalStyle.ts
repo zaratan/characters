@@ -98,14 +98,24 @@ select {
 
 @keyframes slide-in {
   0% {
-    opacity: 0;
-    width: 0;
+    display: none;
   }
-  20% {
-    opacity: 1;
+  1% {
+    display: inherit;
   }
   100% {
-    width: inherit;
+    display: inherit;
+  }
+}
+@keyframes slide-out {
+  0% {
+    display: inherit;
+  }
+  99% {
+    display: inherit;
+  }
+  100% {
+    display: none;
   }
 }
 `;
