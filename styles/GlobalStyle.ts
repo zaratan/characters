@@ -97,7 +97,6 @@ a {
   }
 }
 
-
 @keyframes fill-stroke {
   0% {
     stroke-dashoffset: 1000;

@@ -73,23 +73,27 @@ const CustomTitleContainer = styled.span`
   :hover,
   :focus {
     .remove-glyph {
-      display: inherit;
+      visibility: visible;
     }
   }
   @media screen and (max-width: 500px) {
     width: 100%;
     .remove-glyph {
-      display: inherit;
+      visibility: visible;
     }
   }
 `;
 
 const RemoveContainer = styled.span`
-  display: none;
+  visibility: hidden;
   position: absolute;
   right: 0;
   top: 4px;
   z-index: 1;
+  transition: visibility 0.3s ease-in-out;
+  :focus {
+    visibility: visible;
+  }
 `;
 const CustomTitle = styled.span`
   position: relative;
@@ -100,6 +104,11 @@ const CustomTitle = styled.span`
   input {
     flex-grow: 1;
     text-indent: 1px;
+  }
+  :focus-within {
+    .remove-glyph {
+      visibility: visible;
+    }
   }
   @media screen and (max-width: 500px) {
     input {
@@ -130,12 +139,14 @@ const LineTitle = ({
   remove = () => {},
   title,
   interactive = true,
+  placeholder,
 }: {
   custom?: boolean;
   changeName?: (newValue: string) => void;
   remove?: () => void;
   title?: string;
   interactive?: boolean;
+  placeholder?: string;
 }) => {
   if (title === undefined) return null;
   return custom ? (
@@ -144,7 +155,7 @@ const LineTitle = ({
         <HandEditableText
           value={title}
           onChange={(e) => changeName(e.currentTarget.value)}
-          placeholder="Nouveau Nom…"
+          placeholder={placeholder || 'Nouveau Nom…'}
         />
         {interactive ? (
           <RemoveContainer className="remove-glyph">
@@ -172,6 +183,8 @@ export const LineValue = ({
   diffPexCalc,
   changeName,
   remove,
+  placeholderName,
+  placeholderSub,
 }: {
   elem: TempElemType<number>;
   name: string;
@@ -180,10 +193,18 @@ export const LineValue = ({
   diffPexCalc: (from: number, to: number) => number;
   changeName: (newValue: string) => void;
   remove: () => void;
+  placeholderName?: string;
+  placeholderSub?: string;
 }) => (
   <ul>
     <ColumnLine>
-      <LineTitle custom changeName={changeName} title={title} remove={remove} />
+      <LineTitle
+        custom
+        changeName={changeName}
+        title={title}
+        remove={remove}
+        placeholder={placeholderName || 'Nouveau nom…'}
+      />
       <div style={{ position: 'relative' }}>
         <HandEditableText
           size={3}
@@ -194,6 +215,7 @@ export const LineValue = ({
           max={maxValue}
           min={0}
           className="small"
+          placeholder={placeholderSub || 'XP'}
         />
         <BlackLine className="thin" />
         {elem.baseValue !== elem.value ? (
@@ -215,6 +237,7 @@ const Line = ({
   changeName,
   remove,
   interactive = true,
+  placeholder,
 }: {
   elem: TempElemType<number>;
   name: string;
@@ -226,6 +249,7 @@ const Line = ({
   changeName?: (newValue: string) => void;
   remove?: () => void;
   interactive?: boolean;
+  placeholder?: string;
 }) => {
   const onClickHandle = (val: number) => () => {
     elem.set(val);
@@ -240,6 +264,7 @@ const Line = ({
           title={title}
           remove={remove}
           interactive={interactive}
+          placeholder={placeholder}
         />
         <Value role="radiogroup" className={title || custom ? '' : 'only-dots'}>
           <Dot

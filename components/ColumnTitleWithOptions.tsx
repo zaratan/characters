@@ -26,7 +26,7 @@ const OptionsContainer = styled.div<{ elemCount: number; actionCount: number }>`
     opacity: 1;
     visibility: visible;
   }
-  transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
+  transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out;
 `;
 const OptionsSeparator = styled.div`
   height: 20px;

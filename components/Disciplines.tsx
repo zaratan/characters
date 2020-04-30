@@ -55,6 +55,7 @@ const Disciplines = () => {
                   changeName={discipline.setTitle}
                   custom
                   remove={() => removeClanDiscipline(discipline.key)}
+                  placeholder="Nom de la discipline"
                 />
               </li>
             ))}
@@ -82,6 +83,7 @@ const Disciplines = () => {
                   changeName={discipline.setTitle}
                   custom
                   remove={() => removeOutClanDiscipline(discipline.key)}
+                  placeholder="Nom de la discipline"
                 />
               </li>
             ))}
@@ -109,6 +111,7 @@ const Disciplines = () => {
                     removeCombinedDiscipline(combinedDiscipline.key)
                   }
                   title={combinedDiscipline.title}
+                  placeholderName="Nom de la discipline"
                 />
               </li>
             ))}
@@ -158,6 +161,7 @@ const Disciplines = () => {
                       changeName={path.setTitle}
                       custom
                       remove={() => thau.removePath(path.key)}
+                      placeholder="Nom de la voie"
                     />
                   </li>
                 ))}
@@ -186,6 +190,8 @@ const Disciplines = () => {
                       title={ritual.title}
                       maxValue={thau.value}
                       remove={() => thau.removeRitual(ritual.key)}
+                      placeholderSub="Niv."
+                      placeholderName="Nom du Rituel"
                     />
                   </li>
                 ))}
