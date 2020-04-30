@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import styled from 'styled-components';
 import { StyledLine } from '../styles/Lines';
 import { AbilityLine } from './Line';
 import { HorizontalSection } from '../styles/Sections';
@@ -8,6 +9,30 @@ import AbilitiesContext, {
   AbilitiesListType,
 } from '../contexts/AbilitiesContext';
 import InfosContext from '../contexts/InfosContext';
+
+const Container = styled.div`
+  .col-button {
+    font-size: 1.5rem;
+  }
+  @media screen and (any-hover: hover) {
+    .empty-glyph,
+    .open-glyph,
+    .remove-glyph,
+    .col-button {
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    :hover,
+    :focus-within {
+      .empty-glyph,
+      .open-glyph,
+      .remove-glyph,
+      .col-button {
+        opacity: 1;
+      }
+    }
+  }
+`;
 
 const AbilitiesColumn = ({
   abilities,
@@ -26,18 +51,10 @@ const AbilitiesColumn = ({
   removeCustomAbility: (key: string) => () => void;
   changeCustomAbilityTitle: (key: string) => (newTitle: string) => void;
 }) => (
-  <div>
+  <Container>
     <ColumnTitleWithOptions
       title={title}
-      actions={[
-        {
-          name: `Ajouter ${title.match(/alent/) ? 'un' : 'une'} ${title.slice(
-            0,
-            -1
-          )}`,
-          value: addNewCustomAbility,
-        },
-      ]}
+      button={{ glyph: '+', value: addNewCustomAbility }}
     />
     {abilities.map((ability) => (
       <AbilityLine
@@ -58,7 +75,7 @@ const AbilitiesColumn = ({
         remove={removeCustomAbility(ability.key)}
       />
     ))}
-  </div>
+  </Container>
 );
 
 const Abilities = () => {

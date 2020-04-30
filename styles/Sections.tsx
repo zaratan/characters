@@ -14,4 +14,17 @@ export const HorizontalSection = styled.div<{ count?: number }>`
   @media screen and (max-width: 859px) {
     grid-template-columns: auto;
   }
+
+  @media screen and (any-hover: hover) {
+    .open-col-glyph {
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    :hover,
+    :focus-within {
+      .open-col-glyph {
+        opacity: 1;
+      }
+    }
+  }
 `;

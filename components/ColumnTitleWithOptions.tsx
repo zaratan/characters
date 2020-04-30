@@ -66,10 +66,12 @@ const ColumnTitleWithOptions = ({
   title,
   options = [],
   actions = [],
+  button,
 }: {
   title: string;
   options?: Array<{ name: string; value: boolean; onClick: () => void }>;
   actions?: Array<{ name: string; value: () => void }>;
+  button?: { glyph: string; value: () => void };
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -77,14 +79,25 @@ const ColumnTitleWithOptions = ({
       <ColumnTitle>
         {title}
         <GlyphContainer>
-          <Glyph
-            onClick={() => {
-              setOpen(!open);
-            }}
-            name={`${open ? 'Close' : 'Open'} ${title}`}
-          >
-            {open ? '▼' : '▶'}
-          </Glyph>
+          {button ? (
+            <Glyph
+              onClick={button.value}
+              name={`Add a new ${title}`}
+              className="col-button"
+            >
+              {button.glyph}
+            </Glyph>
+          ) : (
+            <Glyph
+              onClick={() => {
+                setOpen(!open);
+              }}
+              name={`${open ? 'Close' : 'Open'} ${title}`}
+              className="open-col-glyph"
+            >
+              {open ? '▼' : '▶'}
+            </Glyph>
+          )}
         </GlyphContainer>
       </ColumnTitle>
       <OptionsContainer

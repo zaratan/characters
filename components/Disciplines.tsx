@@ -1,4 +1,5 @@
 import React, { useContext } from 'react';
+import styled from 'styled-components';
 import { maxDot } from '../helpers/maxLevels';
 import InfosContext from '../contexts/InfosContext';
 import { StyledLine } from '../styles/Lines';
@@ -14,6 +15,30 @@ import {
   calcPexDiffOutOfClanDiscipline,
   calcPexDiffThaumaturgyRitual,
 } from '../helpers/pex';
+
+const Container = styled.div`
+  .col-button {
+    font-size: 1.5rem;
+  }
+  @media screen and (any-hover: hover) {
+    .empty-glyph,
+    .open-glyph,
+    .remove-glyph,
+    .col-button {
+      opacity: 0;
+      transition: opacity 0.2s ease-in-out;
+    }
+    :hover,
+    :focus-within {
+      .empty-glyph,
+      .open-glyph,
+      .remove-glyph,
+      .col-button {
+        opacity: 1;
+      }
+    }
+  }
+`;
 
 const Disciplines = () => {
   const { generation } = useContext(InfosContext);
@@ -33,15 +58,10 @@ const Disciplines = () => {
     <>
       <StyledLine title="Disciplines" />
       <HorizontalSection>
-        <div>
+        <Container>
           <ColumnTitleWithOptions
             title="Clan"
-            actions={[
-              {
-                name: 'Ajouter une discipline de clan',
-                value: addNewClanDiscipline,
-              },
-            ]}
+            button={{ glyph: '+', value: addNewClanDiscipline }}
           />
           <ul>
             {clanDisciplines.map((discipline) => (
@@ -60,16 +80,11 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </div>
-        <div>
+        </Container>
+        <Container>
           <ColumnTitleWithOptions
             title="Hors Clan"
-            actions={[
-              {
-                name: 'Ajouter une discipline hors clan',
-                value: addNewOutClanDiscipline,
-              },
-            ]}
+            button={{ glyph: '+', value: addNewOutClanDiscipline }}
           />
           <ul>
             {outClanDisciplines.map((discipline) => (
@@ -88,16 +103,11 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </div>
-        <div>
+        </Container>
+        <Container>
           <ColumnTitleWithOptions
             title="Disciplines Combinées"
-            actions={[
-              {
-                name: 'Ajouter une discipline combinée',
-                value: addNewCombinedDiscipline,
-              },
-            ]}
+            button={{ glyph: '+', value: addNewCombinedDiscipline }}
           />
           <ul>
             {combinedDisciplines.map((combinedDiscipline) => (
@@ -116,19 +126,14 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </div>
+        </Container>
         {[...clanDisciplines, ...outClanDisciplines]
           .filter((disc) => disc.isThaumaturgy)
           .map((thau: TempThaumaturgyElemType) => [
-            <div key={`${thau.key}-paths`}>
+            <Container key={`${thau.key}-paths`}>
               <ColumnTitleWithOptions
                 title={`Voies de ${thau.title}`}
-                actions={[
-                  {
-                    name: 'Ajouter une nouvelle Voie',
-                    value: thau.addNewPath,
-                  },
-                ]}
+                button={{ glyph: '+', value: thau.addNewPath }}
               />
               <ul>
                 <li>
@@ -166,16 +171,11 @@ const Disciplines = () => {
                   </li>
                 ))}
               </ul>
-            </div>,
-            <div key={`${thau.key}-rituals`}>
+            </Container>,
+            <Container key={`${thau.key}-rituals`}>
               <ColumnTitleWithOptions
                 title={`Rituels de ${thau.title}`}
-                actions={[
-                  {
-                    name: 'Ajouter une nouveau Rituel',
-                    value: thau.addNewRitual,
-                  },
-                ]}
+                button={{ glyph: '+', value: thau.addNewRitual }}
               />
               <ul>
                 {thau.rituals.map((ritual) => (
@@ -196,7 +196,7 @@ const Disciplines = () => {
                   </li>
                 ))}
               </ul>
-            </div>,
+            </Container>,
           ])}
       </HorizontalSection>
     </>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from './Dot';
@@ -11,20 +11,11 @@ import { TempElemType } from '../types/TempElemType';
 
 const ColumnLine = styled.li`
   display: flex;
+  position: relative;
   justify-content: space-between;
   @media screen and (max-width: 500px) {
     flex-direction: column;
     align-items: center;
-  }
-  .empty-glyph {
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
-  :hover,
-  :focus-within {
-    .empty-glyph {
-      opacity: 1;
-    }
   }
 `;
 
@@ -80,30 +71,17 @@ const CustomTitleContainer = styled.span`
   display: flex;
   flex-grow: 1;
   max-width: 70%;
-  :hover,
-  :focus {
-    .remove-glyph {
-      visibility: visible;
-    }
-  }
   @media screen and (max-width: 500px) {
     width: 100%;
-    .remove-glyph {
-      visibility: visible;
-    }
   }
 `;
 
 const RemoveContainer = styled.span`
-  visibility: hidden;
   position: absolute;
   right: 0;
   top: 4px;
   z-index: 1;
   transition: visibility 0.3s ease-in-out;
-  :focus {
-    visibility: visible;
-  }
 `;
 const CustomTitle = styled.span`
   position: relative;
@@ -114,11 +92,6 @@ const CustomTitle = styled.span`
   input {
     flex-grow: 1;
     text-indent: 1px;
-  }
-  :focus-within {
-    .remove-glyph {
-      visibility: visible;
-    }
   }
   @media screen and (max-width: 500px) {
     input {
@@ -139,6 +112,16 @@ const TextHelper = styled.small`
   justify-content: center;
   align-items: center;
   top: 0;
+`;
+
+const OpenGlyphContainer = styled.span`
+  position: absolute;
+  right: -1.3rem;
+  top: 0.5rem;
+  span {
+    font-size: 1rem;
+    color: #555;
+  }
 `;
 
 const LineTitle = ({
@@ -248,6 +231,7 @@ const Line = ({
   remove,
   interactive = true,
   placeholder,
+  openable,
 }: {
   elem: TempElemType<number>;
   name: string;
@@ -260,10 +244,12 @@ const Line = ({
   remove?: () => void;
   interactive?: boolean;
   placeholder?: string;
+  openable?: boolean;
 }) => {
   const onClickHandle = (val: number) => () => {
     elem.set(val);
   };
+  const [open, setOpen] = useState(false);
 
   return (
     <ul>
@@ -415,6 +401,18 @@ const Line = ({
             />
           ) : null}
         </Value>
+        {openable ? (
+          <OpenGlyphContainer className="open-glyph">
+            <Glyph
+              name={`${open ? 'Close' : 'Open'} ${title}`}
+              onClick={() => {
+                setOpen(!open);
+              }}
+            >
+              {open ? '▼' : '▶'}
+            </Glyph>
+          </OpenGlyphContainer>
+        ) : null}
       </ColumnLine>
     </ul>
   );
