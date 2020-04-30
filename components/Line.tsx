@@ -170,7 +170,7 @@ export const LineValue = ({
         <HandEditableText
           size={3}
           maxLength={3}
-          value={elem.value}
+          value={elem.value === 0 ? '' : elem.value}
           onChange={(e) => elem.set(Number(e.currentTarget.value))}
           type="number"
           max={maxValue}

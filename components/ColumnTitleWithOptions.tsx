@@ -19,14 +19,14 @@ const GlyphContainer = styled.span`
 const OptionsContainer = styled.div<{ elemCount: number; actionCount: number }>`
   max-height: 0;
   opacity: 0;
+  visibility: hidden;
   &.opened {
     max-height: ${(props) =>
       `${props.elemCount * 24 + props.actionCount * 41 + 20}px`};
     opacity: 1;
-    /* animation: 0.5s slide-in; */
+    visibility: visible;
   }
   transition: max-height 0.5s ease-in-out, opacity 0.5s ease-in-out;
-  /* animation: 0.5s slide-out; */
 `;
 const OptionsSeparator = styled.div`
   height: 20px;

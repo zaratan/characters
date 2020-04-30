@@ -103,7 +103,7 @@ const Infos = () => {
             type="number"
             max={15}
             min={3}
-            value={generation.value}
+            value={generation.value === 0 ? '' : generation.value}
             onChange={handleChangeGeneration}
           />
         </InfoContainer>

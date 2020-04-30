@@ -53,6 +53,11 @@ ol {
   list-style: none;
 }
 
+/* A elements that don't have a class get default styles */
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
 /* Make images easier to work with */
 img {
   max-width: 100%;
@@ -82,6 +87,17 @@ select {
   }
 }
 
+a {
+  text-decoration: none;
+  color: black;
+  transition: color 0.2s ease-in-out;
+
+  :hover {
+    color: darkcyan;
+  }
+}
+
+
 @keyframes fill-stroke {
   0% {
     stroke-dashoffset: 1000;
@@ -93,29 +109,6 @@ select {
   
   100% {
     stroke-dashoffset: 0;
-  }
-}
-
-@keyframes slide-in {
-  0% {
-    display: none;
-  }
-  1% {
-    display: inherit;
-  }
-  100% {
-    display: inherit;
-  }
-}
-@keyframes slide-out {
-  0% {
-    display: inherit;
-  }
-  99% {
-    display: inherit;
-  }
-  100% {
-    display: none;
   }
 }
 `;

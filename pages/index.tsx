@@ -20,6 +20,7 @@ import {
   DisciplinesProvider,
 } from '../contexts/DisciplinesContext';
 import Disciplines from '../components/Disciplines';
+import Footer from '../components/Footer';
 
 const SheetContainer = styled.main`
   margin: auto;
@@ -253,6 +254,7 @@ const Home = ({
               <Mind />
               <Disciplines />
             </SheetContainer>
+            <Footer />
           </DisciplinesProvider>
         </AbilitiesProvider>
       </MindProvider>
