@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Square, { EmptyGlyph } from './Square';
 import { TempElemType } from '../types/TempElemType';
