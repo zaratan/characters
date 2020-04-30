@@ -76,6 +76,12 @@ const CustomTitleContainer = styled.span`
       display: inherit;
     }
   }
+  @media screen and (max-width: 500px) {
+    width: 100%;
+    .remove-glyph {
+      display: inherit;
+    }
+  }
 `;
 
 const RemoveContainer = styled.span`
@@ -101,7 +107,19 @@ const CustomTitle = styled.span`
       padding: 0;
       text-indent: 0;
     }
+    margin: 0 auto;
   }
+`;
+
+const TextHelper = styled.small`
+  position: absolute;
+  right: -1.3rem;
+  color: red;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
 `;
 
 const LineTitle = ({
@@ -166,7 +184,7 @@ export const LineValue = ({
   <ul>
     <ColumnLine>
       <LineTitle custom changeName={changeName} title={title} remove={remove} />
-      <div>
+      <div style={{ position: 'relative' }}>
         <HandEditableText
           size={3}
           maxLength={3}
@@ -174,9 +192,13 @@ export const LineValue = ({
           onChange={(e) => elem.set(Number(e.currentTarget.value))}
           type="number"
           max={maxValue}
+          min={0}
           className="small"
         />
         <BlackLine className="thin" />
+        {elem.baseValue !== elem.value ? (
+          <TextHelper>{diffPexCalc(elem.baseValue, elem.value)}</TextHelper>
+        ) : null}
       </div>
     </ColumnLine>
   </ul>

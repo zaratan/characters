@@ -39,7 +39,7 @@ export const HandEditableText = styled.input`
     outline: none;
   }
   @media screen and (max-width: 500px) {
-    padding-left: 2rem;
+    text-align: center;
     width: 100%;
   }
   &.left-padded {
