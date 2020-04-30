@@ -149,7 +149,7 @@ export const EmptyGlyph = ({
   onClick: () => void;
   name: string;
 }) => {
-  const containerClass = `
+  const containerClass = `empty-glyph
     ${selected ? 'selected' : ''} 
     ${baseValue ? 'base' : ''} 
   `;

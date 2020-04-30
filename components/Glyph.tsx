@@ -40,12 +40,14 @@ export const Glyph = ({
   absolutePosition,
   name,
   children,
+  className,
 }: {
   onClick: () => void;
   inactive?: boolean;
   absolutePosition?: boolean;
   name: string;
   children: ReactNode;
+  className?: string;
 }) => {
   const handleClick = generateHandleClick(onClick);
   const handleKeypress = generateHandleKeypress(onClick);
@@ -57,7 +59,7 @@ export const Glyph = ({
       onKeyPress={handleKeypress}
       role="button"
       tabIndex={inactive ? -1 : 0}
-      className={`${inactive ? 'inactive' : ''} ${
+      className={`${className || ''} ${inactive ? 'inactive' : ''} ${
         absolutePosition ? 'absolute-position' : ''
       }`}
     >

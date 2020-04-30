@@ -16,6 +16,16 @@ const ColumnLine = styled.li`
     flex-direction: column;
     align-items: center;
   }
+  .empty-glyph {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  :hover,
+  :focus-within {
+    .empty-glyph {
+      opacity: 1;
+    }
+  }
 `;
 
 const Value = styled.span`

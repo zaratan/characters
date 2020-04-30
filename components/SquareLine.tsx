@@ -43,6 +43,16 @@ const SquareLineContainer = styled.div`
     display: flex;
     justify-content: center;
   }
+  .empty-glyph {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  :hover,
+  :focus-within {
+    .empty-glyph {
+      opacity: 1;
+    }
+  }
 `;
 
 const Container = styled.div`

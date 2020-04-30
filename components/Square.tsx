@@ -84,6 +84,7 @@ export const EmptyGlyph = ({
     onClick={onClick}
     inactive={inactive}
     absolutePosition
+    className="empty-glyph"
   >
     ø
   </Glyph>
