@@ -18,6 +18,7 @@ const Container = styled.div`
     .empty-glyph,
     .line-button,
     .remove-glyph,
+    .remove-spec-button,
     .col-button {
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
@@ -27,6 +28,7 @@ const Container = styled.div`
       .empty-glyph,
       .line-button,
       .remove-glyph,
+      .remove-spec-button,
       .col-button {
         opacity: 1;
       }

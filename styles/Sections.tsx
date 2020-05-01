@@ -7,6 +7,10 @@ export const HorizontalSection = styled.div<{ count?: number }>`
   grid-auto-rows: auto;
   grid-row-gap: 2rem;
 
+  &.compact {
+    grid-row-gap: 0;
+  }
+
   @media screen and (max-width: 1304px) {
     grid-template-columns: repeat(min(${(props) => props.count || 2}, 2), auto);
   }

@@ -41,7 +41,7 @@ const Infos = () => {
     <>
       <EmptyLine />
 
-      <HorizontalSection>
+      <HorizontalSection className="compact">
         <InfoContainer>
           <Title>Nom:</Title>
           <Separator />
