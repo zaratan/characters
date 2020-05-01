@@ -114,13 +114,26 @@ const TextHelper = styled.small`
   top: 0;
 `;
 
-const OpenGlyphContainer = styled.span`
+const ButtonGlyphContainer = styled.span`
   position: absolute;
-  right: -1.3rem;
+  right: -1.5rem;
   top: 0.5rem;
   span {
     font-size: 1rem;
     color: #555;
+    font-family: CloisterBlack;
+  }
+  &.active span {
+    color: green;
+  }
+  @media screen and (max-width: 500px) {
+    right: 3rem;
+  }
+  @media screen and (max-width: 410px) {
+    right: 2rem;
+  }
+  @media screen and (max-width: 310px) {
+    right: 1rem;
   }
 `;
 
@@ -231,7 +244,7 @@ const Line = ({
   remove,
   interactive = true,
   placeholder,
-  openable,
+  lineAction,
 }: {
   elem: TempElemType<number>;
   name: string;
@@ -244,12 +257,11 @@ const Line = ({
   remove?: () => void;
   interactive?: boolean;
   placeholder?: string;
-  openable?: boolean;
+  lineAction?: { glyph: string; value: () => void; active?: boolean };
 }) => {
   const onClickHandle = (val: number) => () => {
     elem.set(val);
   };
-  const [open, setOpen] = useState(false);
 
   return (
     <ul>
@@ -401,17 +413,14 @@ const Line = ({
             />
           ) : null}
         </Value>
-        {openable ? (
-          <OpenGlyphContainer className="open-glyph">
-            <Glyph
-              name={`${open ? 'Close' : 'Open'} ${title}`}
-              onClick={() => {
-                setOpen(!open);
-              }}
-            >
-              {open ? '▼' : '▶'}
+        {lineAction ? (
+          <ButtonGlyphContainer
+            className={`line-button ${lineAction.active ? 'active' : ''}`}
+          >
+            <Glyph name={`Action ${title}`} onClick={lineAction.value}>
+              {lineAction.glyph}
             </Glyph>
-          </OpenGlyphContainer>
+          </ButtonGlyphContainer>
         ) : null}
       </ColumnLine>
     </ul>

@@ -15,6 +15,7 @@ const GlyphContainer = styled.span`
   position: absolute;
   right: -1.5rem;
   top: 0;
+  height: 100%;
 `;
 
 const OptionsContainer = styled.div<{ elemCount: number; actionCount: number }>`

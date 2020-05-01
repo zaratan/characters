@@ -16,7 +16,7 @@ const Container = styled.div`
   }
   @media screen and (any-hover: hover) {
     .empty-glyph,
-    .open-glyph,
+    .line-button,
     .remove-glyph,
     .col-button {
       opacity: 0;
@@ -25,7 +25,7 @@ const Container = styled.div`
     :hover,
     :focus-within {
       .empty-glyph,
-      .open-glyph,
+      .line-button,
       .remove-glyph,
       .col-button {
         opacity: 1;

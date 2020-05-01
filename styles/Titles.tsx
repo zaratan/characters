@@ -12,6 +12,9 @@ export const ColumnTitle = styled(Title)`
   position: relative;
   margin: 0 auto;
   width: fit-content;
+  @media screen and (max-width: 500px) {
+    max-width: 70%;
+  }
 `;
 
 export const SubTitle = styled.h2`

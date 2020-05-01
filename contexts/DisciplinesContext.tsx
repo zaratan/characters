@@ -148,7 +148,7 @@ const convertDisciplineToElem: (
                 paths: disc.paths || [],
                 ritualMulti: disc.ritualMulti || 1,
                 rituals: disc.rituals || [],
-                mainPathName: '',
+                mainPathName: disc.mainPathName || '',
               }
             : disc
         )

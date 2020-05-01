@@ -19,10 +19,14 @@ import {
 const Container = styled.div`
   .col-button {
     font-size: 1.5rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
   @media screen and (any-hover: hover) {
     .empty-glyph,
     .open-glyph,
+    .line-button,
     .remove-glyph,
     .col-button {
       opacity: 0;
@@ -32,6 +36,7 @@ const Container = styled.div`
     :focus-within {
       .empty-glyph,
       .open-glyph,
+      .line-button,
       .remove-glyph,
       .col-button {
         opacity: 1;
@@ -76,6 +81,11 @@ const Disciplines = () => {
                   custom
                   remove={() => removeClanDiscipline(discipline.key)}
                   placeholder="Nom de la discipline"
+                  lineAction={{
+                    glyph: 'Th',
+                    value: discipline.toggleThaumaturgy,
+                    active: discipline.isThaumaturgy,
+                  }}
                 />
               </li>
             ))}
@@ -99,6 +109,11 @@ const Disciplines = () => {
                   custom
                   remove={() => removeOutClanDiscipline(discipline.key)}
                   placeholder="Nom de la discipline"
+                  lineAction={{
+                    glyph: 'Th',
+                    value: discipline.toggleThaumaturgy,
+                    active: discipline.isThaumaturgy,
+                  }}
                 />
               </li>
             ))}
