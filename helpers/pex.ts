@@ -1,3 +1,5 @@
+import { maxBlood } from './maxLevels';
+
 export const calcPexAttribute = (value: number) => value * (value - 1) * 2;
 export const calcPexAbility = (value: number) =>
   value === 0 ? 0 : value * (value - 1) + 3;
@@ -45,3 +47,8 @@ export const calcPexDiffThaumaturgyRitual = (
   multi: number
 ) =>
   calcPexThaumaturgyRitual(to, multi) - calcPexThaumaturgyRitual(from, multi);
+
+export const calcPexSpecialty = (value: number) => (Math.max(1, value) - 1) * 2;
+
+export const calcPexDiffSpecialty = (from: number, to: number) =>
+  (Math.max(1, to) - Math.max(1, from)) * 2;

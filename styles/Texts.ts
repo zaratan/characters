@@ -32,9 +32,14 @@ export const HandEditableText = styled.input`
   font-size: 1.5rem;
   color: #333;
   border: none;
+  border-bottom: 1px solid black;
   flex-shrink: 1;
   flex-grow: 1;
   min-width: 70px;
+  text-indent: 1px;
+  &.low {
+    font-size: 1.2rem;
+  }
   :focus {
     outline: none;
   }

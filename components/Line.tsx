@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from './Dot';
-import { calcPexDiffAttribute, calcPexDiffAbility } from '../helpers/pex';
+import {
+  calcPexDiffAttribute,
+  calcPexDiffAbility,
+  calcPexDiffSpecialty,
+} from '../helpers/pex';
 import { SubTitle } from '../styles/Titles';
 import { HandEditableText } from '../styles/Texts';
-import { BlackLine } from '../styles/Lines';
 import { Glyph } from './Glyph';
 import { TempElemType } from '../types/TempElemType';
 
@@ -112,12 +115,16 @@ const TextHelper = styled.small`
   justify-content: center;
   align-items: center;
   top: 0;
+  &.closer {
+    right: -0.5rem;
+  }
 `;
 
 const ButtonGlyphContainer = styled.span`
   position: absolute;
   right: -1.5rem;
   top: 0.5rem;
+  z-index: 1;
   span {
     font-size: 1rem;
     color: #555;
@@ -127,13 +134,19 @@ const ButtonGlyphContainer = styled.span`
     color: green;
   }
   @media screen and (max-width: 500px) {
-    right: 3rem;
+    :not(.no-reposition) {
+      right: 3rem;
+    }
   }
   @media screen and (max-width: 410px) {
-    right: 2rem;
+    :not(.no-reposition) {
+      right: 2rem;
+    }
   }
   @media screen and (max-width: 310px) {
-    right: 1rem;
+    :not(.no-reposition) {
+      right: 1rem;
+    }
   }
 `;
 
@@ -170,7 +183,6 @@ const LineTitle = ({
             </Glyph>
           </RemoveContainer>
         ) : null}
-        <BlackLine className="thin" />
       </CustomTitle>
       <DotSeparator />
     </CustomTitleContainer>
@@ -223,7 +235,6 @@ export const LineValue = ({
           className="small"
           placeholder={placeholderSub || 'XP'}
         />
-        <BlackLine className="thin" />
         {elem.baseValue !== elem.value ? (
           <TextHelper>{diffPexCalc(elem.baseValue, elem.value)}</TextHelper>
         ) : null}
@@ -245,6 +256,8 @@ const Line = ({
   interactive = true,
   placeholder,
   lineAction,
+  children,
+  endNumber,
 }: {
   elem: TempElemType<number>;
   name: string;
@@ -258,6 +271,8 @@ const Line = ({
   interactive?: boolean;
   placeholder?: string;
   lineAction?: { glyph: string; value: () => void; active?: boolean };
+  children?: ReactNode;
+  endNumber?: number;
 }) => {
   const onClickHandle = (val: number) => () => {
     elem.set(val);
@@ -413,6 +428,9 @@ const Line = ({
             />
           ) : null}
         </Value>
+        {endNumber !== undefined && (
+          <TextHelper className="closer">{endNumber}</TextHelper>
+        )}
         {lineAction ? (
           <ButtonGlyphContainer
             className={`line-button ${lineAction.active ? 'active' : ''}`}
@@ -423,6 +441,7 @@ const Line = ({
           </ButtonGlyphContainer>
         ) : null}
       </ColumnLine>
+      {children}
     </ul>
   );
 };
@@ -446,6 +465,21 @@ export const AttributeLine = ({
   />
 );
 
+const SpecialtyContainer = styled.li`
+  width: 80%;
+  display: flex;
+  position: relative;
+  @media screen and (max-width: 500px) {
+    margin: auto;
+  }
+`;
+
+const SpecialtiesContainer = styled.ul`
+  display: grid;
+  position: relative;
+  grid-template-columns: repeat(3, 1fr);
+`;
+
 export const AbilityLine = ({
   elem,
   title,
@@ -453,6 +487,11 @@ export const AbilityLine = ({
   custom,
   changeTitle,
   remove,
+  lineAction,
+  baseSpecialtyCount,
+  specialties,
+  removeSpecialty,
+  changeSpecialtyTitle,
 }: {
   elem: TempElemType<number>;
   title: string;
@@ -460,6 +499,11 @@ export const AbilityLine = ({
   custom?: boolean;
   changeTitle?: (value: string) => void;
   remove?: () => void;
+  lineAction?: { glyph: string; value: () => void };
+  baseSpecialtyCount: number;
+  specialties?: Array<{ key: string; name: string }>;
+  removeSpecialty?: (key: string) => void;
+  changeSpecialtyTitle?: (key: string, newTitle: string) => void;
 }) => (
   <Line
     elem={elem}
@@ -470,7 +514,37 @@ export const AbilityLine = ({
     custom={custom}
     changeName={changeTitle}
     remove={remove}
-  />
+    lineAction={lineAction}
+    endNumber={
+      ((specialties && specialties.length) || 0) !== baseSpecialtyCount &&
+      calcPexDiffSpecialty(baseSpecialtyCount, specialties.length)
+    }
+  >
+    <li>
+      <SpecialtiesContainer>
+        {specialties &&
+          specialties.map((specialty) => (
+            <SpecialtyContainer key={specialty.key}>
+              <HandEditableText
+                className="low"
+                value={specialty.name}
+                onChange={(e) => {
+                  changeSpecialtyTitle(specialty.key, e.currentTarget.value);
+                }}
+              />
+              <ButtonGlyphContainer className="remove-spec-button no-reposition">
+                <Glyph
+                  name={`remove-${specialty.name}`}
+                  onClick={() => removeSpecialty(specialty.key)}
+                >
+                  ✘
+                </Glyph>
+              </ButtonGlyphContainer>
+            </SpecialtyContainer>
+          ))}
+      </SpecialtiesContainer>
+    </li>
+  </Line>
 );
 
 export default Line;

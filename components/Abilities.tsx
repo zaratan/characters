@@ -62,6 +62,16 @@ const AbilitiesColumn = ({
         elem={ability}
         maxLevel={maxLevel}
         key={ability.title}
+        lineAction={
+          ((ability.specialties && ability.specialties.length) || 0) <
+          ability.value - 3
+            ? { glyph: '+', value: ability.addNewSpecialty }
+            : null
+        }
+        baseSpecialtyCount={ability.baseSpecialtiesCount}
+        specialties={ability.specialties}
+        changeSpecialtyTitle={ability.changeSpecialty}
+        removeSpecialty={ability.removeSpecialty}
       />
     ))}
     {customAbilities.map((ability) => (
@@ -73,6 +83,16 @@ const AbilitiesColumn = ({
         custom
         changeTitle={changeCustomAbilityTitle(ability.key)}
         remove={removeCustomAbility(ability.key)}
+        lineAction={
+          ((ability.specialties && ability.specialties.length) || 0) <
+          ability.value - 3
+            ? { glyph: '+', value: ability.addNewSpecialty }
+            : null
+        }
+        baseSpecialtyCount={ability.baseSpecialtiesCount}
+        specialties={ability.specialties}
+        changeSpecialtyTitle={ability.changeSpecialty}
+        removeSpecialty={ability.removeSpecialty}
       />
     ))}
   </Container>

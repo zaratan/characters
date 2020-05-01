@@ -90,7 +90,16 @@ export async function getStaticProps(_context) {
     { title: 'Expression', value: 1 },
     { title: 'Vigilance', value: 3 },
     { title: 'Athlétisme', value: 6 },
-    { title: 'Bagare', value: 6 },
+    {
+      title: 'Bagare',
+      value: 6,
+      specialties: [
+        {
+          name: 'Poings',
+          key: 'fist',
+        },
+      ],
+    },
     { title: 'Conscience', value: 1 },
     { title: 'Empathie', value: 1 },
     { title: 'Intimidation', value: 1 },

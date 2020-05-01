@@ -5,14 +5,20 @@ import { v4 as uuid } from 'uuid';
 export type RawAbilitiesListType = Array<{
   title: string;
   value: number;
+  specialties?: Array<{ key: string; name: string }>;
   key?: string;
 }>;
 export type AbilityType = {
   title: string;
   value: number;
+  specialties?: Array<{ key: string; name: string }>;
+  baseSpecialtiesCount: number;
   key?: string;
   baseValue: number;
   set: (newValue: number) => void;
+  addNewSpecialty: () => void;
+  removeSpecialty: (key: string) => void;
+  changeSpecialty: (key: string, newValue: string) => void;
 };
 export type AbilitiesListType = Array<AbilityType>;
 
@@ -44,6 +50,66 @@ export const convertRawAbilitiesToAbilities = (
         );
       },
       baseValue: (baseAbility && baseAbility.value) || 0,
+      baseSpecialtiesCount:
+        (baseAbility &&
+          baseAbility.specialties &&
+          baseAbility.specialties.length) ||
+        0,
+      addNewSpecialty: () => {
+        setter(
+          tmpAbilities.map((a) =>
+            (
+              ability.key === undefined
+                ? a.title === ability.title
+                : ability.key === a.key
+            )
+              ? {
+                  ...a,
+                  specialties: [
+                    ...(ability.specialties || []),
+                    { key: uuid(), name: '' },
+                  ],
+                }
+              : a
+          )
+        );
+      },
+      removeSpecialty: (key: string) => {
+        setter(
+          tmpAbilities.map((a) =>
+            (
+              ability.key === undefined
+                ? a.title === ability.title
+                : ability.key === a.key
+            )
+              ? {
+                  ...a,
+                  specialties: (ability.specialties || []).filter(
+                    (spec) => spec.key !== key
+                  ),
+                }
+              : a
+          )
+        );
+      },
+      changeSpecialty: (key: string, newTitle: string) => {
+        setter(
+          tmpAbilities.map((a) =>
+            (
+              ability.key === undefined
+                ? a.title === ability.title
+                : ability.key === a.key
+            )
+              ? {
+                  ...a,
+                  specialties: (ability.specialties || []).map((spec) =>
+                    spec.key !== key ? spec : { ...spec, name: newTitle }
+                  ),
+                }
+              : a
+          )
+        );
+      },
     };
   });
 
@@ -94,50 +160,77 @@ const defaultContext: {
   changeCustomKnowledgeTitle: (key: string) => (newTitle: string) => void;
 } = {
   talents: [
-    { title: 'Expression', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Vigilance', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Athlétisme', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Bagare', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Conscience', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Empathie', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Intimidation', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Passe-passe', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Commandement', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Subterfuge', value: 0, set: () => {}, baseValue: 0 },
-  ],
+    'Expression',
+    'Vigilance',
+    'Athlétisme',
+    'Bagare',
+    'Conscience',
+    'Empathie',
+    'Intimidation',
+    'Passe-passe',
+    'Commandement',
+    'Subterfuge',
+  ].map((title: string) => ({
+    title,
+    value: 0,
+    set: () => {},
+    addNewSpecialty: () => {},
+    changeSpecialty: () => {},
+    removeSpecialty: () => {},
+    baseValue: 0,
+    baseSpecialtiesCount: 0,
+  })),
 
   customTalents: [],
   addNewCustomTalent: () => {},
   removeCustomTalent: () => () => {},
   changeCustomTalentTitle: () => () => {},
   skills: [
-    { title: 'Animaux', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Archerie', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Artisanats', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Equitation', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Etiquette', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Furtivite', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Commerce', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Melee', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Représentation', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Survie', value: 0, set: () => {}, baseValue: 0 },
-  ],
+    'Animaux',
+    'Archerie',
+    'Artisanats',
+    'Equitation',
+    'Etiquette',
+    'Furtivite',
+    'Commerce',
+    'Melee',
+    'Représentation',
+    'Survie',
+  ].map((title: string) => ({
+    title,
+    value: 0,
+    set: () => {},
+    addNewSpecialty: () => {},
+    changeSpecialty: () => {},
+    removeSpecialty: () => {},
+    baseValue: 0,
+    baseSpecialtiesCount: 0,
+  })),
   customSkills: [],
   addNewCustomSkill: () => {},
   removeCustomSkill: () => () => {},
   changeCustomSkillTitle: () => () => {},
   knowledges: [
-    { title: 'Érudition', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Investigation', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Droit', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Linguistique', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Médecine', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Occulte', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Sagesse pop.', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Politique', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Senechal', value: 0, set: () => {}, baseValue: 0 },
-    { title: 'Theologie', value: 0, set: () => {}, baseValue: 0 },
-  ],
+    'Érudition',
+    'Investigation',
+    'Droit',
+    'Linguistique',
+    'Médecine',
+    'Occulte',
+    'Sagesse pop.',
+    'Politique',
+    'Senechal',
+    'Theologie',
+  ].map((title: string) => ({
+    title,
+    value: 0,
+    set: () => {},
+    addNewSpecialty: () => {},
+    changeSpecialty: () => {},
+    removeSpecialty: () => {},
+    baseValue: 0,
+    baseSpecialtiesCount: 0,
+  })),
   customKnowledges: [],
   addNewCustomKnowledge: () => {},
   removeCustomKnowledge: () => () => {},
