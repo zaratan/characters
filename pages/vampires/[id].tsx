@@ -127,9 +127,7 @@ const Sheet = ({
 );
 
 const Home = () => {
-  const { data } = useSWR(`/api/vampires/12`, {
-    refreshInterval: 5000,
-  });
+  const { data } = useSWR(`/api/vampires/12`, {});
   console.log({ data });
   if (!data) {
     return 'Loading to be created.';
