@@ -150,7 +150,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   let lol;
   for (let i = 1; i < 1000000; i += 1) {
-    lol += 1;
+    lol += Number(id);
   }
   res.status(200).json({ id, vampire, lol });
 };
