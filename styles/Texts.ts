@@ -53,4 +53,17 @@ export const HandEditableText = styled.input`
   &.small {
     max-width: 5rem;
   }
+  &.very-small {
+    font-size: 1rem;
+    width: 1rem;
+    min-width: 0;
+    appearance: none;
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number']::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      margin: 0;
+    }
+  }
 `;

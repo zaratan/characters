@@ -15,6 +15,7 @@ import {
   calcPexDiffOutOfClanDiscipline,
   calcPexDiffThaumaturgyRitual,
 } from '../helpers/pex';
+import { HandEditableText } from '../styles/Texts';
 
 const Container = styled.div`
   .col-button {
@@ -28,6 +29,7 @@ const Container = styled.div`
     .open-glyph,
     .line-button,
     .remove-glyph,
+    .ritual-multiplicator,
     .col-button {
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
@@ -38,11 +40,17 @@ const Container = styled.div`
       .open-glyph,
       .line-button,
       .remove-glyph,
+      .ritual-multiplicator,
       .col-button {
         opacity: 1;
       }
     }
   }
+`;
+
+const RitualMultiplicatorContainer = styled.span`
+  font-size: 1rem;
+  white-space: nowrap;
 `;
 
 const Disciplines = () => {
@@ -189,9 +197,26 @@ const Disciplines = () => {
             </Container>,
             <Container key={`${thau.key}-rituals`}>
               <ColumnTitleWithOptions
-                title={`Rituels de ${thau.title}`}
                 button={{ glyph: '+', value: thau.addNewRitual }}
-              />
+              >
+                <span>{`Rituels de ${thau.title}`}</span>
+
+                <RitualMultiplicatorContainer className="ritual-multiplicator">
+                  (x
+                  <HandEditableText
+                    className="very-small"
+                    type="number"
+                    min={1}
+                    max={3}
+                    maxLength={1}
+                    value={thau.ritualMulti === 0 ? '' : thau.ritualMulti}
+                    onChange={(e) =>
+                      thau.setRitualMulti(Number(e.currentTarget.value))
+                    }
+                  />
+                  )
+                </RitualMultiplicatorContainer>
+              </ColumnTitleWithOptions>
               <ul>
                 {thau.rituals.map((ritual) => (
                   <li key={ritual.key}>

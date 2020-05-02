@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ReactNode } from 'react';
 import styled from 'styled-components';
 import { ColumnTitle } from '../styles/Titles';
 import { Glyph } from './Glyph';
@@ -68,17 +68,19 @@ const ColumnTitleWithOptions = ({
   options = [],
   actions = [],
   button,
+  children,
 }: {
-  title: string;
+  title?: string;
   options?: Array<{ name: string; value: boolean; onClick: () => void }>;
   actions?: Array<{ name: string; value: () => void }>;
   button?: { glyph: string; value: () => void };
+  children?: ReactNode;
 }) => {
   const [open, setOpen] = useState(false);
   return (
     <div>
       <ColumnTitle>
-        {title}
+        {title || children}
         <GlyphContainer>
           {button ? (
             <Glyph
