@@ -132,7 +132,7 @@ const Home = () => {
   });
   console.log({ data });
   if (!data) {
-    return <Sheet {...defaultData} key="default" />;
+    return 'Loading to be created.';
   }
   const {
     infos,
