@@ -148,5 +148,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: { id },
   } = req;
 
-  res.status(200).json({ id, vampire });
+  let lol;
+  for (let i = 1; i < 1000000; i += 1) {
+    lol += 1;
+  }
+  res.status(200).json({ id, vampire, lol });
 };
