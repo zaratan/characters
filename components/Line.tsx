@@ -517,7 +517,10 @@ export const AbilityLine = ({
     lineAction={lineAction}
     endNumber={
       ((specialties && specialties.length) || 0) !== baseSpecialtyCount &&
-      calcPexDiffSpecialty(baseSpecialtyCount, specialties.length)
+      calcPexDiffSpecialty(
+        baseSpecialtyCount,
+        (specialties && specialties.length) || 0
+      )
     }
   >
     <li>

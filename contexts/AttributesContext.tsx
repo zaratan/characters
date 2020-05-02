@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useMemo } from 'react';
 import { TempElemType } from '../types/TempElemType';
 
 export interface AttributesType {
@@ -44,7 +44,11 @@ export const AttributesProvider = ({
   children: ReactNode;
   attributes: AttributesType;
 }) => {
+  console.log({ attributes });
+
   const [tmpStrength, setTmpStrength] = useState(attributes.strength);
+
+  console.log({ tmpStrength });
   const [tmpDexterity, setTmpDexterity] = useState(attributes.dexterity);
   const [tmpStamina, setTmpStamina] = useState(attributes.stamina);
   const [tmpCharisma, setTmpCharisma] = useState(attributes.charisma);
