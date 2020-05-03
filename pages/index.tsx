@@ -2,14 +2,15 @@ import Head from 'next/head';
 import useSWR from 'swr';
 import Link from 'next/link';
 import { GetServerSideProps } from 'next';
-import { nodeFetcher } from '../helpers/fetcher';
+import { nodeFetcher, host } from '../helpers/fetcher';
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const initialData = await nodeFetcher(
-    `${process.env.NODE_ENV === 'production' ? 'https://' : 'http://'}${
-      req.headers.host
-    }/api/vampires`
-  );
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  res,
+  query,
+}) => {
+  console.log(process.env);
+  const initialData = await nodeFetcher(`${host(req)}/api/vampires`);
 
   return {
     props: {

@@ -9,17 +9,17 @@ import {
   DisciplinesList,
   CombinedDisciplinesList,
 } from '../../contexts/DisciplinesContext';
-import { nodeFetcher } from '../../helpers/fetcher';
+import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,
   req,
 }) => {
+  console.log({ query, req });
+
   const initialData = await nodeFetcher(
-    `${process.env.NODE_ENV === 'production' ? 'https://' : 'http://'}${
-      req.headers.host
-    }/api/vampires/${query.id}`
+    `${host(req)}/api/vampires/${query.id}`
   );
 
   return {
