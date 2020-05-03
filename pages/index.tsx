@@ -4,9 +4,11 @@ import Link from 'next/link';
 import { nodeFetcher } from '../helpers/fetcher';
 
 export async function getServerSideProps(_context) {
+  console.log(process.env);
+
   const initialData = await nodeFetcher(
     `${
-      process.env.VERCEL_URL
+      process.env.NODE_ENV === 'production'
         ? 'https://characters.zaratan.fr'
         : 'http://localhost:3000'
     }/api/vampires`
