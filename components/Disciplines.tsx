@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import { maxDot } from '../helpers/maxLevels';
-import InfosContext from '../contexts/InfosContext';
 import { StyledLine } from '../styles/Lines';
 import { HorizontalSection } from '../styles/Sections';
 import ColumnTitleWithOptions from './ColumnTitleWithOptions';
@@ -16,6 +15,7 @@ import {
   calcPexDiffThaumaturgyRitual,
 } from '../helpers/pex';
 import { HandEditableText } from '../styles/Texts';
+import GenerationContext from '../contexts/GenerationContext';
 
 const Container = styled.div`
   .col-button {
@@ -54,7 +54,7 @@ const RitualMultiplicatorContainer = styled.span`
 `;
 
 const Disciplines = () => {
-  const { generation } = useContext(InfosContext);
+  const generation = useContext(GenerationContext);
   const {
     clanDisciplines,
     outClanDisciplines,
