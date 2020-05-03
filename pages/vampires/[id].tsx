@@ -16,8 +16,6 @@ export const getServerSideProps: GetServerSideProps = async ({
   query,
   req,
 }) => {
-  console.log({ query, req });
-
   const initialData = await nodeFetcher(
     `${host(req)}/api/vampires/${query.id}`
   );

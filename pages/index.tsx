@@ -4,12 +4,7 @@ import Link from 'next/link';
 import { GetServerSideProps } from 'next';
 import { nodeFetcher, host } from '../helpers/fetcher';
 
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  res,
-  query,
-}) => {
-  console.log(process.env);
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const initialData = await nodeFetcher(`${host(req)}/api/vampires`);
 
   return {
@@ -38,7 +33,7 @@ const Home = ({
       <ul>
         {characters.map((character) => (
           <li key={character.id}>
-            <Link href={`/vampires/${character.id}`}>
+            <Link href="/vampires/[id]" as={`/vampires/${character.id}`}>
               <a>{character.name}</a>
             </Link>
           </li>
