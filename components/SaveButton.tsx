@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { mutate } from 'swr';
+import styled from 'styled-components';
 import { ActionItem } from '../styles/Items';
 import {
   generateHandleClick,
@@ -14,6 +15,12 @@ import GenerationContext from '../contexts/GenerationContext';
 import MindContext from '../contexts/MindContext';
 import DisciplinesContext from '../contexts/DisciplinesContext';
 import { fetcher } from '../helpers/fetcher';
+
+const StyledActionItem = styled(ActionItem)`
+  position: absolute;
+  right: 0;
+  bottom: -4rem;
+`;
 
 const SaveButton = ({ newChar }: { newChar: boolean }) => {
   const router = useRouter();
@@ -204,14 +211,14 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
   const handleClick = generateHandleClick(action);
   const handleKeypress = generateHandleKeypress(action);
   return (
-    <ActionItem
+    <StyledActionItem
       role="button"
       onClick={handleClick}
       onKeyPress={handleKeypress}
       tabIndex={0}
     >
       Sauvegarder
-    </ActionItem>
+    </StyledActionItem>
   );
 };
 
