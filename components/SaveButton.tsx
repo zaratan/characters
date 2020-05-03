@@ -20,6 +20,8 @@ const StyledActionItem = styled(ActionItem)`
   position: absolute;
   right: 0;
   bottom: -4rem;
+  top: initial !important;
+  left: initial !important;
 `;
 
 const SaveButton = ({ newChar }: { newChar: boolean }) => {
