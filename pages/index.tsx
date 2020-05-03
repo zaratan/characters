@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import { nodeFetcher } from '../helpers/fetcher';
 
-export async function getStaticProps(_context) {
+export async function getServerSideProps(_context) {
   const initialData = await nodeFetcher(
     `${
       process.env.VERCEL_URL
