@@ -4,8 +4,8 @@ import { HorizontalSection } from '../styles/Sections';
 import { ColumnTitle } from '../styles/Titles';
 import { AttributeLine } from './Line';
 import { maxDot } from '../helpers/maxLevels';
-import InfosContext from '../contexts/InfosContext';
 import AttributesContext from '../contexts/AttributesContext';
+import GenerationContext from '../contexts/GenerationContext';
 
 const Attributes = () => {
   const {
@@ -19,7 +19,7 @@ const Attributes = () => {
     intelligence,
     wits,
   } = useContext(AttributesContext);
-  const { generation } = useContext(InfosContext);
+  const generation = useContext(GenerationContext);
   const maxLevel = maxDot(generation.value);
 
   return (

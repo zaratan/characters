@@ -5,6 +5,7 @@ import { EmptyLine } from '../styles/Lines';
 import { Title } from '../styles/Titles';
 import { HandLargeEditableText } from '../styles/Texts';
 import InfosContext from '../contexts/InfosContext';
+import GenerationContext from '../contexts/GenerationContext';
 
 const InfoContainer = styled.div`
   display: flex;
@@ -24,11 +25,11 @@ const Infos = () => {
     chronicle,
     clan,
     demeanor,
-    generation,
     haven,
     nature,
     sire,
   } = useContext(InfosContext);
+  const generation = useContext(GenerationContext);
   const handleChange = (changeFunction: (val: string) => void) => (
     event: FormEvent<HTMLInputElement>
   ) => {

@@ -65,11 +65,10 @@ const attributes = {
   intelligence: 3,
   wits: 6,
 };
-
+const generation = 6;
 const infos = {
   name: 'Sined Nisap',
   playerName: 'Zaratan',
-  generation: 6,
   nature: 'Pon',
   sire: 'None',
   demeanor: 'Test',
@@ -130,6 +129,7 @@ const combinedDisciplines = [
 
 const vampire = {
   infos,
+  generation,
   attributes,
   talents,
   customTalents,
@@ -148,9 +148,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     query: { id },
   } = req;
 
-  let lol;
-  for (let i = 1; i < 1000000; i += 1) {
-    lol += Number(id);
-  }
-  res.status(200).json({ id, vampire, lol });
+  res.status(200).json({
+    id,
+    vampire,
+  });
 };

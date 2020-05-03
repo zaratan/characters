@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { TempElemType } from '../types/TempElemType';
 
 export type MindType = {
@@ -58,24 +59,76 @@ export const MindProvider = ({
   children: ReactNode;
   mind: MindType;
 }) => {
-  const [willpower, setWillpower] = useState(mind.willpower);
+  const [willpower, setWillpower] = useState({
+    val: mind.willpower,
+    changed: false,
+  });
   const [tempWillpower, setTempWillpower] = useState(mind.tempWillpower);
   const [bloodSpent, setBloodSpent] = useState(mind.bloodSpent);
-  const [conscience, setConscience] = useState(mind.conscience);
+  const [conscience, setConscience] = useState({
+    val: mind.conscience,
+    changed: false,
+  });
   const [isConviction, setIsConviction] = useState(mind.isConviction);
   const [isInstinct, setIsInstinct] = useState(mind.isInstinct);
-  const [selfControl, setSelfControl] = useState(mind.selfControl);
-  const [courage, setCourage] = useState(mind.courage);
+  const [selfControl, setSelfControl] = useState({
+    val: mind.selfControl,
+    changed: false,
+  });
+  const [courage, setCourage] = useState({ val: mind.courage, changed: false });
   const [pathName, setPathName] = useState(mind.pathName);
-  const [path, setPath] = useState(mind.path);
+  const [path, setPath] = useState({ val: mind.path, changed: false });
   const [isExtraBruisable, setIsExtraBruisable] = useState(
     mind.isExtraBruisable
   );
   const [health, setHealth] = useState(mind.health);
+  useEffect(() => {
+    if (willpower.changed) return;
+    setWillpower({ val: mind.willpower, changed: false });
+  }, [mind.willpower]);
+  useEffect(() => {
+    setTempWillpower(mind.tempWillpower);
+  }, [mind.tempWillpower]);
+  useEffect(() => {
+    setBloodSpent(mind.bloodSpent);
+  }, [mind.bloodSpent]);
+  useEffect(() => {
+    if (conscience.changed) return;
+    setConscience({ val: mind.conscience, changed: false });
+  }, [mind.conscience]);
+  useEffect(() => {
+    setIsConviction(mind.isConviction);
+  }, [mind.isConviction]);
+  useEffect(() => {
+    setIsInstinct(mind.isInstinct);
+  }, [mind.isInstinct]);
+  useEffect(() => {
+    if (selfControl.changed) return;
+    setSelfControl({ val: mind.selfControl, changed: false });
+  }, [mind.selfControl]);
+  useEffect(() => {
+    if (courage.changed) return;
+    setCourage({ val: mind.courage, changed: false });
+  }, [mind.courage]);
+  useEffect(() => {
+    setPathName(mind.pathName);
+  }, [mind.pathName]);
+  useEffect(() => {
+    if (path.changed) return;
+    setPath({ val: mind.path, changed: false });
+  }, [mind.path]);
+  useEffect(() => {
+    setIsExtraBruisable(mind.isExtraBruisable);
+  }, [mind.isExtraBruisable]);
+  useEffect(() => {
+    setHealth(mind.health);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(mind.health)]);
+
   const tmpMind = {
     willpower: {
-      value: willpower,
-      set: setWillpower,
+      value: willpower.val,
+      set: (newWillpower) => setWillpower({ val: newWillpower, changed: true }),
       baseValue: mind.willpower,
     },
     tempWillpower: {
@@ -89,8 +142,9 @@ export const MindProvider = ({
       baseValue: mind.bloodSpent,
     },
     conscience: {
-      value: conscience,
-      set: setConscience,
+      value: conscience.val,
+      set: (newConscience) =>
+        setConscience({ val: newConscience, changed: true }),
       baseValue: mind.conscience,
     },
     isConviction: {
@@ -104,13 +158,22 @@ export const MindProvider = ({
       baseValue: mind.isInstinct,
     },
     selfControl: {
-      value: selfControl,
-      set: setSelfControl,
+      value: selfControl.val,
+      set: (newSeflControl) =>
+        setSelfControl({ val: newSeflControl, changed: true }),
       baseValue: mind.selfControl,
     },
-    courage: { value: courage, set: setCourage, baseValue: mind.courage },
+    courage: {
+      value: courage.val,
+      set: (newCourage) => setCourage({ val: newCourage, changed: true }),
+      baseValue: mind.courage,
+    },
     pathName: { value: pathName, set: setPathName, baseValue: mind.pathName },
-    path: { value: path, set: setPath, baseValue: mind.path },
+    path: {
+      value: path.val,
+      set: (newPath) => setPath({ val: newPath, changed: true }),
+      baseValue: mind.path,
+    },
     isExtraBruisable: {
       value: isExtraBruisable,
       set: setIsExtraBruisable,

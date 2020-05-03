@@ -8,7 +8,7 @@ import ColumnTitleWithOptions from './ColumnTitleWithOptions';
 import AbilitiesContext, {
   AbilitiesListType,
 } from '../contexts/AbilitiesContext';
-import InfosContext from '../contexts/InfosContext';
+import GenerationContext from '../contexts/GenerationContext';
 
 const Container = styled.div`
   .col-button {
@@ -118,7 +118,7 @@ const Abilities = () => {
     removeCustomKnowledge,
     changeCustomKnowledgeTitle,
   } = useContext(AbilitiesContext);
-  const { generation } = useContext(InfosContext);
+  const generation = useContext(GenerationContext);
   const maxLevel = maxDot(generation.value);
   return (
     <>

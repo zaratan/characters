@@ -9,8 +9,8 @@ import Health from './Health';
 import { maxBlood } from '../helpers/maxLevels';
 import UnderlinedHandLargeEditableText from './UnderlinedHandLargeEditableText';
 import ColumnTitleWithOptions from './ColumnTitleWithOptions';
-import InfosContext from '../contexts/InfosContext';
 import MindContext from '../contexts/MindContext';
+import GenerationContext from '../contexts/GenerationContext';
 
 const Mind = () => {
   const {
@@ -25,7 +25,7 @@ const Mind = () => {
     pathName,
     selfControl,
   } = useContext(MindContext);
-  const { generation } = useContext(InfosContext);
+  const generation = useContext(GenerationContext);
   return (
     <>
       <StyledLine />

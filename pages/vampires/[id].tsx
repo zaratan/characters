@@ -1,138 +1,42 @@
-import Head from 'next/head';
-import styled from 'styled-components';
 import useSWR from 'swr';
-import Attributes from '../../components/Attributes';
-import Infos from '../../components/Infos';
-import Mind from '../../components/Mind';
-import {
-  RawAbilitiesListType,
-  AbilitiesProvider,
-} from '../../contexts/AbilitiesContext';
-import Abilities from '../../components/Abilities';
-import { InfosType, InfosProvider } from '../../contexts/InfosContext';
-import {
-  AttributesType,
-  AttributesProvider,
-} from '../../contexts/AttributesContext';
-import { MindType, MindProvider } from '../../contexts/MindContext';
+import { useRouter } from 'next/router';
+import { RawAbilitiesListType } from '../../contexts/AbilitiesContext';
+import { InfosType } from '../../contexts/InfosContext';
+import { AttributesType } from '../../contexts/AttributesContext';
+import { MindType } from '../../contexts/MindContext';
 import {
   DisciplinesList,
   CombinedDisciplinesList,
-  DisciplinesProvider,
 } from '../../contexts/DisciplinesContext';
-import Disciplines from '../../components/Disciplines';
-import Footer from '../../components/Footer';
 import { nodeFetcher } from '../../helpers/fetcher';
-import defaultData from '../../contexts/defaultData';
+import Sheet from '../../components/Sheet';
 
-const SheetContainer = styled.main`
-  margin: auto;
-  margin-top: 20px;
-  width: 80%;
-  max-width: 2000px;
+export async function getServerSideProps({ query }) {
+  const initialData = await nodeFetcher(
+    `${
+      process.env.VERCEL_URL
+        ? 'https://characters.zaratan.fr'
+        : 'http://localhost:3000'
+    }/api/vampires/${query.id}`
+  );
 
-  @media screen and (max-width: 1500px) {
-    width: 95%;
-  }
+  return {
+    props: {
+      initialData,
+    },
+  };
+}
 
-  @media screen and (max-width: 1304px) {
-    width: 80%;
-  }
-
-  @media screen and (max-width: 1022px) {
-    width: 95%;
-  }
-
-  @media screen and (max-width: 859px) {
-    width: 80%;
-  }
-
-  @media screen and (max-width: 600px) {
-    width: 90%;
-  }
-`;
-
-const PageTitle = styled.div`
-  display: flex;
-  justify-content: center;
-`;
-
-const Sheet = ({
-  infos,
-  attributes,
-  talents,
-  customTalents,
-  skills,
-  customSkills,
-  knowledges,
-  customKnowledges,
-  mind,
-  clanDisciplines,
-  outClanDisciplines,
-  combinedDisciplines,
-}: {
-  attributes: AttributesType;
-  talents: RawAbilitiesListType;
-  customTalents: RawAbilitiesListType;
-  skills: RawAbilitiesListType;
-  customSkills: RawAbilitiesListType;
-  knowledges: RawAbilitiesListType;
-  customKnowledges: RawAbilitiesListType;
-  infos: InfosType;
-  mind: MindType;
-  clanDisciplines: DisciplinesList;
-  outClanDisciplines: DisciplinesList;
-  combinedDisciplines: CombinedDisciplinesList;
-}) => (
-  <InfosProvider infos={infos}>
-    <AttributesProvider attributes={attributes}>
-      <MindProvider mind={mind}>
-        <AbilitiesProvider
-          talents={talents}
-          customTalents={customTalents}
-          skills={skills}
-          customSkills={customSkills}
-          knowledges={knowledges}
-          customKnowledges={customKnowledges}
-        >
-          <DisciplinesProvider
-            clanDisciplines={clanDisciplines}
-            outClanDisciplines={outClanDisciplines}
-            combinedDisciplines={combinedDisciplines}
-          >
-            <SheetContainer>
-              <Head>
-                <title>
-                  {infos.name ? `${infos.name} - ` : null}Feuille de Personnage
-                </title>
-                <link rel="icon" href="/favicon.ico" />
-              </Head>
-
-              <PageTitle>
-                <img src="/title.png" alt="Vampire Dark Age" />
-              </PageTitle>
-
-              <Infos />
-              <Attributes />
-              <Abilities />
-              <Mind />
-              <Disciplines />
-            </SheetContainer>
-            <Footer />
-          </DisciplinesProvider>
-        </AbilitiesProvider>
-      </MindProvider>
-    </AttributesProvider>
-  </InfosProvider>
-);
-
-const Home = () => {
-  const { data } = useSWR(`/api/vampires/12`, {});
-  console.log({ data });
-  if (!data) {
-    return 'Loading to be created.';
-  }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const Home = ({ initialData }: { initialData: any }) => {
+  const router = useRouter();
+  const { id } = router.query;
+  const { data } = useSWR(`/api/vampires/${id}`, {
+    refreshInterval: 10 * 1000,
+    initialData,
+  });
   const {
+    generation,
     infos,
     attributes,
     talents,
@@ -146,6 +50,7 @@ const Home = () => {
     outClanDisciplines,
     combinedDisciplines,
   }: {
+    generation: number;
     attributes: AttributesType;
     talents: RawAbilitiesListType;
     customTalents: RawAbilitiesListType;
@@ -159,9 +64,9 @@ const Home = () => {
     outClanDisciplines: DisciplinesList;
     combinedDisciplines: CombinedDisciplinesList;
   } = data.vampire;
-  console.log({ data, infos });
   return (
     <Sheet
+      generation={generation}
       infos={infos}
       attributes={attributes}
       talents={talents}
@@ -174,7 +79,6 @@ const Home = () => {
       clanDisciplines={clanDisciplines}
       outClanDisciplines={outClanDisciplines}
       combinedDisciplines={combinedDisciplines}
-      key="notDefault"
     />
   );
 };

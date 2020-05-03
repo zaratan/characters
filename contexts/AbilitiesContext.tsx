@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 
 export type RawAbilitiesListType = Array<{
@@ -256,43 +257,83 @@ export const AbilitiesProvider = ({
   knowledges: RawAbilitiesListType;
   customKnowledges: RawAbilitiesListType;
 }) => {
-  const [tmpTalents, setTmpTalents] = useState(talents);
+  const [tmpTalents, setTmpTalents] = useState({
+    val: talents,
+    changed: false,
+  });
+  useEffect(() => {
+    if (!tmpTalents.changed) return;
+    setTmpTalents({ val: talents, changed: false });
+  }, [JSON.stringify(talents)]);
   const talentsCap = convertRawAbilitiesToAbilities(
     talents,
-    tmpTalents,
-    setTmpTalents
+    tmpTalents.val,
+    (newTalents) => setTmpTalents({ val: newTalents, changed: true })
   );
-  const [tmpCustomTalents, setTmpCustomTalents] = useState(customTalents);
+  const [tmpCustomTalents, setTmpCustomTalents] = useState({
+    val: customTalents,
+    changed: false,
+  });
+  useEffect(() => {
+    if (tmpCustomTalents.changed) return;
+    setTmpCustomTalents({ val: customTalents, changed: false });
+  }, [JSON.stringify(customTalents)]);
   const customTalentsCap = convertRawAbilitiesToAbilities(
     customTalents,
-    tmpCustomTalents,
-    setTmpCustomTalents
+    tmpCustomTalents.val,
+    (newCustomTalents) =>
+      setTmpCustomTalents({ val: newCustomTalents, changed: true })
   );
-  const [tmpSkills, setTmpSkills] = useState(skills);
+  const [tmpSkills, setTmpSkills] = useState({ val: skills, changed: false });
+  useEffect(() => {
+    if (tmpSkills.changed) return;
+    setTmpSkills({ val: skills, changed: false });
+  }, [JSON.stringify(skills)]);
   const skillsCap = convertRawAbilitiesToAbilities(
     skills,
-    tmpSkills,
-    setTmpSkills
+    tmpSkills.val,
+    (newSkills) => setTmpSkills({ val: newSkills, changed: true })
   );
-  const [tmpCustomSkills, setTmpCustomSkills] = useState(customSkills);
+  const [tmpCustomSkills, setTmpCustomSkills] = useState({
+    val: customSkills,
+    changed: false,
+  });
+  useEffect(() => {
+    if (tmpCustomSkills.changed) return;
+    setTmpCustomSkills({ val: customSkills, changed: false });
+  }, [JSON.stringify(customSkills)]);
   const customSkillsCap = convertRawAbilitiesToAbilities(
     customSkills,
-    tmpCustomSkills,
-    setTmpCustomSkills
+    tmpCustomSkills.val,
+    (newCustomSkills) =>
+      setTmpCustomSkills({ val: newCustomSkills, changed: true })
   );
-  const [tmpKnowledges, setTmpKnowledges] = useState(knowledges);
+  const [tmpKnowledges, setTmpKnowledges] = useState({
+    val: knowledges,
+    changed: false,
+  });
+  useEffect(() => {
+    if (tmpKnowledges.changed) return;
+    setTmpKnowledges({ val: knowledges, changed: false });
+  }, [JSON.stringify(knowledges)]);
   const knowledgesCap = convertRawAbilitiesToAbilities(
     knowledges,
-    tmpKnowledges,
-    setTmpKnowledges
+    tmpKnowledges.val,
+    (newKnowledges) => setTmpKnowledges({ val: newKnowledges, changed: true })
   );
-  const [tmpCustomKnowledges, setTmpCustomKnowledges] = useState(
-    customKnowledges
-  );
+  const [tmpCustomKnowledges, setTmpCustomKnowledges] = useState({
+    val: customKnowledges,
+    changed: false,
+  });
+  useEffect(() => {
+    if (tmpCustomKnowledges.changed) return;
+    setTmpCustomKnowledges({ val: customKnowledges, changed: false });
+  }, [JSON.stringify(customKnowledges)]);
   const customKnowledgesCap = convertRawAbilitiesToAbilities(
     customKnowledges,
-    tmpCustomKnowledges,
-    setTmpCustomKnowledges
+    tmpCustomKnowledges.val,
+    (newCustomKnowledge) =>
+      setTmpCustomKnowledges({ val: newCustomKnowledge, changed: true })
   );
   return (
     <AbilitiesContext.Provider
@@ -300,44 +341,53 @@ export const AbilitiesProvider = ({
         talents: talentsCap,
         customTalents: customTalentsCap,
         addNewCustomTalent: generateAddNewCustomAbility(
-          tmpCustomTalents,
-          setTmpCustomTalents
+          tmpCustomTalents.val,
+          (newCustomTalents) =>
+            setTmpCustomTalents({ val: newCustomTalents, changed: true })
         ),
         removeCustomTalent: generateRemoveCustomAbility(
-          tmpCustomTalents,
-          setTmpCustomTalents
+          tmpCustomTalents.val,
+          (newCustomTalents) =>
+            setTmpCustomTalents({ val: newCustomTalents, changed: true })
         ),
         changeCustomTalentTitle: generateChangeCustomAbilityTitle(
-          tmpCustomTalents,
-          setTmpCustomTalents
+          tmpCustomTalents.val,
+          (newCustomTalents) =>
+            setTmpCustomTalents({ val: newCustomTalents, changed: true })
         ),
         skills: skillsCap,
         customSkills: customSkillsCap,
         addNewCustomSkill: generateAddNewCustomAbility(
-          tmpCustomSkills,
-          setTmpCustomSkills
+          tmpCustomSkills.val,
+          (newCustomSkills) =>
+            setTmpCustomSkills({ val: newCustomSkills, changed: true })
         ),
         removeCustomSkill: generateRemoveCustomAbility(
-          tmpCustomSkills,
-          setTmpCustomSkills
+          tmpCustomSkills.val,
+          (newCustomSkills) =>
+            setTmpCustomSkills({ val: newCustomSkills, changed: true })
         ),
         changeCustomSkillTitle: generateChangeCustomAbilityTitle(
-          tmpCustomSkills,
-          setTmpCustomSkills
+          tmpCustomSkills.val,
+          (newCustomSkills) =>
+            setTmpCustomSkills({ val: newCustomSkills, changed: true })
         ),
         knowledges: knowledgesCap,
         customKnowledges: customKnowledgesCap,
         addNewCustomKnowledge: generateAddNewCustomAbility(
-          tmpCustomKnowledges,
-          setTmpCustomKnowledges
+          tmpCustomKnowledges.val,
+          (newCustomKnowledges) =>
+            setTmpCustomKnowledges({ val: newCustomKnowledges, changed: true })
         ),
         removeCustomKnowledge: generateRemoveCustomAbility(
-          tmpCustomKnowledges,
-          setTmpCustomKnowledges
+          tmpCustomKnowledges.val,
+          (newCustomKnowledges) =>
+            setTmpCustomKnowledges({ val: newCustomKnowledges, changed: true })
         ),
         changeCustomKnowledgeTitle: generateChangeCustomAbilityTitle(
-          tmpCustomKnowledges,
-          setTmpCustomKnowledges
+          tmpCustomKnowledges.val,
+          (newCustomKnowledges) =>
+            setTmpCustomKnowledges({ val: newCustomKnowledges, changed: true })
         ),
       }}
     >
