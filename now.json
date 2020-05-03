@@ -1,6 +1,9 @@
 {
   "name": "characters@zaratan",
   "version": 2,
+  "env": {
+    "FAUNADB_SECRET_KEY": "@characters_faunadb_secret"
+  },
   "alias": [
     "characters.zaratan.fr"
   ]
