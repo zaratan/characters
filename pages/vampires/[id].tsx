@@ -35,6 +35,8 @@ const Home = ({ initialData }: { initialData: any }) => {
     refreshInterval: 10 * 1000,
     initialData,
   });
+  console.log({ data, infos: data.infos, id });
+
   const {
     generation,
     infos,
@@ -63,7 +65,7 @@ const Home = ({ initialData }: { initialData: any }) => {
     clanDisciplines: DisciplinesList;
     outClanDisciplines: DisciplinesList;
     combinedDisciplines: CombinedDisciplinesList;
-  } = data.vampire;
+  } = data;
   return (
     <Sheet
       generation={generation}

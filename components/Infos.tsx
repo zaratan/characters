@@ -29,6 +29,8 @@ const Infos = () => {
     nature,
     sire,
   } = useContext(InfosContext);
+  console.log({ name });
+
   const generation = useContext(GenerationContext);
   const handleChange = (changeFunction: (val: string) => void) => (
     event: FormEvent<HTMLInputElement>

@@ -17,12 +17,13 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
 const Home = ({
   initialData,
 }: {
-  initialData: { characters: Array<{ name: string; id: string }> };
+  initialData: { characters: Array<{ name: string; key: string }> };
 }) => {
   const { data } = useSWR(`/api/vampires`, {
     refreshInterval: 10 * 1000,
     initialData,
   });
+  console.log({ data });
   const { characters } = data;
   return (
     <>
@@ -32,8 +33,8 @@ const Home = ({
       </Head>
       <ul>
         {characters.map((character) => (
-          <li key={character.id}>
-            <Link href="/vampires/[id]" as={`/vampires/${character.id}`}>
+          <li key={character.key}>
+            <Link href="/vampires/[id]" as={`/vampires/${character.key}`}>
               <a>{character.name}</a>
             </Link>
           </li>
