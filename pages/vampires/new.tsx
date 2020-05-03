@@ -1,6 +1,5 @@
-import useSWR from 'swr';
-import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
+import { GetStaticProps } from 'next';
+import { v4 as uuid } from 'uuid';
 import { RawAbilitiesListType } from '../../contexts/AbilitiesContext';
 import { InfosType } from '../../contexts/InfosContext';
 import { AttributesType } from '../../contexts/AttributesContext';
@@ -9,34 +8,17 @@ import {
   DisciplinesList,
   CombinedDisciplinesList,
 } from '../../contexts/DisciplinesContext';
-import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
+import defaultData from '../../contexts/defaultData';
 
-export const getServerSideProps: GetServerSideProps = async ({
-  query,
-  req,
-}) => {
-  const initialData = await nodeFetcher(
-    `${host(req)}/api/vampires/${query.id}`
-  );
-
-  return {
-    props: {
-      initialData,
-    },
-  };
-};
+export const getStaticProps: GetStaticProps = async () => ({
+  props: {
+    data: defaultData,
+  },
+});
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Home = ({ initialData }: { initialData: any }) => {
-  const router = useRouter();
-  const { id } = router.query;
-  const { data } = useSWR(`/api/vampires/${id}`, {
-    refreshInterval: 10 * 60 * 1000,
-    initialData,
-  });
-  console.log({ data, infos: data.infos, id });
-
+const Home = ({ data }: { data: any }) => {
   const {
     generation,
     infos,
@@ -68,7 +50,7 @@ const Home = ({ initialData }: { initialData: any }) => {
   } = data;
   return (
     <Sheet
-      id={data.id}
+      id={uuid()}
       generation={generation}
       infos={infos}
       attributes={attributes}
@@ -82,7 +64,7 @@ const Home = ({ initialData }: { initialData: any }) => {
       clanDisciplines={clanDisciplines}
       outClanDisciplines={outClanDisciplines}
       combinedDisciplines={combinedDisciplines}
-      newChar={false}
+      newChar
     />
   );
 };

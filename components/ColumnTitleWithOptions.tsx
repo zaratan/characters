@@ -6,6 +6,7 @@ import {
   generateHandleKeypress,
   generateHandleClick,
 } from '../helpers/handlers';
+import { ActionItem, OptionItem } from '../styles/Items';
 
 const GlyphContainer = styled.span`
   span {
@@ -32,35 +33,6 @@ const OptionsContainer = styled.div<{ elemCount: number; actionCount: number }>`
 `;
 const OptionsSeparator = styled.div`
   height: 20px;
-`;
-
-const OptionItem = styled.li`
-  display: flex;
-  justify-content: space-between;
-`;
-
-const ActionItem = styled.li`
-  display: inline-block;
-  padding: 0.5rem;
-  border: solid 1px #333;
-  border-radius: 5px;
-  margin: 0 auto;
-  text-align: center;
-  margin-left: 1rem;
-  cursor: pointer;
-  outline: none;
-  position: relative;
-  :focus,
-  :hover {
-    box-shadow: 1px 1px 1px;
-    /* border-color: darkcyan; */
-  }
-  :active {
-    box-shadow: none;
-    background-color: #f7f7f7;
-    top: 1px;
-    left: 1px;
-  }
 `;
 
 const ColumnTitleWithOptions = ({

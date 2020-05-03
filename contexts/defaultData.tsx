@@ -58,10 +58,11 @@ const attributes = {
   wits: 1,
 };
 
+const generation = 12;
+
 const infos = {
   name: '',
   playerName: '',
-  generation: 12,
   nature: '',
   sire: '',
   demeanor: '',
@@ -92,6 +93,7 @@ const outClanDisciplines = [];
 const combinedDisciplines = [];
 
 export default {
+  generation,
   infos,
   attributes,
   talents,

@@ -50,6 +50,10 @@ export interface TempDisciplineElemType extends TempElemType<number> {
   key: string;
   title: string;
   isThaumaturgy: boolean;
+  paths?: Array<TempPathElemType>;
+  rituals?: Array<TempRitualElemType>;
+  ritualMulti?: number;
+  mainPathName?: string;
 }
 
 export interface TempThaumaturgyElemType extends TempDisciplineElemType {
@@ -154,6 +158,8 @@ const convertDisciplineToElem: (
             : disc
         )
       ),
+    paths: [],
+    rituals: [],
   };
 
   return result;
