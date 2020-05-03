@@ -1,5 +1,6 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
 import { RawAbilitiesListType } from '../../contexts/AbilitiesContext';
 import { InfosType } from '../../contexts/InfosContext';
 import { AttributesType } from '../../contexts/AttributesContext';
@@ -11,12 +12,13 @@ import {
 import { nodeFetcher } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
 
-export async function getServerSideProps({ query }) {
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+  req,
+}) => {
   const initialData = await nodeFetcher(
-    `${
-      process.env.VERCEL_URL
-        ? 'https://characters.zaratan.fr'
-        : 'http://localhost:3000'
+    `${process.env.NODE_ENV === 'production' ? 'https://' : 'http://'}${
+      req.headers.host
     }/api/vampires/${query.id}`
   );
 
@@ -25,7 +27,7 @@ export async function getServerSideProps({ query }) {
       initialData,
     },
   };
-}
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Home = ({ initialData }: { initialData: any }) => {

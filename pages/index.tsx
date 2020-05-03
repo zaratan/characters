@@ -1,16 +1,13 @@
 import Head from 'next/head';
 import useSWR from 'swr';
 import Link from 'next/link';
+import { GetServerSideProps } from 'next';
 import { nodeFetcher } from '../helpers/fetcher';
 
-export async function getServerSideProps(_context) {
-  console.log(process.env);
-
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const initialData = await nodeFetcher(
-    `${
-      process.env.NODE_ENV === 'production'
-        ? 'https://characters.zaratan.fr'
-        : 'http://localhost:3000'
+    `${process.env.NODE_ENV === 'production' ? 'https://' : 'http://'}${
+      req.headers.host
     }/api/vampires`
   );
 
@@ -19,7 +16,7 @@ export async function getServerSideProps(_context) {
       initialData,
     },
   };
-}
+};
 
 const Home = ({
   initialData,
