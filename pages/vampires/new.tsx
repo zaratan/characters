@@ -11,6 +11,7 @@ import {
 import Sheet from '../../components/Sheet';
 import defaultData from '../../contexts/defaultData';
 import { AdvFlawType } from '../../contexts/AdvFlawContext';
+import { RawLanguage } from '../../contexts/LanguagesContext';
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
@@ -53,7 +54,7 @@ const Home = ({ data }: { data: any }) => {
     combinedDisciplines: CombinedDisciplinesList;
     advantages: Array<AdvFlawType>;
     flaws: Array<AdvFlawType>;
-    languages: Array<RawAbilitiesListType>;
+    languages: Array<RawLanguage>;
   } = data;
   return (
     <Sheet
