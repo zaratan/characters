@@ -74,6 +74,9 @@ const CustomTitleContainer = styled.span`
   display: flex;
   flex-grow: 1;
   max-width: 70%;
+  &.full-size {
+    max-width: 100%;
+  }
   @media screen and (max-width: 500px) {
     width: 100%;
   }
@@ -159,6 +162,7 @@ const LineTitle = ({
   title,
   interactive = true,
   placeholder,
+  full,
 }: {
   custom?: boolean;
   changeName?: (newValue: string) => void;
@@ -166,10 +170,11 @@ const LineTitle = ({
   title?: string;
   interactive?: boolean;
   placeholder?: string;
+  full?: boolean;
 }) => {
   if (title === undefined) return null;
   return custom ? (
-    <CustomTitleContainer>
+    <CustomTitleContainer className={full ? `full-size` : ''}>
       <CustomTitle>
         <HandEditableText
           value={title}
@@ -203,8 +208,9 @@ export const LineValue = ({
   remove,
   placeholderName,
   placeholderSub,
+  full,
 }: {
-  elem: TempElemType<number>;
+  elem?: TempElemType<number>;
   name: string;
   maxValue?: number;
   title: string;
@@ -213,6 +219,7 @@ export const LineValue = ({
   remove: () => void;
   placeholderName?: string;
   placeholderSub?: string;
+  full?: boolean;
 }) => (
   <ul>
     <ColumnLine>
@@ -222,23 +229,26 @@ export const LineValue = ({
         title={title}
         remove={remove}
         placeholder={placeholderName || 'Nouveau nom…'}
+        full={full}
       />
-      <div style={{ position: 'relative' }}>
-        <HandEditableText
-          size={3}
-          maxLength={3}
-          value={elem.value === 0 ? '' : elem.value}
-          onChange={(e) => elem.set(Number(e.currentTarget.value))}
-          type="number"
-          max={maxValue}
-          min={0}
-          className="small"
-          placeholder={placeholderSub || 'XP'}
-        />
-        {elem.baseValue !== elem.value ? (
-          <TextHelper>{diffPexCalc(elem.baseValue, elem.value)}</TextHelper>
-        ) : null}
-      </div>
+      {elem ? (
+        <div style={{ position: 'relative' }}>
+          <HandEditableText
+            size={3}
+            maxLength={3}
+            value={elem.value === 0 ? '' : elem.value}
+            onChange={(e) => elem.set(Number(e.currentTarget.value))}
+            type="number"
+            max={maxValue}
+            min={0}
+            className="small"
+            placeholder={placeholderSub || 'XP'}
+          />
+          {elem.baseValue !== elem.value ? (
+            <TextHelper>{diffPexCalc(elem.baseValue, elem.value)}</TextHelper>
+          ) : null}
+        </div>
+      ) : null}
     </ColumnLine>
   </ul>
 );

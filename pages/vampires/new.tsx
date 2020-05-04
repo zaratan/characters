@@ -36,6 +36,7 @@ const Home = ({ data }: { data: any }) => {
     combinedDisciplines,
     advantages = [],
     flaws = [],
+    languages = [],
   }: {
     generation: number;
     attributes: AttributesType;
@@ -52,6 +53,7 @@ const Home = ({ data }: { data: any }) => {
     combinedDisciplines: CombinedDisciplinesList;
     advantages: Array<AdvFlawType>;
     flaws: Array<AdvFlawType>;
+    languages: Array<RawAbilitiesListType>;
   } = data;
   return (
     <Sheet
@@ -72,6 +74,7 @@ const Home = ({ data }: { data: any }) => {
       newChar
       advantages={advantages}
       flaws={flaws}
+      languages={languages}
     />
   );
 };

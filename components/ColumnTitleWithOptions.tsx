@@ -35,6 +35,26 @@ const OptionsSeparator = styled.div`
   height: 20px;
 `;
 
+const ColumnButton = ({
+  value,
+  hidden,
+  title,
+  glyph,
+}: {
+  value: () => void;
+  hidden?: boolean;
+  title: string;
+  glyph: string;
+}) => {
+  if (hidden) return null;
+
+  return (
+    <Glyph onClick={value} name={`Add a new ${title}`} className="col-button">
+      {glyph}
+    </Glyph>
+  );
+};
+
 const ColumnTitleWithOptions = ({
   title,
   options = [],
@@ -45,7 +65,7 @@ const ColumnTitleWithOptions = ({
   title?: string;
   options?: Array<{ name: string; value: boolean; onClick: () => void }>;
   actions?: Array<{ name: string; value: () => void }>;
-  button?: { glyph: string; value: () => void };
+  button?: { glyph: string; value: () => void; hidden?: boolean };
   children?: ReactNode;
 }) => {
   const [open, setOpen] = useState(false);
@@ -55,13 +75,12 @@ const ColumnTitleWithOptions = ({
         {title || children}
         <GlyphContainer>
           {button ? (
-            <Glyph
-              onClick={button.value}
-              name={`Add a new ${title}`}
-              className="col-button"
-            >
-              {button.glyph}
-            </Glyph>
+            <ColumnButton
+              glyph={button.glyph}
+              title={title}
+              value={button.value}
+              hidden={button.hidden}
+            />
           ) : (
             <Glyph
               onClick={() => {

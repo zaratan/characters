@@ -16,14 +16,9 @@ import MindContext from '../contexts/MindContext';
 import DisciplinesContext from '../contexts/DisciplinesContext';
 import { fetcher } from '../helpers/fetcher';
 import AdvFlawContext from '../contexts/AdvFlawContext';
+import LanguagesContext from '../contexts/LanguagesContext';
 
-const StyledActionItem = styled(ActionItem)`
-  position: absolute;
-  right: 0;
-  bottom: -4rem;
-  top: initial !important;
-  left: initial !important;
-`;
+const StyledActionItem = styled(ActionItem)``;
 
 const SaveButton = ({ newChar }: { newChar: boolean }) => {
   const router = useRouter();
@@ -78,6 +73,7 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
     combinedDisciplines,
   } = useContext(DisciplinesContext);
   const { advantages, flaws } = useContext(AdvFlawContext);
+  const { languages } = useContext(LanguagesContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -209,6 +205,10 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
         value: flaw.value,
         title: flaw.title,
         key: flaw.key,
+      })),
+      languages: languages.map((language) => ({
+        value: language.value,
+        key: language.key,
       })),
     };
     const url = newChar ? '/api/vampires/create' : `/api/vampires/${id}/update`;

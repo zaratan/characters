@@ -94,6 +94,7 @@ const combinedDisciplines = [];
 
 const advantages = [];
 const flaws = [];
+const languages = [];
 
 export default {
   generation,
@@ -111,4 +112,5 @@ export default {
   combinedDisciplines,
   advantages,
   flaws,
+  languages,
 };

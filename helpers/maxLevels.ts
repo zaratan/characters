@@ -38,3 +38,6 @@ export const maxBlood = (generation: number) => {
       return 10;
   }
 };
+
+export const maxLanguages = (linguistics: number) =>
+  linguistics <= 0 ? 0 : 1 + 2 ** (linguistics - 1);

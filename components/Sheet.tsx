@@ -29,9 +29,10 @@ import { IdProvider } from '../contexts/IdContext';
 import SheetContainer from '../styles/SheetContainer';
 import { ActionItem } from '../styles/Items';
 import { generateHandleKeypress } from '../helpers/handlers';
-import SaveButton from './SaveButton';
 import { AdvFlawProvider, AdvFlawType } from '../contexts/AdvFlawContext';
 import Misc from './Misc';
+import { RawLanguage, LanguagesProvider } from '../contexts/LanguagesContext';
+import Controls from './Controls';
 
 const PageTitle = styled.div`
   display: flex;
@@ -80,6 +81,7 @@ const Sheet = ({
   newChar = false,
   advantages = [],
   flaws = [],
+  languages = [],
 }: {
   id: string;
   generation: number;
@@ -97,6 +99,7 @@ const Sheet = ({
   combinedDisciplines: CombinedDisciplinesList;
   advantages: Array<AdvFlawType>;
   flaws: Array<AdvFlawType>;
+  languages: Array<RawLanguage>;
   newChar: boolean;
 }) => {
   const router = useRouter();
@@ -121,40 +124,42 @@ const Sheet = ({
                   combinedDisciplines={combinedDisciplines}
                 >
                   <AdvFlawProvider advantages={advantages} flaws={flaws}>
-                    <SheetContainer>
-                      <Head>
-                        <title>
-                          {infos.name ? `${infos.name} - ` : null}Feuille de
-                          Personnage
-                        </title>
-                        <link rel="icon" href="/favicon.ico" />
-                      </Head>
+                    <LanguagesProvider languages={languages}>
+                      <SheetContainer>
+                        <Head>
+                          <title>
+                            {infos.name ? `${infos.name} - ` : null}Feuille de
+                            Personnage
+                          </title>
+                          <link rel="icon" href="/favicon.ico" />
+                        </Head>
 
-                      <Link href="/">
-                        <BackLink
-                          as="a"
-                          role="button"
-                          tabIndex={0}
-                          aria-label="Retour"
-                          onKeyPress={generateHandleKeypress(() =>
-                            router.push('/')
-                          )}
-                        >
-                          ←
-                        </BackLink>
-                      </Link>
-                      <PageTitle>
-                        <img src="/title.png" alt="Vampire Dark Age" />
-                      </PageTitle>
+                        <Link href="/">
+                          <BackLink
+                            as="a"
+                            role="button"
+                            tabIndex={0}
+                            aria-label="Retour"
+                            onKeyPress={generateHandleKeypress(() =>
+                              router.push('/')
+                            )}
+                          >
+                            ←
+                          </BackLink>
+                        </Link>
+                        <PageTitle>
+                          <img src="/title.png" alt="Vampire Dark Age" />
+                        </PageTitle>
 
-                      <Infos />
-                      <Attributes />
-                      <Abilities />
-                      <Mind />
-                      <Disciplines />
-                      <Misc />
-                      <SaveButton newChar={newChar} />
-                    </SheetContainer>
+                        <Infos />
+                        <Attributes />
+                        <Abilities />
+                        <Mind />
+                        <Disciplines />
+                        <Misc />
+                        <Controls newChar={newChar} />
+                      </SheetContainer>
+                    </LanguagesProvider>
                   </AdvFlawProvider>
                   <Footer />
                 </DisciplinesProvider>

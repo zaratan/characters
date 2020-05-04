@@ -12,6 +12,7 @@ import {
 import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
 import { AdvFlawType } from '../../contexts/AdvFlawContext';
+import { RawLanguage } from '../../contexts/LanguagesContext';
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,
@@ -45,7 +46,6 @@ const Home = ({ initialData }: { initialData: any }) => {
     refreshInterval: 10 * 1000,
     initialData,
   });
-  console.log({ data, infos: data.infos, id });
 
   const {
     generation,
@@ -63,6 +63,7 @@ const Home = ({ initialData }: { initialData: any }) => {
     combinedDisciplines,
     advantages = [],
     flaws = [],
+    languages = [],
   }: {
     generation: number;
     attributes: AttributesType;
@@ -79,6 +80,7 @@ const Home = ({ initialData }: { initialData: any }) => {
     combinedDisciplines: CombinedDisciplinesList;
     advantages: Array<AdvFlawType>;
     flaws: Array<AdvFlawType>;
+    languages: Array<RawLanguage>;
   } = data;
   return (
     <Sheet
@@ -99,6 +101,7 @@ const Home = ({ initialData }: { initialData: any }) => {
       newChar={false}
       advantages={advantages}
       flaws={flaws}
+      languages={languages}
     />
   );
 };

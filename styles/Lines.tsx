@@ -21,9 +21,12 @@ export const BlackLine = styled.div`
 `;
 
 export const StyledLine = ({ title }: { title?: string }) => (
-  <EmptyLine>
-    <BlackLine />
-    {title ? <SectionTitle>{title}</SectionTitle> : ''}
-    <BlackLine />
-  </EmptyLine>
+  <>
+    <EmptyLine />
+    <EmptyLine>
+      <BlackLine />
+      {title ? <SectionTitle>{title}</SectionTitle> : ''}
+      <BlackLine />
+    </EmptyLine>
+  </>
 );

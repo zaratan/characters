@@ -6,6 +6,9 @@ import ColumnTitleWithOptions from './ColumnTitleWithOptions';
 import { LineValue } from './Line';
 import { calcPexDiffAdvFlaw } from '../helpers/pex';
 import { Container } from '../styles/Container';
+import LanguagesContext from '../contexts/LanguagesContext';
+import AbilitiesContext from '../contexts/AbilitiesContext';
+import { maxLanguages } from '../helpers/maxLevels';
 
 const Misc = () => {
   const {
@@ -16,6 +19,16 @@ const Misc = () => {
     removeAdvantage,
     removeFlaw,
   } = useContext(AdvFlawContext);
+  const { languages, addNewLanguage, removeLanguage } = useContext(
+    LanguagesContext
+  );
+  const { knowledges } = useContext(AbilitiesContext);
+  const linguisticsValue =
+    knowledges.find((knowledge) => knowledge.title === 'Linguistique')?.value ||
+    -1;
+  // 999 should be big enough. If you need more. You probably shouldn't use this tool.
+  const maxLang =
+    linguisticsValue === -1 ? 999 : maxLanguages(linguisticsValue);
   return (
     <>
       <StyledLine title="Misc." />
@@ -63,6 +76,32 @@ const Misc = () => {
                 />
               </li>
             ))}
+          </ul>
+        </Container>
+        <Container>
+          <ColumnTitleWithOptions
+            title="Langues"
+            button={{
+              glyph: '+',
+              value: addNewLanguage,
+              hidden: maxLang <= languages.length,
+            }}
+          />
+          <ul>
+            {languages.map((language, i) =>
+              i < maxLang ? (
+                <li key={language.key}>
+                  <LineValue
+                    changeName={language.set}
+                    diffPexCalc={() => 0}
+                    title={language.value}
+                    remove={() => removeLanguage(language.key)}
+                    name={language.key}
+                    full
+                  />
+                </li>
+              ) : null
+            )}
           </ul>
         </Container>
       </HorizontalSection>
