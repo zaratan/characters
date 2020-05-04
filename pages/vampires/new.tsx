@@ -10,6 +10,7 @@ import {
 } from '../../contexts/DisciplinesContext';
 import Sheet from '../../components/Sheet';
 import defaultData from '../../contexts/defaultData';
+import { AdvFlawType } from '../../contexts/AdvFlawContext';
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
@@ -33,6 +34,8 @@ const Home = ({ data }: { data: any }) => {
     clanDisciplines,
     outClanDisciplines,
     combinedDisciplines,
+    advantages = [],
+    flaws = [],
   }: {
     generation: number;
     attributes: AttributesType;
@@ -47,6 +50,8 @@ const Home = ({ data }: { data: any }) => {
     clanDisciplines: DisciplinesList;
     outClanDisciplines: DisciplinesList;
     combinedDisciplines: CombinedDisciplinesList;
+    advantages: Array<AdvFlawType>;
+    flaws: Array<AdvFlawType>;
   } = data;
   return (
     <Sheet
@@ -65,6 +70,8 @@ const Home = ({ data }: { data: any }) => {
       outClanDisciplines={outClanDisciplines}
       combinedDisciplines={combinedDisciplines}
       newChar
+      advantages={advantages}
+      flaws={flaws}
     />
   );
 };

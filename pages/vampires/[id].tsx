@@ -11,6 +11,7 @@ import {
 } from '../../contexts/DisciplinesContext';
 import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
+import { AdvFlawType } from '../../contexts/AdvFlawContext';
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,
@@ -41,7 +42,7 @@ const Home = ({ initialData }: { initialData: any }) => {
   const router = useRouter();
   const { id } = router.query;
   const { data } = useSWR(`/api/vampires/${id}`, {
-    refreshInterval: 10 * 60 * 1000,
+    refreshInterval: 10 * 1000,
     initialData,
   });
   console.log({ data, infos: data.infos, id });
@@ -60,6 +61,8 @@ const Home = ({ initialData }: { initialData: any }) => {
     clanDisciplines,
     outClanDisciplines,
     combinedDisciplines,
+    advantages = [],
+    flaws = [],
   }: {
     generation: number;
     attributes: AttributesType;
@@ -74,6 +77,8 @@ const Home = ({ initialData }: { initialData: any }) => {
     clanDisciplines: DisciplinesList;
     outClanDisciplines: DisciplinesList;
     combinedDisciplines: CombinedDisciplinesList;
+    advantages: Array<AdvFlawType>;
+    flaws: Array<AdvFlawType>;
   } = data;
   return (
     <Sheet
@@ -92,6 +97,8 @@ const Home = ({ initialData }: { initialData: any }) => {
       outClanDisciplines={outClanDisciplines}
       combinedDisciplines={combinedDisciplines}
       newChar={false}
+      advantages={advantages}
+      flaws={flaws}
     />
   );
 };

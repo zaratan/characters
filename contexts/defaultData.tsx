@@ -92,6 +92,9 @@ const outClanDisciplines = [];
 
 const combinedDisciplines = [];
 
+const advantages = [];
+const flaws = [];
+
 export default {
   generation,
   infos,
@@ -106,4 +109,6 @@ export default {
   clanDisciplines,
   outClanDisciplines,
   combinedDisciplines,
+  advantages,
+  flaws,
 };

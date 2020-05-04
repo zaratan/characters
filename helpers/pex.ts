@@ -1,5 +1,3 @@
-import { maxBlood } from './maxLevels';
-
 export const calcPexAttribute = (value: number) => value * (value - 1) * 2;
 export const calcPexAbility = (value: number) =>
   value === 0 ? 0 : value * (value - 1) + 3;
@@ -19,6 +17,11 @@ export const calcPexThaumaturgyPath = (value: number) => {
 };
 export const calcPexThaumaturgyRitual = (value: number, multi: number) =>
   value * multi;
+
+export const calcPexSpecialty = (value: number) => (Math.max(1, value) - 1) * 2;
+
+export const calcPexAdvFlaw = (value: number, neg: boolean) =>
+  Math.abs(value) * 3 * (neg ? -1 : +1);
 
 export const calcPexDiffAttribute = (from: number, to: number) =>
   calcPexAttribute(to) - calcPexAttribute(from);
@@ -48,7 +51,8 @@ export const calcPexDiffThaumaturgyRitual = (
 ) =>
   calcPexThaumaturgyRitual(to, multi) - calcPexThaumaturgyRitual(from, multi);
 
-export const calcPexSpecialty = (value: number) => (Math.max(1, value) - 1) * 2;
-
 export const calcPexDiffSpecialty = (from: number, to: number) =>
   (Math.max(1, to) - Math.max(1, from)) * 2;
+
+export const calcPexDiffAdvFlaw = (from: number, to: number, neg: boolean) =>
+  calcPexAdvFlaw(to, neg) - calcPexAdvFlaw(from, neg);

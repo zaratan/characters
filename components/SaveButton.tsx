@@ -15,6 +15,7 @@ import GenerationContext from '../contexts/GenerationContext';
 import MindContext from '../contexts/MindContext';
 import DisciplinesContext from '../contexts/DisciplinesContext';
 import { fetcher } from '../helpers/fetcher';
+import AdvFlawContext from '../contexts/AdvFlawContext';
 
 const StyledActionItem = styled(ActionItem)`
   position: absolute;
@@ -76,6 +77,7 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
     outClanDisciplines,
     combinedDisciplines,
   } = useContext(DisciplinesContext);
+  const { advantages, flaws } = useContext(AdvFlawContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -198,6 +200,16 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
       clanDisciplines: clanDisc,
       outClanDisciplines: outClanDisc,
       combinedDisciplines: combinedDisc,
+      advantages: advantages.map((advantage) => ({
+        value: advantage.value,
+        title: advantage.title,
+        key: advantage.key,
+      })),
+      flaws: flaws.map((flaw) => ({
+        value: flaw.value,
+        title: flaw.title,
+        key: flaw.key,
+      })),
     };
     const url = newChar ? '/api/vampires/create' : `/api/vampires/${id}/update`;
     await fetcher(url, {

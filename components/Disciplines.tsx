@@ -16,37 +16,7 @@ import {
 } from '../helpers/pex';
 import { HandEditableText } from '../styles/Texts';
 import GenerationContext from '../contexts/GenerationContext';
-
-const Container = styled.div`
-  .col-button {
-    font-size: 1.5rem;
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
-  @media screen and (any-hover: hover) {
-    .empty-glyph,
-    .open-glyph,
-    .line-button,
-    .remove-glyph,
-    .ritual-multiplicator,
-    .col-button {
-      opacity: 0;
-      transition: opacity 0.2s ease-in-out;
-    }
-    :hover,
-    :focus-within {
-      .empty-glyph,
-      .open-glyph,
-      .line-button,
-      .remove-glyph,
-      .ritual-multiplicator,
-      .col-button {
-        opacity: 1;
-      }
-    }
-  }
-`;
+import { Container } from '../styles/Container';
 
 const RitualMultiplicatorContainer = styled.span`
   font-size: 1rem;

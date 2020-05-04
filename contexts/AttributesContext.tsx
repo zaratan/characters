@@ -1,12 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, {
-  createContext,
-  useState,
-  ReactNode,
-  useMemo,
-  useEffect,
-} from 'react';
+import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { TempElemType } from '../types/TempElemType';
 
 export interface AttributesType {
