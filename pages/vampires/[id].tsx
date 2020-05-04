@@ -15,10 +15,19 @@ import Sheet from '../../components/Sheet';
 export const getServerSideProps: GetServerSideProps = async ({
   query,
   req,
+  res,
 }) => {
   const initialData = await nodeFetcher(
     `${host(req)}/api/vampires/${query.id}`
   );
+
+  if (!initialData.id) {
+    res.writeHead(302, {
+      Location: '/vampires/new',
+    });
+    res.end();
+    return { props: {} };
+  }
 
   return {
     props: {

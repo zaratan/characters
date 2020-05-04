@@ -12,6 +12,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   } = req;
 
   try {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dbs: { data: Array<{ data: any }> } = await client.query(
       q.Map(
         // iterate each item in result
