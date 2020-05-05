@@ -1,8 +1,6 @@
 import React, { useContext } from 'react';
 import { useRouter } from 'next/router';
 import { mutate } from 'swr';
-import styled from 'styled-components';
-import { ActionItem } from '../styles/Items';
 import IdContext from '../contexts/IdContext';
 import InfosContext from '../contexts/InfosContext';
 import AttributesContext from '../contexts/AttributesContext';

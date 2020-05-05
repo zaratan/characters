@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
 import styled from 'styled-components';
 import { TempElemType } from '../types/TempElemType';
-import PreferencesContext from '../contexts/PreferencesContext';
 import { Title } from '../styles/Titles';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 import PexElem from './PexElem';

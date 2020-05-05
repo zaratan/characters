@@ -111,5 +111,6 @@ module.exports = {
       }
     ],
   },
-  plugins: ["prettier", "react-hooks", '@typescript-eslint', 'styled-components-a11y']
+  plugins: ["prettier", "react-hooks", '@typescript-eslint', 'styled-components-a11y'],
+  ignorePatterns: ["next-env.d.ts", "node_modules/"],
 }

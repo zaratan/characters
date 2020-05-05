@@ -33,9 +33,7 @@ import { AdvFlawProvider, AdvFlawType } from '../contexts/AdvFlawContext';
 import Misc from './sections/Misc';
 import { RawLanguage, LanguagesProvider } from '../contexts/LanguagesContext';
 import Controls from './sections/Controls';
-import PreferencesContext, {
-  PreferencesProvider,
-} from '../contexts/PreferencesContext';
+import { PreferencesProvider } from '../contexts/PreferencesContext';
 import PexSection from './sections/PexSection';
 
 const PageTitle = styled.div`
