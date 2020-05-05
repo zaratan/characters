@@ -22,7 +22,8 @@ import AbilitiesContext from '../../contexts/AbilitiesContext';
 import MindContext from '../../contexts/MindContext';
 import DisciplinesContext from '../../contexts/DisciplinesContext';
 import AdvFlawContext from '../../contexts/AdvFlawContext';
-import { HandLargeText } from '../../styles/Texts';
+import { HandLargeText, HandEditableText } from '../../styles/Texts';
+import PexContext from '../../contexts/PexContext';
 
 const HandText = styled(HandLargeText)`
   display: flex;
@@ -32,7 +33,16 @@ const HandText = styled(HandLargeText)`
   }
 `;
 
+const TextContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  input {
+    text-align: center;
+  }
+`;
+
 const PexSection = () => {
+  const { leftOver } = useContext(PexContext);
   const {
     strength,
     appearance,
@@ -156,6 +166,15 @@ const PexSection = () => {
     <>
       <SectionTitle title="Expérience" />
       <HorizontalSection>
+        <Container>
+          <ColumnTitle title="Restant" />
+          <TextContainer>
+            <HandEditableText
+              onChange={(e) => leftOver.set(Number(e.target.value))}
+              value={leftOver.value}
+            />
+          </TextContainer>
+        </Container>
         <Container>
           <ColumnTitle title="Total" />
           <HandText>
