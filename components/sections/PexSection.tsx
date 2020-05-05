@@ -171,7 +171,8 @@ const PexSection = () => {
           <TextContainer>
             <HandEditableText
               onChange={(e) => leftOver.set(Number(e.target.value))}
-              value={leftOver.value}
+              value={leftOver.value === 0 ? '' : leftOver.value}
+              placeholder="PEX restant"
             />
           </TextContainer>
         </Container>
