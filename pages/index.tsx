@@ -44,6 +44,7 @@ const Home = ({
     initialData,
   });
   const { characters } = data;
+  characters.sort((a, b) => (a.name < b.name ? -1 : 1));
   return (
     <>
       <Head>
