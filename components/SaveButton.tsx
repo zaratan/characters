@@ -12,6 +12,7 @@ import { fetcher } from '../helpers/fetcher';
 import AdvFlawContext from '../contexts/AdvFlawContext';
 import LanguagesContext from '../contexts/LanguagesContext';
 import Button from './Button';
+import PexContext from '../contexts/PexContext';
 
 const SaveButton = ({ newChar }: { newChar: boolean }) => {
   const router = useRouter();
@@ -67,6 +68,7 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
   } = useContext(DisciplinesContext);
   const { advantages, flaws } = useContext(AdvFlawContext);
   const { languages } = useContext(LanguagesContext);
+  const { leftOver } = useContext(PexContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -203,6 +205,7 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
         value: language.value,
         key: language.key,
       })),
+      leftOverPex: leftOver.value,
     };
     const url = newChar ? '/api/vampires/create' : `/api/vampires/${id}/update`;
     await fetcher(url, {

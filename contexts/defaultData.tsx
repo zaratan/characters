@@ -95,6 +95,7 @@ const combinedDisciplines = [];
 const advantages = [];
 const flaws = [];
 const languages = [];
+const leftOverPex = 0;
 
 export default {
   generation,
@@ -113,4 +114,5 @@ export default {
   advantages,
   flaws,
   languages,
+  leftOverPex,
 };

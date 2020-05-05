@@ -64,6 +64,7 @@ const Home = ({ initialData }: { initialData: any }) => {
     advantages = [],
     flaws = [],
     languages = [],
+    leftOverPex = 0,
   }: {
     generation: number;
     attributes: AttributesType;
@@ -81,6 +82,7 @@ const Home = ({ initialData }: { initialData: any }) => {
     advantages: Array<AdvFlawType>;
     flaws: Array<AdvFlawType>;
     languages: Array<RawLanguage>;
+    leftOverPex: number;
   } = data;
   return (
     <Sheet
@@ -102,6 +104,7 @@ const Home = ({ initialData }: { initialData: any }) => {
       advantages={advantages}
       flaws={flaws}
       languages={languages}
+      leftOverPex={leftOverPex}
     />
   );
 };
