@@ -6,10 +6,10 @@ import styled from 'styled-components';
 import { nodeFetcher, host, fetcher } from '../helpers/fetcher';
 import SheetContainer from '../styles/SheetContainer';
 import { HorizontalSection } from '../styles/Sections';
-import { StyledLine } from '../styles/Lines';
 import { HandLargeText } from '../styles/Texts';
 import { ActionItem } from '../styles/Items';
 import { Glyph } from '../components/Glyph';
+import SectionTitle from '../components/SectionTitle';
 
 const TitleContainer = styled.li`
   display: flex;
@@ -51,7 +51,7 @@ const Home = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <SheetContainer>
-        <StyledLine title="Personnages" />
+        <SectionTitle title="Personnages" />
         <HorizontalSection as="ul">
           {characters.map((character) => {
             const onClick = async () => {
@@ -84,7 +84,7 @@ const Home = ({
             );
           })}
         </HorizontalSection>
-        <StyledLine />
+        <SectionTitle />
         <HorizontalSection>
           <Link href="/vampires/new">
             <ActionItem as="a">Nouveau Personnage</ActionItem>
