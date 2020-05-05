@@ -161,6 +161,10 @@ const PexSection = () => {
       elemArray: flaws,
       pexCalc: (value) => calcPexAdvFlaw(value, true),
     },
+    {
+      elemArray: [leftOver],
+      pexCalc: (value) => value,
+    },
   ];
   return (
     <>
