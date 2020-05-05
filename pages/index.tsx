@@ -75,11 +75,11 @@ const Home = ({
                     {character.name || 'Pasdnom'}
                   </HandLargeText>
                 </Link>
-                <GlyphContainer>
+                {/* <GlyphContainer>
                   <Glyph name={`Remove ${character.name}`} onClick={onClick}>
                     ✘
                   </Glyph>
-                </GlyphContainer>
+                </GlyphContainer> */}
               </TitleContainer>
             );
           })}
