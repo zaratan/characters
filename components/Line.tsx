@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from './Dot';
@@ -11,6 +11,7 @@ import { SubTitle } from '../styles/Titles';
 import { HandEditableText } from '../styles/Texts';
 import { Glyph } from './Glyph';
 import { TempElemType } from '../types/TempElemType';
+import PreferencesContext from '../contexts/PreferencesContext';
 
 const ColumnLine = styled.li`
   display: flex;
@@ -220,38 +221,41 @@ export const LineValue = ({
   placeholderName?: string;
   placeholderSub?: string;
   full?: boolean;
-}) => (
-  <ul>
-    <ColumnLine>
-      <LineTitle
-        custom
-        changeName={changeName}
-        title={title}
-        remove={remove}
-        placeholder={placeholderName || 'Nouveau nom…'}
-        full={full}
-      />
-      {elem ? (
-        <div style={{ position: 'relative' }}>
-          <HandEditableText
-            size={3}
-            maxLength={3}
-            value={elem.value === 0 ? '' : elem.value}
-            onChange={(e) => elem.set(Number(e.currentTarget.value))}
-            type="number"
-            max={maxValue}
-            min={0}
-            className="small"
-            placeholder={placeholderSub || 'XP'}
-          />
-          {elem.baseValue !== elem.value ? (
-            <TextHelper>{diffPexCalc(elem.baseValue, elem.value)}</TextHelper>
-          ) : null}
-        </div>
-      ) : null}
-    </ColumnLine>
-  </ul>
-);
+}) => {
+  const { showPex } = useContext(PreferencesContext);
+  return (
+    <ul>
+      <ColumnLine>
+        <LineTitle
+          custom
+          changeName={changeName}
+          title={title}
+          remove={remove}
+          placeholder={placeholderName || 'Nouveau nom…'}
+          full={full}
+        />
+        {elem ? (
+          <div style={{ position: 'relative' }}>
+            <HandEditableText
+              size={3}
+              maxLength={3}
+              value={elem.value === 0 ? '' : elem.value}
+              onChange={(e) => elem.set(Number(e.currentTarget.value))}
+              type="number"
+              max={maxValue}
+              min={0}
+              className="small"
+              placeholder={placeholderSub || 'XP'}
+            />
+            {elem.baseValue !== elem.value && showPex ? (
+              <TextHelper>{diffPexCalc(elem.baseValue, elem.value)}</TextHelper>
+            ) : null}
+          </div>
+        ) : null}
+      </ColumnLine>
+    </ul>
+  );
+};
 
 const Line = ({
   elem,
@@ -287,6 +291,8 @@ const Line = ({
   const onClickHandle = (val: number) => () => {
     elem.set(val);
   };
+
+  const { showPex } = useContext(PreferencesContext);
 
   return (
     <ul>
@@ -438,7 +444,7 @@ const Line = ({
             />
           ) : null}
         </Value>
-        {endNumber !== undefined && (
+        {endNumber !== undefined && showPex && (
           <TextHelper className="closer">{endNumber}</TextHelper>
         )}
         {lineAction ? (

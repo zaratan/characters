@@ -3,10 +3,6 @@ import { useRouter } from 'next/router';
 import { mutate } from 'swr';
 import styled from 'styled-components';
 import { ActionItem } from '../styles/Items';
-import {
-  generateHandleClick,
-  generateHandleKeypress,
-} from '../helpers/handlers';
 import IdContext from '../contexts/IdContext';
 import InfosContext from '../contexts/InfosContext';
 import AttributesContext from '../contexts/AttributesContext';
@@ -17,8 +13,7 @@ import DisciplinesContext from '../contexts/DisciplinesContext';
 import { fetcher } from '../helpers/fetcher';
 import AdvFlawContext from '../contexts/AdvFlawContext';
 import LanguagesContext from '../contexts/LanguagesContext';
-
-const StyledActionItem = styled(ActionItem)``;
+import Button from './Button';
 
 const SaveButton = ({ newChar }: { newChar: boolean }) => {
   const router = useRouter();
@@ -222,18 +217,7 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
       mutate(`/api/vampires/${id}`, data);
     }
   };
-  const handleClick = generateHandleClick(action);
-  const handleKeypress = generateHandleKeypress(action);
-  return (
-    <StyledActionItem
-      role="button"
-      onClick={handleClick}
-      onKeyPress={handleKeypress}
-      tabIndex={0}
-    >
-      Sauvegarder
-    </StyledActionItem>
-  );
+  return <Button onClick={action}>Sauvegarder</Button>;
 };
 
 export default SaveButton;

@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { SectionTitle } from './Titles';
 
 export const EmptyLine = styled.div`
   height: 3rem;
@@ -19,14 +18,3 @@ export const BlackLine = styled.div`
     height: 1px;
   }
 `;
-
-export const StyledLine = ({ title }: { title?: string }) => (
-  <>
-    <EmptyLine />
-    <EmptyLine>
-      <BlackLine />
-      {title ? <SectionTitle>{title}</SectionTitle> : ''}
-      <BlackLine />
-    </EmptyLine>
-  </>
-);

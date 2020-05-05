@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
-import { StyledLine } from '../styles/Lines';
-import { HorizontalSection } from '../styles/Sections';
-import { ColumnTitle } from '../styles/Titles';
-import { AttributeLine } from './Line';
-import { maxDot } from '../helpers/maxLevels';
-import AttributesContext from '../contexts/AttributesContext';
-import GenerationContext from '../contexts/GenerationContext';
+import { HorizontalSection } from '../../styles/Sections';
+import { AttributeLine } from '../Line';
+import { maxDot } from '../../helpers/maxLevels';
+import AttributesContext from '../../contexts/AttributesContext';
+import GenerationContext from '../../contexts/GenerationContext';
+import ColumnTitle from '../ColumnTitle';
+import { calcPexAttribute } from '../../helpers/pex';
+import SectionTitle from '../SectionTitle';
 
 const Attributes = () => {
   const {
@@ -21,13 +22,34 @@ const Attributes = () => {
   } = useContext(AttributesContext);
   const generation = useContext(GenerationContext);
   const maxLevel = maxDot(generation.value);
-
   return (
     <>
-      <StyledLine title="Attributs" />
+      <SectionTitle
+        title="Attributs"
+        pexElems={[
+          {
+            elemArray: [
+              strength,
+              dexterity,
+              stamina,
+              charisma,
+              manipulation,
+              appearance,
+              perception,
+              intelligence,
+              wits,
+            ],
+            pexCalc: calcPexAttribute,
+          },
+        ]}
+      />
       <HorizontalSection>
         <div>
-          <ColumnTitle>Physique</ColumnTitle>
+          <ColumnTitle
+            elemArray={[strength, dexterity, stamina]}
+            pexCalc={calcPexAttribute}
+            title="Physique"
+          />
           <AttributeLine title="Force" elem={strength} maxLevel={maxLevel} />
           <AttributeLine
             title="Dextrérité"
@@ -37,7 +59,11 @@ const Attributes = () => {
           <AttributeLine title="Vigueur" elem={stamina} maxLevel={maxLevel} />
         </div>
         <div>
-          <ColumnTitle>Social</ColumnTitle>
+          <ColumnTitle
+            elemArray={[charisma, manipulation, appearance]}
+            pexCalc={calcPexAttribute}
+            title="Social"
+          />
           <AttributeLine title="Charisme" elem={charisma} maxLevel={maxLevel} />
           <AttributeLine
             title="Manipulation"
@@ -51,7 +77,11 @@ const Attributes = () => {
           />
         </div>
         <div>
-          <ColumnTitle>Mental</ColumnTitle>
+          <ColumnTitle
+            elemArray={[perception, intelligence, wits]}
+            pexCalc={calcPexAttribute}
+            title="Mental"
+          />
           <AttributeLine
             title="Perception"
             elem={perception}

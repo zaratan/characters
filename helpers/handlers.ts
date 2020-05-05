@@ -1,13 +1,13 @@
-import { MouseEvent, KeyboardEvent } from 'react';
+import { MouseEvent, KeyboardEvent, FormEvent } from 'react';
 
-export const generateHandleClick = (changeFunc: () => void) => (
+export const generateHandleClick = (changeFunc: (e: FormEvent) => void) => (
   e: MouseEvent<HTMLSpanElement>
 ) => {
-  changeFunc();
+  changeFunc(e);
   e.currentTarget.blur();
 };
 
-export const generateHandleKeypress = (changeFunc: () => void) => (
+export const generateHandleKeypress = (changeFunc: (e: FormEvent) => void) => (
   e: KeyboardEvent
 ) => {
   if (
@@ -19,5 +19,5 @@ export const generateHandleKeypress = (changeFunc: () => void) => (
     return;
   }
   e.preventDefault();
-  changeFunc();
+  changeFunc(e);
 };

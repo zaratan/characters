@@ -1,12 +1,13 @@
 import React, { useState, ReactNode } from 'react';
 import styled from 'styled-components';
-import { ColumnTitle } from '../styles/Titles';
 import { Glyph } from './Glyph';
 import {
   generateHandleKeypress,
   generateHandleClick,
 } from '../helpers/handlers';
 import { ActionItem, OptionItem } from '../styles/Items';
+import ColumnTitle from './ColumnTitle';
+import { TempElemType } from '../types/TempElemType';
 
 const GlyphContainer = styled.span`
   span {
@@ -61,18 +62,38 @@ const ColumnTitleWithOptions = ({
   actions = [],
   button,
   children,
+  currentPex,
+  diffPex,
+  elemArray,
+  pexCalc,
+  pexElems,
 }: {
   title?: string;
   options?: Array<{ name: string; value: boolean; onClick: () => void }>;
   actions?: Array<{ name: string; value: () => void }>;
   button?: { glyph: string; value: () => void; hidden?: boolean };
   children?: ReactNode;
+  currentPex?: number;
+  diffPex?: number;
+  elemArray?: Array<TempElemType<number>>;
+  pexCalc?: (value: number) => number;
+  pexElems?: Array<{
+    elemArray: Array<TempElemType<number>>;
+    pexCalc: (value: number) => number;
+  }>;
 }) => {
   const [open, setOpen] = useState(false);
   return (
     <div>
-      <ColumnTitle>
-        {title || children}
+      <ColumnTitle
+        currentPex={currentPex}
+        diffPex={diffPex}
+        elemArray={elemArray}
+        pexCalc={pexCalc}
+        title={title}
+        pexElems={pexElems}
+      >
+        {children}
         <GlyphContainer>
           {button ? (
             <ColumnButton

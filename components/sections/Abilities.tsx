@@ -1,14 +1,15 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { StyledLine } from '../styles/Lines';
-import { AbilityLine } from './Line';
-import { HorizontalSection } from '../styles/Sections';
-import { maxDot } from '../helpers/maxLevels';
-import ColumnTitleWithOptions from './ColumnTitleWithOptions';
+import { AbilityLine } from '../Line';
+import { HorizontalSection } from '../../styles/Sections';
+import { maxDot } from '../../helpers/maxLevels';
+import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
 import AbilitiesContext, {
   AbilitiesListType,
-} from '../contexts/AbilitiesContext';
-import GenerationContext from '../contexts/GenerationContext';
+} from '../../contexts/AbilitiesContext';
+import GenerationContext from '../../contexts/GenerationContext';
+import { calcPexAbility, calcPexSpecialty } from '../../helpers/pex';
+import SectionTitle from '../SectionTitle';
 
 const Container = styled.div`
   .col-button {
@@ -57,6 +58,26 @@ const AbilitiesColumn = ({
     <ColumnTitleWithOptions
       title={title}
       button={{ glyph: '+', value: addNewCustomAbility }}
+      pexElems={[
+        {
+          elemArray: [...abilities, ...customAbilities],
+          pexCalc: calcPexAbility,
+        },
+        {
+          elemArray: [...abilities, ...customAbilities]
+            .flatMap(
+              (cap) =>
+                cap.specialties && {
+                  baseValue: cap.baseSpecialtiesCount,
+                  value: cap.specialties.length,
+                  // eslint-disable-next-line @typescript-eslint/no-empty-function
+                  set: () => {},
+                }
+            )
+            .filter((e) => e !== undefined),
+          pexCalc: calcPexSpecialty,
+        },
+      ]}
     />
     {abilities.map((ability) => (
       <AbilityLine
@@ -122,7 +143,43 @@ const Abilities = () => {
   const maxLevel = maxDot(generation.value);
   return (
     <>
-      <StyledLine title="Capacités" />
+      <SectionTitle
+        title="Capacités"
+        pexElems={[
+          {
+            elemArray: [
+              ...talents,
+              ...customTalents,
+              ...skills,
+              ...customSkills,
+              ...knowledges,
+              ...customKnowledges,
+            ],
+            pexCalc: calcPexAbility,
+          },
+          {
+            elemArray: [
+              ...talents,
+              ...customTalents,
+              ...skills,
+              ...customSkills,
+              ...knowledges,
+              ...customKnowledges,
+            ]
+              .flatMap(
+                (cap) =>
+                  cap.specialties && {
+                    baseValue: cap.baseSpecialtiesCount,
+                    value: cap.specialties.length,
+                    // eslint-disable-next-line @typescript-eslint/no-empty-function
+                    set: () => {},
+                  }
+              )
+              .filter((e) => e !== undefined),
+            pexCalc: calcPexSpecialty,
+          },
+        ]}
+      />
       <HorizontalSection>
         <AbilitiesColumn
           title="Talents"

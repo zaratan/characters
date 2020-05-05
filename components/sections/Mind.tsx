@@ -1,16 +1,21 @@
 import React, { useContext } from 'react';
-import { StyledLine } from '../styles/Lines';
-import { HorizontalSection } from '../styles/Sections';
-import { ColumnTitle } from '../styles/Titles';
-import Line from './Line';
-import { calcPexDiffWillpower, calcPexDiffPathOrVirtue } from '../helpers/pex';
-import SquareLine from './SquareLine';
-import Health from './Health';
-import { maxBlood } from '../helpers/maxLevels';
-import UnderlinedHandLargeEditableText from './UnderlinedHandLargeEditableText';
-import ColumnTitleWithOptions from './ColumnTitleWithOptions';
-import MindContext from '../contexts/MindContext';
-import GenerationContext from '../contexts/GenerationContext';
+import { HorizontalSection } from '../../styles/Sections';
+import Line from '../Line';
+import {
+  calcPexDiffWillpower,
+  calcPexDiffPathOrVirtue,
+  calcPexWillpower,
+  calcPexPathOrVirtue,
+} from '../../helpers/pex';
+import SquareLine from '../SquareLine';
+import Health from '../Health';
+import { maxBlood } from '../../helpers/maxLevels';
+import UnderlinedHandLargeEditableText from '../UnderlinedHandLargeEditableText';
+import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
+import MindContext from '../../contexts/MindContext';
+import GenerationContext from '../../contexts/GenerationContext';
+import ColumnTitle from '../ColumnTitle';
+import SectionTitle from '../SectionTitle';
 
 const Mind = () => {
   const {
@@ -28,10 +33,26 @@ const Mind = () => {
   const generation = useContext(GenerationContext);
   return (
     <>
-      <StyledLine />
+      <SectionTitle
+        title="Esprit"
+        pexElems={[
+          {
+            elemArray: [willpower],
+            pexCalc: calcPexWillpower,
+          },
+          {
+            elemArray: [courage, selfControl, conscience, path],
+            pexCalc: calcPexPathOrVirtue,
+          },
+        ]}
+      />
       <HorizontalSection>
         <div>
-          <ColumnTitle>Volonté</ColumnTitle>
+          <ColumnTitle
+            elemArray={[willpower]}
+            pexCalc={calcPexWillpower}
+            title="Volonté"
+          />
           <Line
             elem={willpower}
             maxLevel={10}
@@ -66,6 +87,8 @@ const Mind = () => {
                 onClick: () => isInstinct.set(!isInstinct.value),
               },
             ]}
+            elemArray={[conscience, courage, selfControl]}
+            pexCalc={calcPexPathOrVirtue}
           />
           <Line
             title={isConviction.value ? 'Conviction' : 'Conscience'}
@@ -91,7 +114,11 @@ const Mind = () => {
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Courage"
           />
-          <ColumnTitle>Voie</ColumnTitle>
+          <ColumnTitle
+            elemArray={[path]}
+            pexCalc={calcPexPathOrVirtue}
+            title="Voie"
+          />
           <UnderlinedHandLargeEditableText elem={pathName} />
           <Line
             elem={path}

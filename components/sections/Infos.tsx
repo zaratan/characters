@@ -1,11 +1,11 @@
 import React, { FormEvent, useContext } from 'react';
 import styled from 'styled-components';
-import { HorizontalSection } from '../styles/Sections';
-import { EmptyLine } from '../styles/Lines';
-import { Title } from '../styles/Titles';
-import { HandLargeEditableText } from '../styles/Texts';
-import InfosContext from '../contexts/InfosContext';
-import GenerationContext from '../contexts/GenerationContext';
+import { HorizontalSection } from '../../styles/Sections';
+import { EmptyLine } from '../../styles/Lines';
+import { Title } from '../../styles/Titles';
+import { HandLargeEditableText } from '../../styles/Texts';
+import InfosContext from '../../contexts/InfosContext';
+import GenerationContext from '../../contexts/GenerationContext';
 
 const InfoContainer = styled.div`
   display: flex;

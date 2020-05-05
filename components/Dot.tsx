@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
 import {
   generateHandleClick,
   generateHandleKeypress,
 } from '../helpers/handlers';
 import { Glyph } from './Glyph';
+import PreferencesContext from '../contexts/PreferencesContext';
 
 const DotStyle = styled.svg`
   padding: 0 0.05rem;
@@ -197,6 +198,7 @@ const Dot = ({
   const handleClick = generateHandleClick(onClick);
 
   const handleKeyPress = generateHandleKeypress(onClick);
+  const { showPex } = useContext(PreferencesContext);
 
   return (
     <DotContainer
@@ -208,7 +210,7 @@ const Dot = ({
       aria-checked={full}
       aria-label={`${name} ${value}`}
     >
-      <TextHelper>{pexValue}</TextHelper>
+      {showPex ? <TextHelper>{pexValue}</TextHelper> : null}
       <DotStyle className={full ? 'full' : 'not-full'}>
         <ellipse
           cx="50%"

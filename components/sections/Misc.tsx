@@ -1,14 +1,14 @@
 import React, { useContext } from 'react';
-import AdvFlawContext from '../contexts/AdvFlawContext';
-import { StyledLine } from '../styles/Lines';
-import { HorizontalSection } from '../styles/Sections';
-import ColumnTitleWithOptions from './ColumnTitleWithOptions';
-import { LineValue } from './Line';
-import { calcPexDiffAdvFlaw } from '../helpers/pex';
-import { Container } from '../styles/Container';
-import LanguagesContext from '../contexts/LanguagesContext';
-import AbilitiesContext from '../contexts/AbilitiesContext';
-import { maxLanguages } from '../helpers/maxLevels';
+import AdvFlawContext from '../../contexts/AdvFlawContext';
+import { HorizontalSection } from '../../styles/Sections';
+import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
+import { LineValue } from '../Line';
+import { calcPexDiffAdvFlaw, calcPexAdvFlaw } from '../../helpers/pex';
+import { Container } from '../../styles/Container';
+import LanguagesContext from '../../contexts/LanguagesContext';
+import AbilitiesContext from '../../contexts/AbilitiesContext';
+import { maxLanguages } from '../../helpers/maxLevels';
+import SectionTitle from '../SectionTitle';
 
 const Misc = () => {
   const {
@@ -31,12 +31,26 @@ const Misc = () => {
     linguisticsValue === -1 ? 999 : maxLanguages(linguisticsValue);
   return (
     <>
-      <StyledLine title="Misc." />
+      <SectionTitle
+        title="Divers"
+        pexElems={[
+          {
+            elemArray: advantages,
+            pexCalc: (value) => calcPexAdvFlaw(value, false),
+          },
+          {
+            elemArray: flaws,
+            pexCalc: (value) => calcPexAdvFlaw(value, true),
+          },
+        ]}
+      />
       <HorizontalSection>
         <Container>
           <ColumnTitleWithOptions
             title="Avantages"
             button={{ glyph: '+', value: addNewAdvantage }}
+            elemArray={advantages}
+            pexCalc={(value) => calcPexAdvFlaw(value, false)}
           />
           <ul>
             {advantages.map((advantage) => (
@@ -60,6 +74,8 @@ const Misc = () => {
           <ColumnTitleWithOptions
             title="Inconvénients"
             button={{ glyph: '+', value: addNewFlaw }}
+            elemArray={flaws}
+            pexCalc={(value) => calcPexAdvFlaw(value, true)}
           />
           <ul>
             {flaws.map((flaw) => (

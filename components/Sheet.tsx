@@ -18,11 +18,11 @@ import {
   CombinedDisciplinesList,
   DisciplinesProvider,
 } from '../contexts/DisciplinesContext';
-import Infos from './Infos';
-import Attributes from './Attributes';
-import Abilities from './Abilities';
-import Mind from './Mind';
-import Disciplines from './Disciplines';
+import Infos from './sections/Infos';
+import Attributes from './sections/Attributes';
+import Abilities from './sections/Abilities';
+import Mind from './sections/Mind';
+import Disciplines from './sections/Disciplines';
 import Footer from './Footer';
 import { GenerationProvider } from '../contexts/GenerationContext';
 import { IdProvider } from '../contexts/IdContext';
@@ -30,9 +30,13 @@ import SheetContainer from '../styles/SheetContainer';
 import { ActionItem } from '../styles/Items';
 import { generateHandleKeypress } from '../helpers/handlers';
 import { AdvFlawProvider, AdvFlawType } from '../contexts/AdvFlawContext';
-import Misc from './Misc';
+import Misc from './sections/Misc';
 import { RawLanguage, LanguagesProvider } from '../contexts/LanguagesContext';
-import Controls from './Controls';
+import Controls from './sections/Controls';
+import PreferencesContext, {
+  PreferencesProvider,
+} from '../contexts/PreferencesContext';
+import PexSection from './sections/PexSection';
 
 const PageTitle = styled.div`
   display: flex;
@@ -105,70 +109,73 @@ const Sheet = ({
   const router = useRouter();
 
   return (
-    <IdProvider id={id}>
-      <GenerationProvider generation={generation}>
-        <InfosProvider infos={infos}>
-          <AttributesProvider attributes={attributes}>
-            <MindProvider mind={mind}>
-              <AbilitiesProvider
-                talents={talents}
-                customTalents={customTalents}
-                skills={skills}
-                customSkills={customSkills}
-                knowledges={knowledges}
-                customKnowledges={customKnowledges}
-              >
-                <DisciplinesProvider
-                  clanDisciplines={clanDisciplines}
-                  outClanDisciplines={outClanDisciplines}
-                  combinedDisciplines={combinedDisciplines}
+    <PreferencesProvider>
+      <IdProvider id={id}>
+        <GenerationProvider generation={generation}>
+          <InfosProvider infos={infos}>
+            <AttributesProvider attributes={attributes}>
+              <MindProvider mind={mind}>
+                <AbilitiesProvider
+                  talents={talents}
+                  customTalents={customTalents}
+                  skills={skills}
+                  customSkills={customSkills}
+                  knowledges={knowledges}
+                  customKnowledges={customKnowledges}
                 >
-                  <AdvFlawProvider advantages={advantages} flaws={flaws}>
-                    <LanguagesProvider languages={languages}>
-                      <SheetContainer>
-                        <Head>
-                          <title>
-                            {infos.name ? `${infos.name} - ` : null}Feuille de
-                            Personnage
-                          </title>
-                          <link rel="icon" href="/favicon.ico" />
-                        </Head>
+                  <DisciplinesProvider
+                    clanDisciplines={clanDisciplines}
+                    outClanDisciplines={outClanDisciplines}
+                    combinedDisciplines={combinedDisciplines}
+                  >
+                    <AdvFlawProvider advantages={advantages} flaws={flaws}>
+                      <LanguagesProvider languages={languages}>
+                        <SheetContainer>
+                          <Head>
+                            <title>
+                              {infos.name ? `${infos.name} - ` : null}Feuille de
+                              Personnage
+                            </title>
+                            <link rel="icon" href="/favicon.ico" />
+                          </Head>
 
-                        <Link href="/">
-                          <BackLink
-                            as="a"
-                            role="button"
-                            tabIndex={0}
-                            aria-label="Retour"
-                            onKeyPress={generateHandleKeypress(() =>
-                              router.push('/')
-                            )}
-                          >
-                            ←
-                          </BackLink>
-                        </Link>
-                        <PageTitle>
-                          <img src="/title.png" alt="Vampire Dark Age" />
-                        </PageTitle>
+                          <Link href="/">
+                            <BackLink
+                              as="a"
+                              role="button"
+                              tabIndex={0}
+                              aria-label="Retour"
+                              onKeyPress={generateHandleKeypress(() =>
+                                router.push('/')
+                              )}
+                            >
+                              ←
+                            </BackLink>
+                          </Link>
+                          <PageTitle>
+                            <img src="/title.png" alt="Vampire Dark Age" />
+                          </PageTitle>
 
-                        <Infos />
-                        <Attributes />
-                        <Abilities />
-                        <Mind />
-                        <Disciplines />
-                        <Misc />
-                        <Controls newChar={newChar} />
-                      </SheetContainer>
-                    </LanguagesProvider>
-                  </AdvFlawProvider>
-                  <Footer />
-                </DisciplinesProvider>
-              </AbilitiesProvider>
-            </MindProvider>
-          </AttributesProvider>
-        </InfosProvider>
-      </GenerationProvider>
-    </IdProvider>
+                          <Infos />
+                          <Attributes />
+                          <Abilities />
+                          <Mind />
+                          <Disciplines />
+                          <Misc />
+                          <PexSection />
+                          <Controls newChar={newChar} />
+                        </SheetContainer>
+                      </LanguagesProvider>
+                    </AdvFlawProvider>
+                    <Footer />
+                  </DisciplinesProvider>
+                </AbilitiesProvider>
+              </MindProvider>
+            </AttributesProvider>
+          </InfosProvider>
+        </GenerationProvider>
+      </IdProvider>
+    </PreferencesProvider>
   );
 };
 export default Sheet;

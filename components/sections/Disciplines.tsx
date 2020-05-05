@@ -1,22 +1,26 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { maxDot } from '../helpers/maxLevels';
-import { StyledLine } from '../styles/Lines';
-import { HorizontalSection } from '../styles/Sections';
-import ColumnTitleWithOptions from './ColumnTitleWithOptions';
+import { maxDot } from '../../helpers/maxLevels';
+import { HorizontalSection } from '../../styles/Sections';
+import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
 import DisciplinesContext, {
   TempThaumaturgyElemType,
-} from '../contexts/DisciplinesContext';
-import Line, { LineValue } from './Line';
+} from '../../contexts/DisciplinesContext';
+import Line, { LineValue } from '../Line';
 import {
   calcPexDiffThaumaturgyPath,
   calcPexDiffInClanDiscipline,
   calcPexDiffOutOfClanDiscipline,
   calcPexDiffThaumaturgyRitual,
-} from '../helpers/pex';
-import { HandEditableText } from '../styles/Texts';
-import GenerationContext from '../contexts/GenerationContext';
-import { Container } from '../styles/Container';
+  calcPexInClanDiscipline,
+  calcPexOutOfClanDiscipline,
+  calcPexThaumaturgyPath,
+  calcPexThaumaturgyRitual,
+} from '../../helpers/pex';
+import { HandEditableText } from '../../styles/Texts';
+import GenerationContext from '../../contexts/GenerationContext';
+import { Container } from '../../styles/Container';
+import SectionTitle from '../SectionTitle';
 
 const RitualMultiplicatorContainer = styled.span`
   font-size: 1rem;
@@ -39,12 +43,41 @@ const Disciplines = () => {
   const maxLevel = maxDot(generation.value);
   return (
     <>
-      <StyledLine title="Disciplines" />
+      <SectionTitle
+        title="Disciplines"
+        pexElems={[
+          {
+            elemArray: clanDisciplines,
+            pexCalc: calcPexInClanDiscipline,
+          },
+          {
+            elemArray: outClanDisciplines,
+            pexCalc: calcPexOutOfClanDiscipline,
+          },
+          {
+            elemArray: combinedDisciplines,
+            pexCalc: (value) => value,
+          },
+          {
+            elemArray: [...clanDisciplines, ...outClanDisciplines].flatMap(
+              (disc) => disc.paths
+            ),
+            pexCalc: calcPexThaumaturgyPath,
+          },
+          ...[...clanDisciplines, ...outClanDisciplines].flatMap((disc) => ({
+            elemArray: disc.rituals,
+            pexCalc: (value) =>
+              calcPexThaumaturgyRitual(value, disc.ritualMulti),
+          })),
+        ]}
+      />
       <HorizontalSection>
         <Container>
           <ColumnTitleWithOptions
             title="Clan"
             button={{ glyph: '+', value: addNewClanDiscipline }}
+            elemArray={clanDisciplines}
+            pexCalc={calcPexInClanDiscipline}
           />
           <ul>
             {clanDisciplines.map((discipline) => (
@@ -73,6 +106,8 @@ const Disciplines = () => {
           <ColumnTitleWithOptions
             title="Hors Clan"
             button={{ glyph: '+', value: addNewOutClanDiscipline }}
+            elemArray={outClanDisciplines}
+            pexCalc={calcPexOutOfClanDiscipline}
           />
           <ul>
             {outClanDisciplines.map((discipline) => (
@@ -101,6 +136,8 @@ const Disciplines = () => {
           <ColumnTitleWithOptions
             title="Disciplines Combinées"
             button={{ glyph: '+', value: addNewCombinedDiscipline }}
+            elemArray={combinedDisciplines}
+            pexCalc={(value) => value}
           />
           <ul>
             {combinedDisciplines.map((combinedDiscipline) => (
@@ -127,6 +164,8 @@ const Disciplines = () => {
               <ColumnTitleWithOptions
                 title={`Voies de ${thau.title}`}
                 button={{ glyph: '+', value: thau.addNewPath }}
+                elemArray={thau.paths}
+                pexCalc={calcPexThaumaturgyPath}
               />
               <ul>
                 <li>
@@ -167,10 +206,13 @@ const Disciplines = () => {
             </Container>,
             <Container key={`${thau.key}-rituals`}>
               <ColumnTitleWithOptions
+                title={`Rituels de ${thau.title}`}
                 button={{ glyph: '+', value: thau.addNewRitual }}
+                elemArray={thau.rituals}
+                pexCalc={(value) =>
+                  calcPexThaumaturgyRitual(value, thau.ritualMulti)
+                }
               >
-                <span>{`Rituels de ${thau.title}`}</span>
-
                 <RitualMultiplicatorContainer className="ritual-multiplicator">
                   (x
                   <HandEditableText
