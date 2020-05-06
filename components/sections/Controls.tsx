@@ -7,6 +7,7 @@ import { Container } from '../../styles/Container';
 import PreferencesContext from '../../contexts/PreferencesContext';
 import Button from '../Button';
 import SectionTitle from '../SectionTitle';
+import ModeContext from '../../contexts/ModeContext';
 
 const StyledContainer = styled(Container)`
   display: flex;
@@ -19,19 +20,25 @@ const StyledContainer = styled(Container)`
 
 const Controls = ({ newChar }: { newChar: boolean }) => {
   const { showPex, togglePex } = useContext(PreferencesContext);
+  const { editMode, toggleMode } = useContext(ModeContext);
   return (
     <>
       <SectionTitle title="Controlles" />
       <EmptyLine />
       <HorizontalSection>
         <StyledContainer>
-          <SaveButton newChar={newChar} />
+          <Button onClick={toggleMode}>{editMode ? 'Play' : 'Edit'}</Button>
         </StyledContainer>
         <StyledContainer>
           <Button onClick={togglePex}>{`${
             showPex ? 'Cacher' : 'Afficher'
           } les PEX`}</Button>
         </StyledContainer>
+        {editMode ? (
+          <StyledContainer>
+            <SaveButton newChar={newChar} />
+          </StyledContainer>
+        ) : null}
       </HorizontalSection>
     </>
   );

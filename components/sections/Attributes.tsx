@@ -7,6 +7,7 @@ import GenerationContext from '../../contexts/GenerationContext';
 import ColumnTitle from '../ColumnTitle';
 import { calcPexAttribute } from '../../helpers/pex';
 import SectionTitle from '../SectionTitle';
+import ModeContext from '../../contexts/ModeContext';
 
 const Attributes = () => {
   const {
@@ -21,6 +22,7 @@ const Attributes = () => {
     wits,
   } = useContext(AttributesContext);
   const generation = useContext(GenerationContext);
+  const { editMode } = useContext(ModeContext);
   const maxLevel = maxDot(generation.value);
   return (
     <>
@@ -50,13 +52,24 @@ const Attributes = () => {
             pexCalc={calcPexAttribute}
             title="Physique"
           />
-          <AttributeLine title="Force" elem={strength} maxLevel={maxLevel} />
+          <AttributeLine
+            title="Force"
+            elem={strength}
+            maxLevel={maxLevel}
+            inactive={!editMode}
+          />
           <AttributeLine
             title="Dextrérité"
             elem={dexterity}
             maxLevel={maxLevel}
+            inactive={!editMode}
           />
-          <AttributeLine title="Vigueur" elem={stamina} maxLevel={maxLevel} />
+          <AttributeLine
+            title="Vigueur"
+            elem={stamina}
+            maxLevel={maxLevel}
+            inactive={!editMode}
+          />
         </div>
         <div>
           <ColumnTitle
@@ -64,16 +77,23 @@ const Attributes = () => {
             pexCalc={calcPexAttribute}
             title="Social"
           />
-          <AttributeLine title="Charisme" elem={charisma} maxLevel={maxLevel} />
+          <AttributeLine
+            title="Charisme"
+            elem={charisma}
+            maxLevel={maxLevel}
+            inactive={!editMode}
+          />
           <AttributeLine
             title="Manipulation"
             elem={manipulation}
             maxLevel={maxLevel}
+            inactive={!editMode}
           />
           <AttributeLine
             title="Apparence"
             elem={appearance}
             maxLevel={maxLevel}
+            inactive={!editMode}
           />
         </div>
         <div>
@@ -86,13 +106,20 @@ const Attributes = () => {
             title="Perception"
             elem={perception}
             maxLevel={maxLevel}
+            inactive={!editMode}
           />
           <AttributeLine
             title="Intelligence"
             elem={intelligence}
             maxLevel={maxLevel}
+            inactive={!editMode}
           />
-          <AttributeLine title="Astuce" elem={wits} maxLevel={maxLevel} />
+          <AttributeLine
+            title="Astuce"
+            elem={wits}
+            maxLevel={maxLevel}
+            inactive={!editMode}
+          />
         </div>
       </HorizontalSection>
     </>

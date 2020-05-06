@@ -67,6 +67,7 @@ const ColumnTitleWithOptions = ({
   elemArray,
   pexCalc,
   pexElems,
+  inactive,
 }: {
   title?: string;
   options?: Array<{ name: string; value: boolean; onClick: () => void }>;
@@ -81,6 +82,7 @@ const ColumnTitleWithOptions = ({
     elemArray: Array<TempElemType<number>>;
     pexCalc: (value: number) => number;
   }>;
+  inactive?: boolean;
 }) => {
   const [open, setOpen] = useState(false);
   return (
@@ -94,80 +96,84 @@ const ColumnTitleWithOptions = ({
         pexElems={pexElems}
       >
         {children}
-        <GlyphContainer>
-          {button ? (
-            <ColumnButton
-              glyph={button.glyph}
-              title={title}
-              value={button.value}
-              hidden={button.hidden}
-            />
-          ) : (
-            <Glyph
-              onClick={() => {
-                setOpen(!open);
-              }}
-              name={`${open ? 'Close' : 'Open'} ${title}`}
-              className="open-col-glyph"
-            >
-              {open ? '▼' : '▶'}
-            </Glyph>
-          )}
-        </GlyphContainer>
-      </ColumnTitle>
-      <OptionsContainer
-        className={open ? 'opened' : ''}
-        elemCount={options.length}
-        actionCount={actions.length}
-      >
-        <ul>
-          {options.map(({ name, value, onClick }) => (
-            <OptionItem key={`option-${name}`}>
-              <span>{`${name}: ${value ? 'Oui' : 'Non'}`}</span>
-              {value ? (
-                <Glyph
-                  onClick={() => {
-                    if (!value || !open) return;
-                    onClick();
-                  }}
-                  inactive={!value || !open}
-                  name={`${name}: Non`}
-                >
-                  ✘
-                </Glyph>
-              ) : (
-                <Glyph
-                  onClick={() => {
-                    if (value || !open) return;
-                    onClick();
-                  }}
-                  inactive={value || !open}
-                  name={`${name}: Oui`}
-                >
-                  ✔
-                </Glyph>
-              )}
-            </OptionItem>
-          ))}
-          {actions.map((action) => {
-            const handleClick = generateHandleClick(action.value);
-            const handleKeypress = generateHandleKeypress(action.value);
-            return (
-              // eslint-disable-next-line styled-components-a11y/no-noninteractive-element-to-interactive-role
-              <ActionItem
-                onClick={handleClick}
-                onKeyPress={handleKeypress}
-                role="button"
-                tabIndex={0}
-                key={action.name}
+        {inactive ? null : (
+          <GlyphContainer>
+            {button ? (
+              <ColumnButton
+                glyph={button.glyph}
+                title={title}
+                value={button.value}
+                hidden={button.hidden}
+              />
+            ) : (
+              <Glyph
+                onClick={() => {
+                  setOpen(!open);
+                }}
+                name={`${open ? 'Close' : 'Open'} ${title}`}
+                className="open-col-glyph"
               >
-                {action.name}
-              </ActionItem>
-            );
-          })}
-        </ul>
-        <OptionsSeparator />
-      </OptionsContainer>
+                {open ? '▼' : '▶'}
+              </Glyph>
+            )}
+          </GlyphContainer>
+        )}
+      </ColumnTitle>
+      {inactive ? null : (
+        <OptionsContainer
+          className={open ? 'opened' : ''}
+          elemCount={options.length}
+          actionCount={actions.length}
+        >
+          <ul>
+            {options.map(({ name, value, onClick }) => (
+              <OptionItem key={`option-${name}`}>
+                <span>{`${name}: ${value ? 'Oui' : 'Non'}`}</span>
+                {value ? (
+                  <Glyph
+                    onClick={() => {
+                      if (!value || !open) return;
+                      onClick();
+                    }}
+                    inactive={!value || !open}
+                    name={`${name}: Non`}
+                  >
+                    ✘
+                  </Glyph>
+                ) : (
+                  <Glyph
+                    onClick={() => {
+                      if (value || !open) return;
+                      onClick();
+                    }}
+                    inactive={value || !open}
+                    name={`${name}: Oui`}
+                  >
+                    ✔
+                  </Glyph>
+                )}
+              </OptionItem>
+            ))}
+            {actions.map((action) => {
+              const handleClick = generateHandleClick(action.value);
+              const handleKeypress = generateHandleKeypress(action.value);
+              return (
+                // eslint-disable-next-line styled-components-a11y/no-noninteractive-element-to-interactive-role
+                <ActionItem
+                  onClick={handleClick}
+                  onKeyPress={handleKeypress}
+                  role="button"
+                  tabIndex={0}
+                  key={action.name}
+                >
+                  {action.name}
+                </ActionItem>
+              );
+            })}
+          </ul>
+          <OptionsSeparator />
+        </OptionsContainer>
+      )}
     </div>
   );
 };

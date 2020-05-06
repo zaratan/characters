@@ -36,6 +36,7 @@ import Controls from './sections/Controls';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import PexSection from './sections/PexSection';
 import { PexProvider } from '../contexts/PexContext';
+import { ModeProvider } from '../contexts/ModeContext';
 
 const PageTitle = styled.div`
   display: flex;
@@ -132,41 +133,43 @@ const Sheet = ({
                     <AdvFlawProvider advantages={advantages} flaws={flaws}>
                       <LanguagesProvider languages={languages}>
                         <PexProvider leftOverPex={leftOverPex}>
-                          <SheetContainer>
-                            <Head>
-                              <title>
-                                {infos.name ? `${infos.name} - ` : null}Feuille
-                                de Personnage
-                              </title>
-                              <link rel="icon" href="/favicon.ico" />
-                            </Head>
+                          <ModeProvider>
+                            <SheetContainer>
+                              <Head>
+                                <title>
+                                  {infos.name ? `${infos.name} - ` : null}
+                                  Feuille de Personnage
+                                </title>
+                                <link rel="icon" href="/favicon.ico" />
+                              </Head>
 
-                            <Link href="/">
-                              <BackLink
-                                as="a"
-                                role="button"
-                                tabIndex={0}
-                                aria-label="Retour"
-                                onKeyPress={generateHandleKeypress(() =>
-                                  router.push('/')
-                                )}
-                              >
-                                ←
-                              </BackLink>
-                            </Link>
-                            <PageTitle>
-                              <img src="/title.png" alt="Vampire Dark Age" />
-                            </PageTitle>
+                              <Link href="/">
+                                <BackLink
+                                  as="a"
+                                  role="button"
+                                  tabIndex={0}
+                                  aria-label="Retour"
+                                  onKeyPress={generateHandleKeypress(() =>
+                                    router.push('/')
+                                  )}
+                                >
+                                  ←
+                                </BackLink>
+                              </Link>
+                              <PageTitle>
+                                <img src="/title.png" alt="Vampire Dark Age" />
+                              </PageTitle>
 
-                            <Infos />
-                            <Attributes />
-                            <Abilities />
-                            <Mind />
-                            <Disciplines />
-                            <Misc />
-                            <PexSection />
-                            <Controls newChar={newChar} />
-                          </SheetContainer>
+                              <Infos />
+                              <Attributes />
+                              <Abilities />
+                              <Mind />
+                              <Disciplines />
+                              <Misc />
+                              <PexSection />
+                              <Controls newChar={newChar} />
+                            </SheetContainer>
+                          </ModeProvider>
                         </PexProvider>
                       </LanguagesProvider>
                     </AdvFlawProvider>

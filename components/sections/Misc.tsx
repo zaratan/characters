@@ -9,6 +9,7 @@ import LanguagesContext from '../../contexts/LanguagesContext';
 import AbilitiesContext from '../../contexts/AbilitiesContext';
 import { maxLanguages } from '../../helpers/maxLevels';
 import SectionTitle from '../SectionTitle';
+import ModeContext from '../../contexts/ModeContext';
 
 const Misc = () => {
   const {
@@ -23,6 +24,7 @@ const Misc = () => {
     LanguagesContext
   );
   const { knowledges } = useContext(AbilitiesContext);
+  const { editMode } = useContext(ModeContext);
   const linguisticsValue =
     knowledges.find((knowledge) => knowledge.title === 'Linguistique')?.value ||
     -1;
@@ -51,6 +53,7 @@ const Misc = () => {
             button={{ glyph: '+', value: addNewAdvantage }}
             elemArray={advantages}
             pexCalc={(value) => calcPexAdvFlaw(value, false)}
+            inactive={!editMode}
           />
           <ul>
             {advantages.map((advantage) => (
@@ -65,6 +68,7 @@ const Misc = () => {
                   remove={() => removeAdvantage(advantage.key)}
                   title={advantage.title}
                   placeholderName="Nouvel avantage"
+                  inactive={!editMode}
                 />
               </li>
             ))}
@@ -76,6 +80,7 @@ const Misc = () => {
             button={{ glyph: '+', value: addNewFlaw }}
             elemArray={flaws}
             pexCalc={(value) => calcPexAdvFlaw(value, true)}
+            inactive={!editMode}
           />
           <ul>
             {flaws.map((flaw) => (
@@ -89,6 +94,7 @@ const Misc = () => {
                   title={flaw.title}
                   placeholderName="Nouvel inconvénient"
                   placeholderSub="Niv."
+                  inactive={!editMode}
                 />
               </li>
             ))}
@@ -102,6 +108,7 @@ const Misc = () => {
               value: addNewLanguage,
               hidden: maxLang <= languages.length,
             }}
+            inactive={!editMode}
           />
           <ul>
             {languages.map((language, i) =>
@@ -114,6 +121,7 @@ const Misc = () => {
                     remove={() => removeLanguage(language.key)}
                     name={language.key}
                     full
+                    inactive={!editMode}
                   />
                 </li>
               ) : null

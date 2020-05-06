@@ -24,6 +24,7 @@ import DisciplinesContext from '../../contexts/DisciplinesContext';
 import AdvFlawContext from '../../contexts/AdvFlawContext';
 import { HandLargeText, HandEditableText } from '../../styles/Texts';
 import PexContext from '../../contexts/PexContext';
+import ModeContext from '../../contexts/ModeContext';
 
 const HandText = styled(HandLargeText)`
   display: flex;
@@ -71,6 +72,7 @@ const PexSection = () => {
     combinedDisciplines,
   } = useContext(DisciplinesContext);
   const { advantages, flaws } = useContext(AdvFlawContext);
+  const { editMode } = useContext(ModeContext);
   const pexElems: pexElemsType = [
     // Attributes
     {
@@ -173,11 +175,15 @@ const PexSection = () => {
         <Container>
           <ColumnTitle title="Restant" />
           <TextContainer>
-            <HandEditableText
-              onChange={(e) => leftOver.set(Number(e.target.value))}
-              value={leftOver.value === 0 ? '' : leftOver.value}
-              placeholder="PEX restant"
-            />
+            {editMode ? (
+              <HandEditableText
+                onChange={(e) => leftOver.set(Number(e.target.value))}
+                value={leftOver.value === 0 ? '' : leftOver.value}
+                placeholder="PEX restant"
+              />
+            ) : (
+              <HandText>{leftOver.value === 0 ? '' : leftOver.value}</HandText>
+            )}
           </TextContainer>
         </Container>
         <Container>

@@ -16,6 +16,7 @@ import MindContext from '../../contexts/MindContext';
 import GenerationContext from '../../contexts/GenerationContext';
 import ColumnTitle from '../ColumnTitle';
 import SectionTitle from '../SectionTitle';
+import ModeContext from '../../contexts/ModeContext';
 
 const Mind = () => {
   const {
@@ -31,6 +32,7 @@ const Mind = () => {
     selfControl,
   } = useContext(MindContext);
   const generation = useContext(GenerationContext);
+  const { editMode, playMode } = useContext(ModeContext);
   return (
     <>
       <SectionTitle
@@ -59,17 +61,20 @@ const Mind = () => {
             minLevel={1}
             diffPexCalc={calcPexDiffWillpower}
             name="Volonté"
+            inactive={!editMode}
           />
           <SquareLine
             type="Volonté temporaire"
             number={willpower.value}
             numberChecked={tempWillpower}
+            inactive={!playMode}
           />
           <ColumnTitle>Réserve de Sang</ColumnTitle>
           <SquareLine
             type="Sang"
             number={maxBlood(generation.value)}
             numberChecked={bloodSpent}
+            inactive={!playMode}
           />
         </div>
         <div>
@@ -89,6 +94,7 @@ const Mind = () => {
             ]}
             elemArray={[conscience, courage, selfControl]}
             pexCalc={calcPexPathOrVirtue}
+            inactive={!editMode}
           />
           <Line
             title={isConviction.value ? 'Conviction' : 'Conscience'}
@@ -97,6 +103,7 @@ const Mind = () => {
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Conscience"
+            inactive={!editMode}
           />
           <Line
             title={isInstinct.value ? 'Instinct' : 'Maitrise de soi'}
@@ -105,6 +112,7 @@ const Mind = () => {
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Maitrise de soi"
+            inactive={!editMode}
           />
           <Line
             title="Courage"
@@ -113,19 +121,24 @@ const Mind = () => {
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Courage"
+            inactive={!editMode}
           />
           <ColumnTitle
             elemArray={[path]}
             pexCalc={calcPexPathOrVirtue}
             title="Voie"
           />
-          <UnderlinedHandLargeEditableText elem={pathName} />
+          <UnderlinedHandLargeEditableText
+            elem={pathName}
+            inactive={!editMode}
+          />
           <Line
             elem={path}
             maxLevel={10}
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Voie"
+            inactive={!editMode}
           />
         </div>
         <Health />

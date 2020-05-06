@@ -78,7 +78,7 @@ const Home = ({ data }: { data: any }) => {
       advantages={advantages}
       flaws={flaws}
       languages={languages}
-      leftOverPex={0}
+      leftOverPex={leftOverPex}
     />
   );
 };

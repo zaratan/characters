@@ -47,10 +47,12 @@ const SquareLineContainer = styled.div`
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
   }
-  :hover,
-  :focus-within {
-    .empty-glyph {
-      opacity: 1;
+  :not(.inactive) {
+    :hover,
+    :focus-within {
+      .empty-glyph {
+        opacity: 1;
+      }
     }
   }
 `;
@@ -63,17 +65,23 @@ const SquareLine = ({
   type,
   number,
   numberChecked,
+  inactive,
 }: {
   type: string;
   number: number;
   numberChecked: TempElemType<number>;
+  inactive?: boolean;
 }) => (
   <Container>
-    <SquareLineContainer className={number > 15 ? 'must-wrap' : ''}>
+    <SquareLineContainer
+      className={`${number > 15 ? 'must-wrap' : ''} ${
+        inactive ? 'inactive' : ''
+      }`}
+    >
       <EmptyGlyph
         type={type}
         onClick={() => numberChecked.set(0)}
-        inactive={numberChecked.value === 0}
+        inactive={numberChecked.value === 0 || inactive}
       />
       {Array.from(Array(number)).map((_, i) => [
         <Square
@@ -82,7 +90,7 @@ const SquareLine = ({
             numberChecked.set(i + 1);
           }}
           name={`${type} ${i}`}
-          inactive={i + 1 === numberChecked.value}
+          inactive={i + 1 === numberChecked.value || inactive}
           key={`${type} ${i}`}
         />,
         i % 5 === 4 && i !== number - 1 ? (
