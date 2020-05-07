@@ -3,9 +3,10 @@ import styled from 'styled-components';
 import { HorizontalSection } from '../../styles/Sections';
 import { EmptyLine } from '../../styles/Lines';
 import { Title } from '../../styles/Titles';
-import { HandLargeEditableText } from '../../styles/Texts';
+import { HandLargeEditableText, HandLargeText } from '../../styles/Texts';
 import InfosContext from '../../contexts/InfosContext';
 import GenerationContext from '../../contexts/GenerationContext';
+import ModeContext from '../../contexts/ModeContext';
 
 const InfoContainer = styled.div`
   display: flex;
@@ -30,6 +31,7 @@ const Infos = () => {
     sire,
   } = useContext(InfosContext);
 
+  const { editMode } = useContext(ModeContext);
   const generation = useContext(GenerationContext);
   const handleChange = (changeFunction: (val: string) => void) => (
     event: FormEvent<HTMLInputElement>
@@ -47,85 +49,121 @@ const Infos = () => {
         <InfoContainer>
           <Title>Nom:</Title>
           <Separator />
-          <HandLargeEditableText
-            type="text"
-            value={name.value}
-            onChange={handleChange(name.set)}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="text"
+              value={name.value}
+              onChange={handleChange(name.set)}
+            />
+          ) : (
+            <HandLargeText className="label">{name.value}</HandLargeText>
+          )}
         </InfoContainer>
         <InfoContainer>
           <Title>Joueur: </Title>
           <Separator />
-          <HandLargeEditableText
-            type="text"
-            value={playerName.value}
-            onChange={handleChange(playerName.set)}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="text"
+              value={playerName.value}
+              onChange={handleChange(playerName.set)}
+            />
+          ) : (
+            <HandLargeText className="label">{playerName.value}</HandLargeText>
+          )}
         </InfoContainer>
         <InfoContainer>
           <Title>Chronique: </Title>
           <Separator />
-          <HandLargeEditableText
-            type="text"
-            onChange={handleChange(chronicle.set)}
-            value={chronicle.value}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="text"
+              onChange={handleChange(chronicle.set)}
+              value={chronicle.value}
+            />
+          ) : (
+            <HandLargeText className="label">{chronicle.value}</HandLargeText>
+          )}
         </InfoContainer>
         <InfoContainer>
           <Title>Nature: </Title>
           <Separator />
-          <HandLargeEditableText
-            type="text"
-            onChange={handleChange(nature.set)}
-            value={nature.value}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="text"
+              onChange={handleChange(nature.set)}
+              value={nature.value}
+            />
+          ) : (
+            <HandLargeText className="label">{nature.value}</HandLargeText>
+          )}
         </InfoContainer>
         <InfoContainer>
           <Title>Attitude: </Title>
           <Separator />
-          <HandLargeEditableText
-            type="text"
-            onChange={handleChange(demeanor.set)}
-            value={demeanor.value}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="text"
+              onChange={handleChange(demeanor.set)}
+              value={demeanor.value}
+            />
+          ) : (
+            <HandLargeText className="label">{demeanor.value}</HandLargeText>
+          )}
         </InfoContainer>
         <InfoContainer>
           <Title>Clan: </Title>
           <Separator />
-          <HandLargeEditableText
-            type="text"
-            onChange={handleChange(clan.set)}
-            value={clan.value}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="text"
+              onChange={handleChange(clan.set)}
+              value={clan.value}
+            />
+          ) : (
+            <HandLargeText className="label">{clan.value}</HandLargeText>
+          )}
         </InfoContainer>
         <InfoContainer>
           <Title>Génération: </Title>
           <Separator />
-          <HandLargeEditableText
-            type="number"
-            max={15}
-            min={3}
-            value={generation.value === 0 ? '' : generation.value}
-            onChange={handleChangeGeneration}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="number"
+              max={15}
+              min={3}
+              value={generation.value === 0 ? '' : generation.value}
+              onChange={handleChangeGeneration}
+            />
+          ) : (
+            <HandLargeText className="label">{generation.value}</HandLargeText>
+          )}
         </InfoContainer>
         <InfoContainer>
           <Title>Refuge: </Title>
           <Separator />
-          <HandLargeEditableText
-            type="text"
-            onChange={handleChange(haven.set)}
-            value={haven.value}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="text"
+              onChange={handleChange(haven.set)}
+              value={haven.value}
+            />
+          ) : (
+            <HandLargeText className="label">{haven.value}</HandLargeText>
+          )}
         </InfoContainer>
         <InfoContainer>
           <Title>Sire: </Title>
           <Separator />
-          <HandLargeEditableText
-            type="text"
-            onChange={handleChange(sire.set)}
-            value={sire.value}
-          />
+          {editMode ? (
+            <HandLargeEditableText
+              type="text"
+              onChange={handleChange(sire.set)}
+              value={sire.value}
+            />
+          ) : (
+            <HandLargeText className="label">{sire.value}</HandLargeText>
+          )}
         </InfoContainer>
       </HorizontalSection>
     </>

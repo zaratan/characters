@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import { useDebounce } from 'react-use';
+import { mutate } from 'swr';
 import { HorizontalSection } from '../../styles/Sections';
 import Line from '../Line';
 import {
@@ -16,6 +18,9 @@ import MindContext from '../../contexts/MindContext';
 import GenerationContext from '../../contexts/GenerationContext';
 import ColumnTitle from '../ColumnTitle';
 import SectionTitle from '../SectionTitle';
+import ModeContext from '../../contexts/ModeContext';
+import IdContext from '../../contexts/IdContext';
+import { fetcher } from '../../helpers/fetcher';
 
 const Mind = () => {
   const {
@@ -31,6 +36,32 @@ const Mind = () => {
     selfControl,
   } = useContext(MindContext);
   const generation = useContext(GenerationContext);
+  const { id } = useContext(IdContext);
+  const { editMode, playMode } = useContext(ModeContext);
+  useDebounce(
+    async () => {
+      if (tempWillpower.value === tempWillpower.baseValue) return;
+      await fetcher(`/api/vampires/${id}/update_partial`, {
+        method: 'POST',
+        body: JSON.stringify({ mind: { tempWillpower: tempWillpower.value } }),
+      });
+      mutate(`/api/vampires/${id}`);
+    },
+    2000,
+    [tempWillpower]
+  );
+  useDebounce(
+    async () => {
+      if (bloodSpent.value === bloodSpent.baseValue) return;
+      await fetcher(`/api/vampires/${id}/update_partial`, {
+        method: 'POST',
+        body: JSON.stringify({ mind: { bloodSpent: bloodSpent.value } }),
+      });
+      mutate(`/api/vampires/${id}`);
+    },
+    2000,
+    [bloodSpent]
+  );
   return (
     <>
       <SectionTitle
@@ -59,17 +90,20 @@ const Mind = () => {
             minLevel={1}
             diffPexCalc={calcPexDiffWillpower}
             name="Volonté"
+            inactive={!editMode}
           />
           <SquareLine
             type="Volonté temporaire"
             number={willpower.value}
             numberChecked={tempWillpower}
+            inactive={!playMode}
           />
           <ColumnTitle>Réserve de Sang</ColumnTitle>
           <SquareLine
             type="Sang"
             number={maxBlood(generation.value)}
             numberChecked={bloodSpent}
+            inactive={!playMode}
           />
         </div>
         <div>
@@ -89,6 +123,7 @@ const Mind = () => {
             ]}
             elemArray={[conscience, courage, selfControl]}
             pexCalc={calcPexPathOrVirtue}
+            inactive={!editMode}
           />
           <Line
             title={isConviction.value ? 'Conviction' : 'Conscience'}
@@ -97,6 +132,7 @@ const Mind = () => {
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Conscience"
+            inactive={!editMode}
           />
           <Line
             title={isInstinct.value ? 'Instinct' : 'Maitrise de soi'}
@@ -105,6 +141,7 @@ const Mind = () => {
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Maitrise de soi"
+            inactive={!editMode}
           />
           <Line
             title="Courage"
@@ -113,19 +150,24 @@ const Mind = () => {
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Courage"
+            inactive={!editMode}
           />
           <ColumnTitle
             elemArray={[path]}
             pexCalc={calcPexPathOrVirtue}
             title="Voie"
           />
-          <UnderlinedHandLargeEditableText elem={pathName} />
+          <UnderlinedHandLargeEditableText
+            elem={pathName}
+            inactive={!editMode}
+          />
           <Line
             elem={path}
             maxLevel={10}
             minLevel={1}
             diffPexCalc={calcPexDiffPathOrVirtue}
             name="Voie"
+            inactive={!editMode}
           />
         </div>
         <Health />

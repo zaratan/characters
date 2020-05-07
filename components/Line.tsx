@@ -8,7 +8,7 @@ import {
   calcPexDiffSpecialty,
 } from '../helpers/pex';
 import { SubTitle } from '../styles/Titles';
-import { HandEditableText } from '../styles/Texts';
+import { HandEditableText, HandText } from '../styles/Texts';
 import { Glyph } from './Glyph';
 import { TempElemType } from '../types/TempElemType';
 import PreferencesContext from '../contexts/PreferencesContext';
@@ -159,30 +159,34 @@ const LineTitle = ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   changeName = () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  remove = () => {},
+  remove,
   title,
-  interactive = true,
   placeholder,
   full,
+  inactive,
 }: {
   custom?: boolean;
   changeName?: (newValue: string) => void;
   remove?: () => void;
   title?: string;
-  interactive?: boolean;
   placeholder?: string;
   full?: boolean;
+  inactive?: boolean;
 }) => {
   if (title === undefined) return null;
   return custom ? (
     <CustomTitleContainer className={full ? `full-size` : ''}>
       <CustomTitle>
-        <HandEditableText
-          value={title}
-          onChange={(e) => changeName(e.currentTarget.value)}
-          placeholder={placeholder || 'Nouveau Nom…'}
-        />
-        {interactive ? (
+        {inactive ? (
+          <HandText>{title}</HandText>
+        ) : (
+          <HandEditableText
+            value={title}
+            onChange={(e) => changeName(e.currentTarget.value)}
+            placeholder={placeholder || 'Nouveau Nom…'}
+          />
+        )}
+        {!inactive && remove ? (
           <RemoveContainer className="remove-glyph">
             <Glyph onClick={remove} name={`Remove ${title}`}>
               ✘
@@ -200,6 +204,14 @@ const LineTitle = ({
   );
 };
 
+const TextContainer = styled.div`
+  position: relative;
+  &.inactive {
+    display: flex;
+    justify-content: center;
+  }
+`;
+
 export const LineValue = ({
   elem,
   title,
@@ -210,6 +222,7 @@ export const LineValue = ({
   placeholderName,
   placeholderSub,
   full,
+  inactive,
 }: {
   elem?: TempElemType<number>;
   name: string;
@@ -221,6 +234,7 @@ export const LineValue = ({
   placeholderName?: string;
   placeholderSub?: string;
   full?: boolean;
+  inactive?: boolean;
 }) => {
   const { showPex } = useContext(PreferencesContext);
   return (
@@ -233,24 +247,31 @@ export const LineValue = ({
           remove={remove}
           placeholder={placeholderName || 'Nouveau nom…'}
           full={full}
+          inactive={inactive}
         />
         {elem ? (
-          <div style={{ position: 'relative' }}>
-            <HandEditableText
-              size={3}
-              maxLength={3}
-              value={elem.value === 0 ? '' : elem.value}
-              onChange={(e) => elem.set(Number(e.currentTarget.value))}
-              type="number"
-              max={maxValue}
-              min={0}
-              className="small"
-              placeholder={placeholderSub || 'XP'}
-            />
+          <TextContainer className={inactive ? 'inactive' : ''}>
+            {inactive ? (
+              <HandText className="small">
+                {elem.value === 0 ? '' : elem.value}
+              </HandText>
+            ) : (
+              <HandEditableText
+                size={3}
+                maxLength={3}
+                value={elem.value === 0 ? '' : elem.value}
+                onChange={(e) => elem.set(Number(e.currentTarget.value))}
+                type="number"
+                max={maxValue}
+                min={0}
+                className="small"
+                placeholder={placeholderSub || 'XP'}
+              />
+            )}
             {elem.baseValue !== elem.value && showPex ? (
               <TextHelper>{diffPexCalc(elem.baseValue, elem.value)}</TextHelper>
             ) : null}
-          </div>
+          </TextContainer>
         ) : null}
       </ColumnLine>
     </ul>
@@ -267,11 +288,12 @@ const Line = ({
   custom,
   changeName,
   remove,
-  interactive = true,
   placeholder,
   lineAction,
   children,
   endNumber,
+  inactive = false,
+  dotInactive = false,
 }: {
   elem: TempElemType<number>;
   name: string;
@@ -282,15 +304,20 @@ const Line = ({
   custom?: boolean;
   changeName?: (newValue: string) => void;
   remove?: () => void;
-  interactive?: boolean;
   placeholder?: string;
   lineAction?: { glyph: string; value: () => void; active?: boolean };
   children?: ReactNode;
   endNumber?: number;
+  inactive?: boolean;
+  dotInactive?: boolean;
 }) => {
-  const onClickHandle = (val: number) => () => {
-    elem.set(val);
-  };
+  const onClickHandle =
+    !inactive || !dotInactive
+      ? (val: number) => () => {
+          elem.set(val);
+        }
+      : // eslint-disable-next-line @typescript-eslint/no-empty-function
+        () => () => {};
 
   const { showPex } = useContext(PreferencesContext);
 
@@ -302,8 +329,8 @@ const Line = ({
           changeName={changeName}
           title={title}
           remove={remove}
-          interactive={interactive}
           placeholder={placeholder}
+          inactive={inactive}
         />
         <Value role="radiogroup" className={title || custom ? '' : 'only-dots'}>
           <Dot
@@ -314,9 +341,9 @@ const Line = ({
             baseValue={elem.baseValue === 10}
             hidden={maxLevel < 10}
             locked={minLevel > 10}
-            interactive={interactive}
             value={10}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(9)}
@@ -326,9 +353,9 @@ const Line = ({
             baseValue={elem.baseValue === 9}
             hidden={maxLevel < 9}
             locked={minLevel > 8}
-            interactive={interactive}
             value={9}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(8)}
@@ -338,9 +365,9 @@ const Line = ({
             baseValue={elem.baseValue === 8}
             hidden={maxLevel < 8}
             locked={minLevel > 7}
-            interactive={interactive}
             value={8}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(7)}
@@ -350,9 +377,9 @@ const Line = ({
             baseValue={elem.baseValue === 7}
             hidden={maxLevel < 7}
             locked={minLevel > 6}
-            interactive={interactive}
             value={7}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(6)}
@@ -362,9 +389,9 @@ const Line = ({
             baseValue={elem.baseValue === 6}
             hidden={maxLevel < 6}
             locked={minLevel > 5}
-            interactive={interactive}
             value={6}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <DotSeparator
             onClick={onClickHandle(5)}
@@ -382,9 +409,9 @@ const Line = ({
             baseValue={elem.baseValue === 5}
             hidden={maxLevel < 5}
             locked={minLevel > 4}
-            interactive={interactive}
             value={5}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(4)}
@@ -394,9 +421,9 @@ const Line = ({
             baseValue={elem.baseValue === 4}
             hidden={maxLevel < 4}
             locked={minLevel > 3}
-            interactive={interactive}
             value={4}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(3)}
@@ -406,9 +433,9 @@ const Line = ({
             baseValue={elem.baseValue === 3}
             hidden={maxLevel < 3}
             locked={minLevel > 2}
-            interactive={interactive}
             value={3}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(2)}
@@ -418,9 +445,9 @@ const Line = ({
             baseValue={elem.baseValue === 2}
             hidden={maxLevel < 2}
             locked={minLevel > 1}
-            interactive={interactive}
             value={2}
             name={name}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(1)}
@@ -430,11 +457,11 @@ const Line = ({
             baseValue={elem.baseValue === 1}
             hidden={maxLevel < 1}
             locked={minLevel > 0}
-            interactive={interactive}
             value={1}
             name={name}
+            inactive={inactive || dotInactive}
           />
-          {minLevel === 0 && interactive ? (
+          {minLevel === 0 && !inactive && !dotInactive ? (
             <EmptyGlyph
               selected={elem.value === 0}
               baseValue={elem.baseValue === 0}
@@ -447,7 +474,7 @@ const Line = ({
         {endNumber !== undefined && showPex && (
           <TextHelper className="closer">{endNumber}</TextHelper>
         )}
-        {lineAction ? (
+        {lineAction && !inactive ? (
           <ButtonGlyphContainer
             className={`line-button ${lineAction.active ? 'active' : ''}`}
           >
@@ -466,10 +493,12 @@ export const AttributeLine = ({
   elem,
   title,
   maxLevel,
+  inactive,
 }: {
   elem: TempElemType<number>;
   title: string;
   maxLevel: number;
+  inactive?: boolean;
 }) => (
   <Line
     elem={elem}
@@ -478,6 +507,7 @@ export const AttributeLine = ({
     maxLevel={maxLevel}
     minLevel={1}
     name={title}
+    inactive={inactive}
   />
 );
 
@@ -508,6 +538,7 @@ export const AbilityLine = ({
   specialties,
   removeSpecialty,
   changeSpecialtyTitle,
+  inactive,
 }: {
   elem: TempElemType<number>;
   title: string;
@@ -520,6 +551,7 @@ export const AbilityLine = ({
   specialties?: Array<{ key: string; name: string }>;
   removeSpecialty?: (key: string) => void;
   changeSpecialtyTitle?: (key: string, newTitle: string) => void;
+  inactive?: boolean;
 }) => (
   <Line
     elem={elem}
@@ -538,27 +570,34 @@ export const AbilityLine = ({
         (specialties && specialties.length) || 0
       )
     }
+    inactive={inactive}
   >
     <li>
       <SpecialtiesContainer>
         {specialties &&
           specialties.map((specialty) => (
             <SpecialtyContainer key={specialty.key}>
-              <HandEditableText
-                className="low"
-                value={specialty.name}
-                onChange={(e) => {
-                  changeSpecialtyTitle(specialty.key, e.currentTarget.value);
-                }}
-              />
-              <ButtonGlyphContainer className="remove-spec-button no-reposition">
-                <Glyph
-                  name={`remove-${specialty.name}`}
-                  onClick={() => removeSpecialty(specialty.key)}
-                >
-                  ✘
-                </Glyph>
-              </ButtonGlyphContainer>
+              {inactive ? (
+                <HandText>{specialty.name}</HandText>
+              ) : (
+                <HandEditableText
+                  className="low"
+                  value={specialty.name}
+                  onChange={(e) => {
+                    changeSpecialtyTitle(specialty.key, e.currentTarget.value);
+                  }}
+                />
+              )}
+              {inactive ? null : (
+                <ButtonGlyphContainer className="remove-spec-button no-reposition">
+                  <Glyph
+                    name={`remove-${specialty.name}`}
+                    onClick={() => removeSpecialty(specialty.key)}
+                  >
+                    ✘
+                  </Glyph>
+                </ButtonGlyphContainer>
+              )}
             </SpecialtyContainer>
           ))}
       </SpecialtiesContainer>

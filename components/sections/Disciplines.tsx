@@ -17,10 +17,11 @@ import {
   calcPexThaumaturgyPath,
   calcPexThaumaturgyRitual,
 } from '../../helpers/pex';
-import { HandEditableText } from '../../styles/Texts';
+import { HandEditableText, HandText } from '../../styles/Texts';
 import GenerationContext from '../../contexts/GenerationContext';
 import { Container } from '../../styles/Container';
 import SectionTitle from '../SectionTitle';
+import ModeContext from '../../contexts/ModeContext';
 
 const RitualMultiplicatorContainer = styled.span`
   font-size: 1rem;
@@ -40,6 +41,7 @@ const Disciplines = () => {
     addNewCombinedDiscipline,
     removeCombinedDiscipline,
   } = useContext(DisciplinesContext);
+  const { editMode } = useContext(ModeContext);
   const maxLevel = maxDot(generation.value);
   return (
     <>
@@ -78,6 +80,7 @@ const Disciplines = () => {
             button={{ glyph: '+', value: addNewClanDiscipline }}
             elemArray={clanDisciplines}
             pexCalc={calcPexInClanDiscipline}
+            inactive={!editMode}
           />
           <ul>
             {clanDisciplines.map((discipline) => (
@@ -97,6 +100,7 @@ const Disciplines = () => {
                     value: discipline.toggleThaumaturgy,
                     active: discipline.isThaumaturgy,
                   }}
+                  inactive={!editMode}
                 />
               </li>
             ))}
@@ -108,6 +112,7 @@ const Disciplines = () => {
             button={{ glyph: '+', value: addNewOutClanDiscipline }}
             elemArray={outClanDisciplines}
             pexCalc={calcPexOutOfClanDiscipline}
+            inactive={!editMode}
           />
           <ul>
             {outClanDisciplines.map((discipline) => (
@@ -127,6 +132,7 @@ const Disciplines = () => {
                     value: discipline.toggleThaumaturgy,
                     active: discipline.isThaumaturgy,
                   }}
+                  inactive={!editMode}
                 />
               </li>
             ))}
@@ -138,6 +144,7 @@ const Disciplines = () => {
             button={{ glyph: '+', value: addNewCombinedDiscipline }}
             elemArray={combinedDisciplines}
             pexCalc={(value) => value}
+            inactive={!editMode}
           />
           <ul>
             {combinedDisciplines.map((combinedDiscipline) => (
@@ -152,6 +159,7 @@ const Disciplines = () => {
                   }
                   title={combinedDiscipline.title}
                   placeholderName="Nom de la discipline"
+                  inactive={!editMode}
                 />
               </li>
             ))}
@@ -166,6 +174,7 @@ const Disciplines = () => {
                 button={{ glyph: '+', value: thau.addNewPath }}
                 elemArray={thau.paths}
                 pexCalc={calcPexThaumaturgyPath}
+                inactive={!editMode}
               />
               <ul>
                 <li>
@@ -181,7 +190,8 @@ const Disciplines = () => {
                     title={thau.mainPathName}
                     diffPexCalc={() => 0}
                     key={thau.key}
-                    interactive={false}
+                    dotInactive
+                    inactive={!editMode}
                     changeName={thau.changeMainPathName}
                     custom
                   />
@@ -199,6 +209,7 @@ const Disciplines = () => {
                       custom
                       remove={() => thau.removePath(path.key)}
                       placeholder="Nom de la voie"
+                      inactive={!editMode}
                     />
                   </li>
                 ))}
@@ -212,20 +223,27 @@ const Disciplines = () => {
                 pexCalc={(value) =>
                   calcPexThaumaturgyRitual(value, thau.ritualMulti)
                 }
+                inactive={!editMode}
               >
                 <RitualMultiplicatorContainer className="ritual-multiplicator">
                   (x
-                  <HandEditableText
-                    className="very-small"
-                    type="number"
-                    min={1}
-                    max={3}
-                    maxLength={1}
-                    value={thau.ritualMulti === 0 ? '' : thau.ritualMulti}
-                    onChange={(e) =>
-                      thau.setRitualMulti(Number(e.currentTarget.value))
-                    }
-                  />
+                  {editMode ? (
+                    <HandEditableText
+                      className="very-small"
+                      type="number"
+                      min={1}
+                      max={3}
+                      maxLength={1}
+                      value={thau.ritualMulti === 0 ? '' : thau.ritualMulti}
+                      onChange={(e) =>
+                        thau.setRitualMulti(Number(e.currentTarget.value))
+                      }
+                    />
+                  ) : (
+                    <HandText className="very-small">
+                      {thau.ritualMulti === 0 ? '' : thau.ritualMulti}
+                    </HandText>
+                  )}
                   )
                 </RitualMultiplicatorContainer>
               </ColumnTitleWithOptions>
@@ -244,6 +262,7 @@ const Disciplines = () => {
                       remove={() => thau.removeRitual(ritual.key)}
                       placeholderSub="Niv."
                       placeholderName="Nom du Rituel"
+                      inactive={!editMode}
                     />
                   </li>
                 ))}

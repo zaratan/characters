@@ -38,11 +38,13 @@ const NamedSquare = ({
   title,
   subtitle,
   setValue,
+  inactive,
 }: {
   value: number;
   title: string;
   subtitle?: string;
   setValue: (value: number) => void;
+  inactive?: boolean;
 }) => {
   const changeValue = () => {
     setValue(value < 3 ? value + 1 : 3);
@@ -58,12 +60,12 @@ const NamedSquare = ({
         <EmptyGlyph
           type={title}
           onClick={() => setValue(0)}
-          inactive={value === 0}
+          inactive={value === 0 || inactive}
         />
         <Square
           checked={value}
           onClick={changeValue}
-          inactive={value === 3}
+          inactive={value === 3 || inactive}
           name={`${title}`}
         />
       </SquareContainer>

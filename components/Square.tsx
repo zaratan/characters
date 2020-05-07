@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import React from 'react';
 import styled from 'styled-components';
 import {
@@ -8,30 +9,26 @@ import { Glyph } from './Glyph';
 
 const SquareContainer = styled.span`
   height: 36px;
-  cursor: pointer;
-  :hover {
-    svg.hover-check {
-      path.first,
-      path.second {
-        stroke-dashoffset: 0 !important;
-      }
-    }
-  }
   :focus,
   :hover {
     outline: none;
-    rect {
-      stroke: darkcyan;
-      stroke-width: 3px;
-    }
   }
-  &.inactive {
-    cursor: default;
+  :not(.inactive) {
+    cursor: pointer;
+    :hover {
+      svg.hover-check {
+        path.first,
+        path.second {
+          stroke-dashoffset: 0 !important;
+        }
+      }
+    }
     :focus,
     :hover {
+      outline: none;
       rect {
-        stroke: black;
-        stroke-width: 2px;
+        stroke: darkcyan;
+        stroke-width: 3px;
       }
     }
   }
@@ -78,17 +75,23 @@ export const EmptyGlyph = ({
   onClick: () => void;
   inactive: boolean;
   type: string;
-}) => (
-  <Glyph
-    name={`Vider ${type}`}
-    onClick={onClick}
-    inactive={inactive}
-    absolutePosition
-    className="empty-glyph"
-  >
-    ø
-  </Glyph>
-);
+}) => {
+  let handleClick = () => {};
+  if (!inactive) {
+    handleClick = onClick;
+  }
+  return (
+    <Glyph
+      name={`Vider ${type}`}
+      onClick={handleClick}
+      inactive={inactive}
+      absolutePosition
+      className="empty-glyph"
+    >
+      ø
+    </Glyph>
+  );
+};
 
 const Square = ({
   checked,
@@ -103,8 +106,8 @@ const Square = ({
 }) => {
   const timeChecked = checked === true ? 2 : Number(checked);
   const hoverCheck = checked === true || checked === false;
-  const handleClick = generateHandleClick(onClick);
-  const handleKeypress = generateHandleKeypress(onClick);
+  const handleClick = generateHandleClick(inactive ? () => {} : onClick);
+  const handleKeypress = generateHandleKeypress(inactive ? () => {} : onClick);
   return (
     <SquareContainer
       aria-label={name}

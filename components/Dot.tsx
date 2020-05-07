@@ -173,8 +173,8 @@ const Dot = ({
   pexValue,
   locked,
   hidden,
-  interactive = true,
   onClick,
+  inactive,
 }: {
   full?: boolean;
   value: number;
@@ -183,21 +183,24 @@ const Dot = ({
   baseValue: boolean;
   locked?: boolean;
   hidden?: boolean;
-  interactive?: boolean;
   pexValue?: number;
   onClick?: () => void;
+  inactive?: boolean;
 }) => {
   const containerClass = `
     ${selectedValue ? 'selected' : ''} 
     ${locked ? 'locked' : ''} 
-    ${interactive ? '' : 'disabled'} 
+    ${!inactive ? '' : 'disabled'} 
     ${baseValue ? 'base' : ''} 
     ${hidden ? 'hidden' : ''}
   `;
 
-  const handleClick = generateHandleClick(onClick);
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  const clickAction = !inactive ? onClick : () => {};
 
-  const handleKeyPress = generateHandleKeypress(onClick);
+  const handleClick = generateHandleClick(clickAction);
+
+  const handleKeyPress = generateHandleKeypress(clickAction);
   const { showPex } = useContext(PreferencesContext);
 
   return (
@@ -206,7 +209,7 @@ const Dot = ({
       onClick={handleClick}
       onKeyPress={handleKeyPress}
       role="radio"
-      tabIndex={selectedValue || !interactive ? -1 : 0}
+      tabIndex={selectedValue || inactive ? -1 : 0}
       aria-checked={full}
       aria-label={`${name} ${value}`}
     >

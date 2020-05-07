@@ -10,6 +10,7 @@ import AbilitiesContext, {
 import GenerationContext from '../../contexts/GenerationContext';
 import { calcPexAbility, calcPexSpecialty } from '../../helpers/pex';
 import SectionTitle from '../SectionTitle';
+import ModeContext from '../../contexts/ModeContext';
 
 const Container = styled.div`
   .col-button {
@@ -45,6 +46,7 @@ const AbilitiesColumn = ({
   addNewCustomAbility,
   removeCustomAbility,
   changeCustomAbilityTitle,
+  inactive,
 }: {
   abilities: AbilitiesListType;
   customAbilities: AbilitiesListType;
@@ -53,6 +55,7 @@ const AbilitiesColumn = ({
   addNewCustomAbility: () => void;
   removeCustomAbility: (key: string) => () => void;
   changeCustomAbilityTitle: (key: string) => (newTitle: string) => void;
+  inactive?: boolean;
 }) => (
   <Container>
     <ColumnTitleWithOptions
@@ -78,6 +81,7 @@ const AbilitiesColumn = ({
           pexCalc: calcPexSpecialty,
         },
       ]}
+      inactive={inactive}
     />
     {abilities.map((ability) => (
       <AbilityLine
@@ -95,6 +99,7 @@ const AbilitiesColumn = ({
         specialties={ability.specialties}
         changeSpecialtyTitle={ability.changeSpecialty}
         removeSpecialty={ability.removeSpecialty}
+        inactive={inactive}
       />
     ))}
     {customAbilities.map((ability) => (
@@ -116,6 +121,7 @@ const AbilitiesColumn = ({
         specialties={ability.specialties}
         changeSpecialtyTitle={ability.changeSpecialty}
         removeSpecialty={ability.removeSpecialty}
+        inactive={inactive}
       />
     ))}
   </Container>
@@ -140,6 +146,7 @@ const Abilities = () => {
     changeCustomKnowledgeTitle,
   } = useContext(AbilitiesContext);
   const generation = useContext(GenerationContext);
+  const { editMode } = useContext(ModeContext);
   const maxLevel = maxDot(generation.value);
   return (
     <>
@@ -189,6 +196,7 @@ const Abilities = () => {
           addNewCustomAbility={addNewCustomTalent}
           removeCustomAbility={removeCustomTalent}
           changeCustomAbilityTitle={changeCustomTalentTitle}
+          inactive={!editMode}
         />
         <AbilitiesColumn
           title="Compétences"
@@ -198,6 +206,7 @@ const Abilities = () => {
           addNewCustomAbility={addNewCustomSkill}
           removeCustomAbility={removeCustomSkill}
           changeCustomAbilityTitle={changeCustomSkillTitle}
+          inactive={!editMode}
         />
         <AbilitiesColumn
           title="Connaissances"
@@ -207,6 +216,7 @@ const Abilities = () => {
           addNewCustomAbility={addNewCustomKnowledge}
           removeCustomAbility={removeCustomKnowledge}
           changeCustomAbilityTitle={changeCustomKnowledgeTitle}
+          inactive={!editMode}
         />
       </HorizontalSection>
     </>
