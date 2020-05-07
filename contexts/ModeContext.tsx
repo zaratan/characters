@@ -13,9 +13,17 @@ const defaultContext: ContextType = {
   toggleMode: () => {},
 };
 const ModeContext = createContext(defaultContext);
-export const ModeProvider = ({ children }: { children: ReactNode }) => {
-  const [editMode, setEditMode] = useState(false);
-  const [playMode, setPlayMode] = useState(true);
+export const ModeProvider = ({
+  children,
+  startEdit = false,
+  startPlay = true,
+}: {
+  children: ReactNode;
+  startEdit?: boolean;
+  startPlay?: boolean;
+}) => {
+  const [editMode, setEditMode] = useState(startEdit);
+  const [playMode, setPlayMode] = useState(startPlay);
   const toggleMode = () => {
     if (playMode && !editMode) {
       setEditMode(true);

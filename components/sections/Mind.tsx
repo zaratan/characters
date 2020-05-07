@@ -1,4 +1,6 @@
 import React, { useContext } from 'react';
+import { useDebounce } from 'react-use';
+import { mutate } from 'swr';
 import { HorizontalSection } from '../../styles/Sections';
 import Line from '../Line';
 import {
@@ -17,6 +19,8 @@ import GenerationContext from '../../contexts/GenerationContext';
 import ColumnTitle from '../ColumnTitle';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
+import IdContext from '../../contexts/IdContext';
+import { fetcher } from '../../helpers/fetcher';
 
 const Mind = () => {
   const {
@@ -32,7 +36,32 @@ const Mind = () => {
     selfControl,
   } = useContext(MindContext);
   const generation = useContext(GenerationContext);
+  const { id } = useContext(IdContext);
   const { editMode, playMode } = useContext(ModeContext);
+  useDebounce(
+    async () => {
+      if (tempWillpower.value === tempWillpower.baseValue) return;
+      await fetcher(`/api/vampires/${id}/update_partial`, {
+        method: 'POST',
+        body: JSON.stringify({ mind: { tempWillpower: tempWillpower.value } }),
+      });
+      mutate(`/api/vampires/${id}`);
+    },
+    2000,
+    [tempWillpower]
+  );
+  useDebounce(
+    async () => {
+      if (bloodSpent.value === bloodSpent.baseValue) return;
+      await fetcher(`/api/vampires/${id}/update_partial`, {
+        method: 'POST',
+        body: JSON.stringify({ mind: { bloodSpent: bloodSpent.value } }),
+      });
+      mutate(`/api/vampires/${id}`);
+    },
+    2000,
+    [bloodSpent]
+  );
   return (
     <>
       <SectionTitle

@@ -9,11 +9,14 @@ const client = new faunadb.Client({ secret });
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: { id },
+    body,
   } = req;
 
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const dbs: { data: Array<{ data: any }> } = await client.query(
+    const vampire: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data: Array<{ data: any; ref: any }>;
+    } = await client.query(
       q.Map(
         // iterate each item in result
         q.Paginate(
@@ -28,9 +31,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       )
     );
     // ok
-    res.status(200).json(dbs.data[0].data);
+    const vId = vampire.data[0].ref;
+    const jsonBody = JSON.parse(body);
+
+    await client.query(q.Update(vId, { data: { ...jsonBody } }));
+
+    // ok
+    res.status(200).json({ result: 'ok' });
   } catch (e) {
-    console.log(e);
     // something went wrong
     res.status(500).json({ error: e.message });
   }

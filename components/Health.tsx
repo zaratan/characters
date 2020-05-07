@@ -1,12 +1,17 @@
 import React, { useContext } from 'react';
+import { useDebounce } from 'react-use';
+import { mutate } from 'swr';
 import NamedSquare from './NamedSquare';
 import ColumnTitleWithOptions from './ColumnTitleWithOptions';
 import MindContext from '../contexts/MindContext';
 import ModeContext from '../contexts/ModeContext';
+import IdContext from '../contexts/IdContext';
+import { fetcher } from '../helpers/fetcher';
 
 const Health = () => {
   const { isExtraBruisable, health } = useContext(MindContext);
   const { playMode, editMode } = useContext(ModeContext);
+  const { id } = useContext(IdContext);
   const changeIsExtraBruisable = () =>
     isExtraBruisable.set(!isExtraBruisable.value);
 
@@ -17,6 +22,18 @@ const Health = () => {
     newHealth.sort((a, b) => b - a);
     health.set(newHealth);
   };
+  useDebounce(
+    async () => {
+      if (health.value === health.baseValue) return;
+      await fetcher(`/api/vampires/${id}/update_partial`, {
+        method: 'POST',
+        body: JSON.stringify({ mind: { health: health.value } }),
+      });
+      mutate(`/api/vampires/${id}`);
+    },
+    2000,
+    [health]
+  );
   return (
     <div>
       <ColumnTitleWithOptions

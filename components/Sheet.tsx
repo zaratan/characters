@@ -87,6 +87,8 @@ const Sheet = ({
   flaws = [],
   languages = [],
   leftOverPex = 0,
+  startEdit,
+  startPlay,
 }: {
   id: string;
   generation: number;
@@ -107,6 +109,8 @@ const Sheet = ({
   languages: Array<RawLanguage>;
   leftOverPex: number;
   newChar: boolean;
+  startEdit?: boolean;
+  startPlay?: boolean;
 }) => {
   const router = useRouter();
 
@@ -133,7 +137,10 @@ const Sheet = ({
                     <AdvFlawProvider advantages={advantages} flaws={flaws}>
                       <LanguagesProvider languages={languages}>
                         <PexProvider leftOverPex={leftOverPex}>
-                          <ModeProvider>
+                          <ModeProvider
+                            startEdit={startEdit}
+                            startPlay={startPlay}
+                          >
                             <SheetContainer>
                               <Head>
                                 <title>

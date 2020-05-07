@@ -79,6 +79,8 @@ const Home = ({ data }: { data: any }) => {
       flaws={flaws}
       languages={languages}
       leftOverPex={leftOverPex}
+      startEdit
+      startPlay={false}
     />
   );
 };
