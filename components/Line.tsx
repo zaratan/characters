@@ -159,7 +159,7 @@ const LineTitle = ({
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   changeName = () => {},
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  remove = () => {},
+  remove,
   title,
   placeholder,
   full,
@@ -186,7 +186,7 @@ const LineTitle = ({
             placeholder={placeholder || 'Nouveau Nom…'}
           />
         )}
-        {!inactive ? (
+        {!inactive && remove ? (
           <RemoveContainer className="remove-glyph">
             <Glyph onClick={remove} name={`Remove ${title}`}>
               ✘
@@ -293,6 +293,7 @@ const Line = ({
   children,
   endNumber,
   inactive = false,
+  dotInactive = false,
 }: {
   elem: TempElemType<number>;
   name: string;
@@ -308,13 +309,15 @@ const Line = ({
   children?: ReactNode;
   endNumber?: number;
   inactive?: boolean;
+  dotInactive?: boolean;
 }) => {
-  const onClickHandle = !inactive
-    ? (val: number) => () => {
-        elem.set(val);
-      }
-    : // eslint-disable-next-line @typescript-eslint/no-empty-function
-      () => () => {};
+  const onClickHandle =
+    !inactive || !dotInactive
+      ? (val: number) => () => {
+          elem.set(val);
+        }
+      : // eslint-disable-next-line @typescript-eslint/no-empty-function
+        () => () => {};
 
   const { showPex } = useContext(PreferencesContext);
 
@@ -340,7 +343,7 @@ const Line = ({
             locked={minLevel > 10}
             value={10}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(9)}
@@ -352,7 +355,7 @@ const Line = ({
             locked={minLevel > 8}
             value={9}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(8)}
@@ -364,7 +367,7 @@ const Line = ({
             locked={minLevel > 7}
             value={8}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(7)}
@@ -376,7 +379,7 @@ const Line = ({
             locked={minLevel > 6}
             value={7}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(6)}
@@ -388,7 +391,7 @@ const Line = ({
             locked={minLevel > 5}
             value={6}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <DotSeparator
             onClick={onClickHandle(5)}
@@ -408,7 +411,7 @@ const Line = ({
             locked={minLevel > 4}
             value={5}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(4)}
@@ -420,7 +423,7 @@ const Line = ({
             locked={minLevel > 3}
             value={4}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(3)}
@@ -432,7 +435,7 @@ const Line = ({
             locked={minLevel > 2}
             value={3}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(2)}
@@ -444,7 +447,7 @@ const Line = ({
             locked={minLevel > 1}
             value={2}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
           <Dot
             onClick={onClickHandle(1)}
@@ -456,9 +459,9 @@ const Line = ({
             locked={minLevel > 0}
             value={1}
             name={name}
-            inactive={inactive}
+            inactive={inactive || dotInactive}
           />
-          {minLevel === 0 && !inactive ? (
+          {minLevel === 0 && !inactive && !dotInactive ? (
             <EmptyGlyph
               selected={elem.value === 0}
               baseValue={elem.baseValue === 0}

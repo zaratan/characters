@@ -190,7 +190,8 @@ const Disciplines = () => {
                     title={thau.mainPathName}
                     diffPexCalc={() => 0}
                     key={thau.key}
-                    inactive
+                    dotInactive
+                    inactive={!editMode}
                     changeName={thau.changeMainPathName}
                     custom
                   />
