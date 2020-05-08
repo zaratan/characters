@@ -10,7 +10,7 @@ const auth0 = () => {
     clientSecret: process.env.AUTH0_CLIENT_SECRET || '',
     scope: 'openid profile email',
     redirectUri: process.env.BASE_URL
-      ? `${process.env.BASE_URL}/api/callback`
+      ? `${process.env.BASE_URL}api/callback`
       : process.env.VERCEL_URL
       ? `https://${process.env.VERCEL_URL}/api/callback`
       : 'http://localhost:3000/api/callback',
