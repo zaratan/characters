@@ -10,6 +10,7 @@ import { HandLargeText } from '../styles/Texts';
 import { ActionItem } from '../styles/Items';
 import { Glyph } from '../components/Glyph';
 import SectionTitle from '../components/SectionTitle';
+import Nav from '../components/Nav';
 
 const TitleContainer = styled.li`
   display: flex;
@@ -51,8 +52,8 @@ const Home = ({
         <title>Char - Feuilles de perso</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+      <Nav actions={[{ text: 'Nouveau personnage', link: '/vampires/new' }]} />
       <SheetContainer>
-        <SectionTitle title="Personnages" />
         <HorizontalSection as="ul">
           {characters.map((character) => {
             const onClick = async () => {
@@ -84,12 +85,6 @@ const Home = ({
               </TitleContainer>
             );
           })}
-        </HorizontalSection>
-        <SectionTitle />
-        <HorizontalSection>
-          <Link href="/vampires/new">
-            <ActionItem as="a">Nouveau Personnage</ActionItem>
-          </Link>
         </HorizontalSection>
       </SheetContainer>
     </>
