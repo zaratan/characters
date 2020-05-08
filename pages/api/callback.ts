@@ -3,7 +3,6 @@ import auth0 from '../../helpers/auth0';
 
 const callback = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    console.log(req);
     await auth0().handleCallback(req, res, { redirectTo: '/' });
   } catch (error) {
     console.error(error);
