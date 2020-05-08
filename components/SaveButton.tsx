@@ -13,6 +13,12 @@ import AdvFlawContext from '../contexts/AdvFlawContext';
 import LanguagesContext from '../contexts/LanguagesContext';
 import Button from './Button';
 import PexContext from '../contexts/PexContext';
+import { StyledTitle } from './SectionTitle';
+import { SubTitle } from '../styles/Titles';
+import {
+  generateHandleClick,
+  generateHandleKeypress,
+} from '../helpers/handlers';
 
 const SaveButton = ({ newChar }: { newChar: boolean }) => {
   const router = useRouter();
@@ -218,7 +224,18 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
       mutate(`/api/vampires/${id}`, data);
     }
   };
-  return <Button onClick={action}>Sauvegarder</Button>;
+  const handleClick = generateHandleClick(action);
+  const handleKeypress = generateHandleKeypress(action);
+  return (
+    <span
+      role="button"
+      onClick={handleClick}
+      onKeyPress={handleKeypress}
+      tabIndex={0}
+    >
+      Sauvegarder
+    </span>
+  );
 };
 
 export default SaveButton;

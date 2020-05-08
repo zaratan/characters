@@ -1,0 +1,46 @@
+import { initAuth0 } from '@auth0/nextjs-auth0';
+import { ServerResponse, IncomingMessage } from 'http';
+
+const auth0 = () =>
+  initAuth0({
+    domain: process.env.AUTH0_DOMAIN || '',
+    clientId: process.env.AUTH0_CLIENT_ID || '',
+    clientSecret: process.env.AUTH0_CLIENT_SECRET || '',
+    scope: 'openid profile email',
+    redirectUri:
+      process.env.AUTH0_REDIRECT || 'http://localhost:3000/api/callback',
+    postLogoutRedirectUri: process.env.AUTH0_LOGOUT || 'http://localhost:3000/',
+
+    session: {
+      // The secret used to encrypt the cookie.
+      cookieSecret:
+        'ljbhbyt√˚¨∆¨©ftyyjghuytfyjhdsgyuktFYUKgBhyfgUIKIGFTYDfyg65e45E$%^ER&^Fcfghcvghjkbdsjknbs',
+      // The cookie lifetime (expiration) in seconds. Set to 8 hours by default.
+      cookieLifetime: 60 * 60 * 8,
+    },
+    oidcClient: {},
+  });
+
+export const forceLogin = async ({
+  res,
+  req,
+}: {
+  res: ServerResponse | undefined;
+  req: IncomingMessage | undefined;
+}) => {
+  if (typeof window !== 'undefined' || !res || !req) return {};
+
+  const session = await auth0().getSession(req);
+
+  if (!session) {
+    res.writeHead(302, {
+      Location: '/api/login',
+    });
+    res.end();
+    return {};
+  }
+  const { user } = session;
+  return { userSession: user };
+};
+
+export default auth0;
