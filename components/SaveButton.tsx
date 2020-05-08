@@ -11,10 +11,7 @@ import DisciplinesContext from '../contexts/DisciplinesContext';
 import { fetcher } from '../helpers/fetcher';
 import AdvFlawContext from '../contexts/AdvFlawContext';
 import LanguagesContext from '../contexts/LanguagesContext';
-import Button from './Button';
 import PexContext from '../contexts/PexContext';
-import { StyledTitle } from './SectionTitle';
-import { SubTitle } from '../styles/Titles';
 import {
   generateHandleClick,
   generateHandleKeypress,

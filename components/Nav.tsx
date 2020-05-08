@@ -2,7 +2,7 @@
 /* eslint-disable styled-components-a11y/anchor-is-valid */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import useSWR, { responseInterface } from 'swr';
+import useSWR from 'swr';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useClickAway, useMouse } from 'react-use';
