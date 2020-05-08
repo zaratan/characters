@@ -40,6 +40,8 @@ const MenuContainer = styled.div`
   height: 100%;
 
   &.mobile-hidden {
+    display: flex;
+    align-items: center;
     @media screen and (max-width: 500px) {
       display: none;
     }
