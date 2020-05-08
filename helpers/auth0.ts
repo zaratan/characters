@@ -9,9 +9,11 @@ const auth0 = () => {
     clientSecret: process.env.AUTH0_CLIENT_SECRET || '',
     scope: 'openid profile email',
     redirectUri: process.env.VERCEL_URL
-      ? `${process.env.VERCEL_URL}/api/callback`
+      ? `https://${process.env.VERCEL_URL}/api/callback`
       : 'http://localhost:3000/api/callback',
-    postLogoutRedirectUri: process.env.VERCEL_URL || 'http://localhost:3000/',
+    postLogoutRedirectUri: process.env.VERCEL_URL
+      ? `https://${process.env.VERCEL_URL}`
+      : 'http://localhost:3000/',
 
     session: {
       // The secret used to encrypt the cookie.
