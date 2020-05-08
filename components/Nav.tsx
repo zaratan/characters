@@ -40,8 +40,10 @@ const MenuContainer = styled.div`
   height: 100%;
 
   &.mobile-hidden {
-    display: flex;
-    align-items: center;
+    &.text-only {
+      display: flex;
+      align-items: center;
+    }
     @media screen and (max-width: 500px) {
       display: none;
     }
@@ -153,13 +155,13 @@ const LogButton = ({
   });
   if (!data)
     return (
-      <MenuContainer className="mobile-hidden">
+      <MenuContainer className="mobile-hidden text-only">
         <span>Loading…</span>
       </MenuContainer>
     );
   if (data.error) {
     return (
-      <MenuContainer className="mobile-hidden">
+      <MenuContainer className="mobile-hidden text-only">
         <Link href="/api/login">
           <a>Connection</a>
         </Link>
