@@ -1,17 +1,8 @@
 import { GetStaticProps } from 'next';
 import { v4 as uuid } from 'uuid';
-import { RawAbilitiesListType } from '../../contexts/AbilitiesContext';
-import { InfosType } from '../../contexts/InfosContext';
-import { AttributesType } from '../../contexts/AttributesContext';
-import { MindType } from '../../contexts/MindContext';
-import {
-  DisciplinesList,
-  CombinedDisciplinesList,
-} from '../../contexts/DisciplinesContext';
 import Sheet from '../../components/Sheet';
 import defaultData from '../../contexts/defaultData';
-import { AdvFlawType } from '../../contexts/AdvFlawContext';
-import { RawLanguage } from '../../contexts/LanguagesContext';
+import { VampireType } from '../api/types/VampireType';
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {
@@ -19,8 +10,7 @@ export const getStaticProps: GetStaticProps = async () => ({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Home = ({ data }: { data: any }) => {
+const Home = ({ data }: { data: VampireType }) => {
   const {
     generation,
     infos,
@@ -39,24 +29,6 @@ const Home = ({ data }: { data: any }) => {
     flaws = [],
     languages = [],
     leftOverPex = 0,
-  }: {
-    generation: number;
-    attributes: AttributesType;
-    talents: RawAbilitiesListType;
-    customTalents: RawAbilitiesListType;
-    skills: RawAbilitiesListType;
-    customSkills: RawAbilitiesListType;
-    knowledges: RawAbilitiesListType;
-    customKnowledges: RawAbilitiesListType;
-    infos: InfosType;
-    mind: MindType;
-    clanDisciplines: DisciplinesList;
-    outClanDisciplines: DisciplinesList;
-    combinedDisciplines: CombinedDisciplinesList;
-    advantages: Array<AdvFlawType>;
-    flaws: Array<AdvFlawType>;
-    languages: Array<RawLanguage>;
-    leftOverPex: number;
   } = data;
   return (
     <Sheet

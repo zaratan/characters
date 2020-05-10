@@ -1,22 +1,11 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
-import { useRouter } from 'next/router';
-import {
-  AttributesType,
-  AttributesProvider,
-} from '../contexts/AttributesContext';
-import {
-  RawAbilitiesListType,
-  AbilitiesProvider,
-} from '../contexts/AbilitiesContext';
-import { InfosType, InfosProvider } from '../contexts/InfosContext';
-import { MindType, MindProvider } from '../contexts/MindContext';
-import {
-  DisciplinesList,
-  CombinedDisciplinesList,
-  DisciplinesProvider,
-} from '../contexts/DisciplinesContext';
+import { AttributesProvider } from '../contexts/AttributesContext';
+import { AbilitiesProvider } from '../contexts/AbilitiesContext';
+import { InfosProvider } from '../contexts/InfosContext';
+import { MindProvider } from '../contexts/MindContext';
+import { DisciplinesProvider } from '../contexts/DisciplinesContext';
 import Infos from './sections/Infos';
 import Attributes from './sections/Attributes';
 import Abilities from './sections/Abilities';
@@ -26,16 +15,15 @@ import Footer from './Footer';
 import { GenerationProvider } from '../contexts/GenerationContext';
 import { IdProvider } from '../contexts/IdContext';
 import SheetContainer from '../styles/SheetContainer';
-import { ActionItem } from '../styles/Items';
-import { AdvFlawProvider, AdvFlawType } from '../contexts/AdvFlawContext';
+import { AdvFlawProvider } from '../contexts/AdvFlawContext';
 import Misc from './sections/Misc';
-import { RawLanguage, LanguagesProvider } from '../contexts/LanguagesContext';
+import { LanguagesProvider } from '../contexts/LanguagesContext';
 import Controls from './sections/Controls';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import PexSection from './sections/PexSection';
 import { PexProvider } from '../contexts/PexContext';
 import { ModeProvider } from '../contexts/ModeContext';
-import { useScroll } from '../hooks/useScroll';
+import { VampireType } from '../pages/api/types/VampireType';
 
 const PageTitle = styled.div`
   display: flex;
@@ -64,25 +52,8 @@ const Sheet = ({
   leftOverPex = 0,
   startEdit,
   startPlay,
-}: {
+}: VampireType & {
   id: string;
-  generation: number;
-  attributes: AttributesType;
-  talents: RawAbilitiesListType;
-  customTalents: RawAbilitiesListType;
-  skills: RawAbilitiesListType;
-  customSkills: RawAbilitiesListType;
-  knowledges: RawAbilitiesListType;
-  customKnowledges: RawAbilitiesListType;
-  infos: InfosType;
-  mind: MindType;
-  clanDisciplines: DisciplinesList;
-  outClanDisciplines: DisciplinesList;
-  combinedDisciplines: CombinedDisciplinesList;
-  advantages: Array<AdvFlawType>;
-  flaws: Array<AdvFlawType>;
-  languages: Array<RawLanguage>;
-  leftOverPex: number;
   newChar: boolean;
   startEdit?: boolean;
   startPlay?: boolean;

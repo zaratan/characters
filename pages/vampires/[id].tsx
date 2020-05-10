@@ -1,18 +1,9 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
-import { RawAbilitiesListType } from '../../contexts/AbilitiesContext';
-import { InfosType } from '../../contexts/InfosContext';
-import { AttributesType } from '../../contexts/AttributesContext';
-import { MindType } from '../../contexts/MindContext';
-import {
-  DisciplinesList,
-  CombinedDisciplinesList,
-} from '../../contexts/DisciplinesContext';
 import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
-import { AdvFlawType } from '../../contexts/AdvFlawContext';
-import { RawLanguage } from '../../contexts/LanguagesContext';
+import { VampireType } from '../api/types/VampireType';
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,
@@ -42,7 +33,7 @@ export const getServerSideProps: GetServerSideProps = async ({
 const Home = ({ initialData }: { initialData: any }) => {
   const router = useRouter();
   const { id } = router.query;
-  const { data } = useSWR(`/api/vampires/${id}`, {
+  const { data } = useSWR<VampireType>(`/api/vampires/${id}`, {
     refreshInterval: 10 * 1000,
     initialData,
   });
@@ -65,28 +56,10 @@ const Home = ({ initialData }: { initialData: any }) => {
     flaws = [],
     languages = [],
     leftOverPex = 0,
-  }: {
-    generation: number;
-    attributes: AttributesType;
-    talents: RawAbilitiesListType;
-    customTalents: RawAbilitiesListType;
-    skills: RawAbilitiesListType;
-    customSkills: RawAbilitiesListType;
-    knowledges: RawAbilitiesListType;
-    customKnowledges: RawAbilitiesListType;
-    infos: InfosType;
-    mind: MindType;
-    clanDisciplines: DisciplinesList;
-    outClanDisciplines: DisciplinesList;
-    combinedDisciplines: CombinedDisciplinesList;
-    advantages: Array<AdvFlawType>;
-    flaws: Array<AdvFlawType>;
-    languages: Array<RawLanguage>;
-    leftOverPex: number;
   } = data;
   return (
     <Sheet
-      id={data.id}
+      id={String(id)}
       generation={generation}
       infos={infos}
       attributes={attributes}

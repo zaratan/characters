@@ -2,7 +2,6 @@
 /* eslint-disable styled-components-a11y/anchor-is-valid */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useRef, useEffect, ReactNode } from 'react';
-import useSWR from 'swr';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useClickAway, useMouse } from 'react-use';
@@ -13,6 +12,8 @@ import {
 } from '../helpers/handlers';
 import { Title, SubTitle } from '../styles/Titles';
 import { useScroll } from '../hooks/useScroll';
+import { MeType } from '../pages/api/types/MeType';
+import { useMe } from '../hooks/useMe';
 
 const SvgHamburger = () => (
   <svg
@@ -144,7 +145,7 @@ const LogButton = ({
   menuOpen,
   action,
 }: {
-  data?: any;
+  data?: MeType;
   close: () => void;
   action: () => void;
   menuOpen: boolean;
@@ -159,7 +160,7 @@ const LogButton = ({
         <span>Loading…</span>
       </MenuContainer>
     );
-  if (data.error) {
+  if (!data.auth) {
     return (
       <MenuContainer className="mobile-hidden text-only">
         <Link href="/api/login">
@@ -215,7 +216,7 @@ const MobileMenu = ({
   actions,
   menuOpen,
 }: {
-  data: any;
+  data: MeType;
   actions?: Array<{
     text: string;
     link?: string;
@@ -263,7 +264,7 @@ const MobileMenu = ({
         );
       })}
       {data ? (
-        data.error ? (
+        !data.auth ? (
           <Link href="/api/login">
             <MenuDropdownElem as="a">Connection</MenuDropdownElem>
           </Link>
@@ -377,9 +378,7 @@ const Nav = ({
     component?: ReactNode;
   }>;
 }) => {
-  const { data } = useSWR('/api/me', {
-    errorRetryCount: 0, // If it fails, it's probably because the user isn't logged-in
-  });
+  const data = useMe();
   const ref = React.useRef(null);
   const { elY } = useMouse(ref);
 
