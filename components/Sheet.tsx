@@ -23,7 +23,7 @@ import { PreferencesProvider } from '../contexts/PreferencesContext';
 import PexSection from './sections/PexSection';
 import { PexProvider } from '../contexts/PexContext';
 import { ModeProvider } from '../contexts/ModeContext';
-import { VampireType } from '../pages/api/types/VampireType';
+import { VampireType } from '../types/VampireType';
 
 const PageTitle = styled.div`
   display: flex;

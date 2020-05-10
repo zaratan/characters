@@ -12,7 +12,7 @@ import {
 } from '../helpers/handlers';
 import { Title, SubTitle } from '../styles/Titles';
 import { useScroll } from '../hooks/useScroll';
-import { MeType } from '../pages/api/types/MeType';
+import { MeType } from '../types/MeType';
 import { useMe } from '../hooks/useMe';
 
 const SvgHamburger = () => (

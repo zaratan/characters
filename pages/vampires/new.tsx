@@ -2,7 +2,7 @@ import { GetStaticProps } from 'next';
 import { v4 as uuid } from 'uuid';
 import Sheet from '../../components/Sheet';
 import defaultData from '../../contexts/defaultData';
-import { VampireType } from '../api/types/VampireType';
+import { VampireType } from '../../types/VampireType';
 
 export const getStaticProps: GetStaticProps = async () => ({
   props: {

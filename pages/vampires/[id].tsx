@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
-import { VampireType } from '../api/types/VampireType';
+import { VampireType } from '../../types/VampireType';
 
 export const getServerSideProps: GetServerSideProps = async ({
   query,

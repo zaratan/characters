@@ -1,5 +1,5 @@
 import useSWR from 'swr';
-import { MeType } from '../pages/api/types/MeType';
+import { MeType } from '../types/MeType';
 
 // This is to return a better type out of auth0-next me call.
 export const useMe: () => MeType = () => {

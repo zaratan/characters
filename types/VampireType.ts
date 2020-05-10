@@ -1,13 +1,13 @@
-import { AttributesType } from '../../../contexts/AttributesContext';
-import { RawAbilitiesListType } from '../../../contexts/AbilitiesContext';
-import { InfosType } from '../../../contexts/InfosContext';
-import { MindType } from '../../../contexts/MindContext';
+import { AttributesType } from '../contexts/AttributesContext';
+import { RawAbilitiesListType } from '../contexts/AbilitiesContext';
+import { InfosType } from '../contexts/InfosContext';
+import { MindType } from '../contexts/MindContext';
 import {
   DisciplinesList,
   CombinedDisciplinesList,
-} from '../../../contexts/DisciplinesContext';
-import { AdvFlawType } from '../../../contexts/AdvFlawContext';
-import { RawLanguage } from '../../../contexts/LanguagesContext';
+} from '../contexts/DisciplinesContext';
+import { AdvFlawType } from '../contexts/AdvFlawContext';
+import { RawLanguage } from '../contexts/LanguagesContext';
 
 export type VampireType = {
   generation: number;
