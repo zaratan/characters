@@ -6,6 +6,7 @@ export const useMe: () => MeType = () => {
   const { data } = useSWR('/api/me', {
     errorRetryCount: 0, // If it fails, it's probably because the user isn't logged-in
   });
+  if (!data) return undefined;
 
   if (data.error !== undefined) {
     return { ...data, auth: false };
