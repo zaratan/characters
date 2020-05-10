@@ -46,7 +46,9 @@ const MenuContainer = styled.div`
       align-items: center;
     }
     @media screen and (max-width: 500px) {
-      display: none;
+      &.text-only {
+        display: none;
+      }
     }
   }
 
