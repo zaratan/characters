@@ -15,6 +15,11 @@ import { fetcher } from '../helpers/fetcher';
 // config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 // library.add(faCircle, faSquare, faTimes);
 
+export function reportWebVitals(metric) {
+  // These metrics can be sent to any analytics service
+  console.log(metric);
+}
+
 const MyApp = ({ Component, pageProps }) => (
   <>
     <SWRConfig
