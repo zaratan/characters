@@ -1,42 +1,76 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetStaticProps } from 'next';
+import { useEffect } from 'react';
 import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
 import { VampireType } from '../../types/VampireType';
+import { fetchVampireFromDB } from '../api/vampires';
+import { fetchOneVampire } from '../api/vampires/[id]';
+import defaultData from '../../contexts/defaultData';
 
-export const getServerSideProps: GetServerSideProps = async ({
-  query,
-  req,
-  res,
-}) => {
-  const initialData = await nodeFetcher(
-    `${host(req)}/api/vampires/${query.id}`
-  );
-
-  if (!initialData.id) {
-    res.writeHead(302, {
-      Location: '/vampires/new',
-    });
-    res.end();
-    return { props: {} };
+export async function getStaticPaths() {
+  const vampires = await fetchVampireFromDB();
+  if (vampires.failed) {
+    return { paths: [], fallback: true };
   }
+
+  return {
+    paths: vampires.characters.map((vampire) => ({
+      params: { id: vampire.key },
+    })),
+    fallback: true,
+  };
+}
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
+  const fetchedData = await fetchOneVampire(String(params.id));
+
+  if (fetchedData.failed) {
+    return {
+      props: {
+        notFound: true,
+      },
+      // eslint-disable-next-line @typescript-eslint/camelcase
+      unstable_revalidate: 1,
+    };
+  }
+  const initialData: VampireType & { id: string } = fetchedData.data;
 
   return {
     props: {
       initialData,
+      notFound: false,
     },
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    unstable_revalidate: 1,
   };
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const Home = ({ initialData }: { initialData: any }) => {
+const Home = ({
+  initialData,
+  notFound,
+}:
+  | {
+      initialData: VampireType;
+      notFound: false;
+    }
+  | { notFound: true; initialData: undefined }) => {
   const router = useRouter();
   const { id } = router.query;
   const { data } = useSWR<VampireType>(`/api/vampires/${id}`, {
     refreshInterval: 10 * 1000,
     initialData,
   });
+  useEffect(() => {
+    if (!router.isFallback && notFound) {
+      router.push('/vampires/new');
+    }
+  });
+  if (router.isFallback || notFound) {
+    return <div>Loading...</div>;
+  }
 
   const {
     generation,

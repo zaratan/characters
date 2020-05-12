@@ -6,11 +6,7 @@ const secret = process.env.FAUNADB_SECRET_KEY;
 const q = faunadb.query;
 const client = new faunadb.Client({ secret });
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const {
-    query: { id },
-  } = req;
-
+export const fetchOneVampire = async (id: string) => {
   try {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dbs: { data: Array<{ data: any }> } = await client.query(
@@ -28,10 +24,23 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       )
     );
     // ok
-    res.status(200).json(dbs.data[0].data);
+    return { data: dbs.data[0].data, failed: false };
   } catch (e) {
-    console.log(e);
     // something went wrong
-    res.status(500).json({ error: e.message });
+    return { error: e.message, failed: true };
+  }
+};
+
+export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const {
+    query: { id },
+  } = req;
+  const vampire = await fetchOneVampire(String(id));
+
+  if (!vampire.failed) {
+    res.status(200).json(vampire.data);
+  } else {
+    // something went wrong
+    res.status(500).json(vampire);
   }
 };

@@ -1,7 +1,7 @@
 import Head from 'next/head';
 import useSWR from 'swr';
 import Link from 'next/link';
-import { GetServerSideProps } from 'next';
+import { GetServerSideProps, GetStaticProps } from 'next';
 import styled from 'styled-components';
 import { nodeFetcher, host, fetcher } from '../helpers/fetcher';
 import SheetContainer from '../styles/SheetContainer';
@@ -11,6 +11,7 @@ import { ActionItem } from '../styles/Items';
 import { Glyph } from '../components/Glyph';
 import SectionTitle from '../components/SectionTitle';
 import Nav from '../components/Nav';
+import { fetchVampireFromDB } from './api/vampires';
 
 const TitleContainer = styled.li`
   display: flex;
@@ -25,13 +26,15 @@ const GlyphContainer = styled.span`
   margin-left: 2rem;
 `;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const initialData = await nodeFetcher(`${host(req)}/api/vampires`);
+export const getStaticProps: GetStaticProps = async () => {
+  const initialData = await fetchVampireFromDB();
 
   return {
     props: {
       initialData,
     },
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    unstable_revalidate: 1,
   };
 };
 
