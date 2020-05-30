@@ -1,7 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable styled-components-a11y/anchor-is-valid */
 /* eslint-disable no-nested-ternary */
-import React, { useState, useRef, useEffect, ReactNode } from 'react';
+import React, {
+  useState,
+  useRef,
+  useEffect,
+  ReactNode,
+  useContext,
+} from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useClickAway, useMouse } from 'react-use';
@@ -13,7 +19,7 @@ import {
 import { Title, SubTitle } from '../styles/Titles';
 import { useScroll } from '../hooks/useScroll';
 import { MeType } from '../types/MeType';
-import { useMe } from '../hooks/useMe';
+import MeContext from '../contexts/MeContext';
 
 const SvgHamburger = () => (
   <svg
@@ -45,7 +51,8 @@ const MenuContainer = styled.div`
       display: flex;
       align-items: center;
     }
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 680px) {
+      display: none;
       &.text-only {
         display: none;
       }
@@ -53,7 +60,7 @@ const MenuContainer = styled.div`
   }
 
   &.mobile-only {
-    @media screen and (min-width: 501px) {
+    @media screen and (min-width: 681px) {
       display: none;
     }
   }
@@ -78,7 +85,7 @@ const NameContainer = styled.li`
   padding: 0.5rem;
   white-space: nowrap;
   z-index: 3;
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 680px) {
     border-top: 2px solid #ccc;
     border-bottom: 0;
   }
@@ -128,7 +135,7 @@ const MenuDropdown = styled.ul<{ numberLi?: number; namePresent?: boolean }>`
   }
   z-index: 3;
   background-color: #f8f8f8;
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 680px) {
     position: relative;
     width: 100%;
     max-height: 0;
@@ -143,11 +150,13 @@ const MenuDropdown = styled.ul<{ numberLi?: number; namePresent?: boolean }>`
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LogButton = ({
   data,
+  connected,
   close,
   menuOpen,
   action,
 }: {
   data?: MeType;
+  connected?: boolean;
   close: () => void;
   action: () => void;
   menuOpen: boolean;
@@ -156,13 +165,7 @@ const LogButton = ({
   useClickAway(wrapperRef, () => {
     close();
   });
-  if (!data)
-    return (
-      <MenuContainer className="mobile-hidden text-only">
-        <span>Loading…</span>
-      </MenuContainer>
-    );
-  if (!data.auth) {
+  if (!connected || !data?.auth) {
     return (
       <MenuContainer className="mobile-hidden text-only">
         <Link href="/api/login">
@@ -213,18 +216,47 @@ const MobileButton = ({ openAction }: { openAction: () => void }) => {
   );
 };
 
+const MobileAction = ({ action }: { action: ActionType }) => {
+  if (action.link) {
+    return (
+      <Link href={action.link} passHref key={action.text}>
+        <MenuDropdownElem as="a">{action.text}</MenuDropdownElem>
+      </Link>
+    );
+  }
+  if (action.component !== undefined) {
+    if (action.component === null) return null;
+    return (
+      <MenuDropdownElem key={action.text}>{action.component}</MenuDropdownElem>
+    );
+  }
+  const handleClickAction = generateHandleClick(action.action);
+  const handleKeypressAction = generateHandleKeypress(action.action);
+  return (
+    <MenuDropdownElem
+      key={action.text}
+      as="span"
+      role="button"
+      onClick={handleClickAction}
+      onKeyPress={handleKeypressAction}
+      tabIndex={0}
+    >
+      {action.text}
+    </MenuDropdownElem>
+  );
+};
+
 const MobileMenu = ({
   data,
-  actions,
+  connected,
+  actions = [],
+  loggedActions = [],
   menuOpen,
 }: {
   data: MeType;
-  actions?: Array<{
-    text: string;
-    link?: string;
-    action?: () => void;
-    component?: ReactNode;
-  }>;
+  connected: boolean;
+  actions?: Array<ActionType>;
+  loggedActions?: Array<ActionType>;
   menuOpen: boolean;
 }) => (
   <MenuContainer className="mobile-only">
@@ -233,52 +265,27 @@ const MobileMenu = ({
       numberLi={1 + actions.length}
       namePresent={!data?.error}
     >
-      {actions.map((action) => {
-        if (action.link) {
-          return (
-            <Link href={action.link} passHref key={action.text}>
-              <MenuDropdownElem as="a">{action.text}</MenuDropdownElem>
-            </Link>
-          );
-        }
-        if (action.component !== undefined) {
-          if (action.component === null) return null;
-          return (
-            <MenuDropdownElem key={action.text}>
-              {action.component}
-            </MenuDropdownElem>
-          );
-        }
-        const handleClickAction = generateHandleClick(action.action);
-        const handleKeypressAction = generateHandleKeypress(action.action);
-        return (
-          <MenuDropdownElem
-            key={action.text}
-            as="span"
-            role="button"
-            onClick={handleClickAction}
-            onKeyPress={handleKeypressAction}
-            tabIndex={0}
-          >
-            {action.text}
-          </MenuDropdownElem>
-        );
-      })}
-      {data ? (
-        !data.auth ? (
-          <Link href="/api/login">
-            <MenuDropdownElem as="a">Connection</MenuDropdownElem>
-          </Link>
-        ) : (
-          <>
-            <NameContainer>{data.name}</NameContainer>
-            <Link href="/api/logout" prefetch={false} passHref>
-              <MenuDropdownElem as="a">Déconnection</MenuDropdownElem>
-            </Link>
-          </>
-        )
+      {actions.map((action) => (
+        <MobileAction key={action.text} action={action} />
+      ))}
+      {connected ? (
+        loggedActions.map((action) => (
+          <MobileAction key={action.text} action={action} />
+        ))
+      ) : loggedActions.length > 0 ? (
+        <span>Connectez vous pour le reste</span>
+      ) : null}
+      {!connected || !data?.auth ? (
+        <Link href="/api/login">
+          <MenuDropdownElem as="a">Connection</MenuDropdownElem>
+        </Link>
       ) : (
-        <MenuDropdownElem>Loading…</MenuDropdownElem>
+        <>
+          <NameContainer>{data.name}</NameContainer>
+          <Link href="/api/logout" prefetch={false} passHref>
+            <MenuDropdownElem as="a">Déconnection</MenuDropdownElem>
+          </Link>
+        </>
       )}
     </MenuDropdown>
   </MenuContainer>
@@ -297,12 +304,20 @@ const LeftContainer = styled.div`
   display: flex;
 `;
 
+const RightContainer = styled.div`
+  display: flex;
+`;
+
 const ActionsContainer = styled.ul`
   display: flex;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 680px) {
     display: none;
   }
+`;
+
+const RightActionsContainer = styled(ActionsContainer)`
+  padding-right: 1rem;
 `;
 
 const Action = styled.li`
@@ -324,7 +339,7 @@ const PageTitle = styled.header`
   padding-right: 3rem;
   font-size: 2rem;
 
-  @media screen and (max-width: 500px) {
+  @media screen and (max-width: 680px) {
     padding-right: 0;
     font-size: 1.5rem;
   }
@@ -369,17 +384,56 @@ const NavContainer = styled.nav<{
     )}
 `;
 
+export type ActionType = {
+  text: string;
+  link?: string;
+  action?: () => void;
+  component?: ReactNode;
+};
+
+const NavAction = ({ action }: { action: ActionType }) => {
+  if (action.link) {
+    return (
+      <Action key={action.text}>
+        <Link href={action.link} passHref>
+          <SubTitle as="a">{action.text}</SubTitle>
+        </Link>
+      </Action>
+    );
+  }
+  if (action.component !== undefined) {
+    if (action.component === null) return null;
+    return (
+      <Action key={action.text}>
+        <SubTitle as="span">{action.component}</SubTitle>
+      </Action>
+    );
+  }
+  const handleClick = generateHandleClick(action.action);
+  const handleKeypress = generateHandleKeypress(action.action);
+  return (
+    <Action key={action.text}>
+      <SubTitle
+        as="span"
+        role="button"
+        onClick={handleClick}
+        onKeyPress={handleKeypress}
+        tabIndex={0}
+      >
+        {action.text}
+      </SubTitle>
+    </Action>
+  );
+};
+
 const Nav = ({
   actions = [],
+  loggedActions = [],
 }: {
-  actions?: Array<{
-    text: string;
-    link?: string;
-    action?: () => void;
-    component?: ReactNode;
-  }>;
+  loggedActions?: Array<ActionType>;
+  actions?: Array<ActionType>;
 }) => {
-  const data = useMe();
+  const { me, connected } = useContext(MeContext);
   const ref = React.useRef(null);
   const { elY } = useMouse(ref);
 
@@ -411,51 +465,36 @@ const Nav = ({
               </Link>
             </PageTitle>
             <ActionsContainer>
-              {actions.map((action) => {
-                if (action.link) {
-                  return (
-                    <Action key={action.text}>
-                      <Link href={action.link} passHref>
-                        <SubTitle as="a">{action.text}</SubTitle>
-                      </Link>
-                    </Action>
-                  );
-                }
-                if (action.component !== undefined) {
-                  if (action.component === null) return null;
-                  return (
-                    <Action key={action.text}>
-                      <SubTitle as="span">{action.component}</SubTitle>
-                    </Action>
-                  );
-                }
-                const handleClick = generateHandleClick(action.action);
-                const handleKeypress = generateHandleKeypress(action.action);
-                return (
-                  <Action key={action.text}>
-                    <SubTitle
-                      as="span"
-                      role="button"
-                      onClick={handleClick}
-                      onKeyPress={handleKeypress}
-                      tabIndex={0}
-                    >
-                      {action.text}
-                    </SubTitle>
-                  </Action>
-                );
-              })}
+              {actions.map((action) => (
+                <NavAction action={action} />
+              ))}
             </ActionsContainer>
           </LeftContainer>
-          <MobileButton openAction={openAction} />
-          <LogButton
-            data={data}
-            action={openAction}
-            close={close}
-            menuOpen={menuOpen}
-          />
+          <RightContainer>
+            <RightActionsContainer>
+              {connected ? (
+                loggedActions.map((action) => <NavAction action={action} />)
+              ) : loggedActions.length > 0 ? (
+                <span>Pour les autres actions: </span>
+              ) : null}
+            </RightActionsContainer>
+            <MobileButton openAction={openAction} />
+            <LogButton
+              data={me}
+              connected={connected}
+              action={openAction}
+              close={close}
+              menuOpen={menuOpen}
+            />
+          </RightContainer>
         </Container>
-        <MobileMenu data={data} actions={actions} menuOpen={menuOpen} />
+        <MobileMenu
+          data={me}
+          connected={connected}
+          actions={actions}
+          loggedActions={loggedActions}
+          menuOpen={menuOpen}
+        />
         <BlackLine />
       </NavContainer>
       <EmptyLine />

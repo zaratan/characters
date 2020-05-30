@@ -11,18 +11,22 @@ const Controls = ({ newChar }: { newChar: boolean }) => {
     <Nav
       actions={[
         {
-          text: editMode ? 'Play' : 'Edit',
-          action: toggleMode,
-        },
-        {
           text: `${showPex ? 'Cacher' : 'Afficher'} les PEX`,
           action: togglePex,
         },
+      ]}
+      loggedActions={[
+        newChar
+          ? null
+          : {
+              text: editMode ? 'Play' : 'Edit',
+              action: toggleMode,
+            },
         {
           text: 'Save',
           component: editMode ? <SaveButton newChar={newChar} /> : null,
         },
-      ]}
+      ].filter((e) => e !== null)}
     />
   );
 };

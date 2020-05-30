@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode } from 'react';
+import React, { createContext, useState, ReactNode, useContext } from 'react';
+import MeContext from './MeContext';
 
 type ContextType = {
   editMode: boolean;
@@ -22,17 +23,20 @@ export const ModeProvider = ({
   startEdit?: boolean;
   startPlay?: boolean;
 }) => {
-  const [editMode, setEditMode] = useState(startEdit);
-  const [playMode, setPlayMode] = useState(startPlay);
-  const toggleMode = () => {
-    if (playMode && !editMode) {
-      setEditMode(true);
-      setPlayMode(false);
-    } else {
-      setEditMode(false);
-      setPlayMode(true);
-    }
-  };
+  const { connected } = useContext(MeContext);
+  const [editMode, setEditMode] = useState(connected ? startEdit : false);
+  const [playMode, setPlayMode] = useState(connected ? startPlay : false);
+  const toggleMode = connected
+    ? () => {
+        if (playMode && !editMode) {
+          setEditMode(true);
+          setPlayMode(false);
+        } else {
+          setEditMode(false);
+          setPlayMode(true);
+        }
+      }
+    : () => {};
   const context: ContextType = { editMode, playMode, toggleMode };
   return (
     <ModeContext.Provider value={context}>{children}</ModeContext.Provider>
