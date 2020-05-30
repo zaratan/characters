@@ -113,7 +113,7 @@ const ColumnTitleWithOptions = ({
                 name={`${open ? 'Close' : 'Open'} ${title}`}
                 className="open-col-glyph"
               >
-                {open ? '▼' : '▶'}
+                {open ? '▼' : '\u25b6\ufe0e'}
               </Glyph>
             )}
           </GlyphContainer>
