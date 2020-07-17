@@ -100,8 +100,6 @@ const Home = ({
       <PusherSheetListener
         id={String(id)}
         callback={() => {
-          alert('mut');
-          console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
           mutate();
         }}
       />
