@@ -12,6 +12,7 @@ const PusherSheetListener = ({
 }) => {
   const { appId, pusherClient } = useContext(SystemContext);
   useEffect(() => {
+    if (pusherClient === null) return;
     const { client, channel } = subscribeToSheet({
       id,
       callback: (data) => {
