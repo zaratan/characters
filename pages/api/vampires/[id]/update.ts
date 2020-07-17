@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
+import { updateOnSheet } from '../../../../helpers/pusherServer';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
@@ -39,6 +40,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     );
 
     // ok
+    updateOnSheet(String(id));
     res.status(200).json({ result: 'ok' });
   } catch (e) {
     // something went wrong

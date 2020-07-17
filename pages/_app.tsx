@@ -11,7 +11,7 @@ import { SWRConfig } from 'swr';
 import GlobalStyle from '../styles/GlobalStyle';
 import { fetcher } from '../helpers/fetcher';
 
-// // See https://github.com/FortAwesome/react-fontawesome#integrating-with-other-tools-and-frameworks
+// See https://github.com/FortAwesome/react-fontawesome#integrating-with-other-tools-and-frameworks
 // config.autoAddCss = false; // Tell Font Awesome to skip adding the CSS automatically since it's being imported above
 // library.add(faCircle, faSquare, faTimes);
 

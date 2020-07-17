@@ -2,6 +2,7 @@ import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { GetServerSideProps, GetStaticProps } from 'next';
 import { useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
 import { VampireType } from '../../types/VampireType';
@@ -23,9 +24,13 @@ export async function getStaticPaths() {
   };
 }
 
+const PusherSheetListener = dynamic(
+  () => import('../../components/no-ssr/PusherSheetListener'),
+  { ssr: false }
+);
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const fetchedData = await fetchOneVampire(String(params.id));
-
   if (fetchedData.failed) {
     return {
       props: {
@@ -59,8 +64,7 @@ const Home = ({
   | { notFound: true; initialData: undefined }) => {
   const router = useRouter();
   const { id } = router.query;
-  const { data } = useSWR<VampireType>(`/api/vampires/${id}`, {
-    refreshInterval: 10 * 1000,
+  const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
     initialData,
   });
   useEffect(() => {
@@ -92,27 +96,36 @@ const Home = ({
     leftOverPex = 0,
   } = data;
   return (
-    <Sheet
-      id={String(id)}
-      generation={generation}
-      infos={infos}
-      attributes={attributes}
-      talents={talents}
-      customTalents={customTalents}
-      skills={skills}
-      customSkills={customSkills}
-      knowledges={knowledges}
-      customKnowledges={customKnowledges}
-      mind={mind}
-      clanDisciplines={clanDisciplines}
-      outClanDisciplines={outClanDisciplines}
-      combinedDisciplines={combinedDisciplines}
-      newChar={false}
-      advantages={advantages}
-      flaws={flaws}
-      languages={languages}
-      leftOverPex={leftOverPex}
-    />
+    <>
+      <PusherSheetListener
+        id={String(id)}
+        callback={() => {
+          alert('mut');
+          mutate();
+        }}
+      />
+      <Sheet
+        id={String(id)}
+        generation={generation}
+        infos={infos}
+        attributes={attributes}
+        talents={talents}
+        customTalents={customTalents}
+        skills={skills}
+        customSkills={customSkills}
+        knowledges={knowledges}
+        customKnowledges={customKnowledges}
+        mind={mind}
+        clanDisciplines={clanDisciplines}
+        outClanDisciplines={outClanDisciplines}
+        combinedDisciplines={combinedDisciplines}
+        newChar={false}
+        advantages={advantages}
+        flaws={flaws}
+        languages={languages}
+        leftOverPex={leftOverPex}
+      />
+    </>
   );
 };
 

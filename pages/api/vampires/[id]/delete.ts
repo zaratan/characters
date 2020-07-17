@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
+import { updateOnSheets } from '../../../../helpers/pusherServer';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
@@ -30,6 +31,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       )
     );
     // ok
+    updateOnSheets();
     const vId = vampire.data[0].ref;
 
     await client.query(q.Delete(vId));
