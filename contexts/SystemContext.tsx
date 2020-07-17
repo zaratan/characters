@@ -36,7 +36,8 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
     () => {
       if (typeof window !== 'undefined') {
         const client: Pusher = pusher().pusherClient();
-        setPusherState(client.connection.state);
+        setPusherState(client?.connection?.state);
+        setNeedPusherFallback(!client);
         client.connection.bind(
           'state_change',
           (states: { previous: string; current: string }) => {
