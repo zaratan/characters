@@ -18,7 +18,7 @@ const PusherSheetsListener = ({ callback }: { callback: () => void }) => {
       channel.unbind(null, callback);
       client.unsubscribe(sheetsChannel);
     };
-  }, [appId, callback]);
+  }, [appId, callback, pusherClient]);
   return <></>;
 };
 
