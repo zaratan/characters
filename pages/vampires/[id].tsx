@@ -61,10 +61,10 @@ const Home = ({
   | { notFound: true; initialData: undefined }) => {
   const router = useRouter();
   const { id } = router.query;
-  const { pusherClient } = useContext(SystemContext);
+  const { needPusherFallback } = useContext(SystemContext);
   const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
     initialData,
-    refreshInterval: pusherClient ? 0 : 10 * 1000,
+    refreshInterval: needPusherFallback ? 10 * 1000 : 0,
   });
   useEffect(() => {
     if (!router.isFallback && notFound) {

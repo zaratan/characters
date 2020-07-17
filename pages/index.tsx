@@ -51,10 +51,10 @@ const Home = ({
 }: {
   initialData: { characters: Array<{ name: string; key: string }> };
 }) => {
-  const { pusherClient } = useContext(SystemContext);
+  const { needPusherFallback } = useContext(SystemContext);
   const { data, mutate } = useSWR(`/api/vampires`, {
     initialData,
-    refreshInterval: pusherClient ? 0 : 10 * 1000,
+    refreshInterval: needPusherFallback ? 10 * 1000 : 0,
   });
   const { characters } = data;
   characters.sort((a, b) => (a.name < b.name ? -1 : 1));
