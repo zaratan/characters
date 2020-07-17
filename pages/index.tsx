@@ -3,7 +3,7 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import { GetServerSideProps, GetStaticProps } from 'next';
 import styled from 'styled-components';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import { nodeFetcher, host, fetcher } from '../helpers/fetcher';
 import SheetContainer from '../styles/SheetContainer';
@@ -15,6 +15,7 @@ import SectionTitle from '../components/SectionTitle';
 import Nav from '../components/Nav';
 import { fetchVampireFromDB } from './api/vampires';
 import { subscribeToSheets } from '../helpers/pusherClient';
+import SystemContext from '../contexts/SystemContext';
 
 const PusherSheetsListener = dynamic(
   () => import('../components/no-ssr/PusherSheetsListener'),
@@ -50,8 +51,10 @@ const Home = ({
 }: {
   initialData: { characters: Array<{ name: string; key: string }> };
 }) => {
+  const { pusherClient } = useContext(SystemContext);
   const { data, mutate } = useSWR(`/api/vampires`, {
     initialData,
+    refreshInterval: pusherClient ? 0 : 10 * 1000,
   });
   const { characters } = data;
   characters.sort((a, b) => (a.name < b.name ? -1 : 1));

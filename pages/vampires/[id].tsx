@@ -1,12 +1,13 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
 import { GetStaticProps } from 'next';
-import { useEffect } from 'react';
+import { useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import Sheet from '../../components/Sheet';
 import { VampireType } from '../../types/VampireType';
 import { fetchVampireFromDB } from '../api/vampires';
 import { fetchOneVampire } from '../api/vampires/[id]';
+import SystemContext from '../../contexts/SystemContext';
 
 export async function getStaticPaths() {
   const vampires = await fetchVampireFromDB();
@@ -60,8 +61,10 @@ const Home = ({
   | { notFound: true; initialData: undefined }) => {
   const router = useRouter();
   const { id } = router.query;
+  const { pusherClient } = useContext(SystemContext);
   const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
     initialData,
+    refreshInterval: pusherClient ? 0 : 10 * 1000,
   });
   useEffect(() => {
     if (!router.isFallback && notFound) {
