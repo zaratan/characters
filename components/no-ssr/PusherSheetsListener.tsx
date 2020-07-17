@@ -4,12 +4,15 @@ import { sheetsChannel } from '../../helpers/pusherConst';
 import SystemContext from '../../contexts/SystemContext';
 
 const PusherSheetsListener = ({ callback }: { callback: () => void }) => {
-  const { appId } = useContext(SystemContext);
+  const { appId, pusherClient } = useContext(SystemContext);
   useEffect(() => {
-    const { channel, client } = subscribeToSheets((data) => {
-      if (data.appId === appId) return;
+    const { channel, client } = subscribeToSheets({
+      callback: (data) => {
+        if (data.appId === appId) return;
 
-      callback();
+        callback();
+      },
+      client: pusherClient,
     });
     return () => {
       channel.unbind(null, callback);
