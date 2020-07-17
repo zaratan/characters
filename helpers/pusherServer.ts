@@ -1,6 +1,5 @@
 import Pusher from 'pusher';
 import { sheetsChannel, UPDATE_EVENT, sheetChannel } from './pusherConst';
-import { pusherClient } from './pusherClient';
 
 export const pusherServer = () =>
   new Pusher({
@@ -11,10 +10,14 @@ export const pusherServer = () =>
     useTLS: true,
   });
 
-export const updateOnSheets = () => {
-  pusherServer().trigger(sheetsChannel, UPDATE_EVENT, {});
+export const updateOnSheets = (appId: string) => {
+  pusherServer().trigger(sheetsChannel, UPDATE_EVENT, { appId });
 };
 
-export const updateOnSheet = (id: string) => {
-  pusherServer().trigger(sheetChannel(id), UPDATE_EVENT, {});
+export const updateOnSheet = (id: string, appId: string) => {
+  console.log('UPDATE', sheetChannel(id));
+  const result = pusherServer().trigger(sheetChannel(id), UPDATE_EVENT, {
+    appId,
+  });
+  console.log(result);
 };

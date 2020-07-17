@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useContext } from 'react';
 import { subscribeToSheet } from '../../helpers/pusherClient';
 import { sheetChannel } from '../../helpers/pusherConst';
+import SystemContext from '../../contexts/SystemContext';
 
 const PusherSheetListener = ({
   id,
@@ -9,17 +10,18 @@ const PusherSheetListener = ({
   id: string;
   callback: () => void;
 }) => {
+  const { appId } = useContext(SystemContext);
   useEffect(() => {
-    console.log('EFECT START');
-
-    const { client, channel, bind } = subscribeToSheet(id, callback);
+    const { client, channel } = subscribeToSheet(id, (data) => {
+      if (data.appId === appId) return;
+      callback();
+    });
     return () => {
-      console.log('DEAD: SHEET', bind);
-      // channel.unbind();
-      // client.unsubscribe(sheetChannel(id));
+      channel.unbind(null, callback);
+      client.unsubscribe(sheetChannel(id));
     };
-  }, [id]);
-  return <div />;
+  }, [id, appId, callback]);
+  return <div className="pusher" />;
 };
 
 export default PusherSheetListener;

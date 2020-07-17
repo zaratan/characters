@@ -7,11 +7,13 @@ import MindContext from '../contexts/MindContext';
 import ModeContext from '../contexts/ModeContext';
 import IdContext from '../contexts/IdContext';
 import { fetcher } from '../helpers/fetcher';
+import SystemContext from '../contexts/SystemContext';
 
 const Health = () => {
   const { isExtraBruisable, health } = useContext(MindContext);
   const { playMode, editMode } = useContext(ModeContext);
   const { id } = useContext(IdContext);
+  const { appId } = useContext(SystemContext);
   const changeIsExtraBruisable = () =>
     isExtraBruisable.set(!isExtraBruisable.value);
 
@@ -24,10 +26,12 @@ const Health = () => {
   };
   useDebounce(
     async () => {
-      if (health.value === health.baseValue) return;
+      if (JSON.stringify(health.value) === JSON.stringify(health.baseValue))
+        return;
+
       await fetcher(`/api/vampires/${id}/update_partial`, {
         method: 'POST',
-        body: JSON.stringify({ mind: { health: health.value } }),
+        body: JSON.stringify({ mind: { health: health.value }, appId }),
       });
       mutate(`/api/vampires/${id}`);
     },

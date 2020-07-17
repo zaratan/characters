@@ -19,8 +19,10 @@ export type AuthMeType = {
   nickname: string;
   name: string;
   picture: string;
+  // eslint-disable-next-line camelcase
   updated_at: string;
   email: string;
+  // eslint-disable-next-line camelcase
   email_verified: boolean;
   sub: string;
   error: undefined;

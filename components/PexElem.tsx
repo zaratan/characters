@@ -1,3 +1,5 @@
+// TODO THIS IS A BUG IN ESLINT
+/* eslint-disable react/prop-types */
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import PreferencesContext from '../contexts/PreferencesContext';

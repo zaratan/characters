@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import PusherClient from 'pusher-js/with-encryption';
 import { sheetsChannel, sheetChannel, UPDATE_EVENT } from './pusherConst';
 
@@ -17,7 +18,7 @@ export const subscribeToSheets = (callback: (data: any) => void) => {
 export const subscribeToSheet = (id: string, callback: (data: any) => void) => {
   const client = pusherClient();
   const channel = client.subscribe(sheetChannel(id));
-  const bind = client.channel.bind(UPDATE_EVENT, callback);
+  const bind = channel.bind(UPDATE_EVENT, callback);
 
   return { client, channel, bind };
 };

@@ -9,12 +9,14 @@ const client = new faunadb.Client({ secret });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
-    await client.query(
-      q.Create(q.Collection('vampires'), { data: { ...JSON.parse(req.body) } })
-    );
+    const data = { ...JSON.parse(req.body) };
+    const { appId } = data;
+    delete data.appId;
+
+    await client.query(q.Create(q.Collection('vampires'), { data }));
 
     // ok
-    updateOnSheets();
+    updateOnSheets(String(appId));
     res.status(200).json({ result: 'ok' });
   } catch (e) {
     // something went wrong

@@ -10,6 +10,7 @@ const client = new faunadb.Client({ secret });
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: { id },
+    body,
   } = req;
 
   try {
@@ -32,15 +33,18 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     );
     // ok
     const vId = vampire.data[0].ref;
+    const data = { ...JSON.parse(body) };
+    const { appId } = data;
+    delete data.appId;
 
     await client.query(
       q.Replace(vId, {
-        data: { ...JSON.parse(req.body) },
+        data,
       })
     );
 
     // ok
-    updateOnSheet(String(id));
+    updateOnSheet(String(id), String(appId));
     res.status(200).json({ result: 'ok' });
   } catch (e) {
     // something went wrong
