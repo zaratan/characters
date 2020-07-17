@@ -16,10 +16,12 @@ import {
   generateHandleClick,
   generateHandleKeypress,
 } from '../helpers/handlers';
+import SystemContext from '../contexts/SystemContext';
 
 const SaveButton = ({ newChar }: { newChar: boolean }) => {
   const router = useRouter();
   const { id } = useContext(IdContext);
+  const { appId } = useContext(SystemContext);
   const {
     chronicle,
     clan,
@@ -213,7 +215,7 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
     const url = newChar ? '/api/vampires/create' : `/api/vampires/${id}/update`;
     await fetcher(url, {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, appId }),
     });
     if (newChar) {
       router.push(`/vampires/${id}`);

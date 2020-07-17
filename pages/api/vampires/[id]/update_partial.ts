@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
+import { updateOnSheet } from '../../../../helpers/pusherServer';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
@@ -32,11 +33,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     );
     // ok
     const vId = vampire.data[0].ref;
-    const jsonBody = JSON.parse(body);
+    const data = { ...JSON.parse(body) };
+    const { appId } = data;
+    delete data.appId;
 
-    await client.query(q.Update(vId, { data: { ...jsonBody } }));
+    await client.query(q.Update(vId, { data }));
 
     // ok
+    updateOnSheet(String(id), String(appId));
     res.status(200).json({ result: 'ok' });
   } catch (e) {
     // something went wrong

@@ -153,7 +153,6 @@ const Disciplines = () => {
                   changeName={combinedDiscipline.setTitle}
                   diffPexCalc={(from, to) => to - from}
                   elem={combinedDiscipline}
-                  name={combinedDiscipline.title}
                   remove={() =>
                     removeCombinedDiscipline(combinedDiscipline.key)
                   }
@@ -256,7 +255,6 @@ const Disciplines = () => {
                         calcPexDiffThaumaturgyRitual(from, to, thau.ritualMulti)
                       }
                       elem={ritual}
-                      name={ritual.title}
                       title={ritual.title}
                       maxValue={thau.value}
                       remove={() => thau.removeRitual(ritual.key)}

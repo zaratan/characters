@@ -3,6 +3,8 @@ import useSWR from 'swr';
 import Link from 'next/link';
 import { GetServerSideProps, GetStaticProps } from 'next';
 import styled from 'styled-components';
+import { useEffect, useContext } from 'react';
+import dynamic from 'next/dynamic';
 import { nodeFetcher, host, fetcher } from '../helpers/fetcher';
 import SheetContainer from '../styles/SheetContainer';
 import { HorizontalSection } from '../styles/Sections';
@@ -12,6 +14,13 @@ import { Glyph } from '../components/Glyph';
 import SectionTitle from '../components/SectionTitle';
 import Nav from '../components/Nav';
 import { fetchVampireFromDB } from './api/vampires';
+import { subscribeToSheets } from '../helpers/pusherClient';
+import SystemContext from '../contexts/SystemContext';
+
+const PusherSheetsListener = dynamic(
+  () => import('../components/no-ssr/PusherSheetsListener'),
+  { ssr: false }
+);
 
 const TitleContainer = styled.li`
   display: flex;
@@ -33,7 +42,6 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       initialData,
     },
-    // eslint-disable-next-line @typescript-eslint/camelcase
     unstable_revalidate: 1,
   };
 };
@@ -43,14 +51,16 @@ const Home = ({
 }: {
   initialData: { characters: Array<{ name: string; key: string }> };
 }) => {
+  const { needPusherFallback } = useContext(SystemContext);
   const { data, mutate } = useSWR(`/api/vampires`, {
-    refreshInterval: 10 * 1000,
     initialData,
+    refreshInterval: needPusherFallback ? 10 * 1000 : 0,
   });
   const { characters } = data;
   characters.sort((a, b) => (a.name < b.name ? -1 : 1));
   return (
     <>
+      <PusherSheetsListener callback={() => mutate()} />
       <Head>
         <title>Char - Feuilles de perso</title>
         <link rel="icon" href="/favicon.ico" />

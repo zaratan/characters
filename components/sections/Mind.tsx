@@ -21,6 +21,7 @@ import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
 import IdContext from '../../contexts/IdContext';
 import { fetcher } from '../../helpers/fetcher';
+import SystemContext from '../../contexts/SystemContext';
 
 const Mind = () => {
   const {
@@ -37,13 +38,17 @@ const Mind = () => {
   } = useContext(MindContext);
   const generation = useContext(GenerationContext);
   const { id } = useContext(IdContext);
+  const { appId } = useContext(SystemContext);
   const { editMode, playMode } = useContext(ModeContext);
   useDebounce(
     async () => {
       if (tempWillpower.value === tempWillpower.baseValue) return;
       await fetcher(`/api/vampires/${id}/update_partial`, {
         method: 'POST',
-        body: JSON.stringify({ mind: { tempWillpower: tempWillpower.value } }),
+        body: JSON.stringify({
+          mind: { tempWillpower: tempWillpower.value },
+          appId,
+        }),
       });
       mutate(`/api/vampires/${id}`);
     },
@@ -55,7 +60,7 @@ const Mind = () => {
       if (bloodSpent.value === bloodSpent.baseValue) return;
       await fetcher(`/api/vampires/${id}/update_partial`, {
         method: 'POST',
-        body: JSON.stringify({ mind: { bloodSpent: bloodSpent.value } }),
+        body: JSON.stringify({ mind: { bloodSpent: bloodSpent.value }, appId }),
       });
       mutate(`/api/vampires/${id}`);
     },

@@ -64,7 +64,6 @@ const Misc = () => {
                     calcPexDiffAdvFlaw(from, to, false)
                   }
                   elem={advantage}
-                  name={advantage.title}
                   remove={() => removeAdvantage(advantage.key)}
                   title={advantage.title}
                   placeholderName="Nouvel avantage"
@@ -89,7 +88,6 @@ const Misc = () => {
                   changeName={flaw.setTitle}
                   diffPexCalc={(from, to) => calcPexDiffAdvFlaw(from, to, true)}
                   elem={flaw}
-                  name={flaw.title}
                   remove={() => removeFlaw(flaw.key)}
                   title={flaw.title}
                   placeholderName="Nouvel inconvénient"
@@ -119,7 +117,6 @@ const Misc = () => {
                     diffPexCalc={() => 0}
                     title={language.value}
                     remove={() => removeLanguage(language.key)}
-                    name={language.key}
                     full
                     inactive={!editMode}
                   />

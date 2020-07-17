@@ -226,7 +226,6 @@ const MobileMenu = ({
     component?: ReactNode;
   }>;
   menuOpen: boolean;
-  openAction: () => void;
 }) => (
   <MenuContainer className="mobile-only">
     <MenuDropdown
@@ -456,12 +455,7 @@ const Nav = ({
             menuOpen={menuOpen}
           />
         </Container>
-        <MobileMenu
-          data={data}
-          actions={actions}
-          menuOpen={menuOpen}
-          openAction={openAction}
-        />
+        <MobileMenu data={data} actions={actions} menuOpen={menuOpen} />
         <BlackLine />
       </NavContainer>
       <EmptyLine />

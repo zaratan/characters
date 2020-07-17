@@ -1,3 +1,5 @@
+// TODO THIS IS A BUG IN ESLINT…
+/* eslint-disable react/prop-types */
 import React, { ReactNode, useContext } from 'react';
 import styled from 'styled-components';
 
@@ -158,7 +160,6 @@ const LineTitle = ({
   custom,
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   changeName = () => {},
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   remove,
   title,
   placeholder,
@@ -225,7 +226,6 @@ export const LineValue = ({
   inactive,
 }: {
   elem?: TempElemType<number>;
-  name: string;
   maxValue?: number;
   title: string;
   diffPexCalc: (from: number, to: number) => number;

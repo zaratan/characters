@@ -1,13 +1,13 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { GetServerSideProps, GetStaticProps } from 'next';
-import { useEffect } from 'react';
-import { nodeFetcher, host } from '../../helpers/fetcher';
+import { GetStaticProps } from 'next';
+import { useEffect, useContext } from 'react';
+import dynamic from 'next/dynamic';
 import Sheet from '../../components/Sheet';
 import { VampireType } from '../../types/VampireType';
 import { fetchVampireFromDB } from '../api/vampires';
 import { fetchOneVampire } from '../api/vampires/[id]';
-import defaultData from '../../contexts/defaultData';
+import SystemContext from '../../contexts/SystemContext';
 
 export async function getStaticPaths() {
   const vampires = await fetchVampireFromDB();
@@ -23,15 +23,18 @@ export async function getStaticPaths() {
   };
 }
 
+const PusherSheetListener = dynamic(
+  () => import('../../components/no-ssr/PusherSheetListener'),
+  { ssr: false }
+);
+
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const fetchedData = await fetchOneVampire(String(params.id));
-
   if (fetchedData.failed) {
     return {
       props: {
         notFound: true,
       },
-      // eslint-disable-next-line @typescript-eslint/camelcase
       unstable_revalidate: 1,
     };
   }
@@ -42,7 +45,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       initialData,
       notFound: false,
     },
-    // eslint-disable-next-line @typescript-eslint/camelcase
     unstable_revalidate: 1,
   };
 };
@@ -59,9 +61,10 @@ const Home = ({
   | { notFound: true; initialData: undefined }) => {
   const router = useRouter();
   const { id } = router.query;
-  const { data } = useSWR<VampireType>(`/api/vampires/${id}`, {
-    refreshInterval: 10 * 1000,
+  const { needPusherFallback } = useContext(SystemContext);
+  const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
     initialData,
+    refreshInterval: needPusherFallback ? 10 * 1000 : 0,
   });
   useEffect(() => {
     if (!router.isFallback && notFound) {
@@ -92,27 +95,35 @@ const Home = ({
     leftOverPex = 0,
   } = data;
   return (
-    <Sheet
-      id={String(id)}
-      generation={generation}
-      infos={infos}
-      attributes={attributes}
-      talents={talents}
-      customTalents={customTalents}
-      skills={skills}
-      customSkills={customSkills}
-      knowledges={knowledges}
-      customKnowledges={customKnowledges}
-      mind={mind}
-      clanDisciplines={clanDisciplines}
-      outClanDisciplines={outClanDisciplines}
-      combinedDisciplines={combinedDisciplines}
-      newChar={false}
-      advantages={advantages}
-      flaws={flaws}
-      languages={languages}
-      leftOverPex={leftOverPex}
-    />
+    <>
+      <PusherSheetListener
+        id={String(id)}
+        callback={() => {
+          mutate();
+        }}
+      />
+      <Sheet
+        id={String(id)}
+        generation={generation}
+        infos={infos}
+        attributes={attributes}
+        talents={talents}
+        customTalents={customTalents}
+        skills={skills}
+        customSkills={customSkills}
+        knowledges={knowledges}
+        customKnowledges={customKnowledges}
+        mind={mind}
+        clanDisciplines={clanDisciplines}
+        outClanDisciplines={outClanDisciplines}
+        combinedDisciplines={combinedDisciplines}
+        newChar={false}
+        advantages={advantages}
+        flaws={flaws}
+        languages={languages}
+        leftOverPex={leftOverPex}
+      />
+    </>
   );
 };
 
