@@ -166,7 +166,7 @@ const LineTitle = ({
   full,
   inactive,
 }: {
-  custom: boolean;
+  custom?: boolean;
   changeName?: (newValue: string) => void;
   remove?: () => void;
   title?: string;
