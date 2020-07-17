@@ -15,9 +15,7 @@ export const updateOnSheets = (appId: string) => {
 };
 
 export const updateOnSheet = (id: string, appId: string) => {
-  console.log('UPDATE', sheetChannel(id));
-  const result = pusherServer().trigger(sheetChannel(id), UPDATE_EVENT, {
+  pusherServer().trigger(sheetChannel(id), UPDATE_EVENT, {
     appId,
   });
-  console.log(result);
 };
