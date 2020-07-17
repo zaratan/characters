@@ -41,7 +41,6 @@ export const getStaticProps: GetStaticProps = async () => {
     props: {
       initialData,
     },
-    // eslint-disable-next-line @typescript-eslint/camelcase
     unstable_revalidate: 1,
   };
 };

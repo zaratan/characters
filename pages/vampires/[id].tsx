@@ -1,14 +1,12 @@
 import useSWR from 'swr';
 import { useRouter } from 'next/router';
-import { GetServerSideProps, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
 import { useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { nodeFetcher, host } from '../../helpers/fetcher';
 import Sheet from '../../components/Sheet';
 import { VampireType } from '../../types/VampireType';
 import { fetchVampireFromDB } from '../api/vampires';
 import { fetchOneVampire } from '../api/vampires/[id]';
-import defaultData from '../../contexts/defaultData';
 
 export async function getStaticPaths() {
   const vampires = await fetchVampireFromDB();
@@ -36,7 +34,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       props: {
         notFound: true,
       },
-      // eslint-disable-next-line @typescript-eslint/camelcase
       unstable_revalidate: 1,
     };
   }
@@ -47,7 +44,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       initialData,
       notFound: false,
     },
-    // eslint-disable-next-line @typescript-eslint/camelcase
     unstable_revalidate: 1,
   };
 };
