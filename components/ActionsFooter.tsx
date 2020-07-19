@@ -146,27 +146,42 @@ const DesktopActionsContainer = styled.div`
   right: 1rem;
 `;
 
-const MobileActionsFooter = ({
-  actions,
-}: {
-  actions: Array<{ name: string; link?: string; act?: () => void }>;
-}) => (
+const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
   <>
     <MobileActionsContainer>
       <BlackLine className="thin mobile-only" />
       <EmptyLine className="thin mobile-only" />
       <MobileActions>
-        {actions?.map((action) =>
-          action.link ? (
-            <Link href={action.link}>
-              <a>
-                <MobileAction key={action.name}>{action.name}</MobileAction>
-              </a>
-            </Link>
-          ) : (
-            <MobileAction key={action.name}>{action.name}</MobileAction>
-          )
-        )}
+        {actions?.map((action) => {
+          if (action.link) {
+            return (
+              <Link href={action.link}>
+                <a>
+                  <MobileAction key={action.name}>{action.name}</MobileAction>
+                </a>
+              </Link>
+            );
+          }
+          if (action.component !== undefined) {
+            if (action.component === null) return null;
+            return (
+              <MobileAction key={action.name}>{action.component}</MobileAction>
+            );
+          }
+          const handleClick = generateHandleClick(action.act);
+          const handleKeypress = generateHandleKeypress(action.act);
+          return (
+            <MobileAction
+              key={action.name}
+              role="button"
+              onClick={handleClick}
+              onKeyPress={handleKeypress}
+              tabIndex={0}
+            >
+              {action.name}
+            </MobileAction>
+          );
+        })}
       </MobileActions>
     </MobileActionsContainer>
   </>
