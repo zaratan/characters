@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { mutate } from 'swr';
 import IdContext from '../contexts/IdContext';
@@ -18,7 +18,13 @@ import {
 } from '../helpers/handlers';
 import SystemContext from '../contexts/SystemContext';
 
-const SaveButton = ({ newChar }: { newChar: boolean }) => {
+const SaveButton = ({
+  newChar,
+  children,
+}: {
+  newChar: boolean;
+  children: ReactNode;
+}) => {
   const router = useRouter();
   const { id } = useContext(IdContext);
   const { appId } = useContext(SystemContext);
@@ -231,9 +237,8 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
       onClick={handleClick}
       onKeyPress={handleKeypress}
       tabIndex={0}
-      className="full-text"
     >
-      Sauvegarder
+      {children}
     </span>
   );
 };

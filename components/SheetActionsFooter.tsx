@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import PreferencesContext from '../contexts/PreferencesContext';
 import ModeContext from '../contexts/ModeContext';
 import ActionsFooter from './ActionsFooter';
@@ -24,11 +24,14 @@ const SheetActionsFooter = ({ newChar }: { newChar: boolean }) => {
               act: toggleMode,
               name: editMode ? 'Jouer' : 'Modifier',
             },
-        {
-          glyph: '💾',
-          component: editMode ? <SaveButton newChar={newChar} /> : null,
-          name: 'Sauver',
-        },
+        editMode
+          ? {
+              glyph: '💾',
+              component: SaveButton,
+              componentProps: { newChar },
+              name: 'Sauver',
+            }
+          : null,
       ].filter((e) => e !== null)}
     />
   );

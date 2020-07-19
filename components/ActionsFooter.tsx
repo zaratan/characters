@@ -16,14 +16,17 @@ type ActionType = {
       link: string;
       act?: null;
       component?: null;
+      componentProps?: null;
     }
   | {
       act: () => void;
       link?: null;
       component?: null;
+      componentProps?: null;
     }
   | {
-      component: ReactNode;
+      component: (any) => JSX.Element;
+      componentProps?: any;
       act?: null;
       link?: null;
     }
@@ -55,9 +58,9 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
       {actions.map((action) => {
         if (action.link) {
           return (
-            <Link href={action.link}>
+            <Link href={action.link} key={action.name}>
               <a>
-                <DesktopAction key={action.name}>
+                <DesktopAction>
                   <GlyphAction>{action.glyph}</GlyphAction>
                   <span className="full-text">{action.name}</span>
                 </DesktopAction>
@@ -67,11 +70,15 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
         }
         if (action.component !== undefined) {
           if (action.component === null) return null;
+
           return (
-            <DesktopAction key={action.name}>
-              <GlyphAction>{action.glyph}</GlyphAction>
-              {action.component}
-            </DesktopAction>
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            <action.component {...action.componentProps} key={action.name}>
+              <DesktopAction>
+                <GlyphAction>{action.glyph}</GlyphAction>
+                <span className="full-text">{action.name}</span>
+              </DesktopAction>
+            </action.component>
           );
         }
         const handleClick = generateHandleClick(action.act);
@@ -144,6 +151,7 @@ const DesktopActionsContainer = styled.div`
   position: fixed;
   bottom: 5rem;
   right: 1rem;
+  z-index: 2;
 `;
 
 const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
@@ -155,9 +163,9 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
         {actions?.map((action) => {
           if (action.link) {
             return (
-              <Link href={action.link}>
+              <Link href={action.link} key={action.name}>
                 <a>
-                  <MobileAction key={action.name}>{action.name}</MobileAction>
+                  <MobileAction>{action.name}</MobileAction>
                 </a>
               </Link>
             );
@@ -165,7 +173,10 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
           if (action.component !== undefined) {
             if (action.component === null) return null;
             return (
-              <MobileAction key={action.name}>{action.component}</MobileAction>
+              // eslint-disable-next-line react/jsx-props-no-spreading
+              <action.component {...action.componentProps} key={action.name}>
+                <MobileAction>{action.name}</MobileAction>
+              </action.component>
             );
           }
           const handleClick = generateHandleClick(action.act);
@@ -203,12 +214,16 @@ const MobileActions = styled.ul`
 
 const MobileAction = styled.li`
   text-align: center;
-  margin: auto;
+  margin: 0 auto;
   padding: 1rem;
   background-color: #eee;
   border-radius: 5px;
   border: 1px solid lightgray;
   width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   cursor: pointer;
 `;
 

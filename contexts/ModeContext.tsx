@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode, useContext } from 'react';
+import React, {
+  createContext,
+  useState,
+  ReactNode,
+  useContext,
+  useEffect,
+} from 'react';
 import MeContext from './MeContext';
 
 type ContextType = {
@@ -9,7 +15,7 @@ type ContextType = {
 };
 
 const defaultContext: ContextType = {
-  editMode: true,
+  editMode: false,
   playMode: false,
   toggleMode: () => {},
 };
@@ -28,8 +34,14 @@ export const ModeProvider = ({
 
   const [editMode, setEditMode] = useState(connected ? startEdit : false);
   const [playMode, setPlayMode] = useState(connected ? startPlay : false);
+  useEffect(() => {
+    setEditMode(false);
+    setPlayMode(connected);
+  }, [connected]);
   const toggleMode = connected
     ? () => {
+        console.log({ playMode, editMode });
+
         if (playMode && !editMode) {
           setEditMode(true);
           setPlayMode(false);
