@@ -231,6 +231,7 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
       onClick={handleClick}
       onKeyPress={handleKeypress}
       tabIndex={0}
+      className="full-text"
     >
       Sauvegarder
     </span>

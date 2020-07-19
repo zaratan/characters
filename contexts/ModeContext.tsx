@@ -9,10 +9,11 @@ type ContextType = {
 };
 
 const defaultContext: ContextType = {
-  editMode: false,
+  editMode: true,
   playMode: false,
   toggleMode: () => {},
 };
+
 const ModeContext = createContext(defaultContext);
 export const ModeProvider = ({
   children,
@@ -24,6 +25,7 @@ export const ModeProvider = ({
   startPlay?: boolean;
 }) => {
   const { connected } = useContext(MeContext);
+
   const [editMode, setEditMode] = useState(connected ? startEdit : false);
   const [playMode, setPlayMode] = useState(connected ? startPlay : false);
   const toggleMode = connected
@@ -37,7 +39,13 @@ export const ModeProvider = ({
         }
       }
     : () => {};
-  const context: ContextType = { editMode, playMode, toggleMode };
+
+  const context: ContextType = {
+    editMode,
+    playMode,
+    toggleMode,
+  };
+
   return (
     <ModeContext.Provider value={context}>{children}</ModeContext.Provider>
   );

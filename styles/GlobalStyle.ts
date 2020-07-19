@@ -8,6 +8,11 @@ const GlobalStyle = createGlobalStyle`
   font-display: swap;
 }
 
+html, body, #__next {
+  min-height: 100%;
+  height: 100%;
+}
+
 /* Box sizing rules */
 *,
 *::before,
@@ -41,7 +46,6 @@ dd {
 
 /* Set core body defaults */
 body {
-  min-height: 100vh;
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
   line-height: 1.5;

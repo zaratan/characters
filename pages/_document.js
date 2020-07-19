@@ -35,7 +35,7 @@ class MyDocument extends Document {
         <body>
           <Main />
 
-          <NextScript />
+          <NextScript style={{ minHeight: '100%' }} />
         </body>
       </Html>
     );

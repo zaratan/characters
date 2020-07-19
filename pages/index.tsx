@@ -16,6 +16,8 @@ import Nav from '../components/Nav';
 import { fetchVampireFromDB } from './api/vampires';
 import { subscribeToSheets } from '../helpers/pusherClient';
 import SystemContext from '../contexts/SystemContext';
+import Footer from '../components/Footer';
+import ActionsFooter from '../components/ActionsFooter';
 
 const PusherSheetsListener = dynamic(
   () => import('../components/no-ssr/PusherSheetsListener'),
@@ -33,6 +35,12 @@ const GlyphContainer = styled.span`
   justify-content: center;
   align-items: center;
   margin-left: 2rem;
+`;
+
+const MainContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 `;
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -59,13 +67,13 @@ const Home = ({
   const { characters } = data;
   characters.sort((a, b) => (a.name < b.name ? -1 : 1));
   return (
-    <>
+    <MainContainer>
       <PusherSheetsListener callback={() => mutate()} />
       <Head>
         <title>Char - Feuilles de perso</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Nav actions={[{ text: 'Nouveau personnage', link: '/vampires/new' }]} />
+      <Nav />
       <SheetContainer>
         <HorizontalSection as="ul">
           {characters.map((character) => {
@@ -100,7 +108,13 @@ const Home = ({
           })}
         </HorizontalSection>
       </SheetContainer>
-    </>
+      <ActionsFooter
+        loggedActions={[
+          { name: 'Nouveau Personnage', link: '/vampires/new', glyph: '+' },
+        ]}
+      />
+      <Footer withoutEmptyLines />
+    </MainContainer>
   );
 };
 
