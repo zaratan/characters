@@ -1,6 +1,7 @@
 import React, { useContext, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { mutate } from 'swr';
+import styled from 'styled-components';
 import IdContext from '../contexts/IdContext';
 import InfosContext from '../contexts/InfosContext';
 import AttributesContext from '../contexts/AttributesContext';
@@ -232,15 +233,27 @@ const SaveButton = ({
   const handleClick = generateHandleClick(action);
   const handleKeypress = generateHandleKeypress(action);
   return (
-    <span
+    <Button
       role="button"
       onClick={handleClick}
       onKeyPress={handleKeypress}
       tabIndex={0}
     >
       {children}
-    </span>
+    </Button>
   );
 };
+
+const Button = styled.span`
+  &:focus {
+    & > li {
+      padding: 1.5rem;
+      .full-text {
+        max-width: 160px;
+        padding-left: 1rem;
+      }
+    }
+  }
+`;
 
 export default SaveButton;

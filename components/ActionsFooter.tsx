@@ -15,11 +15,13 @@ type ActionType = {
   | {
       link: string;
       act?: null;
+      active?: null;
       component?: null;
       componentProps?: null;
     }
   | {
       act: () => void;
+      active?: boolean;
       link?: null;
       component?: null;
       componentProps?: null;
@@ -27,6 +29,7 @@ type ActionType = {
   | {
       component: (any) => JSX.Element;
       componentProps?: any;
+      active?: null;
       act?: null;
       link?: null;
     }
@@ -91,7 +94,9 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
             onKeyPress={handleKeypress}
             tabIndex={0}
           >
-            <GlyphAction>{action.glyph}</GlyphAction>
+            <GlyphAction className={action.active ? 'active' : ''}>
+              {action.glyph}
+            </GlyphAction>
             <span className="full-text">{action.name}</span>
           </DesktopAction>
         );
@@ -102,6 +107,9 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
 
 const GlyphAction = styled.span`
   font-size: 2rem;
+  &.active {
+    color: green;
+  }
 `;
 
 const DesktopAction = styled.li`
@@ -128,11 +136,15 @@ const DesktopAction = styled.li`
   @media screen and (any-hover: hover) {
     &:hover,
     &:focus {
+      outline: none;
       padding: 1.5rem;
       .full-text {
         max-width: 160px;
         padding-left: 1rem;
       }
+    }
+    &:focus {
+      border-color: blue;
     }
   }
 `;

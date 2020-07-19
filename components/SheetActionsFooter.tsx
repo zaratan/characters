@@ -14,6 +14,7 @@ const SheetActionsFooter = ({ newChar }: { newChar: boolean }) => {
           glyph: 'XP',
           name: `${showPex ? 'Cacher' : 'Afficher'} les PEX`,
           act: togglePex,
+          active: showPex,
         },
       ]}
       loggedActions={[
