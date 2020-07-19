@@ -28,10 +28,14 @@ const FooterText = styled.span`
   align-items: center;
 `;
 
-const Footer = () => (
+const Footer = ({ withoutEmptyLines }: { withoutEmptyLines?: boolean }) => (
   <FooterStyle>
-    <EmptyLine />
-    <EmptyLine />
+    {withoutEmptyLines ? null : (
+      <>
+        <EmptyLine />
+        <EmptyLine />
+      </>
+    )}
     <BlackLine />
     <FooterText>
       <span>

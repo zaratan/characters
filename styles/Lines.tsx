@@ -8,6 +8,11 @@ export const EmptyLine = styled.div`
   &.thin {
     height: 1rem;
   }
+  &.mobile-only {
+    @media screen and (min-width: 681px) {
+      display: none;
+    }
+  }
 `;
 
 export const BlackLine = styled.div`
@@ -16,5 +21,10 @@ export const BlackLine = styled.div`
   width: 100%;
   &.thin {
     height: 1px;
+  }
+  &.mobile-only {
+    @media screen and (min-width: 681px) {
+      display: none;
+    }
   }
 `;

@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
 import { updateOnSheets } from '../../../../helpers/pusherServer';
+import auth0 from '../../../../helpers/auth0';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
@@ -8,6 +9,12 @@ const q = faunadb.query;
 const client = new faunadb.Client({ secret });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await auth0().getSession(req);
+  if (!session) {
+    return res
+      .status(403)
+      .json({ error: 'Vous devez vous connecter pour effectuer cette action' });
+  }
   const {
     query: { id },
     body,

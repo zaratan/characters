@@ -18,12 +18,13 @@ import SheetContainer from '../styles/SheetContainer';
 import { AdvFlawProvider } from '../contexts/AdvFlawContext';
 import Misc from './sections/Misc';
 import { LanguagesProvider } from '../contexts/LanguagesContext';
-import Controls from './sections/Controls';
 import { PreferencesProvider } from '../contexts/PreferencesContext';
 import PexSection from './sections/PexSection';
 import { PexProvider } from '../contexts/PexContext';
 import { ModeProvider } from '../contexts/ModeContext';
 import { VampireType } from '../types/VampireType';
+import SheetActionsFooter from './SheetActionsFooter';
+import Nav from './Nav';
 
 const PageTitle = styled.div`
   display: flex;
@@ -59,32 +60,29 @@ const Sheet = ({
   startPlay?: boolean;
 }) => (
   <PreferencesProvider>
-    <IdProvider id={id}>
-      <GenerationProvider generation={generation}>
-        <InfosProvider infos={infos}>
-          <AttributesProvider attributes={attributes}>
-            <MindProvider mind={mind}>
-              <AbilitiesProvider
-                talents={talents}
-                customTalents={customTalents}
-                skills={skills}
-                customSkills={customSkills}
-                knowledges={knowledges}
-                customKnowledges={customKnowledges}
-              >
-                <DisciplinesProvider
-                  clanDisciplines={clanDisciplines}
-                  outClanDisciplines={outClanDisciplines}
-                  combinedDisciplines={combinedDisciplines}
+    <ModeProvider startEdit={startEdit} startPlay={startPlay}>
+      <IdProvider id={id}>
+        <GenerationProvider generation={generation}>
+          <InfosProvider infos={infos}>
+            <AttributesProvider attributes={attributes}>
+              <MindProvider mind={mind}>
+                <AbilitiesProvider
+                  talents={talents}
+                  customTalents={customTalents}
+                  skills={skills}
+                  customSkills={customSkills}
+                  knowledges={knowledges}
+                  customKnowledges={customKnowledges}
                 >
-                  <AdvFlawProvider advantages={advantages} flaws={flaws}>
-                    <LanguagesProvider languages={languages}>
-                      <PexProvider leftOverPex={leftOverPex}>
-                        <ModeProvider
-                          startEdit={startEdit}
-                          startPlay={startPlay}
-                        >
-                          <Controls newChar={newChar} />
+                  <DisciplinesProvider
+                    clanDisciplines={clanDisciplines}
+                    outClanDisciplines={outClanDisciplines}
+                    combinedDisciplines={combinedDisciplines}
+                  >
+                    <AdvFlawProvider advantages={advantages} flaws={flaws}>
+                      <LanguagesProvider languages={languages}>
+                        <PexProvider leftOverPex={leftOverPex}>
+                          <Nav />
                           <SheetContainer>
                             <Head>
                               <title>
@@ -106,18 +104,19 @@ const Sheet = ({
                             <Misc />
                             <PexSection />
                           </SheetContainer>
-                        </ModeProvider>
-                      </PexProvider>
-                    </LanguagesProvider>
-                  </AdvFlawProvider>
-                  <Footer />
-                </DisciplinesProvider>
-              </AbilitiesProvider>
-            </MindProvider>
-          </AttributesProvider>
-        </InfosProvider>
-      </GenerationProvider>
-    </IdProvider>
+                          <SheetActionsFooter newChar={newChar} />
+                          <Footer />
+                        </PexProvider>
+                      </LanguagesProvider>
+                    </AdvFlawProvider>
+                  </DisciplinesProvider>
+                </AbilitiesProvider>
+              </MindProvider>
+            </AttributesProvider>
+          </InfosProvider>
+        </GenerationProvider>
+      </IdProvider>
+    </ModeProvider>
   </PreferencesProvider>
 );
 export default Sheet;

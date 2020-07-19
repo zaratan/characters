@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import React, { useContext, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import { mutate } from 'swr';
+import styled from 'styled-components';
 import IdContext from '../contexts/IdContext';
 import InfosContext from '../contexts/InfosContext';
 import AttributesContext from '../contexts/AttributesContext';
@@ -18,7 +19,13 @@ import {
 } from '../helpers/handlers';
 import SystemContext from '../contexts/SystemContext';
 
-const SaveButton = ({ newChar }: { newChar: boolean }) => {
+const SaveButton = ({
+  newChar,
+  children,
+}: {
+  newChar: boolean;
+  children: ReactNode;
+}) => {
   const router = useRouter();
   const { id } = useContext(IdContext);
   const { appId } = useContext(SystemContext);
@@ -226,15 +233,27 @@ const SaveButton = ({ newChar }: { newChar: boolean }) => {
   const handleClick = generateHandleClick(action);
   const handleKeypress = generateHandleKeypress(action);
   return (
-    <span
+    <Button
       role="button"
       onClick={handleClick}
       onKeyPress={handleKeypress}
       tabIndex={0}
     >
-      Sauvegarder
-    </span>
+      {children}
+    </Button>
   );
 };
+
+const Button = styled.span`
+  &:focus {
+    & > li {
+      padding: 1.5rem;
+      .full-text {
+        max-width: 160px;
+        padding-left: 1rem;
+      }
+    }
+  }
+`;
 
 export default SaveButton;
