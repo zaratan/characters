@@ -18,6 +18,7 @@ import { subscribeToSheets } from '../helpers/pusherClient';
 import SystemContext from '../contexts/SystemContext';
 import Footer from '../components/Footer';
 import ActionsFooter from '../components/ActionsFooter';
+import { EmptyLine } from '../styles/Lines';
 
 const PusherSheetsListener = dynamic(
   () => import('../components/no-ssr/PusherSheetsListener'),
@@ -74,6 +75,8 @@ const Home = ({
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Nav />
+      <EmptyLine />
+      <EmptyLine />
       <SheetContainer>
         <HorizontalSection as="ul">
           {characters.map((character) => {
