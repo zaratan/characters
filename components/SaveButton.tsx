@@ -38,6 +38,7 @@ const SaveButton = ({
     nature,
     playerName,
     sire,
+    era,
   } = useContext(InfosContext);
   const {
     appearance,
@@ -146,6 +147,7 @@ const SaveButton = ({
       nature: nature.value,
       playerName: playerName.value,
       sire: sire.value,
+      era,
     };
     const attributes = {
       strength: strength.value,

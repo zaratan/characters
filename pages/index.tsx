@@ -110,7 +110,7 @@ const Home = ({
       </SheetContainer>
       <ActionsFooter
         loggedActions={[
-          { name: 'Nouveau Personnage', link: '/vampires/new', glyph: '+' },
+          { name: 'Nouveau Personnage', link: '/new', glyph: '+' },
         ]}
       />
       <Footer withoutEmptyLines />

@@ -1,6 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import { initAuth0 } from '@auth0/nextjs-auth0';
-import { ServerResponse, IncomingMessage } from 'http';
+import { ServerResponse } from 'http';
 import { NextApiRequest } from 'next';
 
 const auth0 = () =>

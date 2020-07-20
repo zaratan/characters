@@ -11,6 +11,7 @@ export interface InfosType {
   clan: string;
   haven: string;
   sire: string;
+  era: number;
 }
 
 const defaultContext: {
@@ -22,6 +23,7 @@ const defaultContext: {
   clan: TempElemType<string>;
   haven: TempElemType<string>;
   sire: TempElemType<string>;
+  era: number;
 } = {
   name: { value: '', set: () => {}, baseValue: '' },
   playerName: { value: '', set: () => {}, baseValue: '' },
@@ -31,6 +33,7 @@ const defaultContext: {
   clan: { value: '', set: () => {}, baseValue: '' },
   haven: { value: '', set: () => {}, baseValue: '' },
   sire: { value: '', set: () => {}, baseValue: '' },
+  era: 0,
 };
 
 const InfosContext = createContext(defaultContext);
@@ -90,6 +93,7 @@ export const InfosProvider = ({
     clan: { value: clan, set: setClan, baseValue: infos.clan },
     haven: { value: haven, set: setHaven, baseValue: infos.haven },
     sire: { value: sire, set: setSire, baseValue: infos.sire },
+    era: infos.era,
   };
   return (
     <InfosContext.Provider value={tmpInfos}>{children}</InfosContext.Provider>

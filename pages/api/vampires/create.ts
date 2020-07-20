@@ -1,7 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
-import { updateOnSheets } from '../../../helpers/pusherServer';
 import auth0 from '../../../helpers/auth0';
+
+import base from '../../../defaultData/base';
+import darkAge from '../../../defaultData/darkAge';
+import victorian from '../../../defaultData/victorian';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
@@ -16,14 +19,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .json({ error: 'Vous devez vous connecter pour effectuer cette action' });
   }
   try {
-    const data = { ...JSON.parse(req.body) };
-    const { appId } = data;
-    delete data.appId;
+    const { type = 0, name = '', era = 0, id = 'aaaaaaaa' } = {
+      ...JSON.parse(req.body),
+    };
+
+    const data = { ...base, ...(era === 0 ? darkAge : victorian), id };
+    data.infos.name = name;
+    data.infos.era = era;
 
     await client.query(q.Create(q.Collection('vampires'), { data }));
 
     // ok
-    updateOnSheets(String(appId));
     res.status(200).json({ result: 'ok' });
   } catch (e) {
     // something went wrong

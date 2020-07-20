@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext } from 'react';
 import PreferencesContext from '../contexts/PreferencesContext';
 import ModeContext from '../contexts/ModeContext';
 import ActionsFooter from './ActionsFooter';

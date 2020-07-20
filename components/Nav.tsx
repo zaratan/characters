@@ -5,7 +5,7 @@ import React, { useState, useRef, ReactNode, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useClickAway } from 'react-use';
-import { BlackLine, EmptyLine } from '../styles/Lines';
+import { BlackLine } from '../styles/Lines';
 import {
   generateHandleClick,
   generateHandleKeypress,
@@ -211,8 +211,6 @@ const Nav = () => {
         </Container>
         <BlackLine />
       </NavContainer>
-      <EmptyLine />
-      <EmptyLine />
     </>
   );
 };

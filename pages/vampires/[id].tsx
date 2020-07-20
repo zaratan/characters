@@ -8,7 +8,6 @@ import { VampireType } from '../../types/VampireType';
 import { fetchVampireFromDB } from '../api/vampires';
 import { fetchOneVampire } from '../api/vampires/[id]';
 import SystemContext from '../../contexts/SystemContext';
-import MeContext from '../../contexts/MeContext';
 
 export async function getStaticPaths() {
   const vampires = await fetchVampireFromDB();
@@ -63,7 +62,6 @@ const Home = ({
   const router = useRouter();
   const { id } = router.query;
   const { needPusherFallback } = useContext(SystemContext);
-  const { connected } = useContext(MeContext);
   const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
     initialData,
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
@@ -96,6 +94,11 @@ const Home = ({
     languages = [],
     leftOverPex = 0,
   } = data;
+
+  // default era
+  if (infos.era === undefined) {
+    infos.era = 0;
+  }
   return (
     <>
       <PusherSheetListener
