@@ -14,7 +14,6 @@ import { HandEditableText, HandText } from '../styles/Texts';
 import { Glyph } from './Glyph';
 import { TempElemType } from '../types/TempElemType';
 import PreferencesContext from '../contexts/PreferencesContext';
-import InfosContext from '../contexts/InfosContext';
 
 const ColumnLine = styled.li`
   display: flex;

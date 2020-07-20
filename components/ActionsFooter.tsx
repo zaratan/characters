@@ -1,4 +1,4 @@
-import React, { useContext, ReactNode } from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { BlackLine, EmptyLine } from '../styles/Lines';
@@ -28,6 +28,7 @@ type ActionType = {
     }
   | {
       component: (any) => JSX.Element;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       componentProps?: any;
       active?: null;
       act?: null;

@@ -25,7 +25,7 @@ import { ModeProvider } from '../contexts/ModeContext';
 import { VampireType } from '../types/VampireType';
 import SheetActionsFooter from './SheetActionsFooter';
 import Nav from './Nav';
-import { Title, SubTitle } from '../styles/Titles';
+import { Title } from '../styles/Titles';
 
 const PageTitle = styled.div`
   display: flex;

@@ -1,8 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Square, { EmptyGlyph } from './Square';
 import { SubTitle } from '../styles/Titles';
-import InfosContext from '../contexts/InfosContext';
 
 const NamedSquareContainer = styled.div`
   display: flex;

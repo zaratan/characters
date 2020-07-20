@@ -5,7 +5,7 @@ import React, { useState, useRef, ReactNode, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useClickAway } from 'react-use';
-import { BlackLine, EmptyLine } from '../styles/Lines';
+import { BlackLine } from '../styles/Lines';
 import {
   generateHandleClick,
   generateHandleKeypress,
@@ -13,7 +13,6 @@ import {
 import { Title } from '../styles/Titles';
 import { MeType } from '../types/MeType';
 import MeContext from '../contexts/MeContext';
-import InfosContext from '../contexts/InfosContext';
 
 const ProfileImg = styled.img`
   height: 30px;
