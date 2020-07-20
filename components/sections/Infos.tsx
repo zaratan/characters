@@ -29,6 +29,7 @@ const Infos = () => {
     haven,
     nature,
     sire,
+    era,
   } = useContext(InfosContext);
 
   const { editMode } = useContext(ModeContext);

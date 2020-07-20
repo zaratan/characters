@@ -63,6 +63,13 @@ const MyApp = ({ Component, pageProps }) => (
           type="font/ttf"
           crossOrigin="anonymous"
         />
+        <link
+          rel="preload"
+          href="/GreatVictorianQ.otf"
+          as="font"
+          type="font/otf"
+          crossOrigin="anonymous"
+        />
       </Head>
       <GlobalStyle />
       <SystemProvider>

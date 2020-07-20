@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useContext } from 'react';
 
 import styled from 'styled-components';
 import { TempElemType } from '../types/TempElemType';
 import { Title } from '../styles/Titles';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 import PexElem from './PexElem';
+import InfosContext from '../contexts/InfosContext';
 
 export const StyledTitle = styled(Title)`
   padding: 0 1rem;

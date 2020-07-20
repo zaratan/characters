@@ -96,6 +96,11 @@ const Home = ({
     languages = [],
     leftOverPex = 0,
   } = data;
+
+  // default era
+  if (infos.era === undefined) {
+    infos.era = 0;
+  }
   return (
     <>
       <PusherSheetListener

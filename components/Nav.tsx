@@ -13,6 +13,7 @@ import {
 import { Title } from '../styles/Titles';
 import { MeType } from '../types/MeType';
 import MeContext from '../contexts/MeContext';
+import InfosContext from '../contexts/InfosContext';
 
 const ProfileImg = styled.img`
   height: 30px;
@@ -211,8 +212,6 @@ const Nav = () => {
         </Container>
         <BlackLine />
       </NavContainer>
-      <EmptyLine />
-      <EmptyLine />
     </>
   );
 };

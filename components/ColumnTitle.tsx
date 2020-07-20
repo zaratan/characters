@@ -1,7 +1,8 @@
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useContext } from 'react';
 import { StyledColumnTitle } from '../styles/Titles';
 import { TempElemType } from '../types/TempElemType';
 import PexElem from './PexElem';
+import InfosContext from '../contexts/InfosContext';
 
 const ColumnTitle = ({
   children,

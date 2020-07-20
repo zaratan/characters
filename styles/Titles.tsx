@@ -2,6 +2,11 @@ import styled from 'styled-components';
 
 export const Title = styled.h1`
   font-family: CloisterBlack;
+  &.victorian-queen {
+    font-family: VictorianQ;
+    font-size: 6rem;
+    font-weight: 100;
+  }
 `;
 
 export const StyledColumnTitle = styled(Title)`

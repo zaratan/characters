@@ -8,6 +8,13 @@ const GlobalStyle = createGlobalStyle`
   font-display: swap;
 }
 
+@font-face {
+  font-family: VictorianQ;
+  src: url(/GreatVictorianQ.otf);
+  font-display: swap;
+  font-weight: 100;
+}
+
 html, body, #__next {
   min-height: 100%;
   height: 100%;

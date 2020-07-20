@@ -25,6 +25,7 @@ import { ModeProvider } from '../contexts/ModeContext';
 import { VampireType } from '../types/VampireType';
 import SheetActionsFooter from './SheetActionsFooter';
 import Nav from './Nav';
+import { Title, SubTitle } from '../styles/Titles';
 
 const PageTitle = styled.div`
   display: flex;
@@ -93,7 +94,13 @@ const Sheet = ({
                             </Head>
 
                             <PageTitle>
-                              <img src="/title.png" alt="Vampire Dark Age" />
+                              {infos.era === 0 ? (
+                                <img src="/title.png" alt="Vampire Dark Age" />
+                              ) : (
+                                <Title className="victorian-queen">
+                                  Vampire Ère Victorienne
+                                </Title>
+                              )}
                             </PageTitle>
 
                             <Infos />
