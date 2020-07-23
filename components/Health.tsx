@@ -35,8 +35,8 @@ const Health = () => {
       });
       mutate(`/api/vampires/${id}`);
     },
-    2000,
-    [health]
+    10000,
+    [JSON.stringify(health)]
   );
   return (
     <div>

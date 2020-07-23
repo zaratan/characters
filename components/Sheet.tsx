@@ -26,6 +26,7 @@ import { VampireType } from '../types/VampireType';
 import SheetActionsFooter from './SheetActionsFooter';
 import Nav from './Nav';
 import { Title } from '../styles/Titles';
+import { SectionsProvider } from '../contexts/SectionsContext';
 
 const PageTitle = styled.div`
   display: flex;
@@ -52,6 +53,13 @@ const Sheet = ({
   flaws = [],
   languages = [],
   leftOverPex = 0,
+  sections = {
+    blood: true,
+    path: true,
+    disciplines: true,
+    generation: true,
+    vampireInfos: true,
+  },
   startEdit,
   startPlay,
 }: VampireType & {
@@ -61,69 +69,74 @@ const Sheet = ({
   startPlay?: boolean;
 }) => (
   <PreferencesProvider>
-    <ModeProvider startEdit={startEdit} startPlay={startPlay}>
-      <IdProvider id={id}>
-        <GenerationProvider generation={generation}>
-          <InfosProvider infos={infos}>
-            <AttributesProvider attributes={attributes}>
-              <MindProvider mind={mind}>
-                <AbilitiesProvider
-                  talents={talents}
-                  customTalents={customTalents}
-                  skills={skills}
-                  customSkills={customSkills}
-                  knowledges={knowledges}
-                  customKnowledges={customKnowledges}
-                >
-                  <DisciplinesProvider
-                    clanDisciplines={clanDisciplines}
-                    outClanDisciplines={outClanDisciplines}
-                    combinedDisciplines={combinedDisciplines}
+    <SectionsProvider sections={sections}>
+      <ModeProvider startEdit={startEdit} startPlay={startPlay}>
+        <IdProvider id={id}>
+          <GenerationProvider generation={generation}>
+            <InfosProvider infos={infos}>
+              <AttributesProvider attributes={attributes}>
+                <MindProvider mind={mind}>
+                  <AbilitiesProvider
+                    talents={talents}
+                    customTalents={customTalents}
+                    skills={skills}
+                    customSkills={customSkills}
+                    knowledges={knowledges}
+                    customKnowledges={customKnowledges}
                   >
-                    <AdvFlawProvider advantages={advantages} flaws={flaws}>
-                      <LanguagesProvider languages={languages}>
-                        <PexProvider leftOverPex={leftOverPex}>
-                          <Nav />
-                          <SheetContainer>
-                            <Head>
-                              <title>
-                                {infos.name ? `${infos.name} - ` : null}
-                                Feuille de Personnage
-                              </title>
-                              <link rel="icon" href="/favicon.ico" />
-                            </Head>
+                    <DisciplinesProvider
+                      clanDisciplines={clanDisciplines}
+                      outClanDisciplines={outClanDisciplines}
+                      combinedDisciplines={combinedDisciplines}
+                    >
+                      <AdvFlawProvider advantages={advantages} flaws={flaws}>
+                        <LanguagesProvider languages={languages}>
+                          <PexProvider leftOverPex={leftOverPex}>
+                            <Nav />
+                            <SheetContainer>
+                              <Head>
+                                <title>
+                                  {infos.name ? `${infos.name} - ` : null}
+                                  Feuille de Personnage
+                                </title>
+                                <link rel="icon" href="/favicon.ico" />
+                              </Head>
 
-                            <PageTitle>
-                              {infos.era === 0 ? (
-                                <img src="/title.png" alt="Vampire Dark Age" />
-                              ) : (
-                                <Title className="victorian-queen">
-                                  Vampire Ère Victorienne
-                                </Title>
-                              )}
-                            </PageTitle>
+                              <PageTitle>
+                                {infos.era === 0 ? (
+                                  <img
+                                    src="/title.png"
+                                    alt="Vampire Dark Age"
+                                  />
+                                ) : (
+                                  <Title className="victorian-queen">
+                                    Vampire Ère Victorienne
+                                  </Title>
+                                )}
+                              </PageTitle>
 
-                            <Infos />
-                            <Attributes />
-                            <Abilities />
-                            <Mind />
-                            <Disciplines />
-                            <Misc />
-                            <PexSection />
-                          </SheetContainer>
-                          <SheetActionsFooter newChar={newChar} />
-                          <Footer />
-                        </PexProvider>
-                      </LanguagesProvider>
-                    </AdvFlawProvider>
-                  </DisciplinesProvider>
-                </AbilitiesProvider>
-              </MindProvider>
-            </AttributesProvider>
-          </InfosProvider>
-        </GenerationProvider>
-      </IdProvider>
-    </ModeProvider>
+                              <Infos />
+                              <Attributes />
+                              <Abilities />
+                              <Mind />
+                              <Disciplines />
+                              <Misc />
+                              <PexSection />
+                            </SheetContainer>
+                            <SheetActionsFooter newChar={newChar} />
+                            <Footer />
+                          </PexProvider>
+                        </LanguagesProvider>
+                      </AdvFlawProvider>
+                    </DisciplinesProvider>
+                  </AbilitiesProvider>
+                </MindProvider>
+              </AttributesProvider>
+            </InfosProvider>
+          </GenerationProvider>
+        </IdProvider>
+      </ModeProvider>
+    </SectionsProvider>
   </PreferencesProvider>
 );
 export default Sheet;

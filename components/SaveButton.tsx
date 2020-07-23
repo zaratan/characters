@@ -18,6 +18,7 @@ import {
   generateHandleKeypress,
 } from '../helpers/handlers';
 import SystemContext from '../contexts/SystemContext';
+import SectionsContext from '../contexts/SectionsContext';
 
 const SaveButton = ({
   newChar,
@@ -82,6 +83,13 @@ const SaveButton = ({
   const { advantages, flaws } = useContext(AdvFlawContext);
   const { languages } = useContext(LanguagesContext);
   const { leftOver } = useContext(PexContext);
+  const {
+    useBlood,
+    useDisciplines,
+    useGeneration,
+    usePath,
+    useVampireInfos,
+  } = useContext(SectionsContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -160,10 +168,18 @@ const SaveButton = ({
       intelligence: intelligence.value,
       wits: wits.value,
     };
+    const sections = {
+      blood: useBlood,
+      generation: useGeneration,
+      vampireInfos: useVampireInfos,
+      path: usePath,
+      disciplines: useDisciplines,
+    };
     const data = {
       id,
       infos,
       attributes,
+      sections,
       talents: talents.map((talent) => ({
         title: talent.title,
         value: talent.value,

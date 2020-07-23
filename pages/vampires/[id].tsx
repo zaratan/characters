@@ -65,6 +65,7 @@ const Home = ({
   const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
     initialData,
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
+    revalidateOnMount: true,
   });
   useEffect(() => {
     if (!router.isFallback && notFound) {
@@ -93,6 +94,13 @@ const Home = ({
     flaws = [],
     languages = [],
     leftOverPex = 0,
+    sections = {
+      blood: true,
+      disciplines: true,
+      generation: true,
+      path: true,
+      vampireInfos: true,
+    },
   } = data;
 
   // default era
@@ -127,6 +135,7 @@ const Home = ({
         flaws={flaws}
         languages={languages}
         leftOverPex={leftOverPex}
+        sections={sections}
       />
     </>
   );

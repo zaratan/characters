@@ -8,6 +8,7 @@ import ColumnTitle from '../ColumnTitle';
 import { calcPexAttribute } from '../../helpers/pex';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
+import SectionsContext from '../../contexts/SectionsContext';
 
 const Attributes = () => {
   const {
@@ -23,7 +24,8 @@ const Attributes = () => {
   } = useContext(AttributesContext);
   const generation = useContext(GenerationContext);
   const { editMode } = useContext(ModeContext);
-  const maxLevel = maxDot(generation.value);
+  const { useGeneration } = useContext(SectionsContext);
+  const maxLevel = maxDot(useGeneration ? generation.value : 13);
   return (
     <>
       <SectionTitle
@@ -41,7 +43,7 @@ const Attributes = () => {
               intelligence,
               wits,
             ],
-            pexCalc: calcPexAttribute,
+            pexCalc: calcPexAttribute(maxLevel),
           },
         ]}
       />
@@ -49,7 +51,7 @@ const Attributes = () => {
         <div>
           <ColumnTitle
             elemArray={[strength, dexterity, stamina]}
-            pexCalc={calcPexAttribute}
+            pexCalc={calcPexAttribute(maxLevel)}
             title="Physique"
           />
           <AttributeLine
@@ -74,7 +76,7 @@ const Attributes = () => {
         <div>
           <ColumnTitle
             elemArray={[charisma, manipulation, appearance]}
-            pexCalc={calcPexAttribute}
+            pexCalc={calcPexAttribute(maxLevel)}
             title="Social"
           />
           <AttributeLine
@@ -99,7 +101,7 @@ const Attributes = () => {
         <div>
           <ColumnTitle
             elemArray={[perception, intelligence, wits]}
-            pexCalc={calcPexAttribute}
+            pexCalc={calcPexAttribute(maxLevel)}
             title="Mental"
           />
           <AttributeLine

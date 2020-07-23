@@ -11,6 +11,7 @@ import GenerationContext from '../../contexts/GenerationContext';
 import { calcPexAbility, calcPexSpecialty } from '../../helpers/pex';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
+import SectionsContext from '../../contexts/SectionsContext';
 
 const Container = styled.div`
   .col-button {
@@ -64,7 +65,7 @@ const AbilitiesColumn = ({
       pexElems={[
         {
           elemArray: [...abilities, ...customAbilities],
-          pexCalc: calcPexAbility,
+          pexCalc: calcPexAbility(maxLevel),
         },
         {
           elemArray: [...abilities, ...customAbilities]
@@ -147,7 +148,8 @@ const Abilities = () => {
   } = useContext(AbilitiesContext);
   const generation = useContext(GenerationContext);
   const { editMode } = useContext(ModeContext);
-  const maxLevel = maxDot(generation.value);
+  const { useGeneration } = useContext(SectionsContext);
+  const maxLevel = maxDot(useGeneration ? generation.value : 13);
   return (
     <>
       <SectionTitle
@@ -162,7 +164,7 @@ const Abilities = () => {
               ...knowledges,
               ...customKnowledges,
             ],
-            pexCalc: calcPexAbility,
+            pexCalc: calcPexAbility(maxLevel),
           },
           {
             elemArray: [

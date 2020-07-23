@@ -25,6 +25,9 @@ import AdvFlawContext from '../../contexts/AdvFlawContext';
 import { HandLargeText, HandEditableText } from '../../styles/Texts';
 import PexContext from '../../contexts/PexContext';
 import ModeContext from '../../contexts/ModeContext';
+import SectionsContext from '../../contexts/SectionsContext';
+import { maxDot } from '../../helpers/maxLevels';
+import GenerationContext from '../../contexts/GenerationContext';
 
 const HandText = styled(HandLargeText)`
   display: flex;
@@ -73,6 +76,11 @@ const PexSection = () => {
   } = useContext(DisciplinesContext);
   const { advantages, flaws } = useContext(AdvFlawContext);
   const { editMode } = useContext(ModeContext);
+  const generation = useContext(GenerationContext);
+  const { useDisciplines, usePath, useGeneration } = useContext(
+    SectionsContext
+  );
+  const maxDots = useGeneration ? maxDot(generation.value) : 5;
   const pexElems: pexElemsType = [
     // Attributes
     {
@@ -87,7 +95,7 @@ const PexSection = () => {
         stamina,
         wits,
       ],
-      pexCalc: calcPexAttribute,
+      pexCalc: calcPexAttribute(maxDots),
     },
     // Abilities
     {
@@ -99,7 +107,7 @@ const PexSection = () => {
         ...knowledges,
         ...customKnowledges,
       ],
-      pexCalc: calcPexAbility,
+      pexCalc: calcPexAbility(maxDots),
     },
     {
       elemArray: [
@@ -128,32 +136,45 @@ const PexSection = () => {
       pexCalc: calcPexWillpower,
     },
     {
-      elemArray: [courage, selfControl, conscience, path],
+      elemArray: [courage, selfControl, conscience],
       pexCalc: calcPexPathOrVirtue,
     },
+    ...(usePath
+      ? [
+          {
+            elemArray: [path],
+            pexCalc: calcPexPathOrVirtue,
+          },
+        ]
+      : []),
     // Disciplines
-    {
-      elemArray: clanDisciplines,
-      pexCalc: calcPexInClanDiscipline,
-    },
-    {
-      elemArray: outClanDisciplines,
-      pexCalc: calcPexOutOfClanDiscipline,
-    },
-    {
-      elemArray: combinedDisciplines,
-      pexCalc: (value) => value,
-    },
-    {
-      elemArray: [...clanDisciplines, ...outClanDisciplines].flatMap(
-        (disc) => disc.paths
-      ),
-      pexCalc: calcPexThaumaturgyPath,
-    },
-    ...[...clanDisciplines, ...outClanDisciplines].flatMap((disc) => ({
-      elemArray: disc.rituals,
-      pexCalc: (value) => calcPexThaumaturgyRitual(value, disc.ritualMulti),
-    })),
+    ...(useDisciplines
+      ? [
+          {
+            elemArray: clanDisciplines,
+            pexCalc: calcPexInClanDiscipline(maxDots),
+          },
+          {
+            elemArray: outClanDisciplines,
+            pexCalc: calcPexOutOfClanDiscipline(maxDots),
+          },
+          {
+            elemArray: combinedDisciplines,
+            pexCalc: (value) => value,
+          },
+          {
+            elemArray: [...clanDisciplines, ...outClanDisciplines].flatMap(
+              (disc) => disc.paths
+            ),
+            pexCalc: calcPexThaumaturgyPath,
+          },
+          ...[...clanDisciplines, ...outClanDisciplines].flatMap((disc) => ({
+            elemArray: disc.rituals,
+            pexCalc: (value) =>
+              calcPexThaumaturgyRitual(value, disc.ritualMulti),
+          })),
+        ]
+      : []),
     // Misc.
     {
       elemArray: advantages,

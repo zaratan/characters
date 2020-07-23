@@ -1,15 +1,24 @@
-export const calcPexAttribute = (value: number) => value * (value - 1) * 2;
-export const calcPexAbility = (value: number) =>
-  value === 0 ? 0 : value * (value - 1) + 3;
+export const calcPexAttribute = (maxValue = 10) => (value: number) => {
+  const actualValue = Math.min(maxValue, value);
+  return actualValue * (actualValue - 1) * 2;
+};
+export const calcPexAbility = (maxValue = 10) => (value: number) => {
+  const actualValue = Math.min(maxValue, value);
+  return actualValue === 0 ? 0 : actualValue * (actualValue - 1) + 3;
+};
 export const calcPexWillpower = (value: number) => (value * (value - 1)) / 2;
 export const calcPexPathOrVirtue = (value: number) => value * (value - 1);
-export const calcPexInClanDiscipline = (value: number) => {
+export const calcPexInClanDiscipline = (maxValue = 10) => (value: number) => {
   if (value === 0) return 0;
-  return value * (value - 1) * 2.5 + 10;
+  const actualValue = Math.min(maxValue, value);
+  return actualValue * (actualValue - 1) * 2.5 + 10;
 };
-export const calcPexOutOfClanDiscipline = (value: number) => {
+export const calcPexOutOfClanDiscipline = (maxValue = 10) => (
+  value: number
+) => {
   if (value === 0) return 0;
-  return value * (value - 1) * 3.5 + 10;
+  const actualValue = Math.min(maxValue, value);
+  return actualValue * (actualValue - 1) * 3.5 + 10;
 };
 export const calcPexThaumaturgyPath = (value: number) => {
   if (value === 0) return 0;
@@ -23,11 +32,15 @@ export const calcPexSpecialty = (value: number) => (Math.max(1, value) - 1) * 2;
 export const calcPexAdvFlaw = (value: number, neg: boolean) =>
   Math.abs(value) * 3 * (neg ? -1 : +1);
 
-export const calcPexDiffAttribute = (from: number, to: number) =>
-  calcPexAttribute(to) - calcPexAttribute(from);
+export const calcPexDiffAttribute = (maxValue = 10) => (
+  from: number,
+  to: number
+) => calcPexAttribute(maxValue)(to) - calcPexAttribute(maxValue)(from);
 
-export const calcPexDiffAbility = (from: number, to: number) =>
-  calcPexAbility(to) - calcPexAbility(from);
+export const calcPexDiffAbility = (maxValue = 10) => (
+  from: number,
+  to: number
+) => calcPexAbility(maxValue)(to) - calcPexAbility(maxValue)(from);
 
 export const calcPexDiffWillpower = (from: number, to: number) =>
   calcPexWillpower(to) - calcPexWillpower(from);
@@ -35,11 +48,19 @@ export const calcPexDiffWillpower = (from: number, to: number) =>
 export const calcPexDiffPathOrVirtue = (from: number, to: number) =>
   calcPexPathOrVirtue(to) - calcPexPathOrVirtue(from);
 
-export const calcPexDiffInClanDiscipline = (from: number, to: number) =>
-  calcPexInClanDiscipline(to) - calcPexInClanDiscipline(from);
+export const calcPexDiffInClanDiscipline = (maxValue = 10) => (
+  from: number,
+  to: number
+) =>
+  calcPexInClanDiscipline(maxValue)(to) -
+  calcPexInClanDiscipline(maxValue)(from);
 
-export const calcPexDiffOutOfClanDiscipline = (from: number, to: number) =>
-  calcPexOutOfClanDiscipline(to) - calcPexOutOfClanDiscipline(from);
+export const calcPexDiffOutOfClanDiscipline = (maxValue = 10) => (
+  from: number,
+  to: number
+) =>
+  calcPexOutOfClanDiscipline(maxValue)(to) -
+  calcPexOutOfClanDiscipline(maxValue)(from);
 
 export const calcPexDiffThaumaturgyPath = (from: number, to: number) =>
   calcPexThaumaturgyPath(to) - calcPexThaumaturgyPath(from);
