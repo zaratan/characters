@@ -17,6 +17,7 @@ export const ERAS = {
 export const TYPES = {
   0: 'Vampire',
   1: 'Humain',
+  2: 'Goule',
 };
 
 const Container = styled.div`

@@ -7,11 +7,18 @@ import darkAge from '../../../defaultData/darkAge';
 import victorian from '../../../defaultData/victorian';
 import vampire from '../../../defaultData/vampire';
 import human from '../../../defaultData/human';
+import ghoul from '../../../defaultData/ghoul';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
 const q = faunadb.query;
 const client = new faunadb.Client({ secret });
+
+const TYPE = {
+  0: vampire,
+  1: human,
+  2: ghoul,
+};
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await auth0().getSession(req);
@@ -29,7 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       ...base,
       ...(era === 0 ? darkAge : victorian),
       id,
-      ...(type === 0 ? vampire : human),
+      ...TYPE[type],
     };
     data.infos.name = name;
     data.infos.era = era;
