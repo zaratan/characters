@@ -8,6 +8,7 @@ import { TempElemType } from '../types/TempElemType';
 export const PexSpan = styled.span`
   font-size: 1rem;
   padding-left: 0.3rem;
+  white-space: nowrap;
 `;
 
 export const RedSpan = styled.span`

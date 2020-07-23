@@ -5,6 +5,8 @@ import auth0 from '../../../helpers/auth0';
 import base from '../../../defaultData/base';
 import darkAge from '../../../defaultData/darkAge';
 import victorian from '../../../defaultData/victorian';
+import vampire from '../../../defaultData/vampire';
+import human from '../../../defaultData/human';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
@@ -23,7 +25,12 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       ...JSON.parse(req.body),
     };
 
-    const data = { ...base, ...(era === 0 ? darkAge : victorian), id };
+    const data = {
+      ...base,
+      ...(era === 0 ? darkAge : victorian),
+      id,
+      ...(type === 0 ? vampire : human),
+    };
     data.infos.name = name;
     data.infos.era = era;
 

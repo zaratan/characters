@@ -7,6 +7,7 @@ import { HandLargeEditableText, HandLargeText } from '../../styles/Texts';
 import InfosContext from '../../contexts/InfosContext';
 import GenerationContext from '../../contexts/GenerationContext';
 import ModeContext from '../../contexts/ModeContext';
+import SectionsContext from '../../contexts/SectionsContext';
 
 const InfoContainer = styled.div`
   display: flex;
@@ -33,6 +34,7 @@ const Infos = () => {
 
   const { editMode } = useContext(ModeContext);
   const generation = useContext(GenerationContext);
+  const { useGeneration, useVampireInfos } = useContext(SectionsContext);
   const handleChange = (changeFunction: (val: string) => void) => (
     event: FormEvent<HTMLInputElement>
   ) => {
@@ -111,34 +113,40 @@ const Infos = () => {
             <HandLargeText className="label">{demeanor.value}</HandLargeText>
           )}
         </InfoContainer>
-        <InfoContainer>
-          <Title>Clan: </Title>
-          <Separator />
-          {editMode ? (
-            <HandLargeEditableText
-              type="text"
-              onChange={handleChange(clan.set)}
-              value={clan.value}
-            />
-          ) : (
-            <HandLargeText className="label">{clan.value}</HandLargeText>
-          )}
-        </InfoContainer>
-        <InfoContainer>
-          <Title>Génération: </Title>
-          <Separator />
-          {editMode ? (
-            <HandLargeEditableText
-              type="number"
-              max={15}
-              min={3}
-              value={generation.value === 0 ? '' : generation.value}
-              onChange={handleChangeGeneration}
-            />
-          ) : (
-            <HandLargeText className="label">{generation.value}</HandLargeText>
-          )}
-        </InfoContainer>
+        {useVampireInfos ? (
+          <InfoContainer>
+            <Title>Clan: </Title>
+            <Separator />
+            {editMode ? (
+              <HandLargeEditableText
+                type="text"
+                onChange={handleChange(clan.set)}
+                value={clan.value}
+              />
+            ) : (
+              <HandLargeText className="label">{clan.value}</HandLargeText>
+            )}
+          </InfoContainer>
+        ) : null}
+        {useGeneration ? (
+          <InfoContainer>
+            <Title>Génération: </Title>
+            <Separator />
+            {editMode ? (
+              <HandLargeEditableText
+                type="number"
+                max={15}
+                min={3}
+                value={generation.value === 0 ? '' : generation.value}
+                onChange={handleChangeGeneration}
+              />
+            ) : (
+              <HandLargeText className="label">
+                {generation.value}
+              </HandLargeText>
+            )}
+          </InfoContainer>
+        ) : null}
         <InfoContainer>
           <Title>Refuge: </Title>
           <Separator />
@@ -152,19 +160,21 @@ const Infos = () => {
             <HandLargeText className="label">{haven.value}</HandLargeText>
           )}
         </InfoContainer>
-        <InfoContainer>
-          <Title>Sire: </Title>
-          <Separator />
-          {editMode ? (
-            <HandLargeEditableText
-              type="text"
-              onChange={handleChange(sire.set)}
-              value={sire.value}
-            />
-          ) : (
-            <HandLargeText className="label">{sire.value}</HandLargeText>
-          )}
-        </InfoContainer>
+        {useVampireInfos ? (
+          <InfoContainer>
+            <Title>Sire: </Title>
+            <Separator />
+            {editMode ? (
+              <HandLargeEditableText
+                type="text"
+                onChange={handleChange(sire.set)}
+                value={sire.value}
+              />
+            ) : (
+              <HandLargeText className="label">{sire.value}</HandLargeText>
+            )}
+          </InfoContainer>
+        ) : null}
       </HorizontalSection>
     </>
   );

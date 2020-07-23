@@ -8,6 +8,7 @@ import {
 } from '../contexts/DisciplinesContext';
 import { AdvFlawType } from '../contexts/AdvFlawContext';
 import { RawLanguage } from '../contexts/LanguagesContext';
+import { SectionsType } from '../contexts/SectionsContext';
 
 export type VampireType = {
   generation: number;
@@ -27,4 +28,5 @@ export type VampireType = {
   flaws: Array<AdvFlawType>;
   languages: Array<RawLanguage>;
   leftOverPex: number;
+  sections: SectionsType;
 };

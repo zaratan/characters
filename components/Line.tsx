@@ -503,7 +503,7 @@ export const AttributeLine = ({
   <Line
     elem={elem}
     title={title}
-    diffPexCalc={calcPexDiffAttribute}
+    diffPexCalc={calcPexDiffAttribute(maxLevel)}
     maxLevel={maxLevel}
     minLevel={1}
     name={title}
@@ -556,7 +556,7 @@ export const AbilityLine = ({
   <Line
     elem={elem}
     title={title}
-    diffPexCalc={calcPexDiffAbility}
+    diffPexCalc={calcPexDiffAbility(maxLevel)}
     maxLevel={maxLevel}
     name={title}
     custom={custom}

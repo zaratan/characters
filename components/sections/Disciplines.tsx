@@ -22,6 +22,7 @@ import GenerationContext from '../../contexts/GenerationContext';
 import { Container } from '../../styles/Container';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
+import SectionsContext from '../../contexts/SectionsContext';
 
 const RitualMultiplicatorContainer = styled.span`
   font-size: 1rem;
@@ -42,7 +43,9 @@ const Disciplines = () => {
     removeCombinedDiscipline,
   } = useContext(DisciplinesContext);
   const { editMode } = useContext(ModeContext);
-  const maxLevel = maxDot(generation.value);
+  const { useDisciplines, useGeneration } = useContext(SectionsContext);
+  if (!useDisciplines) return null;
+  const maxLevel = maxDot(useGeneration ? generation.value : 13);
   return (
     <>
       <SectionTitle
@@ -50,11 +53,11 @@ const Disciplines = () => {
         pexElems={[
           {
             elemArray: clanDisciplines,
-            pexCalc: calcPexInClanDiscipline,
+            pexCalc: calcPexInClanDiscipline(maxLevel),
           },
           {
             elemArray: outClanDisciplines,
-            pexCalc: calcPexOutOfClanDiscipline,
+            pexCalc: calcPexOutOfClanDiscipline(maxLevel),
           },
           {
             elemArray: combinedDisciplines,
@@ -79,7 +82,7 @@ const Disciplines = () => {
             title="Clan"
             button={{ glyph: '+', value: addNewClanDiscipline }}
             elemArray={clanDisciplines}
-            pexCalc={calcPexInClanDiscipline}
+            pexCalc={calcPexInClanDiscipline(maxLevel)}
             inactive={!editMode}
           />
           <ul>
@@ -90,7 +93,7 @@ const Disciplines = () => {
                   maxLevel={maxLevel}
                   title={discipline.title}
                   name={discipline.title}
-                  diffPexCalc={calcPexDiffInClanDiscipline}
+                  diffPexCalc={calcPexDiffInClanDiscipline(maxLevel)}
                   changeName={discipline.setTitle}
                   custom
                   remove={() => removeClanDiscipline(discipline.key)}
@@ -111,7 +114,7 @@ const Disciplines = () => {
             title="Hors Clan"
             button={{ glyph: '+', value: addNewOutClanDiscipline }}
             elemArray={outClanDisciplines}
-            pexCalc={calcPexOutOfClanDiscipline}
+            pexCalc={calcPexOutOfClanDiscipline(maxLevel)}
             inactive={!editMode}
           />
           <ul>
@@ -122,7 +125,7 @@ const Disciplines = () => {
                   maxLevel={maxLevel}
                   title={discipline.title}
                   name={discipline.title}
-                  diffPexCalc={calcPexDiffOutOfClanDiscipline}
+                  diffPexCalc={calcPexDiffOutOfClanDiscipline(maxLevel)}
                   changeName={discipline.setTitle}
                   custom
                   remove={() => removeOutClanDiscipline(discipline.key)}

@@ -64,6 +64,7 @@ const Home = ({
   const { data, mutate } = useSWR(`/api/vampires`, {
     initialData,
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
+    revalidateOnMount: true,
   });
   const { characters } = data;
   characters.sort((a, b) => (a.name < b.name ? -1 : 1));

@@ -22,6 +22,7 @@ import ModeContext from '../../contexts/ModeContext';
 import IdContext from '../../contexts/IdContext';
 import { fetcher } from '../../helpers/fetcher';
 import SystemContext from '../../contexts/SystemContext';
+import SectionsContext from '../../contexts/SectionsContext';
 
 const Mind = () => {
   const {
@@ -40,6 +41,7 @@ const Mind = () => {
   const { id } = useContext(IdContext);
   const { appId } = useContext(SystemContext);
   const { editMode, playMode } = useContext(ModeContext);
+  const { useBlood, usePath, useGeneration } = useContext(SectionsContext);
   useDebounce(
     async () => {
       if (tempWillpower.value === tempWillpower.baseValue) return;
@@ -77,9 +79,17 @@ const Mind = () => {
             pexCalc: calcPexWillpower,
           },
           {
-            elemArray: [courage, selfControl, conscience, path],
+            elemArray: [courage, selfControl, conscience],
             pexCalc: calcPexPathOrVirtue,
           },
+          ...(usePath
+            ? [
+                {
+                  elemArray: [path],
+                  pexCalc: calcPexPathOrVirtue,
+                },
+              ]
+            : []),
         ]}
       />
       <HorizontalSection>
@@ -103,29 +113,37 @@ const Mind = () => {
             numberChecked={tempWillpower}
             inactive={!playMode}
           />
-          <ColumnTitle>Réserve de Sang</ColumnTitle>
-          <SquareLine
-            type="Sang"
-            number={maxBlood(generation.value)}
-            numberChecked={bloodSpent}
-            inactive={!playMode}
-          />
+          {useBlood ? (
+            <>
+              <ColumnTitle>Réserve de Sang</ColumnTitle>
+              <SquareLine
+                type="Sang"
+                number={maxBlood(useGeneration ? generation.value : 13)}
+                numberChecked={bloodSpent}
+                inactive={!playMode}
+              />
+            </>
+          ) : null}
         </div>
         <div>
           <ColumnTitleWithOptions
             title="Vertues"
-            options={[
-              {
-                name: 'Voie avec Conviction',
-                value: isConviction.value,
-                onClick: () => isConviction.set(!isConviction.value),
-              },
-              {
-                name: 'Voie avec Instinct',
-                value: isInstinct.value,
-                onClick: () => isInstinct.set(!isInstinct.value),
-              },
-            ]}
+            options={
+              usePath
+                ? [
+                    {
+                      name: 'Voie avec Conviction',
+                      value: isConviction.value,
+                      onClick: () => isConviction.set(!isConviction.value),
+                    },
+                    {
+                      name: 'Voie avec Instinct',
+                      value: isInstinct.value,
+                      onClick: () => isInstinct.set(!isInstinct.value),
+                    },
+                  ]
+                : []
+            }
             elemArray={[conscience, courage, selfControl]}
             pexCalc={calcPexPathOrVirtue}
             inactive={!editMode}
@@ -157,23 +175,27 @@ const Mind = () => {
             name="Courage"
             inactive={!editMode}
           />
-          <ColumnTitle
-            elemArray={[path]}
-            pexCalc={calcPexPathOrVirtue}
-            title="Voie"
-          />
-          <UnderlinedHandLargeEditableText
-            elem={pathName}
-            inactive={!editMode}
-          />
-          <Line
-            elem={path}
-            maxLevel={10}
-            minLevel={1}
-            diffPexCalc={calcPexDiffPathOrVirtue}
-            name="Voie"
-            inactive={!editMode}
-          />
+          {usePath ? (
+            <>
+              <ColumnTitle
+                elemArray={[path]}
+                pexCalc={calcPexPathOrVirtue}
+                title="Voie"
+              />
+              <UnderlinedHandLargeEditableText
+                elem={pathName}
+                inactive={!editMode}
+              />
+              <Line
+                elem={path}
+                maxLevel={10}
+                minLevel={1}
+                diffPexCalc={calcPexDiffPathOrVirtue}
+                name="Voie"
+                inactive={!editMode}
+              />
+            </>
+          ) : null}
         </div>
         <Health />
       </HorizontalSection>
