@@ -7,6 +7,7 @@ const sections: { sections: SectionsType } = {
     path: false,
     generation: false,
     vampireInfos: true,
+    trueFaith: false,
   },
 };
 export default sections;

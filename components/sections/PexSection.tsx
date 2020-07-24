@@ -17,6 +17,7 @@ import {
   calcPexThaumaturgyPath,
   calcPexThaumaturgyRitual,
   calcPexAdvFlaw,
+  calcPexTrueFaith,
 } from '../../helpers/pex';
 import AbilitiesContext from '../../contexts/AbilitiesContext';
 import MindContext from '../../contexts/MindContext';
@@ -28,6 +29,7 @@ import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
 import { maxDot } from '../../helpers/maxLevels';
 import GenerationContext from '../../contexts/GenerationContext';
+import FaithContext from '../../contexts/FaithContext';
 
 const HandText = styled(HandLargeText)`
   display: flex;
@@ -77,7 +79,8 @@ const PexSection = () => {
   const { advantages, flaws } = useContext(AdvFlawContext);
   const { editMode } = useContext(ModeContext);
   const generation = useContext(GenerationContext);
-  const { useDisciplines, usePath, useGeneration } = useContext(
+  const { trueFaith } = useContext(FaithContext);
+  const { useDisciplines, usePath, useGeneration, useTrueFaith } = useContext(
     SectionsContext
   );
   const maxDots = useGeneration ? maxDot(generation.value) : 5;
@@ -170,7 +173,7 @@ const PexSection = () => {
           },
           ...[...clanDisciplines, ...outClanDisciplines].flatMap((disc) => ({
             elemArray: disc.rituals,
-            pexCalc: (value) =>
+            pexCalc: (value: number) =>
               calcPexThaumaturgyRitual(value, disc.ritualMulti),
           })),
         ]
@@ -188,6 +191,14 @@ const PexSection = () => {
       elemArray: [leftOver],
       pexCalc: (value) => value,
     },
+    ...(useTrueFaith
+      ? [
+          {
+            elemArray: [trueFaith],
+            pexCalc: calcPexTrueFaith,
+          },
+        ]
+      : []),
   ];
   return (
     <>

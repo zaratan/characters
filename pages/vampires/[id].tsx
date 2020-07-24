@@ -100,7 +100,9 @@ const Home = ({
       generation: true,
       path: true,
       vampireInfos: true,
+      trueFaith: false,
     },
+    trueFaith = 0,
   } = data;
 
   // default era
@@ -136,6 +138,7 @@ const Home = ({
         languages={languages}
         leftOverPex={leftOverPex}
         sections={sections}
+        trueFaith={trueFaith}
       />
     </>
   );

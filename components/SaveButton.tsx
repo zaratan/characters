@@ -1,10 +1,11 @@
 import React, { useContext, ReactNode } from 'react';
-import { useRouter } from 'next/router';
 import { mutate } from 'swr';
 import styled from 'styled-components';
 import IdContext from '../contexts/IdContext';
-import InfosContext from '../contexts/InfosContext';
-import AttributesContext from '../contexts/AttributesContext';
+import InfosContext, { InfosType } from '../contexts/InfosContext';
+import AttributesContext, {
+  AttributesType,
+} from '../contexts/AttributesContext';
 import AbilitiesContext from '../contexts/AbilitiesContext';
 import GenerationContext from '../contexts/GenerationContext';
 import MindContext from '../contexts/MindContext';
@@ -18,16 +19,10 @@ import {
   generateHandleKeypress,
 } from '../helpers/handlers';
 import SystemContext from '../contexts/SystemContext';
-import SectionsContext from '../contexts/SectionsContext';
+import SectionsContext, { SectionsType } from '../contexts/SectionsContext';
+import FaithContext from '../contexts/FaithContext';
 
-const SaveButton = ({
-  newChar,
-  children,
-}: {
-  newChar: boolean;
-  children: ReactNode;
-}) => {
-  const router = useRouter();
+const SaveButton = ({ children }: { children: ReactNode }) => {
   const { id } = useContext(IdContext);
   const { appId } = useContext(SystemContext);
   const {
@@ -89,7 +84,9 @@ const SaveButton = ({
     useGeneration,
     usePath,
     useVampireInfos,
+    useTrueFaith,
   } = useContext(SectionsContext);
+  const { trueFaith } = useContext(FaithContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -146,7 +143,7 @@ const SaveButton = ({
       tempWillpower: tempWillpower.value,
       willpower: willpower.value,
     };
-    const infos = {
+    const infos: InfosType = {
       chronicle: chronicle.value,
       clan: clan.value,
       demeanor: demeanor.value,
@@ -157,7 +154,7 @@ const SaveButton = ({
       sire: sire.value,
       era,
     };
-    const attributes = {
+    const attributes: AttributesType = {
       strength: strength.value,
       dexterity: dexterity.value,
       stamina: stamina.value,
@@ -168,12 +165,13 @@ const SaveButton = ({
       intelligence: intelligence.value,
       wits: wits.value,
     };
-    const sections = {
-      blood: useBlood,
-      generation: useGeneration,
-      vampireInfos: useVampireInfos,
-      path: usePath,
-      disciplines: useDisciplines,
+    const sections: SectionsType = {
+      blood: !!useBlood,
+      generation: !!useGeneration,
+      vampireInfos: !!useVampireInfos,
+      path: !!usePath,
+      disciplines: !!useDisciplines,
+      trueFaith: !!useTrueFaith,
     };
     const data = {
       id,
@@ -236,17 +234,15 @@ const SaveButton = ({
         key: language.key,
       })),
       leftOverPex: leftOver.value,
+      trueFaith: trueFaith.value,
     };
-    const url = newChar ? '/api/vampires/create' : `/api/vampires/${id}/update`;
+    console.log({ sections, data });
+    const url = `/api/vampires/${id}/update`;
     await fetcher(url, {
       method: 'POST',
       body: JSON.stringify({ ...data, appId }),
     });
-    if (newChar) {
-      router.push(`/vampires/${id}`);
-    } else {
-      mutate(`/api/vampires/${id}`, data);
-    }
+    mutate(`/api/vampires/${id}`, data);
   };
   const handleClick = generateHandleClick(action);
   const handleKeypress = generateHandleKeypress(action);

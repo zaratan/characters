@@ -27,6 +27,8 @@ import SheetActionsFooter from './SheetActionsFooter';
 import Nav from './Nav';
 import { Title } from '../styles/Titles';
 import { SectionsProvider } from '../contexts/SectionsContext';
+import { FaithProvider } from '../contexts/FaithContext';
+import Faith from './sections/Faith';
 
 const PageTitle = styled.div`
   display: flex;
@@ -59,7 +61,9 @@ const Sheet = ({
     disciplines: true,
     generation: true,
     vampireInfos: true,
+    trueFaith: false,
   },
+  trueFaith = 0,
   startEdit,
   startPlay,
 }: VampireType & {
@@ -76,60 +80,63 @@ const Sheet = ({
             <InfosProvider infos={infos}>
               <AttributesProvider attributes={attributes}>
                 <MindProvider mind={mind}>
-                  <AbilitiesProvider
-                    talents={talents}
-                    customTalents={customTalents}
-                    skills={skills}
-                    customSkills={customSkills}
-                    knowledges={knowledges}
-                    customKnowledges={customKnowledges}
-                  >
-                    <DisciplinesProvider
-                      clanDisciplines={clanDisciplines}
-                      outClanDisciplines={outClanDisciplines}
-                      combinedDisciplines={combinedDisciplines}
+                  <FaithProvider trueFaith={trueFaith}>
+                    <AbilitiesProvider
+                      talents={talents}
+                      customTalents={customTalents}
+                      skills={skills}
+                      customSkills={customSkills}
+                      knowledges={knowledges}
+                      customKnowledges={customKnowledges}
                     >
-                      <AdvFlawProvider advantages={advantages} flaws={flaws}>
-                        <LanguagesProvider languages={languages}>
-                          <PexProvider leftOverPex={leftOverPex}>
-                            <Nav />
-                            <SheetContainer>
-                              <Head>
-                                <title>
-                                  {infos.name ? `${infos.name} - ` : null}
-                                  Feuille de Personnage
-                                </title>
-                                <link rel="icon" href="/favicon.ico" />
-                              </Head>
+                      <DisciplinesProvider
+                        clanDisciplines={clanDisciplines}
+                        outClanDisciplines={outClanDisciplines}
+                        combinedDisciplines={combinedDisciplines}
+                      >
+                        <AdvFlawProvider advantages={advantages} flaws={flaws}>
+                          <LanguagesProvider languages={languages}>
+                            <PexProvider leftOverPex={leftOverPex}>
+                              <Nav />
+                              <SheetContainer>
+                                <Head>
+                                  <title>
+                                    {infos.name ? `${infos.name} - ` : null}
+                                    Feuille de Personnage
+                                  </title>
+                                  <link rel="icon" href="/favicon.ico" />
+                                </Head>
 
-                              <PageTitle>
-                                {infos.era === 0 ? (
-                                  <img
-                                    src="/title.png"
-                                    alt="Vampire Dark Age"
-                                  />
-                                ) : (
-                                  <Title className="victorian-queen">
-                                    Vampire Ère Victorienne
-                                  </Title>
-                                )}
-                              </PageTitle>
+                                <PageTitle>
+                                  {infos.era === 0 ? (
+                                    <img
+                                      src="/title.png"
+                                      alt="Vampire Dark Age"
+                                    />
+                                  ) : (
+                                    <Title className="victorian-queen">
+                                      Vampire Ère Victorienne
+                                    </Title>
+                                  )}
+                                </PageTitle>
 
-                              <Infos />
-                              <Attributes />
-                              <Abilities />
-                              <Mind />
-                              <Disciplines />
-                              <Misc />
-                              <PexSection />
-                            </SheetContainer>
-                            <SheetActionsFooter newChar={newChar} />
-                            <Footer />
-                          </PexProvider>
-                        </LanguagesProvider>
-                      </AdvFlawProvider>
-                    </DisciplinesProvider>
-                  </AbilitiesProvider>
+                                <Infos />
+                                <Attributes />
+                                <Abilities />
+                                <Mind />
+                                <Faith />
+                                <Disciplines />
+                                <Misc />
+                                <PexSection />
+                              </SheetContainer>
+                              <SheetActionsFooter newChar={newChar} />
+                              <Footer />
+                            </PexProvider>
+                          </LanguagesProvider>
+                        </AdvFlawProvider>
+                      </DisciplinesProvider>
+                    </AbilitiesProvider>
+                  </FaithProvider>
                 </MindProvider>
               </AttributesProvider>
             </InfosProvider>
