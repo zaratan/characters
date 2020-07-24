@@ -49,6 +49,7 @@ const advantages = [];
 const flaws = [];
 const languages = [];
 const leftOverPex = 0;
+const trueFaith = 0;
 
 export default {
   generation,
@@ -62,4 +63,5 @@ export default {
   flaws,
   languages,
   leftOverPex,
+  trueFaith,
 };

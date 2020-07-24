@@ -8,6 +8,7 @@ export type SectionsType = {
   disciplines: boolean;
   generation: boolean;
   vampireInfos: boolean;
+  trueFaith: boolean;
 };
 
 type ContextType = {
@@ -16,6 +17,7 @@ type ContextType = {
   useDisciplines: boolean;
   useGeneration: boolean;
   useVampireInfos: boolean;
+  useTrueFaith: boolean;
   toggleSection: (sectionName: string) => void;
 };
 
@@ -25,6 +27,7 @@ const defaultContext: ContextType = {
   useDisciplines: true,
   useGeneration: true,
   useVampireInfos: true,
+  useTrueFaith: false,
   toggleSection: () => {},
 };
 const SectionsContext = createContext(defaultContext);
@@ -39,6 +42,7 @@ export const SectionsProvider = ({
     disciplines?: boolean;
     generation?: boolean;
     vampireInfos?: boolean;
+    trueFaith?: boolean;
   };
 }) => {
   const [sectionsState, setSectionsState] = useState(sections);
@@ -62,6 +66,7 @@ export const SectionsProvider = ({
     usePath: sectionsState.path,
     useGeneration: sectionsState.generation,
     useVampireInfos: sectionsState.vampireInfos,
+    useTrueFaith: sectionsState.trueFaith,
     toggleSection,
   };
   return (

@@ -29,4 +29,5 @@ export type VampireType = {
   languages: Array<RawLanguage>;
   leftOverPex: number;
   sections: SectionsType;
+  trueFaith: number;
 };

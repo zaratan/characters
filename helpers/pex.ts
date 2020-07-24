@@ -32,6 +32,21 @@ export const calcPexSpecialty = (value: number) => (Math.max(1, value) - 1) * 2;
 export const calcPexAdvFlaw = (value: number, neg: boolean) =>
   Math.abs(value) * 3 * (neg ? -1 : +1);
 
+export const calcPexTrueFaith = (value: number) => {
+  if (value === 0) return 0;
+  if (value === 1) return 5;
+  const lowLevels = Math.min(5, value);
+  if (value > 5) {
+    return (
+      2 + // lvl 1 - 3 because v
+      lowLevels * (lowLevels + 1) * 1.5 + // level 2 => 5
+      value * (value + 1) * 2.5 -
+      5 * 6 * 2.5 // lvl 6 => 10 (second part is to not double count the first levels)
+    );
+  }
+  return 2 + lowLevels * (lowLevels + 1) * 1.5;
+};
+
 export const calcPexDiffAttribute = (maxValue = 10) => (
   from: number,
   to: number
@@ -77,3 +92,6 @@ export const calcPexDiffSpecialty = (from: number, to: number) =>
 
 export const calcPexDiffAdvFlaw = (from: number, to: number, neg: boolean) =>
   calcPexAdvFlaw(to, neg) - calcPexAdvFlaw(from, neg);
+
+export const clacPexDiffTrueFaith = (from: number, to: number) =>
+  calcPexTrueFaith(to) - calcPexTrueFaith(from);
