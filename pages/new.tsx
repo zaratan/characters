@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import { EmptyLine } from '../styles/Lines';
 import MeContext from '../contexts/MeContext';
 import { fetcher } from '../helpers/fetcher';
+import SystemContext from '../contexts/SystemContext';
 
 export const ERAS = {
   0: 'Age des ténèbres',
@@ -93,6 +94,7 @@ const NewCharPage = () => {
   const id = uuid();
 
   const { connected } = useContext(MeContext);
+  const { appId } = useContext(SystemContext);
 
   if (!connected) {
     return (
@@ -114,7 +116,7 @@ const NewCharPage = () => {
     const url = '/api/vampires/create';
     await fetcher(url, {
       method: 'POST',
-      body: JSON.stringify({ name, era, type, id }),
+      body: JSON.stringify({ name, era, type, id, appId }),
     });
     router.push(`/vampires/${id}`);
   };

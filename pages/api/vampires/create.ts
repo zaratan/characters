@@ -8,6 +8,7 @@ import victorian from '../../../defaultData/victorian';
 import vampire from '../../../defaultData/vampire';
 import human from '../../../defaultData/human';
 import ghoul from '../../../defaultData/ghoul';
+import { updateOnSheets } from '../../../helpers/pusherServer';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
@@ -28,7 +29,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       .json({ error: 'Vous devez vous connecter pour effectuer cette action' });
   }
   try {
-    const { type = 0, name = '', era = 0, id = 'aaaaaaaa' } = {
+    const { type = 0, name = '', era = 0, id = 'aaaaaaaa', appId = '' } = {
       ...JSON.parse(req.body),
     };
 
@@ -44,6 +45,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     await client.query(q.Create(q.Collection('vampires'), { data }));
 
     // ok
+    updateOnSheets(appId);
     res.status(200).json({ result: 'ok' });
   } catch (e) {
     // something went wrong
