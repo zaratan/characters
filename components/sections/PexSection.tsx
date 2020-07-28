@@ -18,6 +18,7 @@ import {
   calcPexThaumaturgyRitual,
   calcPexAdvFlaw,
   calcPexTrueFaith,
+  calcPexHumanMagic,
 } from '../../helpers/pex';
 import AbilitiesContext from '../../contexts/AbilitiesContext';
 import MindContext from '../../contexts/MindContext';
@@ -30,6 +31,7 @@ import SectionsContext from '../../contexts/SectionsContext';
 import { maxDot } from '../../helpers/maxLevels';
 import GenerationContext from '../../contexts/GenerationContext';
 import FaithContext from '../../contexts/FaithContext';
+import HumanMagicContext from '../../contexts/HumanMagicContext';
 
 const HandText = styled(HandLargeText)`
   display: flex;
@@ -80,9 +82,14 @@ const PexSection = () => {
   const { editMode } = useContext(ModeContext);
   const generation = useContext(GenerationContext);
   const { trueFaith } = useContext(FaithContext);
-  const { useDisciplines, usePath, useGeneration, useTrueFaith } = useContext(
-    SectionsContext
-  );
+  const { psy } = useContext(HumanMagicContext);
+  const {
+    useDisciplines,
+    usePath,
+    useGeneration,
+    useTrueFaith,
+    useHumanMagic,
+  } = useContext(SectionsContext);
   const maxDots = useGeneration ? maxDot(generation.value) : 5;
   const pexElems: pexElemsType = [
     // Attributes
@@ -171,11 +178,13 @@ const PexSection = () => {
             ),
             pexCalc: calcPexThaumaturgyPath,
           },
-          ...[...clanDisciplines, ...outClanDisciplines].flatMap((disc) => ({
-            elemArray: disc.rituals,
-            pexCalc: (value: number) =>
-              calcPexThaumaturgyRitual(value, disc.ritualMulti),
-          })),
+          ...[...clanDisciplines, ...outClanDisciplines]
+            .filter((disc) => disc.isThaumaturgy)
+            .flatMap((disc) => ({
+              elemArray: disc.rituals,
+              pexCalc: (value: number) =>
+                calcPexThaumaturgyRitual(value, disc.ritualMulti),
+            })),
         ]
       : []),
     // Misc.
@@ -197,6 +206,17 @@ const PexSection = () => {
             elemArray: [trueFaith],
             pexCalc: calcPexTrueFaith,
           },
+        ]
+      : []),
+    ...(useHumanMagic
+      ? [
+          { elemArray: [...psy], pexCalc: calcPexHumanMagic },
+          ...[...psy]
+            .filter((power) => power.hasRitual)
+            .flatMap((power) => ({
+              elemArray: power.rituals,
+              pexCalc: (value: number) => calcPexThaumaturgyRitual(value, 3),
+            })),
         ]
       : []),
   ];
