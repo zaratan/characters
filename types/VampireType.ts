@@ -9,6 +9,7 @@ import {
 import { AdvFlawType } from '../contexts/AdvFlawContext';
 import { RawLanguage } from '../contexts/LanguagesContext';
 import { SectionsType } from '../contexts/SectionsContext';
+import { HumanMagicType } from '../contexts/HumanMagicContext';
 
 export type VampireType = {
   generation: number;
@@ -30,4 +31,5 @@ export type VampireType = {
   leftOverPex: number;
   sections: SectionsType;
   trueFaith: number;
+  humanMagic: HumanMagicType;
 };

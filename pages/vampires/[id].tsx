@@ -101,8 +101,12 @@ const Home = ({
       path: true,
       vampireInfos: true,
       trueFaith: false,
+      humanMagic: false,
     },
     trueFaith = 0,
+    humanMagic = {
+      psy: [],
+    },
   } = data;
 
   // default era
@@ -139,6 +143,7 @@ const Home = ({
         leftOverPex={leftOverPex}
         sections={sections}
         trueFaith={trueFaith}
+        humanMagic={humanMagic}
       />
     </>
   );

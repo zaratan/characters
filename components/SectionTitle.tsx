@@ -8,6 +8,7 @@ import PexElem from './PexElem';
 
 export const StyledTitle = styled(Title)`
   padding: 0 1rem;
+  white-space: nowrap;
 `;
 
 const SectionTitle = ({

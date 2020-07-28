@@ -21,6 +21,9 @@ import {
 import SystemContext from '../contexts/SystemContext';
 import SectionsContext, { SectionsType } from '../contexts/SectionsContext';
 import FaithContext from '../contexts/FaithContext';
+import HumanMagicContext, {
+  HumanMagicType,
+} from '../contexts/HumanMagicContext';
 
 const SaveButton = ({ children }: { children: ReactNode }) => {
   const { id } = useContext(IdContext);
@@ -85,8 +88,10 @@ const SaveButton = ({ children }: { children: ReactNode }) => {
     usePath,
     useVampireInfos,
     useTrueFaith,
+    useHumanMagic,
   } = useContext(SectionsContext);
   const { trueFaith } = useContext(FaithContext);
+  const { psy } = useContext(HumanMagicContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -172,6 +177,20 @@ const SaveButton = ({ children }: { children: ReactNode }) => {
       path: !!usePath,
       disciplines: !!useDisciplines,
       trueFaith: !!useTrueFaith,
+      humanMagic: !!useHumanMagic,
+    };
+    const humanMagic: HumanMagicType = {
+      psy: psy.map((power) => ({
+        key: power.key,
+        hasRitual: power.hasRitual,
+        title: power.title,
+        value: power.value,
+        rituals: power.rituals.map((ritual) => ({
+          key: ritual.key,
+          value: ritual.value,
+          title: ritual.title,
+        })),
+      })),
     };
     const data = {
       id,
@@ -235,6 +254,7 @@ const SaveButton = ({ children }: { children: ReactNode }) => {
       })),
       leftOverPex: leftOver.value,
       trueFaith: trueFaith.value,
+      humanMagic,
     };
     console.log({ sections, data });
     const url = `/api/vampires/${id}/update`;

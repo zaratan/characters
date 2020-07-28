@@ -29,6 +29,8 @@ import { Title } from '../styles/Titles';
 import { SectionsProvider } from '../contexts/SectionsContext';
 import { FaithProvider } from '../contexts/FaithContext';
 import Faith from './sections/Faith';
+import { HumanMagicProvider } from '../contexts/HumanMagicContext';
+import HumanMagic from './sections/HumanMagic';
 
 const PageTitle = styled.div`
   display: flex;
@@ -62,8 +64,10 @@ const Sheet = ({
     generation: true,
     vampireInfos: true,
     trueFaith: false,
+    humanMagic: false,
   },
   trueFaith = 0,
+  humanMagic: { psy } = { psy: [] },
   startEdit,
   startPlay,
 }: VampireType & {
@@ -94,46 +98,52 @@ const Sheet = ({
                         outClanDisciplines={outClanDisciplines}
                         combinedDisciplines={combinedDisciplines}
                       >
-                        <AdvFlawProvider advantages={advantages} flaws={flaws}>
-                          <LanguagesProvider languages={languages}>
-                            <PexProvider leftOverPex={leftOverPex}>
-                              <Nav />
-                              <SheetContainer>
-                                <Head>
-                                  <title>
-                                    {infos.name ? `${infos.name} - ` : null}
-                                    Feuille de Personnage
-                                  </title>
-                                  <link rel="icon" href="/favicon.ico" />
-                                </Head>
+                        <HumanMagicProvider psy={psy}>
+                          <AdvFlawProvider
+                            advantages={advantages}
+                            flaws={flaws}
+                          >
+                            <LanguagesProvider languages={languages}>
+                              <PexProvider leftOverPex={leftOverPex}>
+                                <Nav />
+                                <SheetContainer>
+                                  <Head>
+                                    <title>
+                                      {infos.name ? `${infos.name} - ` : null}
+                                      Feuille de Personnage
+                                    </title>
+                                    <link rel="icon" href="/favicon.ico" />
+                                  </Head>
 
-                                <PageTitle>
-                                  {infos.era === 0 ? (
-                                    <img
-                                      src="/title.png"
-                                      alt="Vampire Dark Age"
-                                    />
-                                  ) : (
-                                    <Title className="victorian-queen">
-                                      Vampire Ère Victorienne
-                                    </Title>
-                                  )}
-                                </PageTitle>
+                                  <PageTitle>
+                                    {infos.era === 0 ? (
+                                      <img
+                                        src="/title.png"
+                                        alt="Vampire Dark Age"
+                                      />
+                                    ) : (
+                                      <Title className="victorian-queen">
+                                        Vampire Ère Victorienne
+                                      </Title>
+                                    )}
+                                  </PageTitle>
 
-                                <Infos />
-                                <Attributes />
-                                <Abilities />
-                                <Mind />
-                                <Faith />
-                                <Disciplines />
-                                <Misc />
-                                <PexSection />
-                              </SheetContainer>
-                              <SheetActionsFooter newChar={newChar} />
-                              <Footer />
-                            </PexProvider>
-                          </LanguagesProvider>
-                        </AdvFlawProvider>
+                                  <Infos />
+                                  <Attributes />
+                                  <Abilities />
+                                  <Mind />
+                                  <Faith />
+                                  <Disciplines />
+                                  <HumanMagic />
+                                  <Misc />
+                                  <PexSection />
+                                </SheetContainer>
+                                <SheetActionsFooter newChar={newChar} />
+                                <Footer />
+                              </PexProvider>
+                            </LanguagesProvider>
+                          </AdvFlawProvider>
+                        </HumanMagicProvider>
                       </DisciplinesProvider>
                     </AbilitiesProvider>
                   </FaithProvider>

@@ -9,6 +9,7 @@ export type SectionsType = {
   generation: boolean;
   vampireInfos: boolean;
   trueFaith: boolean;
+  humanMagic: boolean;
 };
 
 type ContextType = {
@@ -18,6 +19,7 @@ type ContextType = {
   useGeneration: boolean;
   useVampireInfos: boolean;
   useTrueFaith: boolean;
+  useHumanMagic: boolean;
   toggleSection: (sectionName: string) => void;
 };
 
@@ -28,6 +30,7 @@ const defaultContext: ContextType = {
   useGeneration: true,
   useVampireInfos: true,
   useTrueFaith: false,
+  useHumanMagic: false,
   toggleSection: () => {},
 };
 const SectionsContext = createContext(defaultContext);
@@ -43,6 +46,7 @@ export const SectionsProvider = ({
     generation?: boolean;
     vampireInfos?: boolean;
     trueFaith?: boolean;
+    humanMagic?: boolean;
   };
 }) => {
   const [sectionsState, setSectionsState] = useState(sections);
@@ -67,6 +71,7 @@ export const SectionsProvider = ({
     useGeneration: sectionsState.generation,
     useVampireInfos: sectionsState.vampireInfos,
     useTrueFaith: sectionsState.trueFaith,
+    useHumanMagic: sectionsState.humanMagic,
     toggleSection,
   };
   return (

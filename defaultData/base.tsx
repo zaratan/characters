@@ -50,6 +50,9 @@ const flaws = [];
 const languages = [];
 const leftOverPex = 0;
 const trueFaith = 0;
+const humanMagic = {
+  psy: [],
+};
 
 export default {
   generation,
@@ -64,4 +67,5 @@ export default {
   languages,
   leftOverPex,
   trueFaith,
+  humanMagic,
 };
