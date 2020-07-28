@@ -1,3 +1,5 @@
+import { HumanMagicType } from '../contexts/HumanMagicContext';
+
 const attributes = {
   strength: 1,
   dexterity: 1,
@@ -50,6 +52,11 @@ const flaws = [];
 const languages = [];
 const leftOverPex = 0;
 const trueFaith = 0;
+const humanMagic: HumanMagicType = {
+  psy: [],
+  staticMagic: [],
+  theurgy: [],
+};
 
 export default {
   generation,
@@ -64,4 +71,5 @@ export default {
   languages,
   leftOverPex,
   trueFaith,
+  humanMagic,
 };

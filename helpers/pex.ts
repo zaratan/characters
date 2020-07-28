@@ -47,6 +47,15 @@ export const calcPexTrueFaith = (value: number) => {
   return 2 + lowLevels * (lowLevels + 1) * 1.5;
 };
 
+export const calcPexHumanMagic = (value: number) => {
+  if (value === 0) return 0;
+  if (value === 1) return 10;
+  return value * (value + 1) * 3.5 + 3;
+};
+
+export const calcPexDiffHumanMagic = (from: number, to: number) =>
+  calcPexHumanMagic(to) - calcPexHumanMagic(from);
+
 export const calcPexDiffAttribute = (maxValue = 10) => (
   from: number,
   to: number

@@ -8,6 +8,7 @@ const sections: { sections: SectionsType } = {
     generation: false,
     vampireInfos: false,
     trueFaith: false,
+    humanMagic: false,
   },
 };
 export default sections;
