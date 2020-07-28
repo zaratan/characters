@@ -91,7 +91,7 @@ const SaveButton = ({ children }: { children: ReactNode }) => {
     useHumanMagic,
   } = useContext(SectionsContext);
   const { trueFaith } = useContext(FaithContext);
-  const { psy } = useContext(HumanMagicContext);
+  const { psy, staticMagic, theurgy } = useContext(HumanMagicContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -181,6 +181,28 @@ const SaveButton = ({ children }: { children: ReactNode }) => {
     };
     const humanMagic: HumanMagicType = {
       psy: psy.map((power) => ({
+        key: power.key,
+        hasRitual: power.hasRitual,
+        title: power.title,
+        value: power.value,
+        rituals: power.rituals.map((ritual) => ({
+          key: ritual.key,
+          value: ritual.value,
+          title: ritual.title,
+        })),
+      })),
+      staticMagic: staticMagic.map((power) => ({
+        key: power.key,
+        hasRitual: power.hasRitual,
+        title: power.title,
+        value: power.value,
+        rituals: power.rituals.map((ritual) => ({
+          key: ritual.key,
+          value: ritual.value,
+          title: ritual.title,
+        })),
+      })),
+      theurgy: theurgy.map((power) => ({
         key: power.key,
         hasRitual: power.hasRitual,
         title: power.title,

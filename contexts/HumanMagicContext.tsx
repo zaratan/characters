@@ -7,8 +7,14 @@ import { TempElemType } from '../types/TempElemType';
 
 type ContextType = {
   psy: Array<TempPowerType>;
+  staticMagic: Array<TempPowerType>;
+  theurgy: Array<TempPowerType>;
   addNewPsy: () => string;
   removePsy: (id: string) => void;
+  addNewStatic: () => string;
+  removeStatic: (id: string) => void;
+  addNewTheurgy: () => string;
+  removeTheurgy: (id: string) => void;
 };
 
 export type RitualType = {
@@ -27,6 +33,8 @@ export type PowerType = {
 
 export type HumanMagicType = {
   psy: Array<PowerType>;
+  staticMagic: Array<PowerType>;
+  theurgy: Array<PowerType>;
 };
 
 export interface TempRitualType extends TempElemType<number> {
@@ -48,11 +56,27 @@ export interface TempPowerType extends TempElemType<number> {
 
 const defaultContext: ContextType = {
   psy: [],
+  staticMagic: [],
+  theurgy: [],
   addNewPsy: () => {
     console.error('Default Context used');
     return '';
   },
   removePsy: () => {
+    console.error('Default Context used');
+  },
+  addNewStatic: () => {
+    console.error('Default Context used');
+    return '';
+  },
+  removeStatic: () => {
+    console.error('Default Context used');
+  },
+  addNewTheurgy: () => {
+    console.error('Default Context used');
+    return '';
+  },
+  removeTheurgy: () => {
     console.error('Default Context used');
   },
 };
@@ -73,12 +97,116 @@ const createNewPower: () => PowerType = () => ({
   value: 0,
 });
 
+const generatePowerContext = (
+  tmpPowers: { val: Array<PowerType>; changed: boolean },
+  powers: Array<PowerType>,
+  setter: (value) => void
+) =>
+  tmpPowers.val.map((power) => {
+    const basePower = powers.find((basePwr) => basePwr.key === power.key);
+
+    const addNewRitual = () => {
+      const newRitual = createNewRitual();
+      setter(
+        produce(tmpPowers, (nextState) => {
+          nextState.val
+            .find((pwr) => pwr.key === power.key)
+            .rituals.push(newRitual);
+          nextState.changed = true;
+        })
+      );
+      return newRitual.key;
+    };
+
+    const removeRitual = (key: string) => {
+      setter(
+        produce(tmpPowers, (nextState) => {
+          nextState.val.find(
+            (pwr) => pwr.key === power.key
+          ).rituals = power.rituals.filter((ritual) => ritual.key !== key);
+          nextState.changed = true;
+        })
+      );
+    };
+
+    const set = (newVal: number) => {
+      setter(
+        produce(tmpPowers, (nextState) => {
+          nextState.val.find((pwr) => pwr.key === power.key).value = newVal;
+          nextState.changed = true;
+        })
+      );
+    };
+
+    const setTitle = (newTitle: string) => {
+      setter(
+        produce(tmpPowers, (nextState) => {
+          nextState.val.find((pwr) => pwr.key === power.key).title = newTitle;
+          nextState.changed = true;
+        })
+      );
+    };
+
+    const toggleRituals = () => {
+      setter(
+        produce(tmpPowers, (nextState) => {
+          nextState.val.find(
+            (pwr) => pwr.key === power.key
+          ).hasRitual = !power.hasRitual;
+          nextState.changed = true;
+        })
+      );
+    };
+
+    const rituals: Array<TempRitualType> = power.rituals.map((ritual) => ({
+      ...ritual,
+      baseValue:
+        basePower?.rituals?.find((baseRitual) => baseRitual.key === ritual.key)
+          ?.value || 0,
+      setTitle: (newTitle: string) => {
+        setter(
+          produce(tmpPowers, (nextState) => {
+            nextState.val
+              .find((pwr) => pwr.key === power.key)
+              .rituals.find((rtl) => rtl.key === ritual.key).title = newTitle;
+            nextState.changed = true;
+          })
+        );
+      },
+      set: (newValue: number) => {
+        setter(
+          produce(tmpPowers, (nextState) => {
+            nextState.val
+              .find((pwr) => pwr.key === power.key)
+              .rituals.find((rtl) => rtl.key === ritual.key).value = newValue;
+            nextState.changed = true;
+          })
+        );
+      },
+    }));
+
+    return {
+      ...power,
+      baseValue: basePower?.value || 0,
+      rituals,
+      addNewRitual,
+      removeRitual,
+      set,
+      setTitle,
+      toggleRituals,
+    };
+  });
+
 export const HumanMagicProvider = ({
   children,
-  psy,
+  psy = [],
+  staticMagic = [],
+  theurgy = [],
 }: {
   children: ReactNode;
   psy: Array<PowerType>;
+  staticMagic: Array<PowerType>;
+  theurgy: Array<PowerType>;
 }) => {
   // Psy state
   const [tmpPsy, setTmpPsy] = useState({ val: psy, changed: false });
@@ -86,6 +214,26 @@ export const HumanMagicProvider = ({
     if (tmpPsy.changed) return;
     setTmpPsy({ val: psy, changed: false });
   }, [JSON.stringify(psy)]);
+
+  // StaticMagic state
+  const [tmpStaticMagic, setTmpStaticMagic] = useState({
+    val: staticMagic,
+    changed: false,
+  });
+  useEffect(() => {
+    if (tmpStaticMagic.changed) return;
+    setTmpStaticMagic({ val: staticMagic, changed: false });
+  }, [JSON.stringify(staticMagic)]);
+
+  // Theurgy state
+  const [tmpTheurgy, setTmpTheurgy] = useState({
+    val: theurgy,
+    changed: false,
+  });
+  useEffect(() => {
+    if (tmpTheurgy.changed) return;
+    setTmpTheurgy({ val: theurgy, changed: false });
+  }, [JSON.stringify(theurgy)]);
 
   const addNewPsy = () => {
     const newPsy = createNewPower();
@@ -99,103 +247,61 @@ export const HumanMagicProvider = ({
       changed: true,
     });
   };
+  const addNewStatic = () => {
+    const newStatic = createNewPower();
+    setTmpStaticMagic({
+      val: [...tmpStaticMagic.val, newStatic],
+      changed: true,
+    });
+    return newStatic.key;
+  };
 
-  const contextPsy: Array<TempPowerType> = tmpPsy.val.map((psyPwr) => {
-    const basePower = psy.find((basePwr) => basePwr.key === psyPwr.key);
+  const removeStatic = (key: string) => {
+    setTmpStaticMagic({
+      val: tmpStaticMagic.val.filter((pwr) => pwr.key !== key),
+      changed: true,
+    });
+  };
+  const addNewTheurgy = () => {
+    const newTheurgy = createNewPower();
+    setTmpTheurgy({ val: [...tmpTheurgy.val, newTheurgy], changed: true });
+    return newTheurgy.key;
+  };
 
-    const addNewRitual = () => {
-      const newRitual = createNewRitual();
-      setTmpPsy(
-        produce(tmpPsy, (nextState) => {
-          nextState.val
-            .find((pwr) => pwr.key === psyPwr.key)
-            .rituals.push(newRitual);
-          nextState.changed = true;
-        })
-      );
-      return newRitual.key;
-    };
+  const removeTheurgy = (key: string) => {
+    setTmpTheurgy({
+      val: tmpTheurgy.val.filter((pwr) => pwr.key !== key),
+      changed: true,
+    });
+  };
 
-    const removeRitual = (key: string) => {
-      setTmpPsy(
-        produce(tmpPsy, (nextState) => {
-          nextState.val.find(
-            (pwr) => pwr.key === psyPwr.key
-          ).rituals = psyPwr.rituals.filter((ritual) => ritual.key !== key);
-          nextState.changed = true;
-        })
-      );
-    };
+  const contextTheurgy: Array<TempPowerType> = generatePowerContext(
+    tmpTheurgy,
+    theurgy,
+    setTmpTheurgy
+  );
+  const contextPsy: Array<TempPowerType> = generatePowerContext(
+    tmpPsy,
+    psy,
+    setTmpPsy
+  );
+  const contextStaticMagic: Array<TempPowerType> = generatePowerContext(
+    tmpStaticMagic,
+    staticMagic,
+    setTmpStaticMagic
+  );
 
-    const set = (newVal: number) => {
-      setTmpPsy(
-        produce(tmpPsy, (nextState) => {
-          nextState.val.find((pwr) => pwr.key === psyPwr.key).value = newVal;
-          nextState.changed = true;
-        })
-      );
-    };
-
-    const setTitle = (newTitle: string) => {
-      setTmpPsy(
-        produce(tmpPsy, (nextState) => {
-          nextState.val.find((pwr) => pwr.key === psyPwr.key).title = newTitle;
-          nextState.changed = true;
-        })
-      );
-    };
-
-    const toggleRituals = () => {
-      setTmpPsy(
-        produce(tmpPsy, (nextState) => {
-          nextState.val.find(
-            (pwr) => pwr.key === psyPwr.key
-          ).hasRitual = !psyPwr.hasRitual;
-          nextState.changed = true;
-        })
-      );
-    };
-
-    const rituals: Array<TempRitualType> = psyPwr.rituals.map((ritual) => ({
-      ...ritual,
-      baseValue:
-        basePower?.rituals?.find((baseRitual) => baseRitual.key === ritual.key)
-          ?.value || 0,
-      setTitle: (newTitle: string) => {
-        setTmpPsy(
-          produce(tmpPsy, (nextState) => {
-            nextState.val
-              .find((pwr) => pwr.key === psyPwr.key)
-              .rituals.find((rtl) => rtl.key === ritual.key).title = newTitle;
-            nextState.changed = true;
-          })
-        );
-      },
-      set: (newValue: number) => {
-        setTmpPsy(
-          produce(tmpPsy, (nextState) => {
-            nextState.val
-              .find((pwr) => pwr.key === psyPwr.key)
-              .rituals.find((rtl) => rtl.key === ritual.key).value = newValue;
-            nextState.changed = true;
-          })
-        );
-      },
-    }));
-
-    return {
-      ...psyPwr,
-      baseValue: basePower?.value || 0,
-      rituals,
-      addNewRitual,
-      removeRitual,
-      set,
-      setTitle,
-      toggleRituals,
-    };
-  });
-
-  const context: ContextType = { addNewPsy, removePsy, psy: contextPsy };
+  const context: ContextType = {
+    addNewPsy,
+    removePsy,
+    addNewStatic,
+    removeStatic,
+    addNewTheurgy,
+    removeTheurgy,
+    psy: contextPsy,
+    staticMagic: contextStaticMagic,
+    theurgy: contextTheurgy,
+  };
   return (
     <HumanMagicContext.Provider value={context}>
       {children}

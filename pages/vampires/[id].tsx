@@ -106,6 +106,8 @@ const Home = ({
     trueFaith = 0,
     humanMagic = {
       psy: [],
+      theurgy: [],
+      staticMagic: [],
     },
   } = data;
 

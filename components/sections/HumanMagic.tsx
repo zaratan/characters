@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import SectionsContext from '../../contexts/SectionsContext';
 import SectionTitle from '../SectionTitle';
 import { HorizontalSection } from '../../styles/Sections';
-import ColumnTitle from '../ColumnTitle';
 import { Container } from '../../styles/Container';
 import HumanMagicContext from '../../contexts/HumanMagicContext';
 import {
@@ -17,7 +16,17 @@ import Line, { LineValue } from '../Line';
 
 const HumanMagic = () => {
   const { useHumanMagic } = useContext(SectionsContext);
-  const { psy, addNewPsy, removePsy } = useContext(HumanMagicContext);
+  const {
+    psy,
+    addNewPsy,
+    removePsy,
+    staticMagic,
+    addNewStatic,
+    removeStatic,
+    theurgy,
+    addNewTheurgy,
+    removeTheurgy,
+  } = useContext(HumanMagicContext);
   const { editMode } = useContext(ModeContext);
 
   if (!useHumanMagic) return null;
@@ -27,10 +36,10 @@ const HumanMagic = () => {
         title="Magie Humaine"
         pexElems={[
           {
-            elemArray: [...psy],
+            elemArray: [...psy, ...staticMagic, ...theurgy],
             pexCalc: calcPexHumanMagic,
           },
-          ...[...psy].flatMap((power) => ({
+          ...[...psy, ...staticMagic, ...theurgy].flatMap((power) => ({
             elemArray: power.rituals,
             pexCalc: (value: number) => calcPexThaumaturgyRitual(value, 3),
           })),
@@ -69,7 +78,71 @@ const HumanMagic = () => {
             ))}
           </ul>
         </Container>
-        {[...psy]
+        <Container>
+          <ColumnTitleWithOptions
+            title="Magie Statique"
+            button={{ glyph: '+', value: addNewStatic }}
+            elemArray={staticMagic}
+            pexCalc={calcPexHumanMagic}
+            inactive={!editMode}
+          />
+          <ul>
+            {staticMagic.map((power) => (
+              <li key={power.key}>
+                <Line
+                  elem={power}
+                  maxLevel={5}
+                  title={power.title}
+                  name={power.title}
+                  diffPexCalc={calcPexDiffHumanMagic}
+                  changeName={power.setTitle}
+                  custom
+                  remove={() => removeStatic(power.key)}
+                  placeholder="Nom du pouvoir"
+                  lineAction={{
+                    glyph: 'Rt',
+                    value: power.toggleRituals,
+                    active: power.hasRitual,
+                  }}
+                  inactive={!editMode}
+                />
+              </li>
+            ))}
+          </ul>
+        </Container>
+        <Container>
+          <ColumnTitleWithOptions
+            title="Théurgie"
+            button={{ glyph: '+', value: addNewTheurgy }}
+            elemArray={theurgy}
+            pexCalc={calcPexHumanMagic}
+            inactive={!editMode}
+          />
+          <ul>
+            {theurgy.map((power) => (
+              <li key={power.key}>
+                <Line
+                  elem={power}
+                  maxLevel={5}
+                  title={power.title}
+                  name={power.title}
+                  diffPexCalc={calcPexDiffHumanMagic}
+                  changeName={power.setTitle}
+                  custom
+                  remove={() => removeTheurgy(power.key)}
+                  placeholder="Nom du pouvoir"
+                  lineAction={{
+                    glyph: 'Rt',
+                    value: power.toggleRituals,
+                    active: power.hasRitual,
+                  }}
+                  inactive={!editMode}
+                />
+              </li>
+            ))}
+          </ul>
+        </Container>
+        {[...psy, ...staticMagic, ...theurgy]
           .filter((power) => power.hasRitual)
           .map((power) => (
             <Container key={`${power.key}-rituals`}>

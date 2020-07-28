@@ -82,7 +82,7 @@ const PexSection = () => {
   const { editMode } = useContext(ModeContext);
   const generation = useContext(GenerationContext);
   const { trueFaith } = useContext(FaithContext);
-  const { psy } = useContext(HumanMagicContext);
+  const { psy, staticMagic, theurgy } = useContext(HumanMagicContext);
   const {
     useDisciplines,
     usePath,
@@ -200,6 +200,7 @@ const PexSection = () => {
       elemArray: [leftOver],
       pexCalc: (value) => value,
     },
+    // Faith
     ...(useTrueFaith
       ? [
           {
@@ -208,10 +209,14 @@ const PexSection = () => {
           },
         ]
       : []),
+    // Human Magic
     ...(useHumanMagic
       ? [
-          { elemArray: [...psy], pexCalc: calcPexHumanMagic },
-          ...[...psy]
+          {
+            elemArray: [...psy, ...staticMagic, ...theurgy],
+            pexCalc: calcPexHumanMagic,
+          },
+          ...[...psy, ...staticMagic, ...theurgy]
             .filter((power) => power.hasRitual)
             .flatMap((power) => ({
               elemArray: power.rituals,

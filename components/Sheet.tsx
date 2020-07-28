@@ -67,7 +67,11 @@ const Sheet = ({
     humanMagic: false,
   },
   trueFaith = 0,
-  humanMagic: { psy } = { psy: [] },
+  humanMagic: { psy, staticMagic, theurgy } = {
+    psy: [],
+    staticMagic: [],
+    theurgy: [],
+  },
   startEdit,
   startPlay,
 }: VampireType & {
@@ -98,7 +102,11 @@ const Sheet = ({
                         outClanDisciplines={outClanDisciplines}
                         combinedDisciplines={combinedDisciplines}
                       >
-                        <HumanMagicProvider psy={psy}>
+                        <HumanMagicProvider
+                          psy={psy}
+                          staticMagic={staticMagic}
+                          theurgy={theurgy}
+                        >
                           <AdvFlawProvider
                             advantages={advantages}
                             flaws={flaws}
