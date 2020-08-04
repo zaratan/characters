@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
+import useStateWithTracker from '../hooks/useStateWithTracker';
 
 export interface InfosType {
   name: string;
@@ -44,40 +45,29 @@ export const InfosProvider = ({
   children: ReactNode;
   infos: InfosType;
 }) => {
-  const [name, setName] = useState(infos.name);
-  useEffect(() => {
-    setName(infos.name);
-  }, [infos.name]);
-  const [playerName, setPlayerName] = useState(infos.playerName);
-  useEffect(() => {
-    setPlayerName(infos.playerName);
-  }, [infos.playerName]);
-  const [chronicle, setChronicle] = useState(infos.chronicle);
-  useEffect(() => {
-    setChronicle(infos.chronicle);
-  }, [infos.chronicle]);
-  const [nature, setNature] = useState(infos.nature);
-  useEffect(() => {
-    setNature(infos.nature);
-  }, [infos.nature]);
-  const [demeanor, setDemeanor] = useState(infos.demeanor);
-  useEffect(() => {
-    setDemeanor(infos.demeanor);
-  }, [infos.demeanor]);
-  const [clan, setClan] = useState(infos.clan);
-  useEffect(() => {
-    setClan(infos.clan);
-  }, [infos.clan]);
-  const [haven, setHaven] = useState(infos.haven);
-  useEffect(() => {
-    setHaven(infos.haven);
-  }, [infos.haven]);
-  const [sire, setSire] = useState(infos.sire);
-  useEffect(() => {
-    setSire(infos.sire);
-  }, [infos.sire]);
+  const [name, setName] = useStateWithTracker(infos.name, 'name');
+  const [playerName, setPlayerName] = useStateWithTracker(
+    infos.playerName,
+    'playerName'
+  );
+  const [chronicle, setChronicle] = useStateWithTracker(
+    infos.chronicle,
+    'chronicle'
+  );
+  const [nature, setNature] = useStateWithTracker(infos.nature, 'nature');
+  const [demeanor, setDemeanor] = useStateWithTracker(
+    infos.demeanor,
+    'demeanor'
+  );
+  const [clan, setClan] = useStateWithTracker(infos.clan, 'clan');
+  const [haven, setHaven] = useStateWithTracker(infos.haven, 'haven');
+  const [sire, setSire] = useStateWithTracker(infos.sire, 'sire');
   const tmpInfos = {
-    name: { value: name, set: setName, baseValue: infos.name },
+    name: {
+      value: name,
+      set: setName,
+      baseValue: infos.name,
+    },
     playerName: {
       value: playerName,
       set: setPlayerName,
@@ -88,11 +78,31 @@ export const InfosProvider = ({
       set: setChronicle,
       baseValue: infos.chronicle,
     },
-    nature: { value: nature, set: setNature, baseValue: infos.nature },
-    demeanor: { value: demeanor, set: setDemeanor, baseValue: infos.demeanor },
-    clan: { value: clan, set: setClan, baseValue: infos.clan },
-    haven: { value: haven, set: setHaven, baseValue: infos.haven },
-    sire: { value: sire, set: setSire, baseValue: infos.sire },
+    nature: {
+      value: nature,
+      set: setNature,
+      baseValue: infos.nature,
+    },
+    demeanor: {
+      value: demeanor,
+      set: setDemeanor,
+      baseValue: infos.demeanor,
+    },
+    clan: {
+      value: clan,
+      set: setClan,
+      baseValue: infos.clan,
+    },
+    haven: {
+      value: haven,
+      set: setHaven,
+      baseValue: infos.haven,
+    },
+    sire: {
+      value: sire,
+      set: setSire,
+      baseValue: infos.sire,
+    },
     era: infos.era,
   };
   return (

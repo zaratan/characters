@@ -1,7 +1,10 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
+import useStateWithTracker, {
+  useStateWithChangesAndTracker,
+} from '../hooks/useStateWithTracker';
 
 export type MindType = {
   willpower: number;
@@ -59,76 +62,59 @@ export const MindProvider = ({
   children: ReactNode;
   mind: MindType;
 }) => {
-  const [willpower, setWillpower] = useState({
-    val: mind.willpower,
-    changed: false,
-  });
-  const [tempWillpower, setTempWillpower] = useState(mind.tempWillpower);
-  const [bloodSpent, setBloodSpent] = useState(mind.bloodSpent);
-  const [conscience, setConscience] = useState({
-    val: mind.conscience,
-    changed: false,
-  });
-  const [isConviction, setIsConviction] = useState(mind.isConviction);
-  const [isInstinct, setIsInstinct] = useState(mind.isInstinct);
-  const [selfControl, setSelfControl] = useState({
-    val: mind.selfControl,
-    changed: false,
-  });
-  const [courage, setCourage] = useState({ val: mind.courage, changed: false });
-  const [pathName, setPathName] = useState(mind.pathName);
-  const [path, setPath] = useState({ val: mind.path, changed: false });
-  const [isExtraBruisable, setIsExtraBruisable] = useState(
-    mind.isExtraBruisable
+  const [willpower, setWillpower] = useStateWithChangesAndTracker(
+    mind.willpower,
+    'willpower'
   );
-  const [health, setHealth] = useState(mind.health);
-  useEffect(() => {
-    if (willpower.changed) return;
-    setWillpower({ val: mind.willpower, changed: false });
-  }, [mind.willpower]);
-  useEffect(() => {
-    setTempWillpower(mind.tempWillpower);
-  }, [mind.tempWillpower]);
-  useEffect(() => {
-    setBloodSpent(mind.bloodSpent);
-  }, [mind.bloodSpent]);
-  useEffect(() => {
-    if (conscience.changed) return;
-    setConscience({ val: mind.conscience, changed: false });
-  }, [mind.conscience]);
-  useEffect(() => {
-    setIsConviction(mind.isConviction);
-  }, [mind.isConviction]);
-  useEffect(() => {
-    setIsInstinct(mind.isInstinct);
-  }, [mind.isInstinct]);
-  useEffect(() => {
-    if (selfControl.changed) return;
-    setSelfControl({ val: mind.selfControl, changed: false });
-  }, [mind.selfControl]);
-  useEffect(() => {
-    if (courage.changed) return;
-    setCourage({ val: mind.courage, changed: false });
-  }, [mind.courage]);
-  useEffect(() => {
-    setPathName(mind.pathName);
-  }, [mind.pathName]);
-  useEffect(() => {
-    if (path.changed) return;
-    setPath({ val: mind.path, changed: false });
-  }, [mind.path]);
-  useEffect(() => {
-    setIsExtraBruisable(mind.isExtraBruisable);
-  }, [mind.isExtraBruisable]);
-  useEffect(() => {
-    setHealth(mind.health);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(mind.health)]);
+  const [tempWillpower, setTempWillpower] = useStateWithTracker(
+    mind.tempWillpower,
+    'temp-willpower',
+    {
+      keepInChangeTracker: false,
+    }
+  );
+  const [bloodSpent, setBloodSpent] = useStateWithTracker(
+    mind.bloodSpent,
+    'blood-spent',
+    { keepInChangeTracker: false }
+  );
+  const [conscience, setConscience] = useStateWithChangesAndTracker(
+    mind.conscience,
+    'conscience'
+  );
+  const [isConviction, setIsConviction] = useStateWithTracker(
+    mind.isConviction,
+    'is-conviction'
+  );
+  const [isInstinct, setIsInstinct] = useStateWithTracker(
+    mind.isInstinct,
+    'is-instinct'
+  );
+  const [selfControl, setSelfControl] = useStateWithChangesAndTracker(
+    mind.selfControl,
+    'self-control'
+  );
+  const [courage, setCourage] = useStateWithChangesAndTracker(
+    mind.courage,
+    'courage'
+  );
+  const [pathName, setPathName] = useStateWithTracker(
+    mind.pathName,
+    'path-name'
+  );
+  const [path, setPath] = useStateWithChangesAndTracker(mind.path, 'path');
+  const [isExtraBruisable, setIsExtraBruisable] = useStateWithTracker(
+    mind.isExtraBruisable,
+    'isExtraBruisable'
+  );
+  const [health, setHealth] = useStateWithTracker(mind.health, 'health', {
+    keepInChangeTracker: false,
+  });
 
   const tmpMind = {
     willpower: {
       value: willpower.val,
-      set: (newWillpower) => setWillpower({ val: newWillpower, changed: true }),
+      set: setWillpower,
       baseValue: mind.willpower,
     },
     tempWillpower: {
@@ -143,8 +129,7 @@ export const MindProvider = ({
     },
     conscience: {
       value: conscience.val,
-      set: (newConscience) =>
-        setConscience({ val: newConscience, changed: true }),
+      set: setConscience,
       baseValue: mind.conscience,
     },
     isConviction: {
@@ -159,19 +144,22 @@ export const MindProvider = ({
     },
     selfControl: {
       value: selfControl.val,
-      set: (newSeflControl) =>
-        setSelfControl({ val: newSeflControl, changed: true }),
+      set: setSelfControl,
       baseValue: mind.selfControl,
     },
     courage: {
       value: courage.val,
-      set: (newCourage) => setCourage({ val: newCourage, changed: true }),
+      set: setCourage,
       baseValue: mind.courage,
     },
-    pathName: { value: pathName, set: setPathName, baseValue: mind.pathName },
+    pathName: {
+      value: pathName,
+      set: setPathName,
+      baseValue: mind.pathName,
+    },
     path: {
       value: path.val,
-      set: (newPath) => setPath({ val: newPath, changed: true }),
+      set: setPath,
       baseValue: mind.path,
     },
     isExtraBruisable: {

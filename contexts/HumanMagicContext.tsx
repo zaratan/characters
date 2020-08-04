@@ -1,9 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, ReactNode } from 'react';
 import { v4 as uuid } from 'uuid';
-import produce from 'immer';
 import { TempElemType } from '../types/TempElemType';
+import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
 type ContextType = {
   psy: Array<TempPowerType>;
@@ -100,7 +100,7 @@ const createNewPower: () => PowerType = () => ({
 const generatePowerContext = (
   tmpPowers: { val: Array<PowerType>; changed: boolean },
   powers: Array<PowerType>,
-  setter: (value) => void
+  setter: (value: Array<PowerType>) => void
 ) =>
   tmpPowers.val.map((power) => {
     const basePower = powers.find((basePwr) => basePwr.key === power.key);
@@ -108,53 +108,49 @@ const generatePowerContext = (
     const addNewRitual = () => {
       const newRitual = createNewRitual();
       setter(
-        produce(tmpPowers, (nextState) => {
-          nextState.val
-            .find((pwr) => pwr.key === power.key)
-            .rituals.push(newRitual);
-          nextState.changed = true;
-        })
+        tmpPowers.val.map((pwr) =>
+          pwr.key === power.key
+            ? { ...pwr, rituals: [...pwr.rituals, newRitual] }
+            : pwr
+        )
       );
       return newRitual.key;
     };
 
     const removeRitual = (key: string) => {
       setter(
-        produce(tmpPowers, (nextState) => {
-          nextState.val.find(
-            (pwr) => pwr.key === power.key
-          ).rituals = power.rituals.filter((ritual) => ritual.key !== key);
-          nextState.changed = true;
-        })
+        tmpPowers.val.map((pwr) =>
+          pwr.key === power.key
+            ? {
+                ...pwr,
+                rituals: pwr.rituals.filter((ritual) => ritual.key !== key),
+              }
+            : pwr
+        )
       );
     };
 
     const set = (newVal: number) => {
       setter(
-        produce(tmpPowers, (nextState) => {
-          nextState.val.find((pwr) => pwr.key === power.key).value = newVal;
-          nextState.changed = true;
-        })
+        tmpPowers.val.map((pwr) =>
+          pwr.key === power.key ? { ...pwr, value: newVal } : pwr
+        )
       );
     };
 
     const setTitle = (newTitle: string) => {
       setter(
-        produce(tmpPowers, (nextState) => {
-          nextState.val.find((pwr) => pwr.key === power.key).title = newTitle;
-          nextState.changed = true;
-        })
+        tmpPowers.val.map((pwr) =>
+          pwr.key === power.key ? { ...pwr, title: newTitle } : pwr
+        )
       );
     };
 
     const toggleRituals = () => {
       setter(
-        produce(tmpPowers, (nextState) => {
-          nextState.val.find(
-            (pwr) => pwr.key === power.key
-          ).hasRitual = !power.hasRitual;
-          nextState.changed = true;
-        })
+        tmpPowers.val.map((pwr) =>
+          pwr.key === power.key ? { ...pwr, hasRitual: !pwr.hasRitual } : pwr
+        )
       );
     };
 
@@ -165,22 +161,30 @@ const generatePowerContext = (
           ?.value || 0,
       setTitle: (newTitle: string) => {
         setter(
-          produce(tmpPowers, (nextState) => {
-            nextState.val
-              .find((pwr) => pwr.key === power.key)
-              .rituals.find((rtl) => rtl.key === ritual.key).title = newTitle;
-            nextState.changed = true;
-          })
+          tmpPowers.val.map((pwr) =>
+            pwr.key === power.key
+              ? {
+                  ...pwr,
+                  rituals: pwr.rituals.map((rtl) =>
+                    rtl.key === ritual.key ? { ...rtl, title: newTitle } : rtl
+                  ),
+                }
+              : pwr
+          )
         );
       },
       set: (newValue: number) => {
         setter(
-          produce(tmpPowers, (nextState) => {
-            nextState.val
-              .find((pwr) => pwr.key === power.key)
-              .rituals.find((rtl) => rtl.key === ritual.key).value = newValue;
-            nextState.changed = true;
-          })
+          tmpPowers.val.map((pwr) =>
+            pwr.key === power.key
+              ? {
+                  ...pwr,
+                  rituals: pwr.rituals.map((rtl) =>
+                    rtl.key === ritual.key ? { ...rtl, value: newValue } : rtl
+                  ),
+                }
+              : pwr
+          )
         );
       },
     }));
@@ -209,70 +213,48 @@ export const HumanMagicProvider = ({
   theurgy: Array<PowerType>;
 }) => {
   // Psy state
-  const [tmpPsy, setTmpPsy] = useState({ val: psy, changed: false });
-  useEffect(() => {
-    if (tmpPsy.changed) return;
-    setTmpPsy({ val: psy, changed: false });
-  }, [JSON.stringify(psy)]);
+  const [tmpPsy, setTmpPsy] = useStateWithChangesAndTracker(psy, 'psy');
 
   // StaticMagic state
-  const [tmpStaticMagic, setTmpStaticMagic] = useState({
-    val: staticMagic,
-    changed: false,
-  });
-  useEffect(() => {
-    if (tmpStaticMagic.changed) return;
-    setTmpStaticMagic({ val: staticMagic, changed: false });
-  }, [JSON.stringify(staticMagic)]);
+  const [tmpStaticMagic, setTmpStaticMagic] = useStateWithChangesAndTracker(
+    staticMagic,
+    'static-magic'
+  );
 
   // Theurgy state
-  const [tmpTheurgy, setTmpTheurgy] = useState({
-    val: theurgy,
-    changed: false,
-  });
-  useEffect(() => {
-    if (tmpTheurgy.changed) return;
-    setTmpTheurgy({ val: theurgy, changed: false });
-  }, [JSON.stringify(theurgy)]);
+  const [tmpTheurgy, setTmpTheurgy] = useStateWithChangesAndTracker(
+    theurgy,
+    'theurgy'
+  );
 
   const addNewPsy = () => {
     const newPsy = createNewPower();
-    setTmpPsy({ val: [...tmpPsy.val, newPsy], changed: true });
+    setTmpPsy([...tmpPsy.val, newPsy]);
     return newPsy.key;
   };
 
   const removePsy = (key: string) => {
-    setTmpPsy({
-      val: tmpPsy.val.filter((pwr) => pwr.key !== key),
-      changed: true,
-    });
+    setTmpPsy(tmpPsy.val.filter((pwr) => pwr.key !== key));
   };
+
   const addNewStatic = () => {
     const newStatic = createNewPower();
-    setTmpStaticMagic({
-      val: [...tmpStaticMagic.val, newStatic],
-      changed: true,
-    });
+    setTmpStaticMagic([...tmpStaticMagic.val, newStatic]);
     return newStatic.key;
   };
 
   const removeStatic = (key: string) => {
-    setTmpStaticMagic({
-      val: tmpStaticMagic.val.filter((pwr) => pwr.key !== key),
-      changed: true,
-    });
+    setTmpStaticMagic(tmpStaticMagic.val.filter((pwr) => pwr.key !== key));
   };
+
   const addNewTheurgy = () => {
     const newTheurgy = createNewPower();
-    setTmpTheurgy({ val: [...tmpTheurgy.val, newTheurgy], changed: true });
+    setTmpTheurgy([...tmpTheurgy.val, newTheurgy]);
     return newTheurgy.key;
   };
 
   const removeTheurgy = (key: string) => {
-    setTmpTheurgy({
-      val: tmpTheurgy.val.filter((pwr) => pwr.key !== key),
-      changed: true,
-    });
+    setTmpTheurgy(tmpTheurgy.val.filter((pwr) => pwr.key !== key));
   };
 
   const contextTheurgy: Array<TempPowerType> = generatePowerContext(

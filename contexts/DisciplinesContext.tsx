@@ -3,6 +3,8 @@
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 import { v4 as uuid } from 'uuid';
 import { TempElemType } from '../types/TempElemType';
+import useChangeWatcher from '../hooks/useChangeWatcher';
+import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
 export type PathType = {
   key: string;
@@ -480,74 +482,62 @@ export const DisciplinesProvider = ({
   outClanDisciplines: Array<DisciplineType | ThaumaturgyType>;
   combinedDisciplines: Array<CombinedDisciplineType>;
 }) => {
-  const [tmpClanDisciplines, setTmpClanDisciplines] = useState({
-    val: clanDisciplines,
-    changed: false,
-  });
-  useEffect(() => {
-    if (tmpClanDisciplines.changed) return;
-    setTmpClanDisciplines({ val: clanDisciplines, changed: false });
-  }, [JSON.stringify(clanDisciplines)]);
-  const [tmpOutClanDisciplines, setTmpOutClanDisciplines] = useState({
-    val: outClanDisciplines,
-    changed: false,
-  });
-  useEffect(() => {
-    if (tmpOutClanDisciplines.changed) return;
-    setTmpOutClanDisciplines({ val: outClanDisciplines, changed: false });
-  }, [JSON.stringify(outClanDisciplines)]);
-  const [tmpCombinedDisciplines, setTmpCombinedDisciplines] = useState({
-    val: combinedDisciplines,
-    changed: false,
-  });
-  useEffect(() => {
-    if (tmpCombinedDisciplines.changed) return;
-    setTmpCombinedDisciplines({ val: combinedDisciplines, changed: false });
-  }, [JSON.stringify(combinedDisciplines)]);
+  const [
+    tmpClanDisciplines,
+    setTmpClanDisciplines,
+  ] = useStateWithChangesAndTracker(clanDisciplines, 'clanDisciplines');
+
+  const [
+    tmpOutClanDisciplines,
+    setTmpOutClanDisciplines,
+  ] = useStateWithChangesAndTracker(outClanDisciplines, 'outClanDisciplines');
+
+  const [
+    tmpCombinedDisciplines,
+    setTmpCombinedDisciplines,
+  ] = useStateWithChangesAndTracker(combinedDisciplines, 'combinedDisciplines');
+
   return (
     <DisciplinesContext.Provider
       value={{
         clanDisciplines: convertDisciplinesToElems(
           tmpClanDisciplines.val,
           clanDisciplines,
-          (newDisc) => setTmpClanDisciplines({ val: newDisc, changed: true })
+          setTmpClanDisciplines
         ),
         outClanDisciplines: convertDisciplinesToElems(
           tmpOutClanDisciplines.val,
           outClanDisciplines,
-          (newDisc) => setTmpOutClanDisciplines({ val: newDisc, changed: true })
+          setTmpOutClanDisciplines
         ),
         combinedDisciplines: convertCombinedDisciplineToElem(
           tmpCombinedDisciplines.val,
           combinedDisciplines,
-          (newDisc) =>
-            setTmpCombinedDisciplines({ val: newDisc, changed: true })
+          setTmpCombinedDisciplines
         ),
         addNewClanDiscipline: generateAddNewDiscipline(
           tmpClanDisciplines.val,
-          (newDisc) => setTmpClanDisciplines({ val: newDisc, changed: true })
+          setTmpClanDisciplines
         ),
         removeClanDiscipline: generateRemoveDiscipline(
           tmpClanDisciplines.val,
-          (newDisc) => setTmpClanDisciplines({ val: newDisc, changed: true })
+          setTmpClanDisciplines
         ),
         addNewOutClanDiscipline: generateAddNewDiscipline(
           tmpOutClanDisciplines.val,
-          (newDisc) => setTmpOutClanDisciplines({ val: newDisc, changed: true })
+          setTmpOutClanDisciplines
         ),
         removeOutClanDiscipline: generateRemoveDiscipline(
           tmpOutClanDisciplines.val,
-          (newDisc) => setTmpOutClanDisciplines({ val: newDisc, changed: true })
+          setTmpOutClanDisciplines
         ),
         addNewCombinedDiscipline: generateAddNewCombinedDiscipline(
           tmpCombinedDisciplines.val,
-          (newDisc) =>
-            setTmpCombinedDisciplines({ val: newDisc, changed: true })
+          setTmpCombinedDisciplines
         ),
         removeCombinedDiscipline: generateRemoveCombinedDiscipline(
           tmpCombinedDisciplines.val,
-          (newDisc) =>
-            setTmpCombinedDisciplines({ val: newDisc, changed: true })
+          setTmpCombinedDisciplines
         ),
       }}
     >

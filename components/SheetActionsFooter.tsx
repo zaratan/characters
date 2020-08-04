@@ -3,10 +3,12 @@ import PreferencesContext from '../contexts/PreferencesContext';
 import ModeContext from '../contexts/ModeContext';
 import ActionsFooter from './ActionsFooter';
 import SaveButton from './SaveButton';
+import ModificationsContext from '../contexts/ModificationsContext';
 
-const SheetActionsFooter = ({ newChar }: { newChar: boolean }) => {
+const SheetActionsFooter = () => {
   const { showPex, togglePex } = useContext(PreferencesContext);
   const { editMode, toggleMode } = useContext(ModeContext);
+  const { rollback, unsavedChanges } = useContext(ModificationsContext);
   return (
     <ActionsFooter
       actions={[
@@ -18,21 +20,25 @@ const SheetActionsFooter = ({ newChar }: { newChar: boolean }) => {
         },
       ]}
       loggedActions={[
-        newChar
-          ? null
-          : {
-              glyph: editMode ? '🎲' : '✎',
-              act: toggleMode,
-              name: editMode ? 'Jouer' : 'Modifier',
-            },
-        editMode
-          ? {
-              glyph: '💾',
-              component: SaveButton,
-              componentProps: { newChar },
-              name: 'Sauver',
-            }
-          : null,
+        {
+          glyph: editMode ? '🎲' : '✎',
+          act: toggleMode,
+          name: editMode ? 'Jouer' : 'Modifier',
+        },
+        ...(editMode && unsavedChanges
+          ? [
+              {
+                glyph: '💾',
+                component: SaveButton,
+                name: 'Sauver',
+              },
+              {
+                glyph: '←',
+                act: rollback,
+                name: 'Annuler',
+              },
+            ]
+          : []),
       ].filter((e) => e !== null)}
     />
   );

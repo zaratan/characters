@@ -1,5 +1,11 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, ReactNode, useState, useEffect } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useState,
+  useEffect,
+  useMemo,
+} from 'react';
 import { v4 as uuid } from 'uuid';
 import Pusher from 'pusher-js';
 
@@ -25,6 +31,7 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
   const [pusherClient, setPusherClient] = useState<Pusher | null>(null);
   const [pusherState, setPusherState] = useState('');
   const [needPusherFallback, setNeedPusherFallback] = useState(false);
+  const appId = useMemo(uuid, []);
   useEffect(
     // pusher need a window object and doesn't play well with SSR
     () => {
@@ -47,7 +54,7 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
     []
   );
   const context: ContextType = {
-    appId: uuid(),
+    appId,
     pusherClient,
     pusherState,
     needPusherFallback,
