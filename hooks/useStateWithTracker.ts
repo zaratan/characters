@@ -50,6 +50,7 @@ export const useStateWithChangesAndTracker: useStateWithChangesAndTrackerType = 
     changed: false,
   });
   useEffect(() => {
+    if (tmpValue.changed) return;
     setTmpValue({ val: defaultValue, changed: false });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(defaultValue)]);
