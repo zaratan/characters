@@ -62,7 +62,7 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, unsavedChanges]);
 
-  useKeyboardShortcut('ctrl + z', rollback);
+  useKeyboardShortcut('mod + z', rollback);
   useBeforeUnload(unsavedChanges, UnsavedChangeCloseText);
   return (
     <>
