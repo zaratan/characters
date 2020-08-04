@@ -11,6 +11,23 @@ export const PexSpan = styled.span`
   white-space: nowrap;
 `;
 
+const PexSpansContainer = styled.span`
+  :hover {
+    .hideHover {
+      display: none;
+    }
+    .showHover {
+      display: inherit;
+    }
+  }
+  .hideHover {
+    display: inherit;
+  }
+  .showHover {
+    display: none;
+  }
+`;
+
 export const RedSpan = styled.span`
   color: red;
 `;
@@ -58,6 +75,8 @@ const PexElem = ({
   alwaysShow,
   hideParentheses,
   withSpaces,
+  withPercent,
+  hover,
 }: {
   currentPex?: number;
   diffPex?: number;
@@ -67,6 +86,8 @@ const PexElem = ({
   alwaysShow?: boolean;
   hideParentheses?: boolean;
   withSpaces?: boolean;
+  withPercent?: boolean;
+  hover?: number;
 }) => {
   const { showPex } = useContext(PreferencesContext);
   let calcPex = { current: currentPex, diff: diffPex };
@@ -84,19 +105,37 @@ const PexElem = ({
   }
   return (showPex || alwaysShow) &&
     (calcPex.current !== undefined || calcPex.diff !== undefined) ? (
-    <PexSpan>
-      {hideParentheses ? '' : '('}
-      {calcPex.current}
-      {!(calcPex.diff === 0 || calcPex.diff === undefined) ? (
-        <RedSpan>
-          {withSpaces ? ' ' : ''}
-          {calcPex.diff < 0 ? '-' : '+'}
-          {withSpaces ? ' ' : ''}
-          {Math.abs(calcPex.diff)}
-        </RedSpan>
+    <PexSpansContainer>
+      <PexSpan
+        className={
+          hover !== undefined && hover !== calcPex.current ? 'hideHover' : ''
+        }
+      >
+        {hideParentheses ? '' : '('}
+        {calcPex.current}
+        {withPercent ? '%' : ''}
+        {!(calcPex.diff === 0 || calcPex.diff === undefined) ? (
+          <RedSpan>
+            {withSpaces ? ' ' : ''}
+            {calcPex.diff < 0 ? '-' : '+'}
+            {withSpaces ? ' ' : ''}
+            {Math.abs(calcPex.diff)}
+            {withPercent ? '%' : ''}
+          </RedSpan>
+        ) : null}
+        {hideParentheses ? '' : ')'}
+      </PexSpan>
+      {hover !== undefined && hover !== calcPex.current ? (
+        <PexSpan className="showHover">
+          <RedSpan>
+            {hideParentheses ? '' : '('}
+            {hover}
+            {withPercent ? '%' : ''}
+            {hideParentheses ? '' : ')'}
+          </RedSpan>
+        </PexSpan>
       ) : null}
-      {hideParentheses ? '' : ')'}
-    </PexSpan>
+    </PexSpansContainer>
   ) : null;
 };
 

@@ -5,7 +5,7 @@ import SectionTitle from '../SectionTitle';
 import { HorizontalSection } from '../../styles/Sections';
 import { Container } from '../../styles/Container';
 import ColumnTitle from '../ColumnTitle';
-import PexElem, { pexElemsType } from '../PexElem';
+import PexElem, { pexElemsType, computePexElems } from '../PexElem';
 import {
   calcPexAttribute,
   calcPexAbility,
@@ -32,6 +32,8 @@ import { maxDot } from '../../helpers/maxLevels';
 import GenerationContext from '../../contexts/GenerationContext';
 import FaithContext from '../../contexts/FaithContext';
 import HumanMagicContext from '../../contexts/HumanMagicContext';
+import PexPercentage from '../PexPercentages';
+import PreferencesContext from '../../contexts/PreferencesContext';
 
 const HandText = styled(HandLargeText)`
   display: flex;
@@ -51,6 +53,7 @@ const TextContainer = styled.div`
 
 const PexSection = () => {
   const { leftOver } = useContext(PexContext);
+  const { showPex } = useContext(PreferencesContext);
   const {
     strength,
     appearance,
@@ -91,8 +94,7 @@ const PexSection = () => {
     useHumanMagic,
   } = useContext(SectionsContext);
   const maxDots = useGeneration ? maxDot(generation.value) : 5;
-  const pexElems: pexElemsType = [
-    // Attributes
+  const attributesPexElems: pexElemsType = [
     {
       elemArray: [
         strength,
@@ -107,7 +109,8 @@ const PexSection = () => {
       ],
       pexCalc: calcPexAttribute(maxDots),
     },
-    // Abilities
+  ];
+  const abilitiesPexElems: pexElemsType = [
     {
       elemArray: [
         ...talents,
@@ -140,6 +143,8 @@ const PexSection = () => {
         .filter((e) => e !== undefined),
       pexCalc: calcPexSpecialty,
     },
+  ];
+  const miscPexElems: pexElemsType = [
     // Mind
     {
       elemArray: [willpower],
@@ -157,6 +162,21 @@ const PexSection = () => {
           },
         ]
       : []),
+    // Misc.
+    {
+      elemArray: advantages,
+      pexCalc: (value) => calcPexAdvFlaw(value, false),
+    },
+    {
+      elemArray: flaws,
+      pexCalc: (value) => calcPexAdvFlaw(value, true),
+    },
+    {
+      elemArray: [leftOver],
+      pexCalc: (value) => value,
+    },
+  ];
+  const powersPexElems: pexElemsType = [
     // Disciplines
     ...(useDisciplines
       ? [
@@ -187,19 +207,6 @@ const PexSection = () => {
             })),
         ]
       : []),
-    // Misc.
-    {
-      elemArray: advantages,
-      pexCalc: (value) => calcPexAdvFlaw(value, false),
-    },
-    {
-      elemArray: flaws,
-      pexCalc: (value) => calcPexAdvFlaw(value, true),
-    },
-    {
-      elemArray: [leftOver],
-      pexCalc: (value) => value,
-    },
     // Faith
     ...(useTrueFaith
       ? [
@@ -225,6 +232,13 @@ const PexSection = () => {
         ]
       : []),
   ];
+  const pexElems: pexElemsType = [
+    ...attributesPexElems,
+    ...abilitiesPexElems,
+    ...miscPexElems,
+    ...powersPexElems,
+  ];
+  const totalPex = computePexElems(pexElems);
   return (
     <>
       <SectionTitle title="Expérience" />
@@ -247,13 +261,26 @@ const PexSection = () => {
           <ColumnTitle title="Total" />
           <HandText>
             <PexElem
-              pexElems={pexElems}
+              currentPex={totalPex.current}
+              diffPex={totalPex.diff}
               alwaysShow
               hideParentheses
               withSpaces
             />
           </HandText>
         </Container>
+        {showPex ? (
+          <Container>
+            <ColumnTitle title="Statistiques" />
+            <PexPercentage
+              pexElemsAttributes={attributesPexElems}
+              pexElemsAbilities={abilitiesPexElems}
+              pexElemsMisc={miscPexElems}
+              pexElemsPowers={powersPexElems}
+              totalPex={totalPex}
+            />
+          </Container>
+        ) : null}
       </HorizontalSection>
     </>
   );
