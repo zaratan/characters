@@ -1,9 +1,8 @@
-import React, { useContext, useEffect, useState, useCallback } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
 import useBeforeUnload from 'react-use/lib/useBeforeUnload';
 import { useRouter } from 'next/router';
-import keyboardjs, { Keyboard } from 'keyboardjs';
 import { AttributesProvider } from '../contexts/AttributesContext';
 import { AbilitiesProvider } from '../contexts/AbilitiesContext';
 import { InfosProvider, InfosType } from '../contexts/InfosContext';
