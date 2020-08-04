@@ -35,12 +35,6 @@ const ModificationsContext = createContext(defaultContext);
 const anyChanges = (changesArray: Array<ChangeType>) => {
   const ignoreList = [];
   return some(changesArray, (change) => {
-    console.log({
-      change,
-      ignoreList,
-      bv: JSON.stringify(change.baseValue),
-      cv: JSON.stringify(change.value),
-    });
     if (ignoreList.find((e) => e === change.key)) return false;
     if (change.value.changed) {
       if (JSON.stringify(change.baseValue) !== JSON.stringify(change.value.val))
