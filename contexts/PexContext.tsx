@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
+import useStateWithChanges from '../hooks/useStateWithTracker';
 
 type ContextType = { leftOver: TempElemType<number> };
 
@@ -21,15 +22,15 @@ export const PexProvider = ({
   leftOverPex: number;
   children: ReactNode;
 }) => {
-  const [tmpLeftOverPex, setTmpLeftOverPex] = useState(leftOverPex);
-  useEffect(() => {
-    setTmpLeftOverPex(leftOverPex);
-  }, [leftOverPex]);
+  const [tmpLeftOverPex, setLeftOverPex] = useStateWithChanges(
+    leftOverPex,
+    'left-over-pex'
+  );
   const context: ContextType = {
     leftOver: {
       value: tmpLeftOverPex,
       baseValue: leftOverPex,
-      set: setTmpLeftOverPex,
+      set: setLeftOverPex,
     },
   };
   return <PexContext.Provider value={context}>{children}</PexContext.Provider>;

@@ -1472,6 +1472,11 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
+"@types/keyboardjs@^2.5.0":
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/@types/keyboardjs/-/keyboardjs-2.5.0.tgz#8ab3ac77a1e413e64b80c51b8d6c20e6c79da3f5"
+  integrity sha512-tGU6Lz04lDNH+N3AZYIWVeBza2ZSaLlZuSkzi38zSFSuh6DgVqBdqgkX+OS+jg1vwlw5XzS5MASY44fr9C12Yg==
+
 "@types/lodash@^4.14.157":
   version "4.14.158"
   resolved "https://registry.yarnpkg.com/@types/lodash/-/lodash-4.14.158.tgz#b38ea8b6fe799acd076d7a8d7ab71c26ef77f785"
@@ -5933,6 +5938,11 @@ jsx-ast-utils@^2.2.3, jsx-ast-utils@^2.4.1:
   dependencies:
     array-includes "^3.1.1"
     object.assign "^4.1.0"
+
+keyboardjs@^2.6.3:
+  version "2.6.3"
+  resolved "https://registry.yarnpkg.com/keyboardjs/-/keyboardjs-2.6.3.tgz#2bf8f68cd986591111eb30673d1d833f85b237c4"
+  integrity sha512-xV0dZq6fER0GM0uPrfIqXlAArhNQgGH44zT11g58gGDxtGdWhyhYC9bFajqYaGd7SstiU3GmWaxMVpr6Fa1UOA==
 
 keyv@^3.0.0:
   version "3.1.0"

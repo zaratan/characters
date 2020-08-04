@@ -24,8 +24,10 @@ import FaithContext from '../contexts/FaithContext';
 import HumanMagicContext, {
   HumanMagicType,
 } from '../contexts/HumanMagicContext';
+import ModificationsContext from '../contexts/ModificationsContext';
 
 const SaveButton = ({ children }: { children: ReactNode }) => {
+  const { resetSave } = useContext(ModificationsContext);
   const { id } = useContext(IdContext);
   const { appId } = useContext(SystemContext);
   const {
@@ -278,12 +280,12 @@ const SaveButton = ({ children }: { children: ReactNode }) => {
       trueFaith: trueFaith.value,
       humanMagic,
     };
-    console.log({ sections, data });
     const url = `/api/vampires/${id}/update`;
     await fetcher(url, {
       method: 'POST',
       body: JSON.stringify({ ...data, appId }),
     });
+    resetSave();
     mutate(`/api/vampires/${id}`, data);
   };
   const handleClick = generateHandleClick(action);

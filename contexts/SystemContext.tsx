@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, ReactNode, useState, useEffect } from 'react';
+import React, {
+  createContext,
+  ReactNode,
+  useState,
+  useEffect,
+  useMemo,
+  useRef,
+} from 'react';
 import { v4 as uuid } from 'uuid';
 import Pusher from 'pusher-js';
 
@@ -22,9 +29,10 @@ const defaultContext: ContextType = {
 const SystemContext = createContext(defaultContext);
 export const SystemProvider = ({ children }: { children: ReactNode }) => {
   // Keeping the same websocket over page change
-  const [pusherClient, setPusherClient] = useState<Pusher | null>(null);
+  const pusherClient = useRef<Pusher | null>(null);
   const [pusherState, setPusherState] = useState('');
   const [needPusherFallback, setNeedPusherFallback] = useState(false);
+  const appId = useMemo(uuid, []);
   useEffect(
     // pusher need a window object and doesn't play well with SSR
     () => {
@@ -41,17 +49,21 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
             );
           }
         );
-        setPusherClient(client);
+        pusherClient.current = client;
       }
     },
     []
   );
-  const context: ContextType = {
-    appId: uuid(),
-    pusherClient,
-    pusherState,
-    needPusherFallback,
-  };
+  const context: ContextType = useMemo(
+    () => ({
+      appId,
+      pusherClient: pusherClient.current,
+      pusherState,
+      needPusherFallback,
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [pusherState]
+  );
   return (
     <SystemContext.Provider value={context}>{children}</SystemContext.Provider>
   );

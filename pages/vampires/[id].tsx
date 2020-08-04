@@ -117,12 +117,7 @@ const Home = ({
   }
   return (
     <>
-      <PusherSheetListener
-        id={String(id)}
-        callback={() => {
-          mutate();
-        }}
-      />
+      <PusherSheetListener id={String(id)} callback={mutate} />
       <Sheet
         id={String(id)}
         generation={generation}

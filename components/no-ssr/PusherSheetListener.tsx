@@ -25,7 +25,8 @@ const PusherSheetListener = ({
       channel.unbind(null, callback);
       client.unsubscribe(sheetChannel(id));
     };
-  }, [id, appId, callback, pusherClient]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, appId, pusherClient]);
   return <></>;
 };
 

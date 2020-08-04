@@ -40,8 +40,6 @@ export const ModeProvider = ({
   }, [connected]);
   const toggleMode = connected
     ? () => {
-        console.log({ playMode, editMode });
-
         if (playMode && !editMode) {
           setEditMode(true);
           setPlayMode(false);

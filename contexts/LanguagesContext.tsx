@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, ReactNode } from 'react';
 import { v4 as uuid } from 'uuid';
 import { TempElemType } from '../types/TempElemType';
+import useStateWithTracker from '../hooks/useStateWithTracker';
 
 export type RawLanguage = { value: string; key: string };
 interface Language extends TempElemType<string> {
@@ -28,10 +29,10 @@ export const LanguagesProvider = ({
   languages: Array<RawLanguage>;
   children: ReactNode;
 }) => {
-  const [tmpLanguages, setTmpLanguages] = useState(languages);
-  useEffect(() => {
-    setTmpLanguages(languages);
-  }, [JSON.stringify(languages)]);
+  const [tmpLanguages, setTmpLanguages] = useStateWithTracker(
+    languages,
+    'languages'
+  );
   const context: {
     languages: Array<Language>;
     addNewLanguage: () => void;
@@ -40,18 +41,20 @@ export const LanguagesProvider = ({
     languages: tmpLanguages.map((language) => ({
       ...language,
       baseValue: languages.find((lang) => lang.key === language.key)?.value,
-      set: (newValue: string) =>
-        setTmpLanguages(
-          tmpLanguages.map((lang) =>
-            lang.key === language.key ? { ...lang, value: newValue } : lang
-          )
-        ),
+      set: (newTitle: string) => {
+        const newValue = tmpLanguages.map((lang) =>
+          lang.key === language.key ? { ...lang, value: newTitle } : lang
+        );
+        setTmpLanguages(newValue);
+      },
     })),
     addNewLanguage: () => {
-      setTmpLanguages([...tmpLanguages, { value: '', key: uuid() }]);
+      const newValue = [...tmpLanguages, { value: '', key: uuid() }];
+      setTmpLanguages(newValue);
     },
     removeLanguage: (key: string) => {
-      setTmpLanguages(tmpLanguages.filter((lang) => lang.key !== key));
+      const newValue = tmpLanguages.filter((lang) => lang.key !== key);
+      setTmpLanguages(newValue);
     },
   };
   return (

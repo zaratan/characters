@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
+import useStateWithTracker from '../hooks/useStateWithTracker';
 
 type ContextType = { trueFaith: TempElemType<number> };
 
@@ -15,10 +16,10 @@ export const FaithProvider = ({
   children: ReactNode;
   trueFaith: number;
 }) => {
-  const [localTrueFaith, setTrueFaith] = useState(trueFaith);
-  useEffect(() => {
-    setTrueFaith(trueFaith);
-  }, [trueFaith]);
+  const [localTrueFaith, setTrueFaith] = useStateWithTracker(
+    trueFaith,
+    'trueFaith'
+  );
   const context: ContextType = {
     trueFaith: {
       baseValue: trueFaith,

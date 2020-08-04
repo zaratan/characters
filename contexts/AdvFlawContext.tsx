@@ -1,8 +1,9 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, ReactNode } from 'react';
 import { v4 as uuid } from 'uuid';
 import { TempElemType } from '../types/TempElemType';
+import useStateWithTracker from '../hooks/useStateWithTracker';
 
 export type AdvFlawType = {
   key: string;
@@ -41,14 +42,12 @@ export const AdvFlawProvider = ({
   advantages: Array<AdvFlawType>;
   flaws: Array<AdvFlawType>;
 }) => {
-  const [tmpAdvantages, setTmpAdvantages] = useState(advantages);
-  useEffect(() => {
-    setTmpAdvantages(advantages);
-  }, [JSON.stringify(advantages)]);
-  const [tmpFlaws, setTmpFlaws] = useState(flaws);
-  useEffect(() => {
-    setTmpFlaws(flaws);
-  }, [JSON.stringify(flaws)]);
+  const [tmpAdvantages, setTmpAdvantages] = useStateWithTracker(
+    advantages,
+    'advantages'
+  );
+  const [tmpFlaws, setTmpFlaws] = useStateWithTracker(flaws, 'flaws');
+
   const context: {
     advantages: Array<AdvantagesFlawsType>;
     flaws: Array<AdvantagesFlawsType>;

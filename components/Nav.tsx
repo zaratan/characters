@@ -181,7 +181,13 @@ export type ActionType = {
   component?: ReactNode;
 };
 
-const Nav = () => {
+const Nav = ({
+  confirmNavigation,
+  confirmText,
+}: {
+  confirmNavigation?: boolean;
+  confirmText?: string;
+}) => {
   const { me, connected } = useContext(MeContext);
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -195,7 +201,21 @@ const Nav = () => {
           <LeftContainer>
             <PageTitle>
               <Link href="/" passHref>
-                <Title as="a">Personnages</Title>
+                <Title
+                  as="a"
+                  // This is the only way to intercept NextJs Link navigation
+                  onClick={(e) => {
+                    if (!confirmNavigation) return;
+
+                    if (
+                      typeof window !== 'undefined' &&
+                      !window.confirm(confirmText)
+                    )
+                      e.preventDefault();
+                  }}
+                >
+                  Personnages
+                </Title>
               </Link>
             </PageTitle>
           </LeftContainer>

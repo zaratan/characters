@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
+import useBeforeUnload from 'react-use/lib/useBeforeUnload';
+import { useRouter } from 'next/router';
 import { AttributesProvider } from '../contexts/AttributesContext';
 import { AbilitiesProvider } from '../contexts/AbilitiesContext';
-import { InfosProvider } from '../contexts/InfosContext';
+import { InfosProvider, InfosType } from '../contexts/InfosContext';
 import { MindProvider } from '../contexts/MindContext';
 import { DisciplinesProvider } from '../contexts/DisciplinesContext';
 import Infos from './sections/Infos';
@@ -31,13 +33,77 @@ import { FaithProvider } from '../contexts/FaithContext';
 import Faith from './sections/Faith';
 import { HumanMagicProvider } from '../contexts/HumanMagicContext';
 import HumanMagic from './sections/HumanMagic';
+import ModificationsContext, {
+  ModificationsProvider,
+} from '../contexts/ModificationsContext';
+import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 
 const PageTitle = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-const Sheet = ({
+const UnsavedChangeCloseText =
+  'Il y a des changements sur la page, êtes vous sur de vouloir la quitter sans sauvegarder ?';
+
+const Sheet = ({ infos }: { infos: InfosType }) => {
+  const router = useRouter();
+  const { unsavedChanges, rollback } = useContext(ModificationsContext);
+
+  useEffect(() => {
+    router.beforePopState(() => {
+      debugger;
+      if (unsavedChanges) {
+        return window.confirm(UnsavedChangeCloseText);
+      }
+
+      return true;
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [router, unsavedChanges]);
+
+  useKeyboardShortcut('ctrl + z', rollback);
+  useBeforeUnload(unsavedChanges, UnsavedChangeCloseText);
+  return (
+    <>
+      <Nav
+        confirmNavigation={unsavedChanges}
+        confirmText={UnsavedChangeCloseText}
+      />
+      <SheetContainer>
+        <Head>
+          <title>
+            {infos.name ? `${infos.name} - ` : null}
+            Feuille de Personnage
+          </title>
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+
+        <PageTitle>
+          {infos.era === 0 ? (
+            <img src="/title.png" alt="Vampire Dark Age" />
+          ) : (
+            <Title className="victorian-queen">Vampire Ère Victorienne</Title>
+          )}
+        </PageTitle>
+
+        <Infos />
+        <Attributes />
+        <Abilities />
+        <Mind />
+        <Faith />
+        <Disciplines />
+        <HumanMagic />
+        <Misc />
+        <PexSection />
+      </SheetContainer>
+      <SheetActionsFooter />
+      <Footer />
+    </>
+  );
+};
+
+const SheetWrapper = ({
   id,
   generation,
   infos,
@@ -52,7 +118,6 @@ const Sheet = ({
   clanDisciplines,
   outClanDisciplines,
   combinedDisciplines,
-  newChar = false,
   advantages = [],
   flaws = [],
   languages = [],
@@ -80,88 +145,56 @@ const Sheet = ({
   startEdit?: boolean;
   startPlay?: boolean;
 }) => (
-  <PreferencesProvider>
-    <SectionsProvider sections={sections}>
-      <ModeProvider startEdit={startEdit} startPlay={startPlay}>
-        <IdProvider id={id}>
-          <GenerationProvider generation={generation}>
-            <InfosProvider infos={infos}>
-              <AttributesProvider attributes={attributes}>
-                <MindProvider mind={mind}>
-                  <FaithProvider trueFaith={trueFaith}>
-                    <AbilitiesProvider
-                      talents={talents}
-                      customTalents={customTalents}
-                      skills={skills}
-                      customSkills={customSkills}
-                      knowledges={knowledges}
-                      customKnowledges={customKnowledges}
-                    >
-                      <DisciplinesProvider
-                        clanDisciplines={clanDisciplines}
-                        outClanDisciplines={outClanDisciplines}
-                        combinedDisciplines={combinedDisciplines}
+  <ModificationsProvider>
+    <PreferencesProvider>
+      <SectionsProvider sections={sections}>
+        <ModeProvider startEdit={startEdit} startPlay={startPlay}>
+          <IdProvider id={id}>
+            <GenerationProvider generation={generation}>
+              <InfosProvider infos={infos}>
+                <AttributesProvider attributes={attributes}>
+                  <MindProvider mind={mind}>
+                    <FaithProvider trueFaith={trueFaith}>
+                      <AbilitiesProvider
+                        talents={talents}
+                        customTalents={customTalents}
+                        skills={skills}
+                        customSkills={customSkills}
+                        knowledges={knowledges}
+                        customKnowledges={customKnowledges}
                       >
-                        <HumanMagicProvider
-                          psy={psy}
-                          staticMagic={staticMagic}
-                          theurgy={theurgy}
+                        <DisciplinesProvider
+                          clanDisciplines={clanDisciplines}
+                          outClanDisciplines={outClanDisciplines}
+                          combinedDisciplines={combinedDisciplines}
                         >
-                          <AdvFlawProvider
-                            advantages={advantages}
-                            flaws={flaws}
+                          <HumanMagicProvider
+                            psy={psy}
+                            staticMagic={staticMagic}
+                            theurgy={theurgy}
                           >
-                            <LanguagesProvider languages={languages}>
-                              <PexProvider leftOverPex={leftOverPex}>
-                                <Nav />
-                                <SheetContainer>
-                                  <Head>
-                                    <title>
-                                      {infos.name ? `${infos.name} - ` : null}
-                                      Feuille de Personnage
-                                    </title>
-                                    <link rel="icon" href="/favicon.ico" />
-                                  </Head>
-
-                                  <PageTitle>
-                                    {infos.era === 0 ? (
-                                      <img
-                                        src="/title.png"
-                                        alt="Vampire Dark Age"
-                                      />
-                                    ) : (
-                                      <Title className="victorian-queen">
-                                        Vampire Ère Victorienne
-                                      </Title>
-                                    )}
-                                  </PageTitle>
-
-                                  <Infos />
-                                  <Attributes />
-                                  <Abilities />
-                                  <Mind />
-                                  <Faith />
-                                  <Disciplines />
-                                  <HumanMagic />
-                                  <Misc />
-                                  <PexSection />
-                                </SheetContainer>
-                                <SheetActionsFooter newChar={newChar} />
-                                <Footer />
-                              </PexProvider>
-                            </LanguagesProvider>
-                          </AdvFlawProvider>
-                        </HumanMagicProvider>
-                      </DisciplinesProvider>
-                    </AbilitiesProvider>
-                  </FaithProvider>
-                </MindProvider>
-              </AttributesProvider>
-            </InfosProvider>
-          </GenerationProvider>
-        </IdProvider>
-      </ModeProvider>
-    </SectionsProvider>
-  </PreferencesProvider>
+                            <AdvFlawProvider
+                              advantages={advantages}
+                              flaws={flaws}
+                            >
+                              <LanguagesProvider languages={languages}>
+                                <PexProvider leftOverPex={leftOverPex}>
+                                  <Sheet infos={infos} />
+                                </PexProvider>
+                              </LanguagesProvider>
+                            </AdvFlawProvider>
+                          </HumanMagicProvider>
+                        </DisciplinesProvider>
+                      </AbilitiesProvider>
+                    </FaithProvider>
+                  </MindProvider>
+                </AttributesProvider>
+              </InfosProvider>
+            </GenerationProvider>
+          </IdProvider>
+        </ModeProvider>
+      </SectionsProvider>
+    </PreferencesProvider>
+  </ModificationsProvider>
 );
-export default Sheet;
+export default SheetWrapper;
