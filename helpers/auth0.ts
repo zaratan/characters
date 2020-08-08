@@ -3,9 +3,8 @@ import { initAuth0 } from '@auth0/nextjs-auth0';
 import { ServerResponse } from 'http';
 import { NextApiRequest } from 'next';
 
-const auth0 = () => {
-  console.log(process.env.BASE_URL, process.env.VERCEL_URL);
-  return initAuth0({
+const auth0 = () =>
+  initAuth0({
     domain: process.env.AUTH0_DOMAIN || '',
     clientId: process.env.AUTH0_CLIENT_ID || '',
     clientSecret: process.env.AUTH0_CLIENT_SECRET || '',
@@ -31,7 +30,6 @@ const auth0 = () => {
     },
     oidcClient: {},
   });
-};
 export const forceLogin = async ({
   res,
   req,
