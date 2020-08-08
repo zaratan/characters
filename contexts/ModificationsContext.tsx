@@ -62,10 +62,6 @@ export const ModificationsProvider = ({
       )
     )
       return;
-    console.log(
-      change,
-      changes.current.find((chg) => chg.key === change.key)?.value
-    );
     changes.current = [change, ...changes.current];
     setUnsavedChanges(anyChanges([change, ...changes.current]));
   };

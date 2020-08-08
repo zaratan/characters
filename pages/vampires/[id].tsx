@@ -35,7 +35,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       props: {
         notFound: true,
       },
-      unstable_revalidate: 1,
+      revalidate: 1,
     };
   }
   const initialData: VampireType & { id: string } = fetchedData.data;
@@ -45,7 +45,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       initialData,
       notFound: false,
     },
-    unstable_revalidate: 1,
+    revalidate: 1,
   };
 };
 
