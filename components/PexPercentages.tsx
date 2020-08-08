@@ -1,11 +1,6 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import PexElem, {
-  RedSpan,
-  PexSpan,
-  pexElemsType,
-  computePexElems,
-} from './PexElem';
+import PexElem, { PexSpan, pexElemsType, computePexElems } from './PexElem';
 import PreferencesContext from '../contexts/PreferencesContext';
 import { HandLargeText } from '../styles/Texts';
 
