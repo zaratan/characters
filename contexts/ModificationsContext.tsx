@@ -55,6 +55,17 @@ export const ModificationsProvider = ({
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const changes = useRef<ChangeType[]>([]);
   const addChange = (change: ChangeType) => {
+    if (
+      JSON.stringify(change.value) ===
+      JSON.stringify(
+        changes.current.find((chg) => chg.key === change.key)?.value || -1
+      )
+    )
+      return;
+    console.log(
+      change,
+      changes.current.find((chg) => chg.key === change.key)?.value
+    );
     changes.current = [change, ...changes.current];
     setUnsavedChanges(anyChanges([change, ...changes.current]));
   };
