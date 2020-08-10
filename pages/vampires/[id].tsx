@@ -69,7 +69,7 @@ const Home = ({
   });
   useEffect(() => {
     if (!router.isFallback && notFound) {
-      router.push('/vampires/new');
+      router.push('/new');
     }
   });
   if (router.isFallback || notFound) {

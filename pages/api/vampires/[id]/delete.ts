@@ -1,6 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
-import { updateOnSheets } from '../../../../helpers/pusherServer';
 import auth0 from '../../../../helpers/auth0';
 
 // your secret hash
@@ -17,13 +16,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   }
   const {
     query: { id },
-    body,
   } = req;
 
   try {
-    const data = { ...JSON.parse(body) };
-    const { appId } = data;
-
     const vampire: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       data: Array<{ data: any; ref: any }>;
@@ -42,7 +37,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       )
     );
     // ok
-    updateOnSheets(String(appId));
     const vId = vampire.data[0].ref;
 
     await client.query(q.Delete(vId));
