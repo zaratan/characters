@@ -69,7 +69,7 @@ const TextInput = styled.input`
   padding: 0.5rem;
 `;
 
-const TextFallback = styled.strong`
+export const TextFallback = styled.strong`
   height: 100%;
   flex-grow: 1;
   display: flex;
@@ -93,23 +93,24 @@ const NewCharPage = () => {
   const router = useRouter();
   const id = uuid();
 
+  console.log({ id });
   const { connected } = useContext(MeContext);
   const { appId } = useContext(SystemContext);
+  console.log({ connected, appId });
 
   if (!connected) {
     return (
-      <>
-        <Container>
-          <Nav />
-          <TextFallback>
-            Connectez vous pour créer un nouveau personnage.
-          </TextFallback>
-          <Footer />
-        </Container>
-      </>
+      <Container>
+        <Nav />
+        <TextFallback>
+          Connectez vous pour créer un nouveau personnage.
+        </TextFallback>
+        <Footer />
+      </Container>
     );
   }
 
+  console.log('You are connected');
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 

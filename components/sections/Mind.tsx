@@ -55,7 +55,7 @@ const Mind = () => {
       mutate(`/api/vampires/${id}`);
     },
     2000,
-    [tempWillpower]
+    [tempWillpower.value]
   );
   useDebounce(
     async () => {
@@ -67,7 +67,7 @@ const Mind = () => {
       mutate(`/api/vampires/${id}`);
     },
     2000,
-    [bloodSpent]
+    [bloodSpent.value]
   );
   return (
     <>

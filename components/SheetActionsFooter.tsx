@@ -4,11 +4,13 @@ import ModeContext from '../contexts/ModeContext';
 import ActionsFooter from './ActionsFooter';
 import SaveButton from './SaveButton';
 import ModificationsContext from '../contexts/ModificationsContext';
+import IdContext from '../contexts/IdContext';
 
 const SheetActionsFooter = () => {
   const { showPex, togglePex } = useContext(PreferencesContext);
   const { editMode, toggleMode } = useContext(ModeContext);
   const { rollback, unsavedChanges } = useContext(ModificationsContext);
+  const { id } = useContext(IdContext);
   return (
     <ActionsFooter
       actions={[
@@ -24,6 +26,11 @@ const SheetActionsFooter = () => {
           glyph: editMode ? '🎲' : '✎',
           act: toggleMode,
           name: editMode ? 'Jouer' : 'Modifier',
+        },
+        {
+          glyph: '⚙',
+          link: `/vampires/${id}/config`,
+          name: 'Configuration',
         },
         ...(editMode && unsavedChanges
           ? [

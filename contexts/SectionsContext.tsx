@@ -20,7 +20,7 @@ type ContextType = {
   useVampireInfos: boolean;
   useTrueFaith: boolean;
   useHumanMagic: boolean;
-  toggleSection: (sectionName: string) => void;
+  toggleSection: (sectionName: string) => () => void;
 };
 
 const defaultContext: ContextType = {
@@ -31,7 +31,7 @@ const defaultContext: ContextType = {
   useVampireInfos: true,
   useTrueFaith: false,
   useHumanMagic: false,
-  toggleSection: () => {},
+  toggleSection: () => () => {},
 };
 const SectionsContext = createContext(defaultContext);
 export const SectionsProvider = ({
@@ -51,7 +51,7 @@ export const SectionsProvider = ({
 }) => {
   const [sectionsState, setSectionsState] = useState(sections);
 
-  const toggleSection = (sectionName: string) => {
+  const toggleSection = (sectionName: string) => () => {
     setSectionsState(
       produce(sectionsState, (nextState) => {
         nextState[sectionName] = !nextState[sectionName];
