@@ -161,7 +161,7 @@ const Config = ({ id, name }: { id: string; name: string }) => {
         }),
       });
     },
-    2000,
+    300,
     [
       useBlood,
       useDisciplines,
