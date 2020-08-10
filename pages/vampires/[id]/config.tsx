@@ -39,14 +39,19 @@ const MainContainer = styled.main`
   align-items: center;
 `;
 
-const OptionList = styled.ul``;
+const OptionList = styled.ul`
+  width: 80%;
+  max-width: 30rem;
+`;
 const ButtonList = styled.ul`
   display: grid;
   grid-gap: 1rem;
   grid-template-columns: repeat(3, 1fr);
   grid-auto-rows: minmax(4rem, 1fr);
 `;
-const DangerousSection = styled.section``;
+const DangerousSection = styled.section`
+  width: 80%;
+`;
 const ButtonLi = styled.li`
   position: relative;
 `;
@@ -56,19 +61,10 @@ const RedButton = styled.button`
   border-radius: 2px;
   box-shadow: -1px -1px grey;
   outline: none;
-  position: absolute;
-  top: 0;
-  left: 0;
 
   &:hover,
   &:focus {
     background-color: #c40233;
-  }
-
-  &:active {
-    box-shadow: none;
-    top: -1px;
-    left: -1px;
   }
 `;
 
@@ -108,6 +104,12 @@ const YesNoGlyph = ({
   </>
 );
 
+const StyledLi = styled.li`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+`;
+
 const SectionLi = ({
   displayName,
   name,
@@ -119,10 +121,12 @@ const SectionLi = ({
   value: boolean;
   onClick: (name: string) => () => void;
 }) => (
-  <li>
-    {displayName} : {value ? 'Oui' : 'Non'}{' '}
+  <StyledLi>
+    <span>
+      {displayName} : {value ? 'Oui' : 'Non'}{' '}
+    </span>
     <YesNoGlyph name={name} value={value} onClick={onClick(name)} />
-  </li>
+  </StyledLi>
 );
 
 const Config = ({ id, name }: { id: string; name: string }) => {
@@ -256,6 +260,7 @@ const Config = ({ id, name }: { id: string; name: string }) => {
             </RedButton>
           </ButtonLi>
         </ButtonList>
+        <EmptyLine />
       </DangerousSection>
       <ActionsFooter
         actions={[{ glyph: '←', link: `/vampires/${id}`, name: 'Retour' }]}
@@ -263,6 +268,8 @@ const Config = ({ id, name }: { id: string; name: string }) => {
     </>
   );
 };
+
+const ClearFix = styled.div``;
 
 export async function getStaticPaths() {
   const vampires = await fetchVampireFromDB();
