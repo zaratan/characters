@@ -1,5 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
+import faunadb from 'faunadb';
 import auth0 from '../../helpers/auth0';
+
+// your secret hash
+const secret = process.env.FAUNADB_SECRET_KEY;
+const q = faunadb.query;
+const client = new faunadb.Client({ secret });
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
