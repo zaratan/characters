@@ -42,6 +42,7 @@ const Footer = ({ withoutEmptyLines }: { withoutEmptyLines?: boolean }) => (
         Made with <Heart>♥</Heart> by
       </span>
       <FooterLink href="https://twitter.com/zaratan"> @zaratan</FooterLink>.
+      <FooterLink href="https://ko-fi.com/zaratan">Buy me a tea</FooterLink>.
     </FooterText>
   </FooterStyle>
 );
