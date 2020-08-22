@@ -2,14 +2,15 @@ import React, { useContext } from 'react';
 import PreferencesContext from '../contexts/PreferencesContext';
 import ModeContext from '../contexts/ModeContext';
 import ActionsFooter from './ActionsFooter';
-import SaveButton from './SaveButton';
 import ModificationsContext from '../contexts/ModificationsContext';
 import IdContext from '../contexts/IdContext';
+import { useSave } from '../hooks/useSave';
 
 const SheetActionsFooter = () => {
   const { showPex, togglePex } = useContext(PreferencesContext);
   const { editMode, toggleMode } = useContext(ModeContext);
   const { rollback, unsavedChanges } = useContext(ModificationsContext);
+  const saveAction = useSave();
   const { id } = useContext(IdContext);
   return (
     <ActionsFooter
@@ -36,7 +37,7 @@ const SheetActionsFooter = () => {
           ? [
               {
                 glyph: '💾',
-                component: SaveButton,
+                act: saveAction,
                 name: 'Sauver',
               },
               {

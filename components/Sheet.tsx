@@ -37,6 +37,7 @@ import ModificationsContext, {
   ModificationsProvider,
 } from '../contexts/ModificationsContext';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
+import { useSave } from '../hooks/useSave';
 
 const PageTitle = styled.div`
   display: flex;
@@ -62,7 +63,15 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router, unsavedChanges]);
 
-  useKeyboardShortcut('mod + z', rollback);
+  const saveAction = useSave();
+  useKeyboardShortcut('mod + z', (e) => {
+    e.preventDefault();
+    rollback();
+  });
+  useKeyboardShortcut('mod + s', (e) => {
+    e.preventDefault();
+    saveAction();
+  });
   useBeforeUnload(unsavedChanges, UnsavedChangeCloseText);
   return (
     <>

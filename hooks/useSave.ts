@@ -1,7 +1,8 @@
-import React, { useContext, ReactNode } from 'react';
+import { useContext } from 'react';
 import { mutate } from 'swr';
-import styled from 'styled-components';
+import ModificationsContext from '../contexts/ModificationsContext';
 import IdContext from '../contexts/IdContext';
+import SystemContext from '../contexts/SystemContext';
 import InfosContext, { InfosType } from '../contexts/InfosContext';
 import AttributesContext, {
   AttributesType,
@@ -10,23 +11,17 @@ import AbilitiesContext from '../contexts/AbilitiesContext';
 import GenerationContext from '../contexts/GenerationContext';
 import MindContext from '../contexts/MindContext';
 import DisciplinesContext from '../contexts/DisciplinesContext';
-import { fetcher } from '../helpers/fetcher';
 import AdvFlawContext from '../contexts/AdvFlawContext';
 import LanguagesContext from '../contexts/LanguagesContext';
 import PexContext from '../contexts/PexContext';
-import {
-  generateHandleClick,
-  generateHandleKeypress,
-} from '../helpers/handlers';
-import SystemContext from '../contexts/SystemContext';
 import SectionsContext, { SectionsType } from '../contexts/SectionsContext';
 import FaithContext from '../contexts/FaithContext';
 import HumanMagicContext, {
   HumanMagicType,
 } from '../contexts/HumanMagicContext';
-import ModificationsContext from '../contexts/ModificationsContext';
+import { fetcher } from '../helpers/fetcher';
 
-const SaveButton = ({ children }: { children: ReactNode }) => {
+export const useSave = () => {
   const { resetSave } = useContext(ModificationsContext);
   const { id } = useContext(IdContext);
   const { appId } = useContext(SystemContext);
@@ -288,30 +283,5 @@ const SaveButton = ({ children }: { children: ReactNode }) => {
     resetSave();
     mutate(`/api/vampires/${id}`, data);
   };
-  const handleClick = generateHandleClick(action);
-  const handleKeypress = generateHandleKeypress(action);
-  return (
-    <Button
-      role="button"
-      onClick={handleClick}
-      onKeyPress={handleKeypress}
-      tabIndex={0}
-    >
-      {children}
-    </Button>
-  );
+  return action;
 };
-
-const Button = styled.span`
-  &:focus {
-    & > li {
-      padding: 1.5rem;
-      .full-text {
-        max-width: 160px;
-        padding-left: 1rem;
-      }
-    }
-  }
-`;
-
-export default SaveButton;
