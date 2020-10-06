@@ -2,6 +2,8 @@ This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next
 
 ## Getting Started
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/85ac1ac072674ec2bf0b028342374ce8)](https://app.codacy.com/gh/zaratan/characters?utm_source=github.com&utm_medium=referral&utm_content=zaratan/characters&utm_campaign=Badge_Grade_Settings)
+
 First, run the development server:
 
 ```bash
