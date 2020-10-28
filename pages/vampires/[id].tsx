@@ -133,7 +133,6 @@ const Home = ({
         clanDisciplines={clanDisciplines}
         outClanDisciplines={outClanDisciplines}
         combinedDisciplines={combinedDisciplines}
-        newChar={false}
         advantages={advantages}
         flaws={flaws}
         languages={languages}
