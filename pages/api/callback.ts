@@ -11,7 +11,7 @@ const callback = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     await auth0().handleCallback(req, res, {
       redirectTo: '/',
-      onUserLoaded: async (req2, res2, session, state) => {
+      onUserLoaded: async (req2, res2, session, _state) => {
         const dbUser: {
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           data: Array<{ data: any; ref: any }>;

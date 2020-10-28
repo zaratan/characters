@@ -1,20 +1,15 @@
 import Head from 'next/head';
 import useSWR from 'swr';
 import Link from 'next/link';
-import { GetServerSideProps, GetStaticProps } from 'next';
+import { GetStaticProps } from 'next';
 import styled from 'styled-components';
-import { useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import dynamic from 'next/dynamic';
-import { nodeFetcher, host, fetcher } from '../helpers/fetcher';
 import SheetContainer from '../styles/SheetContainer';
 import { HorizontalSection } from '../styles/Sections';
 import { HandLargeText } from '../styles/Texts';
-import { ActionItem } from '../styles/Items';
-import { Glyph } from '../components/Glyph';
-import SectionTitle from '../components/SectionTitle';
 import Nav from '../components/Nav';
 import { fetchVampireFromDB } from './api/vampires';
-import { subscribeToSheets } from '../helpers/pusherClient';
 import SystemContext from '../contexts/SystemContext';
 import Footer from '../components/Footer';
 import ActionsFooter from '../components/ActionsFooter';
@@ -29,13 +24,6 @@ const TitleContainer = styled.li`
   display: flex;
   justify-content: center;
   position: relative;
-`;
-
-const GlyphContainer = styled.span`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-left: 2rem;
 `;
 
 const MainContainer = styled.div`
@@ -80,36 +68,19 @@ const Home = ({
       <EmptyLine />
       <SheetContainer>
         <HorizontalSection as="ul">
-          {characters.map((character) => {
-            const onClick = async () => {
-              await fetcher(`/api/vampires/${character.key}/delete`, {
-                method: 'POST',
-              });
-              mutate({
-                characters: characters.filter(
-                  (char) => char.key !== character.key
-                ),
-              });
-            };
-            return (
-              <TitleContainer key={character.key}>
-                <Link
-                  href="/vampires/[id]"
-                  passHref
-                  as={`/vampires/${character.key}`}
-                >
-                  <HandLargeText as="a">
-                    {character.name || 'Pasdnom'}
-                  </HandLargeText>
-                </Link>
-                {/* <GlyphContainer>
-                  <Glyph name={`Remove ${character.name}`} onClick={onClick}>
-                    ✘
-                  </Glyph>
-                </GlyphContainer> */}
-              </TitleContainer>
-            );
-          })}
+          {characters.map((character) => (
+            <TitleContainer key={character.key}>
+              <Link
+                href="/vampires/[id]"
+                passHref
+                as={`/vampires/${character.key}`}
+              >
+                <HandLargeText as="a">
+                  {character.name || 'Pasdnom'}
+                </HandLargeText>
+              </Link>
+            </TitleContainer>
+          ))}
         </HorizontalSection>
       </SheetContainer>
       <ActionsFooter

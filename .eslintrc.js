@@ -70,13 +70,6 @@ module.exports = {
       },
     ],
     radix: 0,
-    'no-shadow': [
-      2,
-      {
-        hoist: 'all',
-        allow: ['resolve', 'reject', 'done', 'next', 'err', 'error'],
-      },
-    ],
     quotes: [
       2,
       'single',
@@ -111,6 +104,12 @@ module.exports = {
         argsIgnorePattern: 'res|next|Sequelize|^err|^_.*',
       },
     ],
+    // note you must disable the base rule as it can report incorrect errors
+    'no-use-before-define': 'off',
+    '@typescript-eslint/no-use-before-define': ['error'],
+    // note you must disable the base rule as it can report incorrect errors
+    'no-shadow': 'off',
+    '@typescript-eslint/no-shadow': ['error'],
   },
   plugins: [
     'prettier',

@@ -1,6 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import Head from 'next/head';
+import Image from 'next/image';
 import useBeforeUnload from 'react-use/lib/useBeforeUnload';
 import { useRouter } from 'next/router';
 import { AttributesProvider } from '../contexts/AttributesContext';
@@ -90,7 +91,12 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
 
         <PageTitle>
           {infos.era === 0 ? (
-            <img src="/title.png" alt="Vampire Dark Age" />
+            <Image
+              src="/title.png"
+              alt="Vampire Dark Age"
+              width={516}
+              height={160}
+            />
           ) : (
             <Title className="victorian-queen">Vampire Ère Victorienne</Title>
           )}
@@ -150,7 +156,6 @@ const SheetWrapper = ({
   startPlay,
 }: VampireType & {
   id: string;
-  newChar: boolean;
   startEdit?: boolean;
   startPlay?: boolean;
 }) => (

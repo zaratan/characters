@@ -43,7 +43,7 @@ const NamedSquare = ({
   value: number;
   title: string;
   subtitle?: string;
-  setValue: (value: number) => void;
+  setValue: (newValue: number) => void;
   inactive?: boolean;
 }) => {
   const changeValue = () => {

@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { useRouter, Router } from 'next/router';
+import { useRouter } from 'next/router';
 import styled from 'styled-components';
 import { GetStaticProps } from 'next';
 import useSWR from 'swr';
@@ -15,11 +15,10 @@ import { VampireType } from '../../../types/VampireType';
 import { fetchVampireFromDB } from '../../api/vampires';
 import SystemContext from '../../../contexts/SystemContext';
 import { Title } from '../../../styles/Titles';
-import { EmptyLine, BlackLine } from '../../../styles/Lines';
+import { EmptyLine } from '../../../styles/Lines';
 import SectionTitle from '../../../components/SectionTitle';
 import { Glyph } from '../../../components/Glyph';
 import { fetcher } from '../../../helpers/fetcher';
-import IdContext from '../../../contexts/IdContext';
 import { TextFallback } from '../../new';
 import MeContext from '../../../contexts/MeContext';
 import ActionsFooter from '../../../components/ActionsFooter';
@@ -268,8 +267,6 @@ const Config = ({ id, name }: { id: string; name: string }) => {
     </>
   );
 };
-
-const ClearFix = styled.div``;
 
 export async function getStaticPaths() {
   const vampires = await fetchVampireFromDB();

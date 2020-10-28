@@ -1,3 +1,4 @@
+/* eslint-disable styled-components-a11y/no-noninteractive-element-to-interactive-role */
 import React, { useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
@@ -34,76 +35,6 @@ type ActionType = {
       act?: null;
       link?: null;
     }
-);
-
-const ActionsFooter = ({
-  actions,
-  loggedActions,
-}: {
-  actions?: Array<ActionType>;
-  loggedActions?: Array<ActionType>;
-}) => {
-  const { connected } = useContext(MeContext);
-  const allActions = [
-    ...(actions || []),
-    ...(connected && loggedActions ? loggedActions : []),
-  ];
-  return (
-    <>
-      <DesktopActionsFooter actions={allActions} />
-      <MobileActionsFooter actions={allActions} />
-    </>
-  );
-};
-
-const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
-  <DesktopActionsContainer>
-    <DesktopActions>
-      {actions.map((action) => {
-        if (action.link) {
-          return (
-            <Link href={action.link} key={action.name}>
-              <a>
-                <DesktopAction>
-                  <GlyphAction>{action.glyph}</GlyphAction>
-                  <span className="full-text">{action.name}</span>
-                </DesktopAction>
-              </a>
-            </Link>
-          );
-        }
-        if (action.component !== undefined) {
-          if (action.component === null) return null;
-
-          return (
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            <action.component {...action.componentProps} key={action.name}>
-              <DesktopAction>
-                <GlyphAction>{action.glyph}</GlyphAction>
-                <span className="full-text">{action.name}</span>
-              </DesktopAction>
-            </action.component>
-          );
-        }
-        const handleClick = generateHandleClick(action.act);
-        const handleKeypress = generateHandleKeypress(action.act);
-        return (
-          <DesktopAction
-            key={action.name}
-            role="button"
-            onClick={handleClick}
-            onKeyPress={handleKeypress}
-            tabIndex={0}
-          >
-            <GlyphAction className={action.active ? 'active' : ''}>
-              {action.glyph}
-            </GlyphAction>
-            <span className="full-text">{action.name}</span>
-          </DesktopAction>
-        );
-      })}
-    </DesktopActions>
-  </DesktopActionsContainer>
 );
 
 const GlyphAction = styled.span`
@@ -157,6 +88,35 @@ const DesktopActions = styled.ul`
   align-items: flex-end;
 `;
 
+const MobileActionsContainer = styled.div`
+  padding: 1rem;
+
+  @media screen and (min-width: 681px) {
+    display: none;
+  }
+`;
+
+const MobileActions = styled.ul`
+  display: grid;
+  column-gap: 0.5rem;
+  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+`;
+
+const MobileAction = styled.li`
+  text-align: center;
+  margin: 0 auto;
+  padding: 1rem;
+  background-color: #eee;
+  border-radius: 5px;
+  border: 1px solid lightgray;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+`;
+
 const DesktopActionsContainer = styled.div`
   @media screen and (max-width: 680px) {
     display: none;
@@ -166,6 +126,56 @@ const DesktopActionsContainer = styled.div`
   right: 1rem;
   z-index: 2;
 `;
+
+const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
+  <DesktopActionsContainer>
+    <DesktopActions>
+      {actions.map((action) => {
+        if (action.link) {
+          return (
+            <Link href={action.link} key={action.name}>
+              <a>
+                <DesktopAction>
+                  <GlyphAction>{action.glyph}</GlyphAction>
+                  <span className="full-text">{action.name}</span>
+                </DesktopAction>
+              </a>
+            </Link>
+          );
+        }
+        if (action.component !== undefined) {
+          if (action.component === null) return null;
+
+          return (
+            // eslint-disable-next-line react/jsx-props-no-spreading
+            <action.component {...action.componentProps} key={action.name}>
+              <DesktopAction>
+                <GlyphAction>{action.glyph}</GlyphAction>
+                <span className="full-text">{action.name}</span>
+              </DesktopAction>
+            </action.component>
+          );
+        }
+        const handleClick = generateHandleClick(action.act);
+        const handleKeypress = generateHandleKeypress(action.act);
+        return (
+          <DesktopAction
+            key={action.name}
+            role="button"
+            onClick={handleClick}
+            onKeyPress={handleKeypress}
+            tabIndex={0}
+          >
+            <GlyphAction className={action.active ? 'active' : ''}>
+              {action.glyph}
+            </GlyphAction>
+            <span className="full-text">{action.name}</span>
+          </DesktopAction>
+        );
+      })}
+    </DesktopActions>
+  </DesktopActionsContainer>
+);
 
 const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
   <>
@@ -211,33 +221,24 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
   </>
 );
 
-const MobileActionsContainer = styled.div`
-  padding: 1rem;
-
-  @media screen and (min-width: 681px) {
-    display: none;
-  }
-`;
-
-const MobileActions = styled.ul`
-  display: grid;
-  column-gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
-`;
-
-const MobileAction = styled.li`
-  text-align: center;
-  margin: 0 auto;
-  padding: 1rem;
-  background-color: #eee;
-  border-radius: 5px;
-  border: 1px solid lightgray;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-`;
+const ActionsFooter = ({
+  actions,
+  loggedActions,
+}: {
+  actions?: Array<ActionType>;
+  loggedActions?: Array<ActionType>;
+}) => {
+  const { connected } = useContext(MeContext);
+  const allActions = [
+    ...(actions || []),
+    ...(connected && loggedActions ? loggedActions : []),
+  ];
+  return (
+    <>
+      <DesktopActionsFooter actions={allActions} />
+      <MobileActionsFooter actions={allActions} />
+    </>
+  );
+};
 
 export default ActionsFooter;
