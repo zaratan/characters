@@ -11,7 +11,7 @@
     "@auth0/nextjs-auth0": "^0.16.0",
     "@types/lodash": "^4.14.163",
     "faunadb": "^3.0.1",
-    "immer": "^7.0.14",
+    "immer": "^8.0.1",
     "keyboardjs": "^2.6.4",
     "lodash": "^4.17.20",
     "next": "10.0.0",
