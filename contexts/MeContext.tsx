@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, ReactNode } from 'react';
+import { UserProfile, UserProvider, useUser } from '@auth0/nextjs-auth0';
 import { MeType } from '../types/MeType';
-import { useMe } from '../hooks/useMe';
 
 type ContextType = {
-  me?: MeType;
+  me?: UserProfile;
   connected: boolean;
 };
 
@@ -13,9 +13,9 @@ const defaultContext: ContextType = {
 };
 const MeContext = createContext(defaultContext);
 export const MeProvider = ({ children }: { children: ReactNode }) => {
-  const me = useMe();
-  const connected = me?.auth;
-  const context: ContextType = { me, connected };
+  const { user, error, isLoading } = useUser();
+  const connected = !!user;
+  const context: ContextType = { me: user, connected };
   return <MeContext.Provider value={context}>{children}</MeContext.Provider>;
 };
 

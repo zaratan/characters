@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
-import auth0 from '../../../helpers/auth0';
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 
 import base from '../../../defaultData/base';
 import darkAge from '../../../defaultData/darkAge';
@@ -21,34 +21,30 @@ const TYPE = {
   2: ghoul,
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = await auth0().getSession(req);
-  if (!session) {
-    return res
-      .status(403)
-      .json({ error: 'Vous devez vous connecter pour effectuer cette action' });
+export default withApiAuthRequired(
+  async (req: NextApiRequest, res: NextApiResponse) => {
+    try {
+      const { type = 0, name = '', era = 0, id = 'aaaaaaaa', appId = '' } = {
+        ...JSON.parse(req.body),
+      };
+
+      const data = {
+        ...base,
+        ...(era === 0 ? darkAge : victorian),
+        id,
+        ...TYPE[type],
+      };
+      data.infos.name = name;
+      data.infos.era = era;
+
+      await client.query(q.Create(q.Collection('vampires'), { data }));
+
+      // ok
+      updateOnSheets(appId);
+      res.status(200).json({ result: 'ok' });
+    } catch (e) {
+      // something went wrong
+      res.status(500).json({ error: e.message });
+    }
   }
-  try {
-    const { type = 0, name = '', era = 0, id = 'aaaaaaaa', appId = '' } = {
-      ...JSON.parse(req.body),
-    };
-
-    const data = {
-      ...base,
-      ...(era === 0 ? darkAge : victorian),
-      id,
-      ...TYPE[type],
-    };
-    data.infos.name = name;
-    data.infos.era = era;
-
-    await client.query(q.Create(q.Collection('vampires'), { data }));
-
-    // ok
-    updateOnSheets(appId);
-    res.status(200).json({ result: 'ok' });
-  } catch (e) {
-    // something went wrong
-    res.status(500).json({ error: e.message });
-  }
-};
+);

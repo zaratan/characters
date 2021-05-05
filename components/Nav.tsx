@@ -1,17 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable styled-components-a11y/anchor-is-valid */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useRef, ReactNode, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useClickAway } from 'react-use';
+import { UserProfile } from '@auth0/nextjs-auth0';
 import { BlackLine } from '../styles/Lines';
 import {
   generateHandleClick,
   generateHandleKeypress,
 } from '../helpers/handlers';
 import { Title } from '../styles/Titles';
-import { MeType } from '../types/MeType';
 import MeContext from '../contexts/MeContext';
 
 const ProfileImg = styled.img`
@@ -99,7 +98,7 @@ const LogButton = ({
   menuOpen,
   action,
 }: {
-  data?: MeType;
+  data?: UserProfile;
   connected?: boolean;
   close: () => void;
   action: () => void;
@@ -109,10 +108,10 @@ const LogButton = ({
   useClickAway(wrapperRef, () => {
     close();
   });
-  if (!connected || !data?.auth) {
+  if (!connected) {
     return (
       <MenuContainer className="text-only">
-        <Link href="/api/login">
+        <Link href="/api/auth/login">
           <a>Connection</a>
         </Link>
       </MenuContainer>
@@ -134,7 +133,7 @@ const LogButton = ({
       </MenuButton>
       <MenuDropdown className={menuOpen ? 'open' : ''}>
         <NameContainer>{data.name}</NameContainer>
-        <Link href="/api/logout" prefetch={false} passHref>
+        <Link href="/api/auth/logout" prefetch={false} passHref>
           <MenuDropdownElem as="a">Déconnection</MenuDropdownElem>
         </Link>
       </MenuDropdown>

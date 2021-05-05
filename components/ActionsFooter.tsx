@@ -1,4 +1,3 @@
-/* eslint-disable styled-components-a11y/no-noninteractive-element-to-interactive-role */
 import React, { useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';

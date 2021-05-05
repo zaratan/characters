@@ -1,4 +1,3 @@
-/* eslint-disable styled-components-a11y/no-onchange */
 import React, { useState, FormEvent, useContext } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
