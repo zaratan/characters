@@ -33,4 +33,5 @@ export type VampireType = {
   trueFaith: number;
   humanMagic: HumanMagicType;
   editors: Array<string>;
+  viewers: Array<string>;
 };

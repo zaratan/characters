@@ -14,19 +14,32 @@ import { Glyph } from '../Glyph';
 import SectionTitle from '../SectionTitle';
 
 const MainContainer = styled.section`
-  width: 80%;
+  width: 70%;
   margin: 0 auto;
+  @media screen and (max-width: 930px) {
+    width: 80%;
+  }
 `;
 
 const AccessLists = styled.ul`
   display: flex;
   justify-content: space-around;
   width: 100%;
+  @media screen and (max-width: 930px) {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
 const AccessList = styled.li`
   width: 100%;
   max-width: 20rem;
+  @media screen and (max-width: 930px) {
+    &:not(:first-child) {
+      margin-top: 2rem;
+    }
+  }
 `;
 
 const AccessTitle = styled.h3`
@@ -46,7 +59,14 @@ const AccessUser = styled.li`
 `;
 
 const ConfigAccessSection = ({ id }: { id: string }) => {
-  const { editors, addEditor, removeEditor } = useContext(AccessesContext);
+  const {
+    editors,
+    addEditor,
+    removeEditor,
+    addViewer,
+    removeViewer,
+    viewers,
+  } = useContext(AccessesContext);
   const { appId } = useContext(SystemContext);
 
   const { data: usersData } = useSWR('/api/users');
@@ -68,13 +88,14 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
         method: 'POST',
         body: JSON.stringify({
           editors,
+          viewers,
           appId,
         }),
       });
       setAccessChanged(false);
     },
     300,
-    [editors, accessChanged]
+    [editors, accessChanged, viewers]
   );
 
   if (!usersData || users.length === 0)
@@ -90,16 +111,33 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
     editors.map((e) => users.find((user) => user.sub === e))
   );
 
-  const addAction = (user: UserType | string) => {
+  const viewersWithData = concat(
+    viewers.map((e) => users.find((user) => user.sub === e))
+  );
+
+  const addEditorAction = (user: UserType | string) => {
     if (typeof user === 'string') return;
     addEditor(user.sub);
     setAccessChanged(true);
   };
 
-  const removeAction = (sub: string) => () => {
+  const removeEditorAction = (sub: string) => () => {
     if (editors.length < 2) return;
 
     removeEditor(sub);
+    setAccessChanged(true);
+  };
+
+  const addViewerAction = (user: UserType | string) => {
+    if (typeof user === 'string') return;
+    addViewer(user.sub);
+    setAccessChanged(true);
+  };
+
+  const removeViewerAction = (sub: string) => () => {
+    if (viewers.length < 2) return;
+
+    removeViewer(sub);
     setAccessChanged(true);
   };
 
@@ -116,7 +154,7 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
                 {editors.length > 1 ? (
                   <Glyph
                     name={`Remove ${user.name} editor access`}
-                    onClick={removeAction(user.sub)}
+                    onClick={removeEditorAction(user.sub)}
                   >
                     ✘
                   </Glyph>
@@ -131,8 +169,37 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
               (user) => !editors.includes(user.sub)
             )}
             display="name"
-            onSubmit={addAction}
+            onSubmit={addEditorAction}
             placeholder="Ajouter un éditeur"
+            searchKeys={['name']}
+          />
+        </AccessList>
+        <AccessList>
+          <AccessTitle>Viewer</AccessTitle>
+          <AccessUsers>
+            {viewersWithData.map((user) => (
+              <AccessUser key={user.sub}>
+                {user.name}
+                {viewers.length > 1 ? (
+                  <Glyph
+                    name={`Remove ${user.name} viewer access`}
+                    onClick={removeViewerAction(user.sub)}
+                  >
+                    ✘
+                  </Glyph>
+                ) : (
+                  <span />
+                )}
+              </AccessUser>
+            ))}
+          </AccessUsers>
+          <AutoCompleteInput
+            autocompleteOptions={users.filter(
+              (user) => !viewers.includes(user.sub)
+            )}
+            display="name"
+            onSubmit={addViewerAction}
+            placeholder="Ajouter un viewer"
             searchKeys={['name']}
           />
         </AccessList>

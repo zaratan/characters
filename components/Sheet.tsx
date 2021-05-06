@@ -156,6 +156,7 @@ const SheetWrapper = ({
   startEdit,
   startPlay,
   editors,
+  viewers,
 }: VampireType & {
   id: string;
   startEdit?: boolean;
@@ -163,7 +164,7 @@ const SheetWrapper = ({
 }) => (
   <ModificationsProvider>
     <PreferencesProvider>
-      <AccessesProvider editors={editors}>
+      <AccessesProvider editors={editors} viewers={viewers}>
         <SectionsProvider sections={sections}>
           <ModeProvider startEdit={startEdit} startPlay={startPlay}>
             <IdProvider id={id}>
