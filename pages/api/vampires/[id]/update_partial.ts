@@ -1,7 +1,8 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
-import { withApiAuthRequired } from '@auth0/nextjs-auth0';
+import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { updateOnSheet } from '../../../../helpers/pusherServer';
+import { VampireType } from '../../../../types/VampireType';
 
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
@@ -10,6 +11,8 @@ const client = new faunadb.Client({ secret });
 
 export default withApiAuthRequired(
   async (req: NextApiRequest, res: NextApiResponse) => {
+    const { user } = getSession(req, res);
+
     const {
       query: { id },
       body,
@@ -18,7 +21,7 @@ export default withApiAuthRequired(
     try {
       const vampire: {
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        data: Array<{ data: any; ref: any }>;
+        data: Array<{ data: VampireType; ref: any }>;
       } = await client.query(
         q.Map(
           // iterate each item in result
@@ -33,6 +36,12 @@ export default withApiAuthRequired(
           (ref) => q.Get(ref) // lookup each result by its reference
         )
       );
+
+      if (
+        !(vampire.data[0].data.editors || ['github|3338913']).includes(user.sub)
+      ) {
+        return res.status(403).json({ error: 'unauthorized' });
+      }
       // ok
       const vId = vampire.data[0].ref;
       const data = { ...JSON.parse(body) };

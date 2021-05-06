@@ -92,10 +92,8 @@ const NewCharPage = () => {
   const router = useRouter();
   const id = uuid();
 
-  console.log({ id });
   const { connected } = useContext(MeContext);
   const { appId } = useContext(SystemContext);
-  console.log({ connected, appId });
 
   if (!connected) {
     return (
@@ -109,7 +107,6 @@ const NewCharPage = () => {
     );
   }
 
-  console.log('You are connected');
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
 

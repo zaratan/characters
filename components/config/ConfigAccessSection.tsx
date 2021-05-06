@@ -75,7 +75,6 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
   const [accessChanged, setAccessChanged] = useState(false);
 
   useEffect(() => {
-    console.log({ position: 'useEffect', usersData });
     setUsers(usersData?.users || []);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(usersData?.users)]);
