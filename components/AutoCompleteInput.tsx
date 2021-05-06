@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useRef, KeyboardEvent, Ref } from 'react';
+import React, { useState, useMemo, useRef, KeyboardEvent } from 'react';
 import { useDebounce, useClickAway } from 'react-use';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';

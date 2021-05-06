@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
-import { withApiAuthRequired, getSession } from '@auth0/nextjs-auth0';
+import { withApiAuthRequired } from '@auth0/nextjs-auth0';
 import { updateOnSheet } from '../../../../helpers/pusherServer';
 // your secret hash
 const secret = process.env.FAUNADB_SECRET_KEY;
