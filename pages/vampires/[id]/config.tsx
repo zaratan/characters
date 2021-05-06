@@ -124,6 +124,7 @@ const ConfigWrapper = ({
           <AccessesProvider
             editors={data.editors || ['github|3338913']}
             viewers={data.viewers || ['github|3338913']}
+            privateSheet={data.privateSheet}
           >
             <Config id={String(id)} name={data.infos.name} />
           </AccessesProvider>

@@ -111,6 +111,7 @@ const Home = ({
     },
     editors = ['github|3338913'],
     viewers = ['github|3338913'],
+    privateSheet = false,
   } = data;
 
   // default era
@@ -144,6 +145,7 @@ const Home = ({
         humanMagic={humanMagic}
         editors={editors}
         viewers={viewers}
+        privateSheet={privateSheet}
       />
     </>
   );
