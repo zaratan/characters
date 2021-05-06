@@ -8,6 +8,8 @@ type ContextType = {
   viewers: Array<string>;
   addViewer: (sub: string) => void;
   removeViewer: (sub: string) => void;
+  privateSheet: boolean;
+  togglePrivate: () => void;
 };
 
 const defaultContext: ContextType = {
@@ -25,19 +27,26 @@ const defaultContext: ContextType = {
   removeViewer: () => {
     throw new Error('SHOULD HAVE BEEN OVERRIDEN');
   },
+  privateSheet: false,
+  togglePrivate: () => {
+    throw new Error('SHOULD HAVE BEEN OVERRIDEN');
+  },
 };
 const AccessesContext = createContext(defaultContext);
 export const AccessesProvider = ({
   children,
   editors,
   viewers,
+  privateSheet,
 }: {
   children: ReactNode;
   editors: Array<string>;
   viewers: Array<string>;
+  privateSheet: boolean;
 }) => {
   const [editorsState, setEditorsState] = useState(editors);
   const [viewersState, setViewersState] = useState(viewers);
+  const [privateState, setPrivateState] = useState(privateSheet);
 
   const addEditor = (sub: string) => {
     setEditorsState([...editorsState, sub]);
@@ -55,6 +64,8 @@ export const AccessesProvider = ({
     setViewersState(viewersState.filter((viewer) => viewer !== sub));
   };
 
+  const togglePrivate = () => setPrivateState(!privateState);
+
   useEffect(() => {
     setEditorsState(editors);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -65,6 +76,10 @@ export const AccessesProvider = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(viewers)]);
 
+  useEffect(() => {
+    setPrivateState(privateSheet);
+  }, [privateSheet]);
+
   const context: ContextType = {
     editors: editorsState,
     addEditor,
@@ -72,6 +87,8 @@ export const AccessesProvider = ({
     viewers: viewersState,
     addViewer,
     removeViewer,
+    privateSheet: privateState,
+    togglePrivate,
   };
 
   return (

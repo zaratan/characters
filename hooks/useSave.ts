@@ -90,7 +90,7 @@ export const useSave = () => {
   } = useContext(SectionsContext);
   const { trueFaith } = useContext(FaithContext);
   const { psy, staticMagic, theurgy } = useContext(HumanMagicContext);
-  const { editors, viewers } = useContext(AccessesContext);
+  const { editors, viewers, privateSheet } = useContext(AccessesContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -278,6 +278,7 @@ export const useSave = () => {
       humanMagic,
       editors,
       viewers,
+      privateSheet,
     };
     const url = `/api/vampires/${id}/update`;
     await fetcher(url, {

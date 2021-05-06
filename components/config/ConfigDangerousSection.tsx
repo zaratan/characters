@@ -1,6 +1,9 @@
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useContext, useState } from 'react';
+import { useDebounce } from 'react-use';
 import styled from 'styled-components';
+import AccessesContext from '../../contexts/AccessesContext';
+import SystemContext from '../../contexts/SystemContext';
 import { fetcher } from '../../helpers/fetcher';
 import { EmptyLine } from '../../styles/Lines';
 import SectionTitle from '../SectionTitle';
@@ -42,6 +45,9 @@ const DangerousActionsContainer = styled.div`
 
 const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
   const router = useRouter();
+  const { privateSheet, togglePrivate } = useContext(AccessesContext);
+  const { appId } = useContext(SystemContext);
+
   const destroyFunction = async () => {
     if (
       typeof window !== 'undefined' &&
@@ -56,6 +62,26 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
     });
     router.push('/');
   };
+
+  const [visibilityChanged, setVisibilityChanged] = useState(false);
+
+  useDebounce(
+    async () => {
+      if (!visibilityChanged) return;
+
+      await fetcher(`/api/vampires/${id}/update_partial`, {
+        method: 'POST',
+        body: JSON.stringify({
+          privateSheet,
+          appId,
+        }),
+      });
+      setVisibilityChanged(false);
+    },
+    300,
+    [visibilityChanged, privateSheet]
+  );
+
   return (
     <DangerousSection>
       <SectionTitle title="Danger" />
@@ -66,6 +92,18 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
           <ButtonLi>
             <RedButton onClick={destroyFunction}>
               Supprimer le personnage
+            </RedButton>
+          </ButtonLi>
+          <ButtonLi>
+            <RedButton
+              onClick={() => {
+                setVisibilityChanged(true);
+                togglePrivate();
+              }}
+            >
+              {privateSheet
+                ? 'Rendre la feuille publique'
+                : 'Rendre la feuille privée'}
             </RedButton>
           </ButtonLi>
         </ButtonList>

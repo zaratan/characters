@@ -34,4 +34,5 @@ export type VampireType = {
   humanMagic: HumanMagicType;
   editors: Array<string>;
   viewers: Array<string>;
+  privateSheet: boolean;
 };
