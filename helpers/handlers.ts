@@ -10,12 +10,7 @@ export const generateHandleClick = (changeFunc: (e: FormEvent) => void) => (
 export const generateHandleKeypress = (changeFunc: (e: FormEvent) => void) => (
   e: KeyboardEvent
 ) => {
-  if (
-    e.keyCode !== 32 &&
-    e.keyCode !== 13 &&
-    e.charCode !== 32 &&
-    e.charCode !== 13
-  ) {
+  if (e.key !== 'Enter' && e.key !== ' ') {
     return;
   }
   e.preventDefault();

@@ -109,6 +109,7 @@ const Home = ({
       theurgy: [],
       staticMagic: [],
     },
+    editors = ['github|3338913'],
   } = data;
 
   // default era
@@ -140,6 +141,7 @@ const Home = ({
         sections={sections}
         trueFaith={trueFaith}
         humanMagic={humanMagic}
+        editors={editors}
       />
     </>
   );
