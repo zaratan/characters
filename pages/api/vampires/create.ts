@@ -26,7 +26,14 @@ export default withApiAuthRequired(
     const session = getSession(req, res);
 
     try {
-      const { type = 0, name = '', era = 0, id = 'aaaaaaaa', appId = '' } = {
+      const {
+        type = 0,
+        name = '',
+        era = 0,
+        id = 'aaaaaaaa',
+        appId = '',
+        privateSheet = false,
+      } = {
         ...JSON.parse(req.body),
       };
 
@@ -37,6 +44,7 @@ export default withApiAuthRequired(
         ...TYPE[type],
         editors: [session.user.sub],
         viewers: ['github|3338913'],
+        privateSheet,
       };
       data.infos.name = name;
       data.infos.era = era;

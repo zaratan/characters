@@ -22,7 +22,7 @@ const SheetActionsFooter = () => {
           active: showPex,
         },
       ]}
-      loggedActions={[
+      ownerActions={[
         {
           glyph: editMode ? '🎲' : '✎',
           act: toggleMode,

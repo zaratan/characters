@@ -8,6 +8,7 @@ import { VampireType } from '../../types/VampireType';
 import { fetchVampireFromDB } from '../api/vampires';
 import { fetchOneVampire } from '../api/vampires/[id]';
 import SystemContext from '../../contexts/SystemContext';
+import MeContext from '../../contexts/MeContext';
 
 export async function getStaticPaths() {
   const vampires = await fetchVampireFromDB();
@@ -62,6 +63,7 @@ const Home = ({
   const router = useRouter();
   const { id } = router.query;
   const { needPusherFallback } = useContext(SystemContext);
+  const { connected, me } = useContext(MeContext);
   const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
     initialData,
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
@@ -113,6 +115,13 @@ const Home = ({
     viewers = ['github|3338913'],
     privateSheet = false,
   } = data;
+
+  if (
+    privateSheet &&
+    !(connected && (editors.includes(me.sub) || viewers.includes(me.sub)))
+  ) {
+    return 'You are not authorized to see this page.';
+  }
 
   // default era
   if (infos.era === undefined) {

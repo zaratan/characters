@@ -29,6 +29,8 @@ const RedButton = styled.button`
   border-radius: 2px;
   box-shadow: -1px -1px grey;
   outline: none;
+  color: white;
+  cursor: pointer;
 
   &:hover,
   &:focus {
