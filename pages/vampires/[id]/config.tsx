@@ -108,7 +108,10 @@ const ConfigWrapper = ({
       <Nav />
       <MainContainer>
         <SectionsProvider sections={data.sections}>
-          <AccessesProvider editors={data.editors || ['github|3338913']}>
+          <AccessesProvider
+            editors={data.editors || ['github|3338913']}
+            viewers={data.viewers || ['github|3338913']}
+          >
             <Config id={String(id)} name={data.infos.name} />
           </AccessesProvider>
         </SectionsProvider>

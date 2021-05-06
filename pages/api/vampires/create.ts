@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
-import { withApiAuthRequired } from '@auth0/nextjs-auth0';
+import { getSession, withApiAuthRequired } from '@auth0/nextjs-auth0';
 
 import base from '../../../defaultData/base';
 import darkAge from '../../../defaultData/darkAge';
@@ -23,6 +23,8 @@ const TYPE = {
 
 export default withApiAuthRequired(
   async (req: NextApiRequest, res: NextApiResponse) => {
+    const session = getSession(req, res);
+
     try {
       const { type = 0, name = '', era = 0, id = 'aaaaaaaa', appId = '' } = {
         ...JSON.parse(req.body),
@@ -33,6 +35,8 @@ export default withApiAuthRequired(
         ...(era === 0 ? darkAge : victorian),
         id,
         ...TYPE[type],
+        editors: [session.user.sub],
+        viewers: ['github|3338913'],
       };
       data.infos.name = name;
       data.infos.era = era;

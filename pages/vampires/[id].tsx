@@ -110,6 +110,7 @@ const Home = ({
       staticMagic: [],
     },
     editors = ['github|3338913'],
+    viewers = ['github|3338913'],
   } = data;
 
   // default era
@@ -142,6 +143,7 @@ const Home = ({
         trueFaith={trueFaith}
         humanMagic={humanMagic}
         editors={editors}
+        viewers={viewers}
       />
     </>
   );
