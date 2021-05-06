@@ -8,6 +8,7 @@
 // import { faCircle, faSquare } from '@fortawesome/free-regular-svg-icons';
 import Head from 'next/head';
 import { SWRConfig } from 'swr';
+import { UserProvider } from '@auth0/nextjs-auth0';
 import GlobalStyle from '../styles/GlobalStyle';
 import { fetcher } from '../helpers/fetcher';
 import { SystemProvider } from '../contexts/SystemContext';
@@ -23,7 +24,7 @@ export function reportWebVitals(metric) {
 }
 
 const MyApp = ({ Component, pageProps }) => (
-  <>
+  <UserProvider>
     <SWRConfig
       value={{
         fetcher,
@@ -78,19 +79,7 @@ const MyApp = ({ Component, pageProps }) => (
         </MeProvider>
       </SystemProvider>
     </SWRConfig>
-  </>
+  </UserProvider>
 );
-
-// Only uncomment this method if you have blocking data requirements for
-// every single page in your application. This disables the ability to
-// perform automatic static optimization, causing every page in your app to
-// be server-side rendered.
-//
-// MyApp.getInitialProps = async (appContext) => {
-//   // calls page's `getInitialProps` and fills `appProps.pageProps`
-//   const appProps = await App.getInitialProps(appContext);
-//
-//   return { ...appProps }
-// }
 
 export default MyApp;

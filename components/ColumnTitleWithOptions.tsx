@@ -158,7 +158,6 @@ const ColumnTitleWithOptions = ({
               const handleClick = generateHandleClick(action.value);
               const handleKeypress = generateHandleKeypress(action.value);
               return (
-                // eslint-disable-next-line styled-components-a11y/no-noninteractive-element-to-interactive-role
                 <ActionItem
                   onClick={handleClick}
                   onKeyPress={handleKeypress}

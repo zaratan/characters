@@ -39,6 +39,7 @@ import ModificationsContext, {
 } from '../contexts/ModificationsContext';
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSave } from '../hooks/useSave';
+import { AccessesProvider } from '../contexts/AccessesContext';
 
 const PageTitle = styled.div`
   display: flex;
@@ -154,6 +155,7 @@ const SheetWrapper = ({
   },
   startEdit,
   startPlay,
+  editors,
 }: VampireType & {
   id: string;
   startEdit?: boolean;
@@ -161,53 +163,55 @@ const SheetWrapper = ({
 }) => (
   <ModificationsProvider>
     <PreferencesProvider>
-      <SectionsProvider sections={sections}>
-        <ModeProvider startEdit={startEdit} startPlay={startPlay}>
-          <IdProvider id={id}>
-            <GenerationProvider generation={generation}>
-              <InfosProvider infos={infos}>
-                <AttributesProvider attributes={attributes}>
-                  <MindProvider mind={mind}>
-                    <FaithProvider trueFaith={trueFaith}>
-                      <AbilitiesProvider
-                        talents={talents}
-                        customTalents={customTalents}
-                        skills={skills}
-                        customSkills={customSkills}
-                        knowledges={knowledges}
-                        customKnowledges={customKnowledges}
-                      >
-                        <DisciplinesProvider
-                          clanDisciplines={clanDisciplines}
-                          outClanDisciplines={outClanDisciplines}
-                          combinedDisciplines={combinedDisciplines}
+      <AccessesProvider editors={editors}>
+        <SectionsProvider sections={sections}>
+          <ModeProvider startEdit={startEdit} startPlay={startPlay}>
+            <IdProvider id={id}>
+              <GenerationProvider generation={generation}>
+                <InfosProvider infos={infos}>
+                  <AttributesProvider attributes={attributes}>
+                    <MindProvider mind={mind}>
+                      <FaithProvider trueFaith={trueFaith}>
+                        <AbilitiesProvider
+                          talents={talents}
+                          customTalents={customTalents}
+                          skills={skills}
+                          customSkills={customSkills}
+                          knowledges={knowledges}
+                          customKnowledges={customKnowledges}
                         >
-                          <HumanMagicProvider
-                            psy={psy}
-                            staticMagic={staticMagic}
-                            theurgy={theurgy}
+                          <DisciplinesProvider
+                            clanDisciplines={clanDisciplines}
+                            outClanDisciplines={outClanDisciplines}
+                            combinedDisciplines={combinedDisciplines}
                           >
-                            <AdvFlawProvider
-                              advantages={advantages}
-                              flaws={flaws}
+                            <HumanMagicProvider
+                              psy={psy}
+                              staticMagic={staticMagic}
+                              theurgy={theurgy}
                             >
-                              <LanguagesProvider languages={languages}>
-                                <PexProvider leftOverPex={leftOverPex}>
-                                  <Sheet infos={infos} />
-                                </PexProvider>
-                              </LanguagesProvider>
-                            </AdvFlawProvider>
-                          </HumanMagicProvider>
-                        </DisciplinesProvider>
-                      </AbilitiesProvider>
-                    </FaithProvider>
-                  </MindProvider>
-                </AttributesProvider>
-              </InfosProvider>
-            </GenerationProvider>
-          </IdProvider>
-        </ModeProvider>
-      </SectionsProvider>
+                              <AdvFlawProvider
+                                advantages={advantages}
+                                flaws={flaws}
+                              >
+                                <LanguagesProvider languages={languages}>
+                                  <PexProvider leftOverPex={leftOverPex}>
+                                    <Sheet infos={infos} />
+                                  </PexProvider>
+                                </LanguagesProvider>
+                              </AdvFlawProvider>
+                            </HumanMagicProvider>
+                          </DisciplinesProvider>
+                        </AbilitiesProvider>
+                      </FaithProvider>
+                    </MindProvider>
+                  </AttributesProvider>
+                </InfosProvider>
+              </GenerationProvider>
+            </IdProvider>
+          </ModeProvider>
+        </SectionsProvider>
+      </AccessesProvider>
     </PreferencesProvider>
   </ModificationsProvider>
 );

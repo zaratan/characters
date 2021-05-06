@@ -32,4 +32,5 @@ export type VampireType = {
   sections: SectionsType;
   trueFaith: number;
   humanMagic: HumanMagicType;
+  editors: Array<string>;
 };
