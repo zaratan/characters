@@ -43,10 +43,10 @@ export const ModeProvider = ({
 
   useEffect(() => {
     setEditMode(false);
-    setPlayMode(connected && editors.includes(me?.sub));
+    setPlayMode(connected && editors.includes(me.sub));
   }, [connected, editors, me?.sub]);
   const toggleMode =
-    connected && editors.includes(me?.sub)
+    connected && editors.includes(me.sub)
       ? () => {
           if (playMode && !editMode) {
             setEditMode(true);
