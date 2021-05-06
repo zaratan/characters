@@ -20,6 +20,7 @@ import HumanMagicContext, {
   HumanMagicType,
 } from '../contexts/HumanMagicContext';
 import { fetcher } from '../helpers/fetcher';
+import AccessesContext from '../contexts/AccessesContext';
 
 export const useSave = () => {
   const { resetSave } = useContext(ModificationsContext);
@@ -89,6 +90,7 @@ export const useSave = () => {
   } = useContext(SectionsContext);
   const { trueFaith } = useContext(FaithContext);
   const { psy, staticMagic, theurgy } = useContext(HumanMagicContext);
+  const { editors, viewers } = useContext(AccessesContext);
   const action = async () => {
     const combinedDisc = combinedDisciplines.map((disc) => ({
       key: disc.key,
@@ -274,6 +276,8 @@ export const useSave = () => {
       leftOverPex: leftOver.value,
       trueFaith: trueFaith.value,
       humanMagic,
+      editors,
+      viewers,
     };
     const url = `/api/vampires/${id}/update`;
     await fetcher(url, {

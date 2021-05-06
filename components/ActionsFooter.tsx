@@ -7,6 +7,7 @@ import {
   generateHandleClick,
   generateHandleKeypress,
 } from '../helpers/handlers';
+import AccessesContext from '../contexts/AccessesContext';
 
 type ActionType = {
   name: string;
@@ -227,10 +228,13 @@ const ActionsFooter = ({
   actions?: Array<ActionType>;
   loggedActions?: Array<ActionType>;
 }) => {
-  const { connected } = useContext(MeContext);
+  const { connected, me } = useContext(MeContext);
+  const { editors } = useContext(AccessesContext);
   const allActions = [
     ...(actions || []),
-    ...(connected && loggedActions ? loggedActions : []),
+    ...(connected && editors.includes(me.sub) && loggedActions
+      ? loggedActions
+      : []),
   ];
   return (
     <>

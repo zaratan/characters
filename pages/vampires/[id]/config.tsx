@@ -77,7 +77,7 @@ const ConfigWrapper = ({
   const router = useRouter();
   const { id } = router.query;
   const { needPusherFallback } = useContext(SystemContext);
-  const { connected } = useContext(MeContext);
+  const { connected, me } = useContext(MeContext);
   const { data } = useSWR<VampireType>(`/api/vampires/${id}`, {
     initialData,
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
@@ -91,12 +91,25 @@ const ConfigWrapper = ({
   if (router.isFallback || notFound) {
     return <div>Loading...</div>;
   }
+
   if (!connected) {
     return (
       <OuterContainer>
         <Nav />
         <TextFallback>
           Connectez vous pour configurer un personnage.
+        </TextFallback>
+        <Footer />
+      </OuterContainer>
+    );
+  }
+
+  if (!(data.editors || ['github|3338913']).includes(me.sub)) {
+    return (
+      <OuterContainer>
+        <Nav />
+        <TextFallback>
+          Vous n'avez pas accès à la configuration de ce personnage.
         </TextFallback>
         <Footer />
       </OuterContainer>

@@ -6,6 +6,7 @@ import React, {
   useContext,
   useEffect,
 } from 'react';
+import AccessesContext from './AccessesContext';
 import MeContext from './MeContext';
 
 type ContextType = {
@@ -30,25 +31,32 @@ export const ModeProvider = ({
   startEdit?: boolean;
   startPlay?: boolean;
 }) => {
-  const { connected } = useContext(MeContext);
+  const { connected, me } = useContext(MeContext);
+  const { editors } = useContext(AccessesContext);
 
-  const [editMode, setEditMode] = useState(connected ? startEdit : false);
-  const [playMode, setPlayMode] = useState(connected ? startPlay : false);
+  const [editMode, setEditMode] = useState(
+    connected && editors.includes(me.sub) ? startEdit : false
+  );
+  const [playMode, setPlayMode] = useState(
+    connected && editors.includes(me.sub) ? startPlay : false
+  );
+
   useEffect(() => {
     setEditMode(false);
-    setPlayMode(connected);
-  }, [connected]);
-  const toggleMode = connected
-    ? () => {
-        if (playMode && !editMode) {
-          setEditMode(true);
-          setPlayMode(false);
-        } else {
-          setEditMode(false);
-          setPlayMode(true);
+    setPlayMode(connected && editors.includes(me.sub));
+  }, [connected, editors, me?.sub]);
+  const toggleMode =
+    connected && editors.includes(me.sub)
+      ? () => {
+          if (playMode && !editMode) {
+            setEditMode(true);
+            setPlayMode(false);
+          } else {
+            setEditMode(false);
+            setPlayMode(true);
+          }
         }
-      }
-    : () => {};
+      : () => {};
 
   const context: ContextType = {
     editMode,
