@@ -89,6 +89,8 @@ const NewCharPage = () => {
   const [name, setName] = useState('');
   const [era, setEra] = useState(0);
   const [type, setType] = useState(0);
+  const [privateSheet, setPrivateSheet] = useState(false);
+
   const router = useRouter();
   const id = uuid();
 
@@ -113,7 +115,7 @@ const NewCharPage = () => {
     const url = '/api/vampires/create';
     await fetcher(url, {
       method: 'POST',
-      body: JSON.stringify({ name, era, type, id, appId }),
+      body: JSON.stringify({ name, era, type, id, appId, privateSheet }),
     });
     router.push(`/vampires/${id}`);
   };
@@ -161,6 +163,16 @@ const NewCharPage = () => {
                 <option value={key}>{value}</option>
               ))}
             </Select>
+          </Field>
+          <Field htmlFor="new-char-private">
+            <Label>Feuille privée ? :</Label>
+            <input
+              type="checkbox"
+              name="privateSheet"
+              id="new-char-private"
+              checked={privateSheet}
+              onChange={(e) => setPrivateSheet(e.target.checked)}
+            />
           </Field>
           <EmptyLine />
           <Button type="submit" value="Créer" />

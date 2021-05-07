@@ -12,6 +12,7 @@ import { SectionsType } from '../contexts/SectionsContext';
 import { HumanMagicType } from '../contexts/HumanMagicContext';
 
 export type VampireType = {
+  id: string;
   generation: number;
   attributes: AttributesType;
   talents: RawAbilitiesListType;

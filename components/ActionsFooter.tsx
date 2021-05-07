@@ -224,16 +224,19 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
 const ActionsFooter = ({
   actions,
   loggedActions,
+  ownerActions,
 }: {
   actions?: Array<ActionType>;
   loggedActions?: Array<ActionType>;
+  ownerActions?: Array<ActionType>;
 }) => {
   const { connected, me } = useContext(MeContext);
   const { editors } = useContext(AccessesContext);
   const allActions = [
     ...(actions || []),
-    ...(connected && editors.includes(me.sub) && loggedActions
-      ? loggedActions
+    ...(connected && loggedActions ? loggedActions : []),
+    ...(connected && editors.includes(me.sub) && ownerActions
+      ? ownerActions
       : []),
   ];
   return (
