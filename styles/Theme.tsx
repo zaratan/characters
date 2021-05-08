@@ -23,9 +23,9 @@ export const lightTheme = {
 };
 
 export const darkTheme = {
-  background: '#000',
-  color: '#ddd',
-  dotColor: '#bbb',
+  background: '#333',
+  color: '#ccc',
+  dotColor: '#aaa',
   borderColor: 'darkGray',
   actionItemBorderColor: '#444',
   actionItemBackgroundActive: '#080808',
@@ -36,7 +36,7 @@ export const darkTheme = {
   glyphGray: '#999',
   blue: '#1e4ed1',
   navBackground: '#070707',
-  handTextColor: '#ccc',
+  handTextColor: '#bbb',
   dotBaseNotSelectColot: '#fff',
   titleColor: '#ccc',
   red: '#e62a2a',
