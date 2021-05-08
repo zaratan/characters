@@ -29,7 +29,7 @@ const PexSpansContainer = styled.span`
 `;
 
 export const RedSpan = styled.span`
-  color: red;
+  color: ${(props) => props.theme.red};
 `;
 
 export const computePexElems = (

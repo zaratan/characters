@@ -64,8 +64,14 @@ const Field = styled.label`
 `;
 
 const TextInput = styled.input`
-  border-bottom: 1px solid lightgray;
+  border-bottom: 1px solid ${(props) => props.theme.borderColor};
+  background-color: ${(props) => props.theme.background};
+  color: ${(props) => props.theme.color};
   padding: 0.5rem;
+  &:focus {
+    outline: none;
+    border-bottom: 1px solid ${(props) => props.theme.focusBorderColor};
+  }
 `;
 
 export const TextFallback = styled.strong`
@@ -79,10 +85,16 @@ export const TextFallback = styled.strong`
 const Select = styled.select`
   flex-grow: 1;
   padding: 0.5rem;
+  background-color: ${(props) => props.theme.background};
+  color: ${(props) => props.theme.color};
 `;
 
 const Button = styled.input`
   padding: 0.5rem;
+`;
+
+const CheckBox = styled.input`
+  background-color: ${(props) => props.theme.background};
 `;
 
 const NewCharPage = () => {
@@ -166,7 +178,7 @@ const NewCharPage = () => {
           </Field>
           <Field htmlFor="new-char-private">
             <Label>Feuille privée ? :</Label>
-            <input
+            <CheckBox
               type="checkbox"
               name="privateSheet"
               id="new-char-private"

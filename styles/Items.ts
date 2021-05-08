@@ -8,7 +8,7 @@ export const OptionItem = styled.li`
 export const ActionItem = styled.li`
   display: inline-block;
   padding: 0.5rem;
-  border: solid 1px #333;
+  border: solid 1px ${(props) => props.theme.actionItemBorderColor};
   border-radius: 5px;
   margin: 0 auto;
   text-align: center;
@@ -22,7 +22,7 @@ export const ActionItem = styled.li`
   }
   :active {
     box-shadow: none;
-    background-color: #f7f7f7;
+    background-color: ${(props) => props.theme.actionItemBackgroundActive};
     top: 1px;
     left: 1px;
   }

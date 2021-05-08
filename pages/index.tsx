@@ -14,6 +14,9 @@ import SystemContext from '../contexts/SystemContext';
 import Footer from '../components/Footer';
 import ActionsFooter from '../components/ActionsFooter';
 import { EmptyLine } from '../styles/Lines';
+import MoonIcon from '../components/icons/MoonIcon';
+import SunIcon from '../components/icons/SunIcon';
+import ThemeContext from '../contexts/ThemeContext';
 
 const PusherSheetsListener = dynamic(
   () => import('../components/no-ssr/PusherSheetsListener'),
@@ -49,6 +52,7 @@ const Home = ({
   initialData: { characters: Array<{ name: string; key: string }> };
 }) => {
   const { needPusherFallback } = useContext(SystemContext);
+  const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const { data, mutate } = useSWR(`/api/vampires`, {
     initialData,
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
@@ -84,6 +88,13 @@ const Home = ({
         </HorizontalSection>
       </SheetContainer>
       <ActionsFooter
+        actions={[
+          {
+            glyph: darkMode ? SunIcon : MoonIcon,
+            name: `Mode ${darkMode ? 'Clair' : 'Sombre'}`,
+            act: toggleDarkMode,
+          },
+        ]}
         loggedActions={[
           { name: 'Nouveau Personnage', link: '/new', glyph: '+' },
         ]}

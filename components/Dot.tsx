@@ -6,12 +6,15 @@ import {
 } from '../helpers/handlers';
 import { Glyph } from './Glyph';
 import PreferencesContext from '../contexts/PreferencesContext';
+import ThemeContext from '../contexts/ThemeContext';
+import { darkTheme } from '../styles/Theme';
 
 const DotStyle = styled.svg`
+  color: ${(props) => props.theme.color};
   padding: 0 0.05rem;
   fill: transparent;
   &.full {
-    fill: #555;
+    fill: ${(props) => props.theme.glyphGray};
   }
   width: 24px;
   height: 36px;
@@ -40,16 +43,16 @@ const DotContainer = styled.span`
   :hover,
   :focus {
     svg {
-      fill: #555 !important;
+      fill: ${(props) => props.theme.dotColor} !important;
     }
     ~ span {
       svg {
-        fill: #555 !important;
+        fill: ${(props) => props.theme.dotColor} !important;
       }
     }
     ~ span.locked {
       svg {
-        fill: black !important;
+        fill: ${(props) => props.theme.dotColor} !important;
       }
     }
   }
@@ -65,19 +68,19 @@ const DotContainer = styled.span`
   }
 
   &.locked svg {
-    fill: black !important;
+    fill: ${(props) => props.theme.dotColor} !important;
   }
 
   &.disabled {
     cursor: auto !important;
     svg.full {
-      fill: black !important;
+      fill: ${(props) => props.theme.dotColor} !important;
     }
     :focus {
       outline: none;
       svg {
         ellipse {
-          stroke: black !important;
+          stroke: ${(props) => props.theme.dotColor} !important;
           stroke-width: 2px !important;
         }
       }
@@ -105,13 +108,13 @@ const DotContainer = styled.span`
   &.base.selected {
     small {
       display: none;
-      color: red;
+      color: ${(props) => props.theme.red};
     }
   }
 
   &.selected small {
     display: inline;
-    color: red;
+    color: ${(props) => props.theme.red};
   }
 
   &.hidden {
@@ -119,7 +122,7 @@ const DotContainer = styled.span`
   }
 
   &.base:not(.selected) svg {
-    fill: #bbb !important;
+    fill: ${(props) => props.theme.dotBaseNotSelectColot} !important;
   }
 `;
 
@@ -128,12 +131,12 @@ const GlyphContainer = styled.span`
   &.base.selected {
     small {
       display: none;
-      color: red;
+      color: ${(props) => props.theme.red};
     }
   }
   &.selected small {
     display: inline;
-    color: red;
+    color: ${(props) => props.theme.red};
   }
 `;
 
@@ -202,6 +205,7 @@ const Dot = ({
 
   const handleKeyPress = generateHandleKeypress(clickAction);
   const { showPex } = useContext(PreferencesContext);
+  const { darkMode } = useContext(ThemeContext);
 
   return (
     <DotContainer
@@ -220,7 +224,7 @@ const Dot = ({
           cy="50%"
           rx="40%"
           ry="30%"
-          stroke="black"
+          stroke={darkMode ? darkTheme.dotColor : 'black'}
           strokeWidth="2"
         />
       </DotStyle>

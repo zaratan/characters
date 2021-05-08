@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { ComponentType, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { BlackLine, EmptyLine } from '../styles/Lines';
@@ -11,7 +11,7 @@ import AccessesContext from '../contexts/AccessesContext';
 
 type ActionType = {
   name: string;
-  glyph: string;
+  glyph: string | ComponentType;
 } & (
   | {
       link: string;
@@ -38,6 +38,11 @@ type ActionType = {
 );
 
 const GlyphAction = styled.span`
+  display: flex;
+  align-items: center;
+  svg {
+    width: 30px;
+  }
   font-size: 2rem;
   &.active {
     color: green;
@@ -48,8 +53,9 @@ const DesktopAction = styled.li`
   border-radius: 40px;
   height: 80px;
   min-width: 80px;
-  background-color: #eee;
-  border: 1px solid lightgray;
+  background-color: ${(props) => props.theme.actionBackground};
+  border: 1px solid ${(props) => props.theme.borderColor};
+  color: ${(props) => props.theme.color};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -76,7 +82,7 @@ const DesktopAction = styled.li`
       }
     }
     &:focus {
-      border-color: blue;
+      border-color: ${(props) => props.theme.blue};
     }
   }
 `;
@@ -167,7 +173,11 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
             tabIndex={0}
           >
             <GlyphAction className={action.active ? 'active' : ''}>
-              {action.glyph}
+              {typeof action.glyph === 'string' ? (
+                action.glyph
+              ) : (
+                <action.glyph />
+              )}
             </GlyphAction>
             <span className="full-text">{action.name}</span>
           </DesktopAction>

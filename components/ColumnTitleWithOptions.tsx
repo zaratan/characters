@@ -12,7 +12,7 @@ import { TempElemType } from '../types/TempElemType';
 const GlyphContainer = styled.span`
   span {
     font-size: 1rem;
-    color: #555;
+    color: ${(props) => props.theme.glyphGray};
   }
   position: absolute;
   right: -1.5rem;
