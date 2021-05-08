@@ -18,6 +18,8 @@ const GlobalStyle = createGlobalStyle`
 html, body, #__next {
   min-height: 100%;
   height: 100%;
+  background-color: ${(props) => props.theme.background};
+  color: ${(props) => props.theme.color}
 }
 
 /* Box sizing rules */
@@ -111,7 +113,7 @@ input[type=number]::-webkit-outer-spin-button {
 
 a {
   text-decoration: none;
-  color: black;
+  color: ${(props) => props.theme.color};
   transition: color 0.2s ease-in-out;
 
   :hover {

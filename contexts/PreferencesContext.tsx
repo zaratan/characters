@@ -13,6 +13,7 @@ const defaultContext: ContextType = {
 const PreferencesContext = createContext(defaultContext);
 export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
   const [showPex, setShowPex] = useState(false);
+
   const togglePex = () => {
     const nextState = !showPex;
     localStorage.setItem(

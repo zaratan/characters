@@ -17,7 +17,7 @@ const Heart = styled.span`
   cursor: grab;
   :hover {
     transition: color 0.2s ease-in-out;
-    color: red;
+    color: ${(props) => props.theme.red};
   }
 `;
 

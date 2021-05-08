@@ -40,6 +40,7 @@ import ModificationsContext, {
 import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSave } from '../hooks/useSave';
 import { AccessesProvider } from '../contexts/AccessesContext';
+import ThemeContext from '../contexts/ThemeContext';
 
 const PageTitle = styled.div`
   display: flex;
@@ -52,6 +53,7 @@ const UnsavedChangeCloseText =
 const Sheet = ({ infos }: { infos: InfosType }) => {
   const router = useRouter();
   const { unsavedChanges, rollback } = useContext(ModificationsContext);
+  const { darkMode } = useContext(ThemeContext);
 
   useEffect(() => {
     router.beforePopState(() => {
@@ -93,7 +95,7 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
         <PageTitle>
           {infos.era === 0 ? (
             <Image
-              src="/title.png"
+              src={darkMode ? '/title_dark.png' : '/title.png'}
               alt="Vampire Dark Age"
               width={516}
               height={160}

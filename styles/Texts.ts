@@ -3,7 +3,7 @@ import styled from 'styled-components';
 export const HandLargeText = styled.span`
   font-family: 'Bilbo Swash Caps', cursive;
   font-size: 2rem;
-  color: #333;
+  color: ${(props) => props.theme.handTextColor};
   &.left-padded {
     padding-left: 2rem;
   }
@@ -18,7 +18,8 @@ export const HandLargeText = styled.span`
 export const HandLargeEditableText = styled.input`
   font-family: 'Bilbo Swash Caps', cursive;
   font-size: 2rem;
-  color: #333;
+  color: ${(props) => props.theme.handTextColor};
+  background-color: ${(props) => props.theme.background};
   border: none;
   flex-shrink: 1;
   flex-grow: 1;
@@ -39,9 +40,9 @@ export const HandLargeEditableText = styled.input`
 export const HandText = styled.span`
   font-family: 'Bilbo Swash Caps', cursive;
   font-size: 1.5rem;
-  color: #333;
+  color: ${(props) => props.theme.handTextColor};
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid ${(props) => props.theme.color};
   flex-shrink: 1;
   flex-grow: 1;
   min-width: 70px;
@@ -75,9 +76,10 @@ export const HandText = styled.span`
 export const HandEditableText = styled.input`
   font-family: 'Bilbo Swash Caps', cursive;
   font-size: 1.5rem;
-  color: #333;
+  color: ${(props) => props.theme.handTextColor};
+  background-color: ${(props) => props.theme.background};
   border: none;
-  border-bottom: 1px solid black;
+  border-bottom: 1px solid ${(props) => props.theme.color};
   flex-shrink: 1;
   flex-grow: 1;
   min-width: 70px;

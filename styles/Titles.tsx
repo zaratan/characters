@@ -20,7 +20,7 @@ export const StyledColumnTitle = styled(Title)`
 
 export const SubTitle = styled.h2`
   font-family: CloisterBlack;
-  color: gray;
+  color: ${(props) => props.theme.titleColor};
   display: inline;
   white-space: nowrap;
 `;

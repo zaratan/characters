@@ -1,10 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import ThemeContext from '../contexts/ThemeContext';
 import {
   generateHandleClick,
   generateHandleKeypress,
 } from '../helpers/handlers';
+import { darkTheme, lightTheme } from '../styles/Theme';
 import { Glyph } from './Glyph';
 
 const SquareContainer = styled.span`
@@ -108,6 +110,7 @@ const Square = ({
   const hoverCheck = checked === true || checked === false;
   const handleClick = generateHandleClick(inactive ? () => {} : onClick);
   const handleKeypress = generateHandleKeypress(inactive ? () => {} : onClick);
+  const { darkMode } = useContext(ThemeContext);
   return (
     <SquareContainer
       aria-label={name}
@@ -121,7 +124,7 @@ const Square = ({
         <rect
           x="3"
           y="9"
-          stroke="black"
+          stroke={darkMode ? darkTheme.color : lightTheme.color}
           strokeWidth="2"
           width="18"
           height="18"
@@ -129,7 +132,7 @@ const Square = ({
         <path
           d="M6 12 L18 24 Z"
           className={`first ${timeChecked >= 1 ? 'checked' : ''}`}
-          stroke="black"
+          stroke={darkMode ? darkTheme.color : lightTheme.color}
           strokeWidth="2"
         />
         <path
@@ -137,13 +140,13 @@ const Square = ({
           className={`second ${timeChecked >= 2 ? 'checked' : ''} ${
             hoverCheck ? 'slow-checked' : ''
           }`}
-          stroke="black"
+          stroke={darkMode ? darkTheme.color : lightTheme.color}
           strokeWidth="2"
         />
         <path
           d="M12 11 L12 25 Z"
           className={`third ${timeChecked >= 3 ? 'checked' : ''}`}
-          stroke="black"
+          stroke={darkMode ? darkTheme.color : lightTheme.color}
           strokeWidth="2"
         />
       </SquareStyle>

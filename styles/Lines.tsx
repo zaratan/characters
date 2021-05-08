@@ -16,7 +16,7 @@ export const EmptyLine = styled.div`
 `;
 
 export const BlackLine = styled.div`
-  background-color: black;
+  background-color: ${(props) => props.theme.color};
   height: 3px;
   width: 100%;
   &.thin {

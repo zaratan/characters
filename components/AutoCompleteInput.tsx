@@ -18,18 +18,20 @@ const Form = styled.form`
 `;
 
 const Input = styled.input`
-  border: 1px solid lightgrey;
+  border: 1px solid ${(props) => props.theme.borderColor};
+  background-color: ${(props) => props.theme.background};
+  color: ${(props) => props.theme.color};
   padding: 0.5rem;
   width: 100%;
   &:focus {
     outline: none;
-    border-color: #8bcbe0;
+    border-color: ${(props) => props.theme.focusBorderColor};
     border-width: 1px;
   }
 `;
 
 const SuggestionList = styled.ul`
-  border: 1px solid lightgray;
+  border: 1px solid ${(props) => props.theme.borderColor};
 `;
 
 const Suggestion = styled.li`
@@ -39,12 +41,13 @@ const Suggestion = styled.li`
     width: 100%;
     height: 100%;
     display: inline-block;
+    color: ${(props) => props.theme.color};
     &:hover {
-      background-color: #8bcbe0;
+      background-color: ${(props) => props.theme.hoverBackgroundColor};
     }
     &:focus {
       outline: none;
-      background-color: #b4dae7;
+      background-color: ${(props) => props.theme.focusBackgroundColor};
     }
   }
 `;

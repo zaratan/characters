@@ -49,7 +49,7 @@ const MenuDropdownElem = styled.li`
   transition: 0.3s ease-in-out;
   :hover,
   :focus {
-    background-color: #eee;
+    background-color: ${(props) => props.theme.actionBackground};
     outline: none;
   }
   a {
@@ -82,12 +82,12 @@ const MenuDropdown = styled.ul`
   transition: max-height 0.3s ease-in-out, padding 0.2s ease-in-out;
 
   &.open {
-    border: 1px solid lightgray;
+    border: 1px solid ${(props) => props.theme.borderColor};
     max-height: 8rem;
     padding: 0.5rem 0rem;
   }
   z-index: 3;
-  background-color: #f8f8f8;
+  background-color: ${(props) => props.theme.navBackground};
 `;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -170,7 +170,8 @@ const PageTitle = styled.header`
 
 const NavContainer = styled.nav`
   width: 100%;
-  background-color: white;
+  background-color: ${(props) => props.theme.background};
+  color: ${(props) => props.theme.color};
 `;
 
 export type ActionType = {

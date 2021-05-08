@@ -47,7 +47,7 @@ const DotSeparator = styled.span`
 
   :hover ~ span {
     svg {
-      fill: #555 !important;
+      fill: ${(props) => props.theme.glyphGray} !important;
     }
   }
 
@@ -65,7 +65,7 @@ const DotSeparator = styled.span`
   }
 
   svg.full {
-    color: #555;
+    color: ${(props) => props.theme.glyphGray};
   }
 
   &.hidden {
@@ -115,7 +115,7 @@ const CustomTitle = styled.span`
 const TextHelper = styled.small`
   position: absolute;
   right: -1.3rem;
-  color: red;
+  color: ${(props) => props.theme.red};
   height: 100%;
   display: flex;
   justify-content: center;
@@ -133,7 +133,7 @@ const ButtonGlyphContainer = styled.span`
   z-index: 1;
   span {
     font-size: 1rem;
-    color: #555;
+    color: ${(props) => props.theme.glyphGray};
     font-family: CloisterBlack;
   }
   &.active span {
