@@ -66,6 +66,7 @@ const Field = styled.label`
 const TextInput = styled.input`
   border-bottom: 1px solid ${(props) => props.theme.borderColor};
   background-color: ${(props) => props.theme.background};
+  color: ${(props) => props.theme.color};
   padding: 0.5rem;
   &:focus {
     outline: none;
