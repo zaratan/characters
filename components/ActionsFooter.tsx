@@ -96,6 +96,7 @@ const DesktopActions = styled.ul`
 
 const MobileActionsContainer = styled.div`
   padding: 1rem;
+  width: 100%;
 
   @media screen and (min-width: 681px) {
     display: none;
