@@ -103,24 +103,27 @@ const MobileActionsContainer = styled.div`
 `;
 
 const MobileActions = styled.ul`
-  display: grid;
-  column-gap: 0.5rem;
-  grid-template-columns: repeat(auto-fit, minmax(50px, 1fr));
+  display: flex;
+  flex-direction: column;
 `;
 
 const MobileAction = styled.li`
   text-align: center;
-  margin: 0 auto;
   padding: 1rem;
-  background-color: #eee;
+  background-color: ${(props) => props.theme.actionBackground};
   border-radius: 5px;
-  border: 1px solid lightgray;
+  border: 1px solid ${(props) => props.theme.actionItemBorderColor} !important;
+  color: ${(props) => props.theme.color};
   width: 100%;
   height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  margin-top: 0.5rem;
+  &:hover {
+    background-color: ${(props) => props.theme.actionItemBackgroundActive};
+  }
 `;
 
 const DesktopActionsContainer = styled.div`
