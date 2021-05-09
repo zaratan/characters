@@ -3,6 +3,7 @@ import ThemeContext from '../../contexts/ThemeContext';
 import { EmptyLine } from '../../styles/Lines';
 import { Title } from '../../styles/Titles';
 import ActionsFooter from '../ActionsFooter';
+import ArrowLeft from '../icons/ArrowLeft';
 import MoonIcon from '../icons/MoonIcon';
 import SunIcon from '../icons/SunIcon';
 import ConfigAccessSection from './ConfigAccessSection';
@@ -25,7 +26,7 @@ const Config = ({ id, name }: { id: string; name: string }) => {
             name: `Mode ${darkMode ? 'Clair' : 'Sombre'}`,
             act: toggleDarkMode,
           },
-          { glyph: '←', link: `/vampires/${id}`, name: 'Retour' },
+          { glyph: ArrowLeft, link: `/vampires/${id}`, name: 'Retour' },
         ]}
       />
     </>

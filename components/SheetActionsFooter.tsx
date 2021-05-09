@@ -8,6 +8,9 @@ import { useSave } from '../hooks/useSave';
 import ThemeContext from '../contexts/ThemeContext';
 import SunIcon from './icons/SunIcon';
 import MoonIcon from './icons/MoonIcon';
+import CogIcon from './icons/CogIcon';
+import PenIcon from './icons/PenIcon';
+import PuzzleIcon from './icons/PuzzleIcon';
 
 const SheetActionsFooter = () => {
   const { showPex, togglePex } = useContext(PreferencesContext);
@@ -33,12 +36,12 @@ const SheetActionsFooter = () => {
       ]}
       ownerActions={[
         {
-          glyph: editMode ? '🎲' : '✎',
+          glyph: editMode ? PuzzleIcon : PenIcon,
           act: toggleMode,
           name: editMode ? 'Jouer' : 'Modifier',
         },
         {
-          glyph: '⚙',
+          glyph: CogIcon,
           link: `/vampires/${id}/config`,
           name: 'Configuration',
         },
