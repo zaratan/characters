@@ -142,7 +142,13 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
             <Link href={action.link} key={action.name}>
               <a>
                 <DesktopAction>
-                  <GlyphAction>{action.glyph}</GlyphAction>
+                  <GlyphAction>
+                    {typeof action.glyph === 'string' ? (
+                      action.glyph
+                    ) : (
+                      <action.glyph />
+                    )}
+                  </GlyphAction>
                   <span className="full-text">{action.name}</span>
                 </DesktopAction>
               </a>
@@ -156,7 +162,13 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
             // eslint-disable-next-line react/jsx-props-no-spreading
             <action.component {...action.componentProps} key={action.name}>
               <DesktopAction>
-                <GlyphAction>{action.glyph}</GlyphAction>
+                <GlyphAction>
+                  {typeof action.glyph === 'string' ? (
+                    action.glyph
+                  ) : (
+                    <action.glyph />
+                  )}
+                </GlyphAction>
                 <span className="full-text">{action.name}</span>
               </DesktopAction>
             </action.component>

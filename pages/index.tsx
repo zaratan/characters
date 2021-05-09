@@ -17,6 +17,7 @@ import { EmptyLine } from '../styles/Lines';
 import MoonIcon from '../components/icons/MoonIcon';
 import SunIcon from '../components/icons/SunIcon';
 import ThemeContext from '../contexts/ThemeContext';
+import PlusIcon from '../components/icons/PlusIcon';
 
 const PusherSheetsListener = dynamic(
   () => import('../components/no-ssr/PusherSheetsListener'),
@@ -96,7 +97,7 @@ const Home = ({
           },
         ]}
         loggedActions={[
-          { name: 'Nouveau Personnage', link: '/new', glyph: '+' },
+          { name: 'Nouveau Personnage', link: '/new', glyph: PlusIcon },
         ]}
       />
       <Footer withoutEmptyLines />
