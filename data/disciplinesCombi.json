@@ -1,0 +1,2140 @@
+[
+  {
+    "name": "Sucer le Tout !",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "1" }] },
+      { "or": [{ "name": "Protean", "level": "2" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": [
+      "En touchant du sang, permet de le prendre pour soi, en l'absorbant. Il peut rester quelques traces après, mais ce pouvoir est bien pratique pour vider un corps entier de son sang sans en donner l'impression, ou assécher une flaque."
+    ]
+  },
+  {
+    "name": "Voile Ténébreux",
+    "requirements": [
+      { "or": [{ "name": "Dissimulation", "level": "1" }] },
+      { "or": [{ "name": "Obtenebration", "level": "1" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": ["Permet de créer instantanément l'ombre pour se cacher."]
+  },
+  {
+    "name": "Vision Accélérée",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "1" }] },
+      { "or": [{ "name": "Célérité", "level": "2" }] }
+    ],
+    "source": "Archons and Templars (2425) p140",
+    "description": [
+      "1 Sang pour une scène, Esprit+Vigilance SR 6 ou 7 pour suivre des yeux un objet très rapide (carte dans un jeu, flèche etc)."
+    ]
+  },
+  {
+    "name": "Façade de Fer",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "1" }] },
+      { "or": [{ "name": "Dissimulation", "level": "3" }] }
+    ],
+    "source": "Archons and Templars (2425) p140",
+    "description": [
+      "Pouvoir connu des archontes, et de quelques templiers. Manipulation+Subterfuge SR6. Le vampire semble n'avoir subit aucun dégât. Brisable sur Auspex > Dissimulation. Ne marche pas si l'utilisateur est Incapacité."
+    ]
+  },
+  {
+    "name": "Nommer les Disparus",
+    "requirements": [
+      {
+        "or": [
+          { "name": "Auspex", "level": "3" },
+          { "name": "Thaumaturgie", "level": "1" },
+          { "name": "Nécromancie", "level": "1" }
+        ]
+      }
+    ],
+    "source": "Archons and Templars (2425) p140",
+    "description": [
+      "1 Sang, Perception+Empathie. Permet d'identifier les restes d'une personne (cendre, os etc...)."
+    ],
+    "extra_table": [
+      ["Mort", "Vampire", "Humain"],
+      ["< 24h", "4", "4"],
+      ["< 1 semaine", "6", "4"],
+      ["< 1 mois", "7", "6"],
+      ["< 6 mois", "8", "6"],
+      ["< 1 an", "10", "6"],
+      ["< 10 ans", "10/ 3 succès", "7"],
+      ["< 100 ans", "10 / 5 succès", "8"],
+      ["> 100 ans", "NA", "10"]
+    ]
+  },
+  {
+    "name": "Faille Mémorielle",
+    "requirements": [
+      { "or": [{ "name": "Dissimulation", "level": "2" }] },
+      { "or": [{ "name": "Présence", "level": "2" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": [
+      "1 Sang, Charisme+Subterfuge SR Volonté. Permet de faire croire à un témoin qu'on était pas là."
+    ]
+  },
+  {
+    "name": "Roi de la Montagne",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] },
+      { "or": [{ "name": "Présence", "level": "2" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": [
+      "Le vampire n'est jamais projeté à terre par un choc, sauf s'il le désire ou est tué par l'impact. Il reste debout... mais bien sur peut avoir très mal !"
+    ]
+  },
+  {
+    "name": "Peau du Blaireau",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "1" }] },
+      { "or": [{ "name": "Protean", "level": "4" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": [
+      "1 Sang pour une scène, Esprit+Vigilance SR 6 ou 7 pour suivre des yeux un objet très rapide (carte dans un jeu, flèche etc)."
+    ]
+  },
+  {
+    "name": "Façade de Fer",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "1" }] },
+      { "or": [{ "name": "Dissimulation", "level": "3" }] }
+    ],
+    "source": "Archons and Templars (2425) p140",
+    "description": [
+      "Pouvoir connu des archontes, et de quelques templiers. Manipulation+Subterfuge SR6. Le vampire semble n'avoir subit aucun dégât. Brisable sur Auspex > Dissimulation. Ne marche pas si l'utilisateur est Incapacité."
+    ]
+  },
+  {
+    "name": "Nommer les Disparus",
+    "requirements": [
+      {
+        "or": [
+          { "name": "Auspex", "level": "3" },
+          { "name": "Thaumaturgie", "level": "1" },
+          { "name": "Nécromancie", "level": "1" }
+        ]
+      }
+    ],
+    "source": "Archons and Templars (2425) p140",
+    "description": [
+      "1 point de volonté (ou 1 Sang si Nature connue). Manipulation+Expression SR6. La victime voit le lanceur, ou la victime de ce pouvoir, comme un animal, suivant la personnalité.",
+      "Si volonté<3 : est persuadé de voir vraiment un homme à tête et corps animal",
+      "Si volonté>3 : la personne semble avoir des traits animaux.",
+      "1 succès - 1 scène",
+      "2 succès - 1 nuit",
+      "3 succès - 1 semaine",
+      "4 succès - 1 mois",
+      "5 succès - 1 an."
+    ]
+  },
+  {
+    "name": "Chair de Vent et d'Eau",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "2" }] },
+      { "or": [{ "name": "Vicissitude", "level": "3" }] }
+    ],
+    "source": "Archons and Templars (2425) p141",
+    "description": [
+      "2 Sang. Permet defaire en un tour, sur soit même, les pouvoirs 1-2-3 de Vicissitude.Le jet se fait normalement."
+    ]
+  },
+  {
+    "name": "Appeler le Sang",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "3" }] },
+      { "or": [{ "name": "Animalisme", "level": "3" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": [
+      "Permet de ressentir la Bête dans une environnement. Toute créature ayant une Bête(garou, vampire, goule etc) est détectable.",
+      "Perception+Dressage SR inconnu (6 par défaut?).",
+      "1 succès - Pièce",
+      "2 succès - Salle",
+      "3 succès - Maison",
+      "4 succès - Paté de maison",
+      "5 succès - Vaste propriété.",
+      " Note importante: ce pouvoir fonctionneavec la Bête du lanceur... plus on l'utilise, plus elle ressort."
+    ]
+  },
+  {
+    "name": "Peau de l'Ours",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "2" }] },
+      { "or": [{ "name": "Protean", "level": "4" }] }
+    ],
+    "source": "Wolves of the Sea (2820) p70, Dark Ages: Players Guide to Low Clans (20006) - p159",
+    "description": [
+      "Frénésie, 1 SangLe vampire prend l'apparence mythique d'un Bersek ours: ses muscles segonflent, sa peau se couvre de fourrure. +2 Force, +2 Vigueur tant qudure la frénésie.",
+      "La version du Dark Ages: Players Guide to Low Clans (20006) ajoute, outre un coût supérieur, une machoire proéminente infligeant 1 dé de plus de dégât, et la possibilité de résister à tout dégât aggravé avec Vigueur+Force d'Ame."
+    ]
+  },
+  {
+    "name": "Terreur Mortelle",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "3" }] },
+      { "or": [{ "name": "Présence", "level": "3" }] }
+    ],
+    "source": "Archons and Templars (2425) p142",
+    "description": [
+      "Charisme+Intimidation SR7 vs VolontéSR7. Permet de faire rentrer en frénésie de peur lapersonne visée. Un contact physique, ou les yeux dans les yeux,est nécessaire."
+    ]
+  },
+  {
+    "name": "La Blague de Smiling Jack",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "3" }] },
+      { "or": [{ "name": "Dissimulation", "level": "3" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": [
+      "Manipulation+Performance SR Intelligence+5(max=10) vs Esprit+Subterfuge SR7. La personne viséeprend une autre personne pour le vampire lançant le pouvoir."
+    ]
+  },
+  {
+    "name": "Hibernation",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "4" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] }
+    ],
+    "source": "Wolves of the Sea (2820) p71",
+    "description": [
+      "Si le vampire rentre volontairement en torpeur, Vigueur+Survie SR 8. Chaque succès représente 1Sang qui ne sera pas consumé lors de la torpeur. "
+    ]
+  },
+  {
+    "name": "Parole Anticipée",
+    "requirements": [],
+    "extra_requirements": ["Connaitre Visage Anticipé"],
+    "source": "Archons and Templars (2425) p142",
+    "description": [
+      "Nécessite de connaître \"Visage anticipé\". Manipulation+Subterfuge SR7. Ce pouvoir permet de faire croire à la victime qu'il entend ce qu'il veut entendre. Ceci ne peut être qu'une phrase courte, qu'un mot de passe. Toute discussion permet de passer outre ce pouvoir."
+    ]
+  },
+  {
+    "name": "Le 7eme Frère Chinois",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "2" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "5" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": [
+      "1 point de volonté.Empêche qu'on puisse couper un appendice du vampire. Ceci permetd'ignorer les dégâts sur la première tentative contrel'appendice (bras, tête...). Ne marche que pour un membre àla fois. Une variante permet de protéger le coeur."
+    ]
+  },
+  {
+    "name": "Visage Anticipé",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Dissimulation", "level": "3" }] }
+    ],
+    "source": "Archons and Templars (2425) p142",
+    "description": [
+      "Pouvoir archonte. 1Sang, Manipulation+Performance SR6. Le vampire prend l'apparence d'unepersonne attendue par l'interlocuteur. Si plusieurs visages sont possibles,un choix est nécessaire. Il ne sait pas quelle tête il prend."
+    ]
+  },
+  {
+    "name": "Transformation Instantanée",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "2" }] },
+      {
+        "or": [
+          { "name": "Protean", "level": "5" },
+          { "name": "Dissimulation", "level": "5" },
+          { "name": "Vicissitude", "level": "5" }
+        ]
+      }
+    ],
+    "source": "Archons and Templars (2425) p143",
+    "description": [
+      "Permet de changer un 1tour de forme, en ne dépensant qu'un Sang au lieu de 3. Il estutilisé principalement par les Templiers."
+    ]
+  },
+  {
+    "name": "Retrait du Chaos",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "4" }] },
+      { "or": [{ "name": "Aliénation", "level": "4" }] }
+    ],
+    "source": "Guide to the Anarchs (2424) p164-167",
+    "description": [
+      "Manipulation+Empathie SR6 (8 sile Malkav ne possède pas la folie voulue) vs VolontéSR7. Permet de déclencher une folie à rebours, quandun évènement survient. (attention, usage de Domination doncla génération entre en compte)."
+    ]
+  },
+  {
+    "name": "Yeux de l'Esprit",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Domination", "level": "3" }] }
+    ],
+    "source": "Archons and Templars (2425) p144",
+    "description": [
+      "Permet de voir/sentir/entendre un événement particulier, en fouillant l'esprit de la victime. Si le sujet coopère ou est de génération plus grande : Perception+Subterfuge SR6. Si le sujet est de génération inférieure et résiste : il utilise sa volonté SR6 pour résister.",
+      "Si échec critique, la victime voit un évènement de la vie du vampire, et est immunisé à son pouvoir.",
+      "1 succès - évènement <1h",
+      "2 succès - <1 jour",
+      "3 succès - <1 semaine",
+      "4 succès - <1 mois",
+      "5 succès - <1 an."
+    ]
+  },
+  {
+    "name": "Résistance du Martyr",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "7" }] }
+    ],
+    "source": "Guide to the Camarilla (2302) p114-115",
+    "description": [
+      "Le vampire doit avoir bu du sangdu bénéficiaire au moins une fois durant l'année passée. Il peut, s'ille désire, encaisser Vigueur dégâts à la place du bénéficiaire, résist"
+    ]
+  },
+  {
+    "name": "Stoïcime Elémentaire",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "8" }] },
+      { "or": [{ "name": "Dissimulation", "level": "4" }] }
+    ],
+    "source": "Guide to the Camarilla (2302) p115",
+    "description": [
+      "Pour chaque heurepassée exposée au soleil ou au feu, 1 Sang. Les dégâts deviennentnon aggravés et sont résistibles normalement. "
+    ]
+  },
+  {
+    "name": "Parade Irréfutable",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "3" }] },
+      { "or": [{ "name": "Célérité", "level": "7" }] }
+    ],
+    "source": "Guide to the Camarilla (2302) p114",
+    "description": [
+      "Permet de parer ou d'attraper toute sorte de projectiles sur Dextérité+Sport Le vampire doit au moins faire 3 succès, sinon il encaisse les dégâts normaux."
+    ],
+    "extra_table": [
+      ["Projectile", "Parer", "Attraper"],
+      ["Rocher ou grenade", "4", "5"],
+      ["Couteau ou shuriken", "6", "7"],
+      ["Lance", "5", "5"],
+      ["Hâche", "7", "7"],
+      ["Flèche", "7", "8"],
+      ["Carreau d'arbalète", "8", "9"],
+      ["Balle", "9", "9"]
+    ]
+  },
+  {
+    "name": "Forme de toutes les Bêtes",
+    "requirements": [
+      { "or": [{ "name": "Protean", "level": "4" }] },
+      { "or": [{ "name": "Vicissitude", "level": "4" }] }
+    ],
+    "source": "Mexico City by Night (2412) p114",
+    "description": [
+      "Permet de se changer en toutanimal depuis un lapin jusqu'à un tigre. A la différence de Protean4, les vêtements ne sont pas assimilés par la forme. Il est possiblede changer une autre personne (Volonté SR6 pour résister auDextérité+Alteration corporelle du vampire) en manipulant son corps.Un vampire de génération inférieure ou égale peut guérir de cettetransformation en dépensant 5 Sang. Un vampire de générationsupérieure doit trouver quelqu'un avec Vicissitude. Les restrictionsd'utilisation de pouvoirs sous formes animales sont les mêmes qued'habitude. </p</di>"
+    ]
+  },
+  {
+    "name": "Attaché pour l'impact",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "4" }] },
+      { "or": [{ "name": "Potence", "level": "2" }] }
+    ],
+    "source": "Mexico City by Night (2412) p115",
+    "description": [
+      "Permet de résister à deschocs traumatisant l'ensemble du corps : voiture, tomber de haut,explosion etc. Le vampire doit se préparer à l'impact. Il résisteà Puissance niveaux de blessure (même aggravées), du momentqu'elles ne sont que sous forme d'impact. </p</di>"
+    ]
+  },
+  {
+    "name": "Double psychique",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "5" }] },
+      { "or": [{ "name": "Dissimulation", "level": "3" }] }
+    ],
+    "source": "Lair of the Hidden (2430) p140",
+    "description": [
+      "Ce pouvoir permet de projeterson âme astralement, mais surtout de faire apparaître son corpsastral dans le monde vivant, aussi réel que le vrai. Coûte 1Volonté, nécessite Perception+Occultisme pour se projeter au bonendroit. Le SR dépend de la familiarité du lieu (7 pour un lieufamilier et proche, 10 pour l'autre bout du monde). SurManipulation+Performance SR7, possibilité d'assumer l'apparence d'unautre (même système que Masque aux mille visages). Puisque le corpsapparaît, et même s'il ne peut y avoir d'interaction physique, il est possible d'utiliser les compétences mentales... qui permettent éventuellement l'interaction physique."
+    ]
+  },
+  {
+    "name": "Projection cadavérique",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "5" }] },
+      { "or": [{ "name": "Mortis", "level": "6" }] }
+    ],
+    "source": "Lair of the Hidden (2430) p140",
+    "description": [
+      "Permet, sous forme astrale, dese projeter dans un cadavre et de le posséder pour déambuler. Cecisuppose donc de rechercher un cadavre, et impose la limite de distancede 1500km/h. Agir ainsi coûte 1 Volonté, et ne nécessite pas dejet, la possession est automatique. Alternativement, le vampire peutdécider de se projeter instantanément dans un cadavre, ne sachantpas forcément où il va arriver dans le monde. Perception+Occulte SR7à 10 (suivant la connaissance de l'endroit), le nombre de succèsdétermine à quelle distance le cadavre dans lequel il se projette setrouve de sa cible théorique.",
+      "Bien entendu, en se projetant au hasard, le vampirene choisit ni l'état de décomposition, ni le lieu où se trouve lecorps, qui peut être dans une crypte, dans un cerceuil, oufraîchement tué. La possession prend fin quand le soleil se lève àl'endroit de la possession, empêchant donc de marcher en plein jour.Après le grand Maëlstrom qui détruit Stygie, le vampire utilisantce pouvoir peut voir des fragments de fantômes occuper son corpspendant que lui même est dans le cadavre."
+    ],
+    "extra_table": [
+      ["Echec critique", "Perdu dans le plan astral"],
+      ["Echec", "perte du point de volonté pour rien"],
+      ["1", "quelques centaines de km"],
+      ["2", "entre 30 et 50km"],
+      ["3", "entre 15 et 30km"],
+      ["4", "Dans la bonne ville, à 5km maximum"],
+      ["5", "A moins de 2km"]
+    ]
+  },
+  {
+    "name": "Terreur assomante",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "2" }] },
+      { "or": [{ "name": "Présence", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p169",
+    "description": [
+      "La victime est terrassée parla terreur et une compulsion mystique, ce qui la ralentit totalement. Manipulation+Intimidation SR Volonté, chaque succès terrasse la victime en lui retirant 1 Dé pour agir. Au bout de succès tour, l'effet décroît de 1 dé par tour supplémentaire. Si le nombre desuccès dépasse l'Astuce de la victime, l'effet se compte en minutes. Si la victime subit une douleur, elle lance Volonté SR7, chaque succès décroît sa pénalité de 1. Cette résistance n'est applicable qu'une fois par tour. En cas d'échec critique de la part du vampire, la victime n'est plus sujette à sa Présence ou sa Domination jusqu'à la fin de la nuit. "
+    ]
+  },
+  {
+    "name": "Mesurer la Volonté",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Domination", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p168",
+    "description": [
+      "Ce pouvoir permet d'évaluer la force de l'esprit et la résolution d'une cible. Perception+Intimidation SR6 résisté par Volonté SR6. La cible neressent rien, à moins d'un échec critique. Si c'est un succès, le vampire peut savoir quelle est la valeur de la Volonté, de la Volonté temporaire, ou d'une des Vertus."
+    ]
+  },
+  {
+    "name": "Aura de rage maudite",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "3" }] },
+      { "or": [{ "name": "Présence", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p158",
+    "description": [
+      "Ce pouvoir provoque une augmentation de la Frénésie dans un groupe donné. Charisme+Intimidation SR7, tout jet de Maîtrise de Soi est à +1SR par succès, ceci est valable pour tout vampire dans la ligne de vue du vampire. L'effet dure le reste de la scène, même si la victime quitte le champs visuel du vampire. Ceux entrant dans la scène après activation ne sont pas affectés. En cas d'échec critique, le vampire entre en Frénésie de peur."
+    ]
+  },
+  {
+    "name": "Imprégnation férale",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "4" }] },
+      { "or": [{ "name": "Potence", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p160",
+    "description": [
+      "Ce pouvoir permet de transférer sa force surnaturelle à un animal visible. Force+Dressage SR6. Le vampire peut transférer jusqu'à succès niveaux de Puissance. Le vampire peut les récupérer lors d'une action réflexe"
+    ]
+  },
+  {
+    "name": "Enfouissement partagé",
+    "requirements": [
+      { "or": [{ "name": "Potence", "level": "1" }] },
+      { "or": [{ "name": "Protean", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p166",
+    "description": [
+      "Permet d'entraîner dans la terre descadavres avec soit sous terre. Par pointde sang en plus des 3 points normaux, permet d'entraîner 1 corps."
+    ]
+  },
+  {
+    "name": "Gouffre mémoriel",
+    "requirements": [
+      { "or": [{ "name": "Dissimulation", "level": "2" }] },
+      { "or": [{ "name": "Présence", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p163",
+    "description": [
+      "Ce pouvoir permet de faire oublier à une personne qu'on a été présent lors d'une scène. Il est utilisable sur une personne à la fois. 1 Sang, Manipulation+Subterfuge SR Volonté. Le souvenir est réprimé. Il peut ressurgir si des évènements concordants sont rappelés à la victime, il est trouvable par Auspex, Domination ou pouvoir similaire. Parfois les victimes rationnalisent seules leur perte de mémoire. Le vampire doit quitter dans les 5 minutes la présence de la victime et ne doit pas la croiser pendant l'heure suivante, sous peine d'annuler tout effet."
+    ]
+  },
+  {
+    "name": "Instincts accélérés",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "1" }] },
+      { "or": [{ "name": "Célérité", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p163",
+    "description": [
+      "En dépensant 1 Sang, ce pouvoir permet de réagir à une attaque ou une ambûche, dans un but purement défensif, permettant même de dépenser du Sang pour la Célérité. Une fois l'effet de surprise passé, le reste du combat (ou tout autre interaction) se passe normalement. Ce pouvoir peut être suspendu pour une scène, mais ne peut être réactivé lors de celle-ci."
+    ]
+  },
+  {
+    "name": "Voir la vraie forme",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Protean", "level": "4" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p164",
+    "description": [
+      "Ce pouvoir permet de discerner la vraie forme de toute personne en ayant changé. Perception+Empathie SR8. 1 succès permet de savoir que le sujet peut changer de forme. 2 succès permettent de savoir si la forme actuelle est la réelle. 3 pour voir la vraie forme en surimpression. 4 pour connaître toutes les formes déjà prises par le sujet. Ce pouvoir ne marche pas sur les illusions ou les influences sur l'esprit, seulement les pouvoirs affectant le corps réellement."
+    ]
+  },
+  {
+    "name": "Révélation circonspecte",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "1" }] },
+      {
+        "or": [
+          { "name": "Dissimulation", "level": "2" },
+          { "name": "Vicissitude", "level": "3" }
+        ]
+      }
+    ],
+    "source": "Caine's Chosen (2428) p75",
+    "description": [
+      "Ce pouvoir permet de faire apparaître ou disparaître rapidement la marque du croissant de Lune de la secte. Le vampire dépense 1 Sang, et permet que la cible, et la cible seule, voit la marque, en un instant qui semble une hallucination. Toute personne avec Auspex 4 ou plus peut sentir qu'une chose surnaturelle vient de se passer. Seule une personne ayant ce score et regardant attentivement la main du vampire peut voir la marque si elle n'est pas cible du pouvoir."
+    ]
+  },
+  {
+    "name": "Leçons dans l'acier",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "1" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "3" }] }
+    ],
+    "source": "Caine's Chosen (2428) p76",
+    "description": [
+      "Pour les utilisateurs de ce pouvoir, Nietzsche a raison : ce qui ne vous tue pas vous rend plus fort. Si le vampire reçoit un niveau de blessure d'un opposant, il lance Vigueur+Occulte SR Volonté. Chaque succès permet de connaître un élément sur les capacités martiales de l'adversaire, en commençant par le plus évident."
+    ]
+  },
+  {
+    "name": "Masque de Judas",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Dissimulation", "level": "3" }] }
+    ],
+    "source": "Caine's Chosen (2428) p76",
+    "description": [
+      "Ce pouvoir permet de prendre l'apparence de quelqu'un que la victime aime, ou au moins qu'elle apprécie énormément. Le vampire n'a pas de choix sur le visage : il l'adopte, c'est tout. Manipulation+Performance SR Volonté, 1 succès suffit. La cible peut être très secouée par l'apparence de son attaquant : elle résiste par Volonté SR6, elle subit une pénalité d'un nombre de dés égale aux succès restant, pour succès tours. Si la victime ne fait pas de succès, il est totalement choqué, et perd un tour entier. De plus, toute action contre sa cible se fait à SR10. Cette pénalité est annulable pour une action en dépensant 1 Volonté."
+    ]
+  },
+  {
+    "name": "Encryptage sympathique",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Art de la mémoire", "level": "2" }] }
+    ],
+    "source": "Caine's Chosen (2428) p76",
+    "description": [
+      "Grâce à sa capacité de mémorisation et Auspex, le vampire peut instinctivement regarder l'esprit de sa victime et en extraire des pensées, qu'il mémorise sous forme symbolique, sans même en connaître la nature. Intelligence+Subterfuge SR Volonté. Il devient alors le porteur d'une information par succès, que seule la personne comprenant le symbole peut comprendre. Le vampire devient donc un parfait courrier. Les secrets nécessitent 5 succès à extraire de la tête des victimes. De manière instinctive, les vampires possédant ce pouvoir commencent, au bout d'un temps, à l'utiliser sur des personnes, inconsciemment."
+    ]
+  },
+  {
+    "name": "Voler la terrible rapidité",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "1" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] }
+    ],
+    "source": "Wind from the East: The Mongols (2828) p70",
+    "description": [
+      "L'Anda dépense 1 Sang, Vigueur+Sport SR6. 1 succès lui permet de parcourir 32km/h, chaque succès additionnel ajoute 8km/h. S'il descend sous la moitié de sa vitesse, le vampire perd l'avantage de ce pouvoir. Il peut le conserver en dépensant 1 point de Volonté par tour où il s'arrête. Ce pouvoir est utilisable une fois par nuit."
+    ]
+  },
+  {
+    "name": "Force partagée",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "3" }] },
+      { "or": [{ "name": "Protean", "level": "2" }] }
+    ],
+    "source": "Wind from the East: The Mongols (2828) p70",
+    "description": [
+      "Les Andas se nourrissent sur leurs poneys, et leur retourne parfois la pareil : Charisme+Dressage SR7. Chaque succès est réparti parmi les effets suivants (ces capacités durent Animalisme jours). Ce don de sang ne crée pas de lien de sang, ni d'effet de goule.",
+      "augmenter la distance parcourue par la monture (1 succès = 2 fois la distance, 2 succès = 3 fois la distance etc)",
+      "augmenter la vitesse de galop (même système)",
+      "augmenter de 1 un attribut physique de la  monture (on peut au maximum doubler ces attributs)",
+      "la monture fait corps avec l'Anda. On ne peut le déloger du dos du poney, sauf s'il le veut (ou si les succès pour le faire dépassent 5 succès, à la discrétion du MJ). De plus, +1Dé en Equitation et +1Dé en mêlée montée durant ce pouvoir"
+    ]
+  },
+  {
+    "name": "Baiser d'Itügen",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "1" }] },
+      { "or": [{ "name": "Protean", "level": "3" }] }
+    ],
+    "source": "Wind from the East: The Mongols (2828) p71, Dark Ages: Players Guide to Low Clans (20006) p166",
+    "description": [
+      "Permet d'entraîner dans la terre des personnes (qui en ressortent en même temps que le vampire). Par point de sang en plus des 3 points normaux, permet d'entraîner 1 goule (y compris un animal, jusqu'à un poney!), un vampire de sa descendance, ou un vampire lié au sang."
+    ]
+  },
+  {
+    "name": "Regard Acéré",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Célérité", "level": "2" }] }
+    ],
+    "source": "Libellus Sanguinis III (2823) p63",
+    "description": [
+      "Permet, pendant le tour où il est activé (2 Sang et 1 Volonté), de parer toute attaque avec la totalité de sa réserve de dés. Ne peut être utilisé que (Perception) fois par scène."
+    ]
+  },
+  {
+    "name": "Marche Forcée",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "2" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p162",
+    "description": [
+      "1/2 Célérité points de sang au début de chaque heure. Marche normale multipliée par Célérité (6km/heure de marche en normal). S'arrête dès que le vampire stoppe son mouvement. Utilisable Force d'Ame heures chaque nuit."
+    ]
+  },
+  {
+    "name": "Ombre Feinte",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "2" }] },
+      { "or": [{ "name": "Dissimulation", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p165",
+    "description": [
+      "1 Sang, Célérité activée en plus. Toute attaque faite sur le vampire est à +2SR, car il donne la sensation d'être toujours un peu dans la fraction d'espace qu'il occupait précedement. Contrable normalement par Auspex",
+      "Le point de Sang dépensé peut dépasser la capacité de dépense de Sang par tour du vampire. La première action du vampire doit être défensive. Ce pouvoir est considéré comme de la Dissimulation et est contrable par Auspex."
+    ]
+  },
+  {
+    "name": "Tempérance du Sang",
+    "requirements": [
+      { "or": [{ "name": "Quietus", "level": "4" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] }
+    ],
+    "source": "Libellus Sanguinis III (2823) p63",
+    "description": [
+      "Permet de renforcer des objets (1 Sang nécessaire par tranche de 30cm de long), coûte 1 Volonté. Est utilisé pour préserver des reliques ou pour renforcer des armes (+1Dé de dégâts, incassable sauf par choc massif) ou armure (+1Dé de resistance, idem, les dégâts sont transmis par transfert d'énergie cinétique). Ne peut être utilisé sur des objets souples."
+    ]
+  },
+  {
+    "name": "Vérité par le Sang",
+    "requirements": [
+      { "or": [{ "name": "Quietus", "level": "2" }] },
+      { "or": [{ "name": "Auspex", "level": "4" }] }
+    ],
+    "source": "    Libellus Sanguinis III (2823) p63",
+    "description": [
+      "Perception+Subterfuge SR Volonté de la victime (1 jet par \"question\"), 1 Sang de la personne interrogée. Le vampire sait alors si la victime dit la vérité ou non. Dure une scène :",
+      "1 succès - sait si c'est un mensonge, un 1/2 mensonge ou la vérité",
+      "2 succès - sait pourquoi une demi vérité ou un mensonge est dit (état émotionel)",
+      "3 succès - Connaissance totale de la vérité telle que la connait le sujet",
+      "4 succès - idem, mais en plus connaissance de choses que le sujet oblitère inconsciement, ou a oublié, ou que Domination lui a fait oublié",
+      "5 succès ou + - Vérité totale, voir un peu plus..."
+    ]
+  },
+  {
+    "name": "Conserver le Sang Vif",
+    "requirements": [
+      { "or": [{ "name": "Quietus", "level": "3" }] },
+      { "or": [{ "name": "Célérité", "level": "3" }] }
+    ],
+    "source": "Vampire l'Age des Ténèbres - p.163, Dark Ages: Players Guide to Low Clans (20006) p163",
+    "description": [
+      "Le vampire peut regagner les points de Sang utilisés pour la Célérité après le combat.",
+      "NOTE : Ce pouvoir existe à l'époque Dark Ages pour n'importe qui (Anarch).",
+      "Précision du Dark Ages: Players Guide to Low Clans (20006) : le Sang revient au rythme de 1 par heure. Ce pouvoir est considéré comme toujours actif."
+    ]
+  },
+  {
+    "name": "Assèchement de l'Âme",
+    "requirements": [
+      { "or": [{ "name": "Quietus", "level": "5" }] },
+      { "or": [{ "name": "Auspex", "level": "4" }] }
+    ],
+    "source": "      Libellus Sanguinis III (2823) p62",
+    "description": [
+      "Lors d'une diablerie, le vampire dépense autant de volonté que la victime à d'Intelligence et lance Volonté SR Volonté +plus nombre de folies de la victime. S'il réussit, il gagne 1Xp par Compétence ou Connaissance que la victime possède à plus haut niveau que lui. De plus, a accès à la mémoire de la victime, de manière éthérée."
+    ]
+  },
+  {
+    "name": "Boire l'esprit",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Quietus", "level": "5" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p160",
+    "description": [
+      "Permet de voler souvenirs et connaissances lors de la diablerie. Le vampire dépense autant de points de Volonté que l'Intelligence de la victime, et lance Volonté SR Volonté (+1 par Folie de la victime). Chaque succès donne un point de bonus (comme à la création du personnage) utilisable pour augmenter une Compétence jusqu'au maximum le niveau de la victime. Les souvenirs forts sont pris à la victime, sous forme de flashs souvent cryptiques. Sur un échec critique, -1 en Volonté permanente par 1 obtenu (images négatives, de haine, centrées sur l'acte)."
+    ]
+  },
+  {
+    "name": "Odeur de Cain",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      {
+        "or": [
+          { "name": "Thaumaturgie", "subname": "Rego Vitae", "level": "1" }
+        ]
+      }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p164",
+    "description": [
+      "Ce pouvoir permet de sentir le Sang de vampire présent dans une créature. Perception+Occulte, la créature doit être dans le champ de perception normal du vampire. SR6 pour les vampires, SR8 pour sentir les goules (modifiable suivant les circonstances: le pouvoir étant toujours actif, même quand on dort). Avec le temps, il est possible de reconnaitre l'odeur de vampires en particulier."
+    ]
+  },
+  {
+    "name": "Je suis légion",
+    "requirements": [
+      { "or": [{ "name": "Daimonon", "level": "3" }] },
+      { "or": [{ "name": "Dissimulation", "level": "2" }] }
+    ],
+    "source": "Clanbook: Baali (2817) p47",
+    "description": [
+      "Manipulation+Commandement SR 6 pour appeler un démon qui prend place aux côtés du vampire dans son corps, et qui répond à sa place lorsqu'il le désire. C'est un moyen de pouvoir passer sans encombre un interrogatoire sous Auspex ou Domination, puisque l'esprit ne ment pas forcément là où vous, vous le devriez."
+    ]
+  },
+  {
+    "name": "Courroux Enflammé",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "3" }] },
+      { "or": [{ "name": "Potence", "level": "3" }] }
+    ],
+    "source": "Clanbook: Brujah (1st Edition) (2051) p31, Clanbook: Brujah (Revised Edition) (2351) p66",
+    "description": [
+      "(Iconoclaste) La tête et les poings du vampire se recouvrent de sang. Tout dégât au contact devient aggravé. De plus, la victime touchée doit réussir Volonté SR 6 pour agir le tour d'après.",
+      "La version du Clanbook Brujah seconde édition spécifie l'usage d'un point de Sang pour activer le pouvoir, et ne parle pas du jet de Volonté"
+    ]
+  },
+  {
+    "name": "Coeur d'Acier",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "3" }] },
+      { "or": [{ "name": "Potence", "level": "3" }] }
+    ],
+    "source": "Clanbook: Brujah (1st Edition) (2051) p31, Clanbook: Brujah (Revised Edition) (2351) p66",
+    "description": [
+      "(Individualiste) Ajoute 2 à tout SR de Domination, de Présence ou tout autre jet visant à influencer le Brujah. En dépensant 1 Volonté, il peut, en parlant à un autre, le renforcer dans sa conviction, augmentant de 1 les SR des actions destinées à manipuler ou convaincre cette personne. Dure 1 heure ou une scène, suivant laquelle des 2 périodes est la plus courte."
+    ]
+  },
+  {
+    "name": "Fléau d'Alecto",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "2" }] },
+      { "or": [{ "name": "Présence", "level": "4" }] }
+    ],
+    "source": "Clanbook: Brujah (1st Edition) (2051) p31",
+    "description": [
+      "(Idéaliste) Le Brujah apprend à diriger ses Frénésies sur d'autres. 1 Volonté, Volonté SR Volonté, chaque succès inflige un dégât à son adversaire. De plus, si cette personne possède une Bête, elle est sujette à des Frénésies à SR+2."
+    ]
+  },
+  {
+    "name": "Pulsion du Mort Vivant",
+    "requirements": [
+      { "or": [{ "name": "Potence", "level": "3" }] },
+      { "or": [{ "name": "Auspex", "level": "1" }] }
+    ],
+    "source": "Clanbook: Brujah (1st Edition) (2051) p66",
+    "description": [
+      "Per+Emp SR 6. Chaque succès permet de déterminer quelles disciplines physiques possède un vampire, et à quel niveau (Puissance, Force d'Ame, Célérité)"
+    ]
+  },
+  {
+    "name": "Commander au Destrier",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "3" }] },
+      { "or": [{ "name": "Animalisme", "level": "2" }] }
+    ],
+    "source": "Libellus Sanguinis II (2815) p101",
+    "description": [
+      "1 Volonté, Manipulation+Dressage SR 7. Le vampire peut influencer en masse les montures adverses ou les montures de ses camarades. +3SR pour les jets d'équitation pour les adversaires, -2SR pour les amis. De plus, les montures amies peuvent rester calmes dans des situations qui les feraient fuir d'habitude."
+    ]
+  },
+  {
+    "name": "Esprit de Corps",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "5" }] },
+      { "or": [{ "name": "Potence", "level": "5" }] }
+    ],
+    "source": "Libellus Sanguinis II (2815) p101",
+    "description": [
+      "Force+Intimidation SR 7. Tout pouvoir adverse infligeant la peur ou empêchant de combattre se fait à +2SR. De plus chaque ami reçoit 1 pt de Puissance par tranche de deux succès. Ce pouvoir affecte :",
+      "1 succès - 1 personne",
+      "2 succès - 2 personnes",
+      "3 succès - 6 personnes",
+      "4 succès - 20 personnes",
+      "5 succès ou + - Toute personne dans le groupe de combat du vampire et dans son entourage (i.e. pouvant au moins l'entr'apercevoir)"
+    ]
+  },
+  {
+    "name": "Regard de Fer",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "3" }] },
+      { "or": [{ "name": "Potence", "level": "3" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p101",
+    "description": [
+      "Pouvoir appris typiquement à un nouveau Primogène Brujah. Il permet en général d'impressionner toute personne (du clan Brujah souvent) qui n'est pas tout a fait d'accord avec son supérieur.",
+      "Charisme+Manipulation SR Standard, démonstration de force (briser une table en chêne etc..). Les succès s'ajoutent à tout jet d'intimidation sur la personne qui a croisé le regard du personnage lors de sa démonstration ou juste après.",
+      "Ce pouvoir perd son effet s'il est trop utilisé : 1/2 effet si plus deux fois par mois, 1/4 effet si 3 fois par mois. Au delà, tout le monde devient accoutumé à ces démonstrations, donc il n'y a plus d'effet."
+    ]
+  },
+  {
+    "name": "Fontaine d'humeurs malignes",
+    "requirements": [
+      { "or": [{ "name": "Potence", "level": "2" }] },
+      {
+        "or": [
+          { "name": "Mortis", "subname": "Voie des 4 humeurs", "level": "3" }
+        ]
+      }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p167",
+    "description": [
+      "Pouvoir Lamie. Permet de cracher les humeurs créées par Humeurs Noires. 2 Sang, Dextérité+Sport SR6 pour toucher la cible, distance maximum de Force+Puissance mètres. On peut tenter d'esquiver, mais ce n'est pas un crachat, mais une brumisation. La victime peut résister à l'effet de l'humeur par Vigueur SR8."
+    ]
+  },
+  {
+    "name": "Effigie de la tombe sculptée",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] },
+      { "or": [{ "name": "Potence", "level": "2" }] },
+      {
+        "or": [
+          { "name": "Mortis", "subname": "Pourriture du tombeau", "level": "2" }
+        ]
+      }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p165",
+    "description": [
+      "Pouvoir quasi exclusif des Lamies. 1 Volonté, Vigueur+Médecine SR6, permet de donner la dureté d'un cadavre rigide à son corps, mais sans les inconvénients. Chaque succès s'ajoute à la Force ou à la Vigueur (au choix, mais un seul des 2 attributs), dans la limite maximum de la Force d'Ame, ou de la Puissance. Cet effet est cumulable avec les effets d'augmentation d'attributs par le sang."
+    ]
+  },
+  {
+    "name": "Rame de Charon",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "5" }] },
+      { "or": [{ "name": "Nécromancie", "level": "5" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p165",
+    "description": [
+      "Permet de passer corporellement dans le monde des morts. 1 Sang et 1 Volonté, Perception+Occulte SR9 (-2 sur les lieux imbibés par la mort, le jet est impossible en journée). Le vampire se dissout, et devient un fantôme, avec les objets qu'il porte. Il n'a pas de corde d'argent, a les mêmes statistiques que vivant, et prend des dommages normalement. Il peut interagir physiquement avec les morts, passer au travers des murs solides, ne peut affecter le monde physique, est invisible au monde des esprits (Umbra moyenne), et donc aux personnes utilisant seulement Auspex 5. On peut la ressentir en réussissant Perception+Occulte SR9. Pour repasser dans le monde des vivants, il faut réutiliser ce pouvoir. A noter que le feu ne fait rien au vampire, mais que le soleil le frappe normalement, et qu'il dort le jour."
+    ]
+  },
+  {
+    "name": "Eveiller la malédiction endormie",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Mortis", "level": "5" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p164",
+    "description": [
+      "Ce pouvoir est un moyen de punir une goule traîtresse. Le vampire se concentre sur elle, en la voyant, et lance Intelligence+Occulte SR Volonté. Chaque succès corrompt la Vitae dans la goule pour une heure. Elle se sent fiévreuse, et si elle va au soleil, son Sang brûle au soleil, comme pour les vampires. Chaque blessure aggravée correspond à 1 Sang qui brûle, l'effet cesse après consommation du Sang, ou hors du soleil. Résistible avec Force d'Ame."
+    ]
+  },
+  {
+    "name": "Clarté du vide",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "1" }] },
+      {
+        "or": [
+          { "name": "Mortis", "subname": "Le corps du monstre", "level": "2" }
+        ]
+      }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p165",
+    "description": [
+      "Ce pouvoir permet de mettre de côté toute passion, pour ne conserver que la pensée pure. Esprit+Occulte SR7, chaque succès ajoute 1 dé à la prochaine action mentale (maximum = doubler le nombre dés possibles). Toute action sociale se fait à +2SR."
+    ]
+  },
+  {
+    "name": "Sous l'Egide de l'Entropie",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "3" }] },
+      {
+        "or": [
+          {
+            "name": "Mortis",
+            "subname": "Pourriture de la tombe",
+            "level": "1"
+          }
+        ]
+      }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p163",
+    "description": [
+      "Une aura de pourrissement renforce le corps du vampire : une fois le pouvoir activé après qu'il ait été touché (sur Esprit+Artisanat SR6, impossible de déclencher le pouvoir si on a été pris par surprise), l'arme pourrit en un tour, sauf si elle est magique. Ceci n'affecte pas les coups portés à mains nues."
+    ]
+  },
+  {
+    "name": "Maladie Dévoilée",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "7" }] }
+    ],
+    "source": "Clanbook: Cappadocian (2805) p41",
+    "description": [
+      "Perception+Médecine (ou Herbalisme) SR 8, permet de diagnostiquer une maladie (si le vampire la connaît). Vig+Medecine SR 5 à 9, suivant la maladie, permet de guérir la maladie."
+    ]
+  },
+  {
+    "name": "Constitution Merveilleuse",
+    "requirements": [
+      { "or": [{ "name": "Mortis", "level": "2" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "8" }] }
+    ],
+    "source": "Clanbook: Cappadocian (2805) p41",
+    "description": [
+      "Tout point de sang restant, 4 Volonté + 1 Volonté/membre coupé (y compris la tête) : le vampire reconstitue son corps, et revient de la mort finale (il lui reste encore 5 niveaux de blessure à guérir).",
+      "S'il n'a pas assez de Volonté, il meurt. Sinon, il perd un point de volonté permanente, réduit tout ses Attributs de 1, et abaisse son niveau maximal d'attributs de 1."
+    ]
+  },
+  {
+    "name": "Créer un zombie",
+    "requirements": [
+      { "or": [{ "name": "Mortis", "level": "2" }] },
+      { "or": [{ "name": "Nécromancie", "level": "2" }] },
+      { "or": [{ "name": "Thaumaturgie", "level": "2" }] }
+    ],
+    "extra_requirements": [
+      "La somme des niveaux des 3 disciplines doit faire au moins 8"
+    ],
+    "source": "Clanbook: Cappadocian (2805) p37",
+    "description": [
+      "Ce rituel est appris par les Cappadocéens ne pouvant posséder Mortis à 6. Il permet de créer un perle de Sang, qui demande 8 heures de rituel et 3 Sang.",
+      "Intelligence+Occulte, le SR est déterminé par le cappadocéen : c'est le nombre d'heure pendant lequel le zombie sera actif. La perle peut être conservée, avant d'être insérée dans la bouche d'un corps. A la fin du délai, le corps tombe en poussière."
+    ]
+  },
+  {
+    "name": "Eclosion de la Vipère",
+    "requirements": [
+      { "or": [{ "name": "Serpentis", "level": "4" }] },
+      { "or": [{ "name": "Protean", "level": "2" }] }
+    ],
+    "source": "Vampire: The Dark Ages (2800) p164",
+    "description": [
+      "Le vampire se concentre un tour, dépense 4 Sang, et dégorge un serpent fait de son sang, possédant une morsure venimeuse. Nécessite 1 Sang tous les trois jours pour survivre, obéit aux commandements de son maître dont il reflète l'esprit.",
+      "Le Players guide to the low-clans ajoute que le serpent possède Force d'Ame 1 et Puissance 1. Il se dissout si détruit ou non nourri, le sang acide fait 4 dés de dommages aggravés s'il est ingéré. Animalisme permet de communiquer avec eux, mais la personnalité de leur créateur est trop proche pour les rendre naturels."
+    ]
+  },
+  {
+    "name": "Visage de l'être aimé",
+    "requirements": [
+      { "or": [{ "name": "Dissimulation", "level": "3" }] },
+      { "or": [{ "name": "Présence", "level": "3" }] }
+    ],
+    "source": "Clanbook: Setite (Revised Edition) (2360) p69, Dark Ages: Players Guide to Low Clans (20006) p167",
+    "description": [
+      "Permet de se faire passer pour un être aimé par la victime. Si on ne connaît pas un tel être, la personne voit qui elle désire (et le vampire a intérêt à réfléchir très vite pour savoir comment réagir!).  Charisme+Empathie SR6"
+    ]
+  },
+  {
+    "name": "Bête typhonienne",
+    "requirements": [
+      { "or": [{ "name": "Potence", "level": "3" }] },
+      { "or": [{ "name": "Serpentis", "level": "4" }] }
+    ],
+    "source": "Clanbook: Setite (Revised Edition) (2360) p69",
+    "description": [
+      "Ce pouvoir permet de prendre la forme de la mythique Bête Typhonienne. Coûte 3 Sang, la transformation dure 3 tours. +1 en Force, Vigueur, Dextérité, bénéfice du niveau 3 de Serpentis \"Peau de la vipère\", le vampire peut utiliser sa Vigeur pour résister aux morsures et aux griffes. De plus, la morsure de la Bête est empoisonnée, la Bête court à double vitesse, et gagne +2Dés pour tout jet lié à l'odorat ou l'ouïe."
+    ]
+  },
+  {
+    "name": "Peser le coeur",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "3" }] },
+      { "or": [{ "name": "Serpentis", "level": "5" }] }
+    ],
+    "source": "Clanbook: Setite (Revised Edition) (2360) p70",
+    "description": [
+      "Le Sétite peut lire le coeur de la victime (sans avoir besoin de l'extraire), tel Thoth. Sur Perception+Empathie SR8, il découvre 1 secret sur les passions, les culpabilités, ou les faiblesses de la victime. Le premier élément révélé est sa nature, puis ses folies, ses faiblesses ou ses peurs."
+    ]
+  },
+  {
+    "name": "Baiser engourdissant du serpent",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "3" }] },
+      { "or": [{ "name": "Serpentis", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p164",
+    "description": [
+      "Permet d'empoisonner la langue avec un poison subtil. 1 Sang, le vampire frappe avec sa langue sa victime. La blessure se referme lorsque la langue se rétracte, celle-ci reprend tout de suite sa forme normale. Si au moins une blessure est infligée à la victime, elle doit réussir Vigueur (SR6 pour un vampire, SR8 pour un être vivant), avec 3 succès. Pendant l'heure qui suit, tout pouvoir affectant les perceptions, les altérations mentales ou émotionnelles reçoit un succès automatique. Il faut noter que l'effet est souvent utilisé à des fins négatives, mais permet aussi de réparer plus facilement les dégâts dus à Domination par exemple. Les visions semblent aussi plus vivaces. Un humain faisant un échec critique devient apathique pour une heure (Volonté 8 pour faire une action)."
+    ]
+  },
+  {
+    "name": "Lamentation du Loup",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "1" }] },
+      { "or": [{ "name": "Dissimulation", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p168",
+    "description": [
+      "Permet d'hurler un message dans la nature, message qui voyage ensuite sur des kilomètres grâce aux loups qui viennent ajouter leur hurlement pour le faire voyager. Un individu l'entendant ne discernera qu'une étrange mélopée voyageant dans l'air. Celui qui possède Parole de Fauve entendra quand à lui une voix portée par les hurlements. Le message doit être bref (émotionnel, idée générale, danger, soit environ 2 phrases simples).",
+      "Manipulation+Animaux SR 6, le nombre de succès indique la distance :",
+      "1 succès - 8 kms",
+      "2 succès - 16 kms",
+      "3 succès - 80 kms",
+      "4 succès - 160 kms",
+      "5 succès - 400 kms",
+      "échec - aucun loup dans la région",
+      "échec critique - on attire une attention indésirable"
+    ]
+  },
+  {
+    "name": "Griffes de Fenrir",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] },
+      { "or": [{ "name": "Protean", "level": "2" }] }
+    ],
+    "source": "Wolves of the Sea (2820) p71",
+    "description": [
+      "Le vampire fait apparaître des griffes de 20cm de long, au lieu de celles habituelles de 3cm. Elles ont une apparence presque métallique, infligent Force+3 dégâts aggravés, et découpent tout matériau, du moment que le vampire à la force nécessaire pour l'endommager, et que la force recquise n'est pas de plus de 10. Toute manipulationdélicate se fait à +2SR quand ce pouvoir se manifeste."
+    ]
+  },
+  {
+    "name": "Blessé dans sa Chair",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] },
+      { "or": [{ "name": "Dissimulation", "level": "3" }] }
+    ],
+    "source": "Clanbook: Gangrel (Revised Edition) (2352) p72",
+    "description": [
+      "Commun chez les Gangrel des Villes. 1 Sang. Pour une scène, le vampire ne semble pas être affecté par les coups qu'on lui porte (pas de traces de blessures, de sang, etc...)."
+    ]
+  },
+  {
+    "name": "Améliorer la Chevauchée Sauvage",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "4" }] },
+      { "or": [{ "name": "Protean", "level": "4" }] }
+    ],
+    "source": "Libellus Sanguinis III (2823) p29-30",
+    "description": [
+      "(cf Animalisme 4)",
+      "Même jet que pour Animalisme 4, mais lecture des succès sur la table suivante :",
+      "1 succès - Peut utiliser Auspex, Présence",
+      "2 succès - Domination, Aliénation, Animalisme",
+      "3 succès - Thaumaturgie, Chimérie, Force d'âme",
+      "4 succès - Protean, Potence",
+      "5 succès - Célérité, peut utiliser de points de sang pour augmenter ses attributs physiques. Les points de sang sont ceux de l'animal. S'il lui reste la moitié ou moins de sang, il meurt.",
+      "Pas de neccessité de Volonté pour aller contre les instincts de l'animal.",
+      "Effet retour : l'animal influence le comportement du vampire très longtemps (peut aller jusqu'à plusieurs années) , 8 Volonté accélèrent la distanciation. Si l'animal éprouve une émotion sévère, Astuce+Empathie SR8. Si pas de succès, l'âme retourne dans le corps et le vampire se prend pour la bête."
+    ]
+  },
+  {
+    "name": "Immunité aux Griffes",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "4" }] },
+      { "or": [{ "name": "Animalisme", "level": "2" }] }
+    ],
+    "source": "Clanbook: Gangrel (Revised Edition) (2352) p72",
+    "description": [
+      "2 Sang. Pour une scène, le vampire peut résister aux armes naturelles d'un type d'animal (Animalisme+Force d'Ame en plus pour résister aux dégâts). Résistance aux griffes de Garou à la discrétion du Mj."
+    ]
+  },
+  {
+    "name": "Lire les Vents",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "4" }] },
+      { "or": [{ "name": "Auspex", "level": "5" }] }
+    ],
+    "source": "Libellus Sanguinis III (2823) p30",
+    "description": [
+      "Permet de voir et d'entendre par tous les animaux du coin. Perception+Dressage SR7, les succès sont à répartir entre distance et impression",
+      "1 succès - A portée d'oreille, impressions générales",
+      "2 succès - 1.5km, détails flous",
+      "3 succès - 3km, détails",
+      "4 succès - 75km, détails, entend mal",
+      "5 succès - 150km, voit et entend clairement."
+    ]
+  },
+  {
+    "name": "Appel de la Meute Sauvage",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "5" }] },
+      { "or": [{ "name": "Protean", "level": "4" }] }
+    ],
+    "source": "Libellus Sanguinis III (2823) p30",
+    "description": [
+      "Manipulation+Dressage, chaque succès affecte une goule du vampire. Le vampire devient immunisé à la Frénésie et transfert sa bête sur ses goules, leur conférant les avantages standards, en plus de Protéan 2. Les goules ne s'attaquent pas entre elles, ni leur maître. L'effet prend fin à l'aube, où si elles ne voient plus leur maître."
+    ]
+  },
+  {
+    "name": "Voir les Reflets des Formes",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Protean", "level": "4" }] }
+    ],
+    "source": "Clanbook: Gangrel (Revised Edition) (2352) p72",
+    "description": [
+      "Permet de voir dans les auras des autres les formes qu'ils peuvent assumer. Perception+Occulte SR7. Avec les succès viennent les sensations sur les émotions liées à ces formes. Peut être résisté avec Dissimulation contre Auspex."
+    ]
+  },
+  {
+    "name": "Se Mêler aux Bêtes",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "3" }] },
+      { "or": [{ "name": "Protean", "level": "6" }] }
+    ],
+    "source": "Clanbook: Gangrel (Revised Edition) (2352) p73",
+    "description": [
+      "Le vampire peut s'immerger dans un animal (assez large pour contenir la plus petite de ses formes animales). 3 Sang, Charisme+Dressage SR6. Plus de 3 succès permettent de guider entièrement l'animal. Condition pour la sortie de l'animal posée dès l'entrée (au lever du jour etc etc..). Expulsion si l'animal meurt. L'animal ne vieillit plus.Le vampire ne prend que les dégâts du feu infligés à l'animal. Il dépense 1 Sang à chaque lever de soleil, peut rester en torpeur dans la bête. Celle-ci est plus agressive, évite la lumière vive."
+    ]
+  },
+  {
+    "name": "Reflet de l'alpha",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "4" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "3" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p104",
+    "description": [
+      "Le Gangrel fait appel à la Bête, et exhale son instinct de domination animal, de manière à impressionner toute personne. Charisme+Animaux + Volonté (volonté reflète l'usage du pouvoir dans ce jet) résisté par Volonté de la part des victimes. Pour les garous, diviser les succès du vampire par 2. Si le vampire gagne le jet d'opposition, la (les) victime(s) affectée(s) agissent avec un respect craintif contre le Gangrel."
+    ]
+  },
+  {
+    "name": "Don de Loki",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "4" }] },
+      { "or": [{ "name": "Protean", "level": "4" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p162",
+    "description": [
+      "Le vampire peut prendre la forme du dernier animal ou humain dont il a bu le sang. L'imitation est parfaite d'un point de vue physique. Ce pouvoir n'est utilisable que directement après avoir bu le sang, et l'animal a la taille d'un ours au maximum. 3 Sang, Manipulation+Subterfuge SR9, dure succès heures, +1 heure par Sang dépensé. Boire du sang d'un autre annule immédiatement l'effet. Un échec critique indique qu'on ne peut jamais prendre la forme du sujet. Tout pouvoir de détection fait passer le vampire pour la forme prise, sauf ceux détectant spécifiquement les changements. Ce pouvoir est le même que Protean 6."
+    ]
+  },
+  {
+    "name": "Brume fragmentée",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "1" }] },
+      { "or": [{ "name": "Protean", "level": "5" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p166",
+    "description": [
+      "Quand le vampire est attaqué, il peut dépenser 1 Sang et se transformer instantanément en brouillard. Après un tour, il regagne sa forme solide. Toutefois, un mouvement brusque à la périphérie de la vision peut être prise pour une attaque par erreur."
+    ]
+  },
+  {
+    "name": "Se mêler à la pierre",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] },
+      { "or": [{ "name": "Protean", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p166",
+    "description": [
+      "Permet de se mêler à la pierre (même sculptée, du moment que le volume est suffisant pour contenir le vampire). Si la pierre est brisée, le vampire est expulsé."
+    ]
+  },
+  {
+    "name": "Hibernation torpide",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] },
+      { "or": [{ "name": "Protean", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p167",
+    "description": [
+      "En dépensant 5 Sang et en réussissant Vigueur+Survie SR6, le vampire peut tomber en torpeur en terre et décider de se réveiller après une durée qu'il fixe à l'avance. Un échec indique qu'il se réveille la nuit suivante. Un échec critique indique une torpeur normale. A noter qu'il est possible de se fondre dans autre chose que le sol si le vampire possède un pouvoir adapté."
+    ]
+  },
+  {
+    "name": "Clarté du vide",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "1" }] },
+      { "or": [{ "name": "Obtenebration", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p165",
+    "description": [
+      "Ce pouvoir permet de mettre de côté toute passion, pour ne conserver que la pensée pure. Esprit+Occulte SR7, chaque succès ajoute 1 dé à la prochaine action mentale (maximum = doubler le nombre dés possibles). Toute action sociale se fait à +2SR."
+    ]
+  },
+  {
+    "name": "Témoin d'Arhiman",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "3" }] },
+      { "or": [{ "name": "Obtenebration", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p170",
+    "description": [
+      "Les pupilles du Lasombra se dilatent en 2 puits noirs terrifiants, comme menant sur l'Abysse. Des visions de l'Abysse commencent à assaillir la victime. Manipulation+Occulte SR Volonté. La victime commence à voir des tâches noires à la périphérie de sa vision, entend des murmures. +2 à tout SR de Volonté ou de Vertu. Chaque jour, la victime peut tenter de se débarrasser de l'effet par Volonté SR Occulte+2, puis +1 par jour où il n'a pas réussi. Si la victime est hantée plus de jours que sa Volonté, elle perd sa faculté à regagner de la Volonté, jusqu'à se débarrasser de l'effet. Un humain subissant l'effet plus longtemps que Volonté+Astuce devient suicidaire."
+    ]
+  },
+  {
+    "name": "Eminence de l'Ombre conquérant le sang",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "5" }] },
+      {
+        "or": [
+          { "name": "Obtenebration", "level": "5" },
+          { "name": "Vicissitude", "level": "5" }
+        ]
+      }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p166",
+    "description": [
+      "Le vampire prend la forme Ténébreuse, ou bien la forme Sanguine, niveau 5 de son pouvoir. Il entre alors dans le corps du réceptacle, en saisissant sa victime (Dextérité+Bagarre), par la bouche, en 3 tours. Une fois à l'intérieur, le vampire tente de réduire la volonté de la victime, avec Domination 5. Si c'est un échec critique, le vampire est vomi hors du corps, il est incapable de faire quoique ce soit pendant 5-Esprit tours. Si la Volonté est brisée, le vampire prend contrôle du corps, à loisirs. Il dort le jour, peut rester dans le corps tant qu'il a du Sang (il ressort quand il le veut, ou est expulsé comme décrit plus haut s'il a 0 Sang), il ne peut regagner de Sang parquelque moyen que ce soit.",
+      "Pouvoir avec Obtenebration : possibilité de posséder un vampire ou un humain. Sur un vampire, possibilité d'utiliser le Sang de celui-ci pour maintenir le corps en vie et guérir les blessures. Les yeux de la victime ont des pupilles qui sont des abysses noires sans fond.",
+      "Pouvoir avec Vicissitude : possibilité de posséder un humain (sur un vampire ... la victime diableriserait le vampire!). L'humain devient une goule, peut utiliser le Sang du vampire le possédant. De plus, possibilité d'utiliser des pouvoirs de Vicissitude pour reformer le corps. Des vagues courent parfois sur le corps de la goule.",
+      "A noter que dans le cas d'une possession humaine, le possédé peut résister à tout dégât avec Vigueur, et les dégâts peuvent être guéris avec le Sang du vampire. De plus, les signes (les yeux ou les vagues) sont très peu visibles (Perception+Vigilance SR9 pour les voir)."
+    ]
+  },
+  {
+    "name": "Echo du Vizir Subtil",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "2" }] },
+      { "or": [{ "name": "Obtenebration", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p165",
+    "description": [
+      "Permet de murmurer à l'ombre d'une victime un Pouvoir de Domination. 1 Sang Manipulation+Empathie SR Volonté. Chaque succès permet de suspendre un pouvoir différent, pour une heure au maximum."
+    ]
+  },
+  {
+    "name": "Armurerie de l'Abysse",
+    "requirements": [
+      {
+        "or": [
+          { "name": "Force d'Ame", "level": "3" },
+          { "name": "Potence", "level": "3" }
+        ]
+      },
+      { "or": [{ "name": "Obtenebration", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p163",
+    "description": [
+      "Permet de faire des armes et des armures à partir des ombres. 1 Sang, Manipulation+Compétence de fabrication SR6. Nécessite un tour de concentration complète pour solidifier l'objet (arme ou armure), qui se forme dans la main ou autour du corps. Les armures procurent au maximum Obtenebration dés pour résister aux dégâts autres que le feu ou le soleil. Les armes ajoutent à la force au maximum la valeur en Obtenebration du vampire.",
+      "Les vampires avec Puissance peuvent produire des armes, ceux avec Force d'Ame des armures. Ceux combinant les 2 pouvoirs peuvent créer les 2. Les objets persistent pendant une scène, ou une heure maximum."
+    ]
+  },
+  {
+    "name": "Armure de Ténèbres",
+    "requirements": [
+      { "or": [{ "name": "Obtenebration", "level": "4" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "2" }] }
+    ],
+    "source": "Vampire: The Dark Ages Companion (2804) p87",
+    "description": [
+      "1 Volonté, 2 Sang, Volonté SR 8. Le nombre de succès indique le nombre  de dés à ajouter pour la résistance aux rayons du soleil. Ceci dure tant que le vampire se concentre. Manipulation+Fabrication pour donner à cette armure une forme épousant des vêtements par exemple."
+    ]
+  },
+  {
+    "name": "Voile d'Absence",
+    "requirements": [
+      { "or": [{ "name": "Obtenebration", "level": "3" }] },
+      { "or": [{ "name": "Domination", "level": "3" }] }
+    ],
+    "source": "Clanbook: Lasombra (Revised Edition) (2362) p71-72",
+    "description": [
+      "1 Sang, Man+Occ SR 7. Permet au vampire d'occulter une zone, où les personnes ne pensent simplement pas à regarder. Leur regard passe sur cette zone. Requiert plus de succès que le lanceur sur Volonté SR7 pour passer outre ce pouvoir, qui prends effet sur 3m de diamètre à un endroit visible par le vampire."
+    ]
+  },
+  {
+    "name": "Ténèbres Etouffantes",
+    "requirements": [
+      { "or": [{ "name": "Obtenebration", "level": "2" }] },
+      { "or": [{ "name": "Dissimulation", "level": "1" }] }
+    ],
+    "source": "Libellus Sanguinis I (2807) p33",
+    "description": [
+      "Ast+Occ SR 6. Sur un succès, les ténèbres entourent la source de lumière la plus proche."
+    ]
+  },
+  {
+    "name": "Les Yeux des Ténèbres",
+    "requirements": [
+      { "or": [{ "name": "Obtenebration", "level": "3" }] },
+      { "or": [{ "name": "Auspex", "level": "3" }] }
+    ],
+    "source": "Libellus Sanguinis I (2807) p33",
+    "description": [
+      "Dextérité+Occultisme SR7, les yeux de la victime sont plongés dans les ténèbres pour",
+      "1 succès - 1 tour",
+      "2 succès - 1 minute",
+      "3 succès - 5 minutes",
+      "4 succès - 30 minutes",
+      "5 succès - 1 heure.",
+      "Il existe une variation o&ugrave; le Lasombra obscurcit ses yeux mais voit au travers, en faisant deux puits de ténèbres (Volonté SR 5 pour ne pas fuir)."
+    ]
+  },
+  {
+    "name": "Acier Noir",
+    "requirements": [
+      { "or": [{ "name": "Obtenebration", "level": "3" }] },
+      { "or": [{ "name": "Potence", "level": "3" }] }
+    ],
+    "source": "Libellus Sanguinis I (2807) p33",
+    "description": [
+      "Manipulation+Occultisme SR 7, 2 Sang. La tentacule créée possède deux fois le niveau d'Obténébration du vampire en Dextérité et en Force (+1 par point de sang dépensé), mesure 2,5 mètres de long, fait Force+2 dommages, possède 6 niveaux de blessure, mais prend des dommages du feu et de la lumière du soleil."
+    ]
+  },
+  {
+    "name": "Déesse parmi les bêtes",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "1" }] },
+      { "or": [{ "name": "Ogham", "level": "1" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p160",
+    "description": [
+      "La Lhiannan peint son corps avec des runes de Sang, et devient une autorité spirituelle du monde animal. Manipulation+Survie SR6, 1 Sang, pendant succès heures, elle reçoit un succès automatique pour tout jet d'Animalisme sur son domaine. De plus, elle gagne l'Avantage Inoffensif envers les animaux jusqu'à la fin de la nuit."
+    ]
+  },
+  {
+    "name": "Se mêler aux arbres",
+    "requirements": [
+      { "or": [{ "name": "Ogham", "level": "1" }] },
+      { "or": [{ "name": "Protean", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p167",
+    "description": [
+      "Permet de fusionner avec un arbre comme avec Protean 3. Pour 1 Sang supplémentaire, possibilité de fusionner avec du bois mort. Si l'objet ou l'arbre est détruit, le vampire est expulsé."
+    ]
+  },
+  {
+    "name": "Prophétie",
+    "requirements": [
+      { "or": [{ "name": "Aliénation", "level": "3" }] },
+      { "or": [{ "name": "Auspex", "level": "4" }] }
+    ],
+    "source": "Libellus Sanguinis IV (2830) p109-111",
+    "description": [
+      "Les instruments de prédiction peuvent être des ossements que l'on jette à terre, des volutes de fumée, les entrailles d'animaux, d'humains, ou même les vagues de la mer. L'oracle peut prédire l'avenir sans prononcer un mot (il n'est pas obligé de communiquer). Le joueur doit poser une question ou se référer au sujet de la divination (ex: \"Qui trahira le Prince, Quelle sera la destinée de mon infant....).",
+      "2 Sang, Perception+ Intuition SR 8, et un rituel d'1 heure. 1 succès donnera des impressions provenant de la mer du destin, alors que 5 donneront une réel expérience du futur. Si le personnage applique la Prophétie à une action qu'il va entreprendre comme affronter un ennemi ou traverser une région dangereuse, il bénificiera d'un avantage instinctif. Le joueur peut alors traiter les succès comme des points de réserve qu'il pourra dépenser pour baisser la difficulté de n'importe quel jet lié à cette action. Chaque succès ne peut être utilisé qu'une seule fois.",
+      "Permet également de déterminer la destinée d'autres individus. Les jets sont similaires, mais 2 Sang supplémentaires devront être dépensés par le sujet de la prophétie. Si cela se manifeste sous forme de vision, c'est au personnage de voir comment les transmettre, si c'est sous forme d'un avantage instinctif, c'est au personnage de délivrer d'obscurs conseils. Le sujet bénéficiera d'une réserve de points comme précédemment. Ces points sont égaux cependant à la moitié des succès obtenu sur le jet du personnage."
+    ]
+  },
+  {
+    "name": "Plume du Fou",
+    "requirements": [
+      { "or": [{ "name": "Aliénation", "level": "1" }] },
+      { "or": [{ "name": "Auspex", "level": "3" }] }
+    ],
+    "source": "Libellus Sanguinis IV (2830) p110-111",
+    "description": [
+      "Permet d'implanter une folie contagieuse dans une oeuvre d'art ou un manuscrit. La victime n'est généralement que très peu consciente du lien entre l'oeuvre d'art ou du manuscrit et sa folie ou ses fantasmes. Les folies ne sont jamais fatales ou mortelles - l'objet est ainsi préservé de la destruction car un objet détruit mettrait fin aux tourments. Seule une observation prolongée d'une personne ayant les connaissances adéquates pourrait déceler la folie magique qui a été implantée dans l'objet.",
+      "Peut implanter n'importe quel pouvoir d'Aliénation qu'il maitrise (à l'exception de pouvoir comme Yeux du Chaos) dans un manuscrit ou une oeuvre d'art. 1 Sang, Manipulation+Artisanat, ou Linguistique+Musique (suivant le support) SR 5 + niveau du pouvoir implanté.",
+      "1 succès - 1 semaine",
+      "2 succès - 1 mois",
+      "3 succès - 3 mois",
+      "4 succès - 1 an",
+      "5 succès - Permanent",
+      "Un individu regardant l'objet (excepté le personnage lui même) plus de 2 minutes sera affecté par le pouvoir comme si le personnage lui même était présent (les changements futurs n'étant pas pris en compte par l'objet). Le seul effet supplémentaire est que la victime gagne un dérangement supplémentaire centré sur l'objet lui même. Il disparaitra une fois la durée passée. Tout prend fin si l'objet est détruit.",
+      "Si le jet pour affecter l'individu échoue (et donc qu'il résiste), celui ci pourra observer l'objet et découvrir ce qui se cache derrière. Perception+Occultisme SR 8 révèlera un objet maudit, voire d'autres détails à la discrétion du Conteur."
+    ]
+  },
+  {
+    "name": "Disparition",
+    "requirements": [
+      { "or": [{ "name": "Aliénation", "level": "4" }] },
+      { "or": [{ "name": "Dissimulation", "level": "5" }] }
+    ],
+    "source": "Libellus Sanguinis IV (2830) p111-112",
+    "description": [
+      "Permet de faire en sorte qu'une cible devienne un véritable fantôme. Il faut plonger son regard dans celui de la cible. Manipulation+Furtivité SR Vol de la cible. Le Nombre de succès détermine la durée :",
+      "1 succès - 1 tour",
+      "2 succès - 1 scène",
+      "3 succès - 1 nuit",
+      "4 succès - 1 semaine",
+      "5 succès - 1 mois",
+      "La cible disparait à la vue de tous (dépend du personnage : absorbée par les ombres, dévorée par les démons, enlevée par les anges) pendant cette durée. La cible ne peut rien faire d'autres que bredouiller et chercher un refuge pour éviter le soleil.S'il y a assez de succès, la victime sera alors véritablement maudite et sombrera en torpeur."
+    ]
+  },
+  {
+    "name": "Respirer une bouffée de folie",
+    "requirements": [
+      { "or": [{ "name": "Aliénation", "level": "2" }] },
+      { "or": [{ "name": "Auspex", "level": "3" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p102",
+    "description": [
+      "Le Malkavian peut  sentir la folie chez un autre. Il respire son odeur en s'approchant assez prêt de lui,  Perception+Empathie SR6. Permet de détecter une instabilité, permanente ou passagère, ou bien un état émotionnel fort. Sur 3 succès ou plus, permet de sentir un lien du sang."
+    ]
+  },
+  {
+    "name": "Affectation phobique",
+    "requirements": [
+      { "or": [{ "name": "Aliénation", "level": "3" }] },
+      { "or": [{ "name": "Domination", "level": "2" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p102",
+    "description": [
+      "Le Malkavian regarde dans les yeux une victime, et  prononce une menace, voilée ou non.  Charisme+Intimidation SR Volonté. Pour une minute par succès, la victime est envahi de vagues de terreur et d'anxiété liées à la menace. La victime ne peut rien faire d'autre que fuir, ou simplement lutter pour ne pas perdre sa contenance. Sur 6 succès ou plus, la Frénésie de peur est immédiate."
+    ]
+  },
+  {
+    "name": "Apocryphe de Sang",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "1" }] },
+      { "or": [{ "name": "Dissimulation", "level": "1" }] }
+    ],
+    "source": "Libellus Sanguinis IV: Thieves in the Night Pg.75",
+    "description": [
+      "Permet de coder et interpréter messages et parole. Si c'est la parole qui est utilisé, les 2 interlocuteurs doivent être assez prêt l'un de l'autre pour pouvoir sentir et goûter le sang atomisé. Le baiser est le moyen le plus sûr. Si c'est l'écriture, le rédacteur peut dessiner des pictogrammes de sang sur du tissu en utilisant sa propre vitae. Le sang ne touche pas réellement le support, mais se dissipe et imprègne le tissu poreux, créant ainsi le message. Le destinataire doit ensuite dépenser un peu de son sang pour pouvoir parler au vampire ou pour projeter des vapeurs de sang afin de faire apparaitre le message. Dans tous les cas, l'Apocryphe ne permet pas de comprendre le code utilisé, il ne constitue que l'encre utilisé.",
+      "1 Sang pour comprendre ou lire le message qu'on soit l'expéditeur ou le destinataire. Aucun jet n'est nécessaire si 2 vampires sont l'un en face de l'autre. Pour les écrits, l'auteur doit faire Perception+Subterfuge SR 5 afin de déterminer la durée de vie du message",
+      "1 - 2 jours",
+      "2 - 4 jours",
+      "3 - 1 semaine",
+      "4 - 1 mois",
+      "5 - Permanent.",
+      "La lecture du message nécessite toujours 1 Sang, mais pas de jet de dés."
+    ]
+  },
+  {
+    "name": "Halo aliénant",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Aliénation", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p162",
+    "description": [
+      "Le Malkavian teinte son aura de tourbillons provoquant la folie pour quiconque la lit. Manipulation+Expression SR6, un tour de concentration, l'effet dure une scène. Quiconque lit l'aura sans avoir autant de succès que ceux obtenus pour ce pouvoir est victime d'une folie du Malkav pour autant de nuits que la différence obtenue."
+    ]
+  },
+  {
+    "name": "Répit de lucidité",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "5" }] },
+      { "or": [{ "name": "Aliénation", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p163",
+    "description": [
+      "Pouvoir rare, il permet lorsqu'on utilise Animalisme 5 de transmettre ses folies en même temps que la Bête. Ceci coûte 1 Sang par folie, ou 3 pour la folie de base des Malkavians."
+    ]
+  },
+  {
+    "name": "Murmures de haine",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Aliénation", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p167",
+    "description": [
+      "La victime de ce pouvoir entend des murmures la poussant à des actes vils, ou bien la poussant à la paranoïa, nuit après nuit. Manipulation+Empathie SR Volonté, contact physique ou un contact visuel. Les murmures donnent de mauvais conseils, critiquent, parfois vont jusqu'au hurlement. Chaque semaine, la victime lance Volonté, SR6, puis +1 par semaine. 3 succès ou plus permettent de mettre fin au pouvoir de manière définitive. Quand le SR parvient à 10, ou que le jet de Volonté est un échec critique, la victime gagne une folie et le pouvoir prend fin."
+    ]
+  },
+  {
+    "name": "Lamentation du Loup",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "1" }] },
+      { "or": [{ "name": "Dissimulation", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p168",
+    "description": [
+      "Permet d'hurler un message dans la nature, message qui voyage ensuite sur des kilomètres grâce aux loups qui viennent ajouter leur hurlement pour le faire voyager. Un individu l'entendant ne discernera qu'une étrange mélopée voyageant dans l'air. Celui qui possède Parole de Fauve entendra quand à lui une voix portée par les hurlements. Le message doit être bref (émotionnel, idée générale, danger, soit environ 2 phrases simples).",
+      "Manipulation+Animaux SR 6, le nombre de succès indique la distance :",
+      "1 succès - 8 kms",
+      "2 succès - 16 kms",
+      "3 succès - 80 kms",
+      "4 succès - 160 kms",
+      "5 succès - 400 kms",
+      "échec - aucun loup dans la région",
+      "échec critique - on attire une attention indésirable"
+    ]
+  },
+  {
+    "name": "Magnétisme animal",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "4" }] },
+      { "or": [{ "name": "Dissimulation", "level": "3" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p102",
+    "description": [
+      "Cette discipline permet au vampire de dégager un  charisme animal de premier ordre, en raffinant Masque aux Milles visages et en faisant appel à la Bête. Augmente de Animalisme dés les jets sociaux (principalement jets de séduction, de persuasion etc...) pour succès tours sur  Charisme+Subterfuge SR6. Un échec critique indique une frénésie immédiate."
+    ]
+  },
+  {
+    "name": "Visage de l'être aimé",
+    "requirements": [
+      { "or": [{ "name": "Dissimulation", "level": "3" }] },
+      { "or": [{ "name": "Présence", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p167",
+    "description": [
+      "Permet de se faire passer pour un être aimé par la victime. Si on ne connaît pas un tel être, la personne voit qui elle désire (et le vampire a intérêt à réfléchir très vite pour savoir comment réagir!).  Charisme+Empathie SR6"
+    ]
+  },
+  {
+    "name": "Vigueur Animale",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "3" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "3" }] }
+    ],
+    "source": "Libellus Sanguinis IV (2830) p32-33, Dark Ages: Players Guide to Low Clans (20006) p159",
+    "description": [
+      "Permet de transmettre ses blessures à un animal goule. Les blessures apparaissent sur le corps de l'animal. Il gardera les cicatrices des blessures, même après guérison, et les poils qui repousseront seront blancs. Il faut que l'animal goule soit dans son champ de vision. 1 Sang, Vigueur+Animaux SR 8. Chaque succès transforme un niveau de santé de dégats (de n'importe quel type) à l'animal. Ce pouvoir doit être utilisé immédiatement après avoir été blessé (après le jet d'absorption)."
+    ]
+  },
+  {
+    "name": "Infliger au vassal",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "4" }] },
+      { "or": [{ "name": "Force d'Ame", "level": "4" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p159",
+    "description": [
+      "Permet de transmettre ses blessures à une goule humaine. Les blessures apparaissent sur le corps de la victime. Il gardera les cicatrices des blessures, même après guérison, et les poils ou cheveux qui repousseront seront blancs. Il faut que la victime soit dans son champ de vision, et liée au Sang. 1 Sang, Vigueur+Animaux SR 8. Chaque succès transforme un niveau de santé de dégats (de n'importe quel type) à la victime. Ce pouvoir doit être utilisé immédiatement après avoir été blessé (après le jet d'absorption)."
+    ]
+  },
+  {
+    "name": "Esprit de la Nature",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "2" }] },
+      { "or": [{ "name": "Auspex", "level": "4" }] }
+    ],
+    "source": "Libellus Sanguinis IV (2830) p33",
+    "description": [
+      "Uniquement connu par quelques Phuri Dae.",
+      "Permet d'étendre sa conscience dans la nature environnante afin de sentir les conditions générales : absence de danger, lieux sûrs ou d'humains. Impossible de déterminer le genre et le nombre de créatures dangereuses. Ce ne sont que des impressions. Perception+Animaux SR 8, et se concentrer 1 tour complet. Chaque succès donne d'avantage d'information sur une zone plus importante.",
+      "1 succès - quelques vagues informations sur un arpent environ (20 à 50 ares)",
+      "5 succès - des infos sur un col montagneux ou petite forêt, en indiquant les endroits les plus dangereux (et les plus sûrs).",
+      "un échec critique fournira évidemment des informations fausses ou erronées.",
+      "Ce pouvoir doit aider un personnage à explorer une zone et non remplacer l'exploration."
+    ]
+  },
+  {
+    "name": "Malédiction Cauchemardesque",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Chimérie", "level": "5" }] }
+    ],
+    "source": "Libellus Sanguinis IV (2830) p33",
+    "description": [
+      "Ce pouvoir vient de la jati indienne des Brahmanes et à travers eux, des Phuri Dae.",
+      "Permet d'invoquer la plus grande peur de la victime pour la tourmenter jour et nuit. Cette créature est uniquement perceptible par la victime, mais elle peut se faire connaitre de façon discrète aux autres. 1 Volonté (2 Volonté si la cible est Caïnite), Perception+Intimidation SR Volonté de la cible. Se concentrer 1 tour. La créature est invoquée pour 1 nuit par succès. Si le ravnos ne regarde pas la victime dans les yeux (mais qu'elle est quand même en vue), il aura une pénalité de +1. Si le ravnos est à moins d'un kilomètre et demi de la cible mais possède au moins un de ses objets personnels, il aura alors une pénalité de +2. Dans les autres cas, le ravnos ne pourra utiliser ce pouvoir.",
+      "Pour augmenter la durée de la malédiction, 1 Sang pour chaque nuit supplémentaire (à dépenser au moment de l'invocation). La créature disparait au lever du soleil après la dernière nuit. La cible souffre des handicaps Cauchemar et Hantise durant les effets de cette malédiction."
+    ]
+  },
+  {
+    "name": "Agonie sympathique",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "4" }] },
+      { "or": [{ "name": "Chimérie", "level": "2" }] }
+    ],
+    "source": "Clanbook: Ravnos (Revised Edition) (2364) p67, Dark Ages: Players Guide to Low Clans (20006) p166",
+    "description": [
+      "Le Ravnos utilisant ce pouvoir transfère la douleur qu'on lui inflige sur la personne le frappant. Le Ravnos dépense 1 Sang, Manipulation+Intimidation SR Perception+Maîtrise de Soi. Chaque succès permet d'ignorer un niveau de blessure, et d'infliger une pénalité équivalente à ce niveau sur la victime. Ce pouvoir dure une scène.",
+      "Même jet, le SR est la plus haute valeur entre Perception et Maîtrise de Soi. La victime cumule les dégâts fictifs et réels pour ses pénalités. Une seule victime à la fois peut être affectée. Le pouvoir est annulable à volonté."
+    ]
+  },
+  {
+    "name": "Désir du coeur",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Chimérie", "level": "2" }] }
+    ],
+    "source": "Clanbook: Ravnos (Revised Edition) (2364) p68",
+    "description": [
+      "Permet de créer une illusion correspondant au désir de la victime. Ce pouvoir se manifeste sous la forme d'un objet inanimé (lettre d'un être aimé par exemple). Intelligence+Subterfuge SR Volonté, 3 succès sont nécessaires. Cet objet peut être ensuite être recréé à volonté."
+    ]
+  },
+  {
+    "name": "Masque de Cathaye",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "3" }] },
+      { "or": [{ "name": "Chimérie", "level": "3" }] }
+    ],
+    "source": "Clanbook: Ravnos (Revised Edition) (2364) p68",
+    "description": [
+      "Ce pouvoir permet de se faire passer pour un Asuratizayya, un Kuei-jin balançant vers le Yin. Tout succès gagné par ce pouvoir contrecarre une succès sur un jet d'Auspex, Vision de la Vie des Kuei-Jin ou autre pouvoir assimilé. Manipulation+Subterfuge SR6. Si le pouvoir de lecture de la nature du Ravnos n'a pas de jet, la personne doit lancer Perception+Vigilance SR6. Ce pouvoir dure une nuit."
+    ]
+  },
+  {
+    "name": "Créer éphémère",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "3" }] },
+      { "or": [{ "name": "Chimérie", "level": "5" }] }
+    ],
+    "source": "Players guide to the low clans p159",
+    "description": [
+      "Permet de donner une substance à un objet créé via ce pouvoir, le rendant même fonctionnel, et on ne peut nier son existence. L'effet dure jusqu'au lever du jour. 3 Sang, 1 Volonté, Volonté SR8. L'objet créé ne doit pas être plus gros que le vampire. Si l'objet est vraiment compliqué, Intelligence+Artisanat pour le créer. Le seul moyen de nier l'objet est d'avoir Auspex (ou équivalent) supérieur à la Chimérie du vampire, et de dépenser 1 Volonté."
+    ]
+  },
+  {
+    "name": "Résignation pénitente",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "3" }] },
+      { "or": [{ "name": "Valeren", "level": "4" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p169",
+    "description": [
+      "Quand le Salubri est touché par le Soleil, il peut dépenser un Sang. Les dégâts du soleil ne deviennent plus automatiques, mais sont lancés. Chaque succès fait perdre 1Sang au lieu d'infliger une blessure. Il est impossible d'utiliser Force d'Ame pour résister. Quand il n'y a plus de point de Sang, les dégâts peuvent se réappliquer normalement."
+    ]
+  },
+  {
+    "name": "Regard de mensonges",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Valeren", "level": "1" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p168",
+    "description": [
+      "Le 3ème oeil du Salubri s'ouvre et scrute l'interlocuteur. Perception+Empathie SR6, l'interlocuteur doit réussir plus de succès avec Manipulation+Subterfige SR8 pour pouvoir mentir sans être percé à jour par le Salubri. Ne permet pas de percevoir les demi-vérités, ou les mensonges par omission, car il ne se concentre que sur la notion de vérité."
+    ]
+  },
+  {
+    "name": "Oeil du Paradis impitoyable",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      { "or": [{ "name": "Valeren", "level": "4" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p166",
+    "description": [
+      "L'oeil du Salubri s'ouvre en grand, et devient d'un doré incandescent, tel le soleil, illuminant, et brûlant les vampires. 1 Sang et 1 Volonté, Conscience SR6 (donc, requiert Conscience). L'effet touche tout vampire devant lui, qui est brûlé par le Soleil, de 1 à 3 dégâts aggravés, suivant les habits le couvrant. L'effet dure un tour, mais peut être prolongé en redépensant 1 Volonté et 1 Sang, autant de fois que voulu. Le Salubri subit en partie l'effet sous la forme de 3 blessures léthales, résistibles normalement. Chaque dégât se manifeste par un flux de Sang tombant du 3ème oeil. Un Salubri mourrant à cause de ces blessures voit ses cendres se disperser dans une lumière blanche."
+    ]
+  },
+  {
+    "name": "Main de l'artisan",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "1" }] },
+      { "or": [{ "name": "Célérité", "level": "1" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p168",
+    "description": [
+      "Le vampire dépense 1 Sang, puis X Sang additionnels. X divise alors le temps nécessaire pour accomplir une oeuvre d'art. Ceci est valable pour une tâche et une seule. Toutefois, le vampire peut suspendre le pouvoir, s'il ne s'éloigne pas plus d'une heure de son oeuvre."
+    ]
+  },
+  {
+    "name": "Faveur du Diplomate",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "5" }] },
+      { "or": [{ "name": "Auspex", "level": "3" }] }
+    ],
+    "source": "Libellus Sanguinis II (2815) p37",
+    "description": [
+      "1 Sang, concentration d'un tour sur le sujet. Le vampire sait alors quoi dire pour convaincre son interlocuteur d'accéder à sa demande. Si celle-ci est totalement contraire aux convictions de la victime, elle peut résister par un jet de Volonté SR 8. L'effet dure un tour."
+    ]
+  },
+  {
+    "name": "Double Sens",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "6" }] },
+      { "or": [{ "name": "Auspex", "level": "3" }] }
+    ],
+    "source": "Libellus Sanguinis II (2815) p37",
+    "description": [
+      "1 point de volonté par tour, Manipulation+Empathie SR (10-Perception de la victime). Une personne, au choix du vampire, perçoit le réel discours caché derrière les phrases que le vampire prononce à haute voix."
+    ]
+  },
+  {
+    "name": "Félicité",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "3" }] },
+      { "or": [{ "name": "Domination", "level": "2" }] }
+    ],
+    "source": "Clanbook: Toreador (Revised Edition) (2356) p73",
+    "description": [
+      "Ce pouvoir permet de se préparer psychologiquement à affronter la Bête. Le Toreador se concentre sur une oeuvre d'art, éprouve alors le défaut de son clan. Pendant toute la scène suivant sa transe, il peut bénéficier d'un rond additionnel sur une vertue (et une seule) s'il a réussit à invoquer ce pouvoir par Intelligence+Survie SR 2*la vertue à augmenter.",
+      "L'oeuvre d'art doit correspondre à la vertue augmentée. Il peut aider un autre vampire, en projetant la paix intérieur qu'il a acquis. Le jet est alors à +1SR. Ce pouvoir n'est utilisable que par les vampires suivant la Voie de l'Humanité."
+    ]
+  },
+  {
+    "name": "Peinture de l'âme",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": "2" }] },
+      { "or": [{ "name": "Auspex", "level": "4" }] }
+    ],
+    "source": "Clanbook: Toreador (Revised Edition) (2356) p74",
+    "description": [
+      "Ce pouvoir avait disparu avec la disparition de Katherine de Montpellier. Depuis sa sortie de torpeur, elle l'a appris à quelques personnes. Le Toreador étudie pendant une heure la personne, y compris son aura, et s'abandonne totalement à sa passion créatrice, forgeant une image inconsciente de la cible. L'oeuvre est alors faite (tableau, sculpture etc...) en une seule fois (parfois, exceptionnellement, ceci nécessite plusieurs dizaines d'heures), en état de transe.",
+      "Manipulation+Empathie SR9. Chaque succès permet à l'artiste de faire apparaître de manière indéniable les traits suivants : Nature, puis Voie ou Volonté ou une Vertue. Toute personne possédant ce pouvoir et voyant l'oeuvre comprendra les signes placés par l'artiste. Une personne non initiée doit réussir  Perception+Empathie  ou  Perception+Artisanat SR Variable.",
+      "Note : utiliser ce pouvoir ne veut pas dire que vous avez fait un chef d'oeuvre."
+    ]
+  },
+  {
+    "name": "Double langage",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "1" }] },
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Dissimulation", "level": "1" }] }
+    ],
+    "source": "Clanbook: Toreador (Revised Edition) (2356) p75",
+    "description": [
+      "Ce pouvoir n'est pas vraiment un secret de clan : il permet de faire passer, aux milieux de phrases, des  bruits parasites qui sont en fait des mots. Savoir les écouter permet de comprendre des phrases entière, le non initié ne pouvant se douter qu'une conversation peut avoir lieu devant lui.  Perception+Subterfuge SR5 permet de comprendre ce qui est dit. Intelligence+Expression SR6 permet de créer les phrases."
+    ]
+  },
+  {
+    "name": "Dans le mille",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "3" }] },
+      { "or": [{ "name": "Présence", "level": "3" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p103",
+    "description": [
+      "En discutant quelque temps avec sa victime, puis en utilisant ce pouvoir, le Toreador est capable d'étaler au grand jour les faiblesses de celle-ci, les assénant telles des vérités atroces.  Esprit+Perception SR6.",
+      "1-2 La victime est rendue sans voix par la honte ou la rage, jusqu'à la fin de la scène",
+      "3-4 La cible explose de colère",
+      "5 La cible devient violente contre le Toreador, ou même contre elle même, de honte",
+      "6 Frénésie immédiate"
+    ]
+  },
+  {
+    "name": "Langue acérée",
+    "requirements": [
+      { "or": [{ "name": "Célérité", "level": "1" }] },
+      { "or": [{ "name": "Présence", "level": "1" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p102",
+    "description": [
+      "Permet de sortir une réplique cinglante instantanément, forçant la partie d'en face au silence grâce à Présence. Esprit+Empathie SR7, +1SR si la victime n'est pas connue. Force la partie adverse au silence, de honte, pendant succès tours (x2 si ce n'est pas une Toreador). 1 point de Volonté annule l'effet. A noter que les Toreadors ne voient pas tous d'un bon oeil le recours un peu facile à ce pouvoir."
+    ]
+  },
+  {
+    "name": "Vue Thaumaturgique",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Thaumaturgie", "level": "1" }] }
+    ],
+    "source": "Clanbook: Tzimisce (Revised Edition) (2361) p47",
+    "description": [
+      "Idem Auspex 2, mais permet de voir précisément les traces de magie vampirique. Perception+Occulte SR8, permet d'identifier les voies utilisées, 1 seul succès nécessaire si le vampire dispose du pouvoir. Ne permet pas de comprendre la Vraie Magie ou la magie statique."
+    ]
+  },
+  {
+    "name": "Changement d'humeur",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Domination", "level": "4" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p103",
+    "description": [
+      "Cette technique requiert le contact visuel, et la cible doit regarder le Tremere. Celui-ci regarde l'aura de la victime, et fait des gestes, émet des grognements, des sourires etc... de façon a faire transiter l'aura de la victime vers un état d'esprit voulu. Ceci dure plusieurs minutes. Manipulation+empathie SR7. L'étendue du succès donne l'effet (qualité de changement par rapport à l'effet voulu) et la durée :",
+      "1 Effet superficiel, dure 5 minutes à peine",
+      "2 Effet modéré, dure 10 minutes",
+      "3 Effet modéré, 1/2 heure",
+      "4 Effet complet, dure la scène entière",
+      "5 Complet, dure toute la nuit",
+      "6 Complet, dure toute la semaine"
+    ]
+  },
+  {
+    "name": "Avertissement de la Bénédiction",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Daimonon", "level": "1" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p159",
+    "description": [
+      "Ce pouvoir permet de mettre en évidence le côté sacré d'une personne ou d'un objet, comme Auspex 2. Avec 1 succès, les Bénis et les reliques sacrées sont entourées d'une aura dorée, les aires bénies irradient une lueur similaire. Avec 3 succès, détection de ceux suivant la Voie du Paradis avec un niveau de 8 ou plus, la lumière est différente de ceux ayant le Vraie Foi. 5 succès permettent de voir le 3ème d'Oeil d'un Salubri. La manière dont les Tremere ont appris ce pouvoir est inconnue. Mais le fait que les Salubri soient trouvables par ce biais est un sujet d'inquiétude morale dans le clan."
+    ]
+  },
+  {
+    "name": "Boire l'esprit",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "4" }] },
+      {
+        "or": [
+          { "name": "Thaumaturgie", "subname": "Voie du Sang", "level": "5" }
+        ]
+      }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p160",
+    "description": [
+      "Permet de voler souvenirs et connaissances lors de la diablerie. Le vampire dépense autant de points de Volonté que l'Intelligence de la victime, et lance Volonté SR Volonté (+1 par Folie de la victime). Chaque succès donne un point de bonus (comme à la création du personnage) utilisable pour augmenter une Compétence jusqu'au maximum le niveau de la victime. Les souvenirs forts sont pris à la victime, sous forme de flashs souvent cryptiques. Sur un échec critique, -1 en Volonté permanente par 1 obtenu (images négatives, de haine, centrées sur l'acte)."
+    ]
+  },
+  {
+    "name": "Odeur de Cain",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      {
+        "or": [
+          { "name": "Thaumaturgie", "subname": "Rego Vitae", "level": "1" }
+        ]
+      }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p164",
+    "description": [
+      "Ce pouvoir permet de sentir le Sang de vampire présent dans une créature. Perception+Occulte, la créature doit être dans le champ de perception normal du vampire. SR6 pour les vampires, SR8 pour sentir les goules (modifiable suivant les circonstances: le pouvoir étant toujours actif, même quand on dort). Avec le temps, il est possible de reconnaitre l'odeur de vampires en particulier."
+    ]
+  },
+  {
+    "name": "Marionnettiste spectral",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "5" }] },
+      { "or": [{ "name": "Domination", "level": "5" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p166",
+    "description": [
+      "Secret très gardé du clan Tremere, ce pouvoir permet sous forme astrale de prendre possession d'un corps via Domination 5. Tout dégât infligé l'est à la victime et à la forme spectrale du vampire. Si l'hôte meurt, l'expulsion du corps est instantanée et rompt la corde d'argent."
+    ]
+  },
+  {
+    "name": "Vue Mystique",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Thaumaturgie", "level": "2" }] }
+    ],
+    "source": "Dark Ages: Players Guide to Low Clans (20006) p163",
+    "description": [
+      "Ce pouvoir permet de voir les flux magiques des objets et de l'environnement, et les vivants. Vigilance+Empathie SR8. 1 succès permet de voir l'aspect magique de l'objet étudié. 2 succès permet de voir si le flux magique lui est propre ou non. 3 succès disent si l'effet est nuisible ou pas, si c'est une illusion. 4 succès permettent de savoir quelle magie est employée, mais pas le style s'il n'a pas été utilisé auparavant. 5 succès ouvrent l'esprit du vampire au flot magique, permettant de voir les lignes de forces et les réserves de pouvoir. Les humains capables de magie luisent d'étincelles par ce pouvoir."
+    ]
+  },
+  {
+    "name": "Eminence de l'Ombre conquérant le sang",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "5" }] },
+      { "or": [{ "name": "Vicissitude", "level": "5" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p166",
+    "description": [
+      "Le vampire prend la forme Ténébreuse, ou bien la forme Sanguine, niveau 5 de son pouvoir. Il entre alors dans le corps du réceptacle, en saisissant sa victime (Dextérité+Bagarre), par la bouche, en 3 tours. Une fois à l'intérieur, le vampire tente de réduire la volonté de la victime, avec Domination 5. Si c'est un échec critique, le vampire est vomit hors du corps, il est incapable de faire quoique ce soit pendant 5-Esprit tours. Si la Volonté est brisée, le vampire prend contrôle du corps, à loisirs. Il dort le jour, peut rester dans le corps tant qu'il a du Sang (il ressort quand il le veut, ou est expulsé comme décrit plus haut s'il a 0 Sang), il ne peut regagner de Sang par quelque moyen que ce soit.",
+      "Pouvoir avec Obtenebration : possibilité de posséder un vampire ou un humain. Sur un vampire, possibilité d'utiliser le Sang de celui-ci pour maintenir le corps en vie et guérir les blessures. Les yeux de la victime ont des pupilles qui sont des abysses noires sans fond.",
+      "Pouvoir avec Vicissitude : possibilité de posséder un humain (sur un vampire ... la victime diableriserait le vampire!). L'humain devient une goule, peut utiliser le Sang du vampire le possédant. De plus, possibilité d'utiliser des pouvoirs de Vicissitude pour reformer le corps. Des vagues courent parfois sur le corps de la goule.",
+      "A noter que dans le cas d'une possession humaine, le possédé peut résister à tout dégât avec Vigueur, et les dégâts peuvent être guéris avec le Sang du vampire. De plus, les signes (les yeux ou les vagues) sont très peu visibles (Perception+Vigilance SR9 pour les voir)"
+    ]
+  },
+  {
+    "name": "Devenir Kupala",
+    "requirements": [
+      {
+        "or": [
+          { "name": "Koldunic", "subname": "Voie des Esprits", "level": "6" }
+        ]
+      },
+      { "or": [{ "name": "Vicissitude", "level": "6" }] }
+    ],
+    "source": "Players guide to the High Clans p164",
+    "description": [
+      "Ce pouvoir ne permet pas de devenir un démon, mais de fusionner avec la terre. Dépense de 10 Sang, Vigueur+Vigilance étendu SR6. Chaque succès fait perdre un point de Réserve de Sang au vampire. Quand il n'a plus de Réserve, son corps se propage dans le sol en des milliers de petites racines, sur une surface de succès x 10 mètres. Sur cette surface, le vampire ressent tout évènement à volonté; il peut activer tout jet de Koldunic à -2SR. S'il utilise Voie de la Terre à 3, il peut choisir de prendre 1 Sang au lieu de faire une blessure. C'est le seul moyen de se nourrir sous cette forme, à moins de verser du Sang là où le vampire se trouve. Sous cette forme, le vampire reste un vampire, il dort le jour. Toutefois, il est insensible aux rayons du soleil. Mais dévaster la terre par le feu le brûle, de même que retourner la terre le blesse. Le pouvoir dure autant que désirer, et peut être écourté en dépensant 1 Volonté. Si le vampire n'a plus de sang, son corps est éjecté de la terre, et il se reforme. S'il se repose plus de jours dans une terre que la valeur de sa plus haute Vertu,le sol du défaut de clan devient celui où il est présentement."
+    ]
+  },
+  {
+    "name": "Toucher de l'écorcheur",
+    "requirements": [
+      { "or": [{ "name": "Potence", "level": "2" }] },
+      { "or": [{ "name": "Vicissitude", "level": "2" }] }
+    ],
+    "source": "Players guide to the High Clans p167",
+    "description": [
+      "En agrippant la peau d'une victime,, ou juste en l'effleurant, le Tzimisce peut l'écorcher, arrachant la peau. Jet normal de Vicissitude 2, à +1SR (max 9). Sur une victime non restreinte, le pouvoir est déclenché par réflexe si voulu. Chaque succès inflige 1 dommage léthale, résistible par Vigueur SR8 (les humains ne peuvent résister). Si les dégâts sont supérieurs à la Vigueur de la victime, elle ne peut rien faire d'autre que hurler pour le reste du tour. De plus, elle saigne abondamment de cette blessure : par minute, un humain ressubit le même nombre de dégâts, mais en non léthaux. Ceci dure pendant succès du premier jet minutes. Pour un vampire, chaque dégât fait lors que la blessure a été infligée fait perdre 1 Sang, pendant le même temps. Si le dommage est partiellement guéri, ou si Dextérité+Médecine SR9 est réussit, la perte de Sang n'est plus que de 1 par heure (soit 1 dégât non léthale pour les humains). La blessure ne cesse de saigner qu'une fois entièrement guérit. Sur un humain, la possibilité d'infection est quasiment sûre."
+    ]
+  },
+  {
+    "name": "Mâchoires du Dracon",
+    "extra_requirements": ["Les 5 voies de Koldunic à 5"],
+    "requirements": [{ "or": [{ "name": "Koldunic", "level": "6" }] }],
+    "source": "Players guide to the High Clans p168",
+    "description": [
+      "Le Koldun peut déclencher une tempête dont la puissance défie l'imagination, combinaison de la tornade, due la tempête de grêle, d'éclairs, de feu etc... Une heure de méditation sur la terre qui va être frappée, Charisme+Occulte SR8, dépense de tout ses points de Sang lui restant. Pour chaque succès, la tempête à 1.5km de rayon. Il entre en frénésie immédiate, et les nuages s'amoncellent dans le ciel. Dans l'heure qui suit, tout objet ou personne se trouvant sous la tempête subit l'équivalent de Volonté+Occultisme du Koldun dégâts aggravés. La furie des éléments dure 1h. Les dégâts sur les bâtiments sont à la discrétion du Mj."
+    ]
+  },
+  {
+    "name": "Voir la vraie forme",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Vicissitude", "level": "2" }] }
+    ],
+    "source": "Players guide to the High Clans p169",
+    "description": [
+      "Le Tzimisce voit quand une chair é a été modifiée. Perception+Altération Corporelle SR6. 1 succès permet de voir un travail de Vicissitude, 2 décèle un changement de forme du à une discipline vampirique, 3 perce une altération magique, 4 permet de mettre à jour un changeur de forme \"naturel\". Si le seuil du nombre de succès est dépassé de 2, le vampire devine de plus quelle est la forme initiale."
+    ]
+  },
+  {
+    "name": "Déchaîner la Bête colérique",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "5" }] },
+      { "or": [{ "name": "Vicissitude", "level": "4" }] }
+    ],
+    "source": "Players guide to the High Clans p170",
+    "description": [
+      "Le Tzimisce relâche sa bête dans le corps d'une victime, qui immédiatement commence à se transformer (douloureusement) en un monstre. Le jet pour relâcher la Bête est standard. La transformation en Zulo de la victime dure 2 tours, puis elle attaque toute personne autre que le vampire. Manipulation+Animaux SR6 pour rappeler la Bête. Si la victime meurt, un nuage de miasmes noir regagne à toute vitesse le vampire. Une fois l'effet fini, la victime ne reprend pas de suite forme humaine : un vampire perd 1 dans chaque attribut augmenté, jusqu'à redevenir normal en 3 nuits. Un humain reste sous forme Zulo : ses tissus dégénèrent, pourrissent, deviennent tumoraux, il subit 1 aggravé par jour jusqu'à mourir. Si c'est une goule, l'effet n'est que de 1 aggravé par semaine. Seule de la magie très puissante peut sauver un humain ou une goule de la mort."
+    ]
+  },
+  {
+    "name": "Sculpter la blessure s'épanchant",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": "3" }] },
+      { "or": [{ "name": "Vicissitude", "level": "2" }] }
+    ],
+    "source": "Players guide to the High Clans p169",
+    "description": [
+      "Le Tzimisce dépense 1 Sang, et lance Esprit+Altération corporelle SR8. Chaque succès guérit 1 blessure, avec au maximum un nombre de blessure limité par la limite de dépense de Sang donné par la génération, le vampire forçant les chairs à se refermer. Si la limite de dépense de Sang est dépassée, l'effet se poursuit sur les tours suivants."
+    ]
+  },
+  {
+    "name": "Armurerie Corporelle",
+    "requirements": [
+      { "or": [{ "name": "Vicissitude", "level": "3" }] },
+      { "or": [{ "name": "Protean", "level": "3" }] }
+    ],
+    "source": "Vampire l'Age des Ténèbres - p173 et Guide du Sabbat - p111",
+    "description": [
+      "Permet de créer des armes à partir de son propre corps (bras en épée, doigt en paire de ciseaux, etc). Chaque arme créée coûte 2 Sang. Les armes à 2 mains coûtent le double en Sang. Même dégats que les armes de bases, mais en dégats aggravés. Dex + Artisanat du Corps SR 7."
+    ]
+  },
+  {
+    "name": "Décoration de l'âme",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Dissimulation", "level": "2" }] }
+    ],
+    "source": "Clanbook Tzimisce 2 p72",
+    "description": [
+      "L'aura est le reflet de l'âme, mais aussi du corps. En changeant des zones érogènes, des chakras, des articulations, le Tzimisce change l'aura qu'il génère. Ce pouvoir coûte 3 Volonté,  Perception+Empathie SR Volonté (une forte Volonté ne permet pas de changer facilement son aura!)"
+    ],
+    "extra_table": [
+      ["Succès", "Effet"],
+      ["1", "Peut altérer des nuances (pâleur ou brillance)"],
+      ["2", "Altération de la couleur principale"],
+      ["3", "Altération de l'état psychologique apparent"],
+      [
+        "4",
+        "Peut retirer une preuve de diablerie, falsifier des preuues magiques"
+      ],
+      [
+        "5",
+        "Peut changer l'aspect naturel de l'aura (mage vampire, garou, humain etc)"
+      ]
+    ]
+  },
+  {
+    "name": "Pater Szlachta",
+    "requirements": [
+      { "or": [{ "name": "Vicissitude", "level": "3" }] },
+      { "or": [{ "name": "Protean", "level": "4" }] }
+    ],
+    "source": "Clanbook Tzimisce p72",
+    "description": [
+      "Dépense de 2 points de Sang, Vigueur+Médecine SR7. Le Tzimisce change son corps en celui d'un Szlatcha, une goule de guerre. Cette transformation est très douloureuse, dure 5-succès tours, et permet de modifier la répartition des attributs physiques (1 point par succès, limités par la génération). De plus, on peut faire apparaître des pics, une épine dorsale etc... à la discrétion du Mj"
+    ]
+  },
+  {
+    "name": "Naissance du Vozhd",
+    "requirements": [
+      { "or": [{ "name": "Vicissitude", "level": "6" }] },
+      { "or": [{ "name": "Animalisme", "level": "6" }] }
+    ],
+    "source": "Clanbook Tzimisce p73",
+    "description": [
+      "Ce pouvoir permet de créer un Vozhd, sans recours à la magie koldunique. Le vampire regroupe 15 à 20 goules, puis lance Intelligence+Altération Corporelle SR10. Avec 1 succès, construire et maîtriser la Vozhd dure presque 1 an, avec 5 succès, ce délai est réduit à 1 mois. Tout jet de Vicissitude par la suite sur le Vozhd est à +2SR, et tout jet d'Animalisme à +3SR. Un échec critique résulte en une masse de chair non viable, ou bien en un Vozhd en frénésie permanente."
+    ]
+  },
+  {
+    "name": "Contemplation du Vif Argent",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": "2" }] },
+      { "or": [{ "name": "Temporis", "level": "3" }] }
+    ],
+    "source": "Dark Ages: Players Guide to High Clans (20007) p169",
+    "description": [
+      "Le vampire peut mettre son esprit hors du temps, évaluer totalement une situation, et faire reprendre le cours des évènements en y répondant avec la meilleur réponse possible.",
+      "1 Sang, Esprit+Vigilance, le temps s'arrête pour le corps, mais pas pour l'esprit du vampire. Il ne peut influencer le monde physique, ni utiliser de pouvoir mental pour cela, mais il peut changer sa perspective de vue par Auspex s'il en a la possibilité par exemple. Il peut rester dans sa bulle de temps mentale aussi longtemps qu'il le désire. Sur chaque succès, il a -1SR sur sa prochaine action, avec un minimum de SR de 3. Sur un échec critique, il reste bloqué dans son espace mental pendant des années, contemplant la même situation, et devient fou. A noter que certains évènements sont inévitables, mais qu'il est possible d'en minimiser l'impact."
+    ]
+  },
+  {
+    "name": "Maîtrise d'Enoia",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": " 1" }] },
+      { "or": [{ "name": "Protean", "level": " 3" }] }
+    ],
+    "source": "Road of the Beast (20030) p72",
+    "description": [
+      "Permet d'adapter certains attributs exprimés par Protean à l'environnement. Esprit+Survie SR6, 1 caractéristique de pouvoir peut être changé par succès. En règle général, le changement permet d'obtenir -2 sur un SR de survie en milieu extérieur. Exemples :",
+      "Griffes : elles deviennent recourbées, facilitant les actions d'escalade aux arbres",
+      "Yeux : sensibilité au mouvement plus qu'à la lumière -2SR pour voir quelque chose bouger, +1SR pour distinguer quelqu'un d'immobile ou camouflé.",
+      "Pieds/Mains : élargissement des pieds pour marcher sur la neige"
+    ]
+  },
+  {
+    "name": "Tester la Voie",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": "3" }] },
+      { "or": [{ "name": "Auspex", "level": " 2" }] }
+    ],
+    "source": "Road of the Beast (20030) p72",
+    "description": [
+      "Ce pouvoir est utilisé par les gardiens des lieux sacrés de ceux suivant la Voie de la Bête, et permet de distinguer, dans la façon de parler, d'agir, qui suit vraiment cette voie (la Bête devant être sous jacente). Le joueur lance sa Voie, SR8",
+      "1 succès - il peut déterminer si la personne est hostile à la Voie de la Bête",
+      "2 succès - permet de savoir si la personne est intéressée par cette voie",
+      "3 succès - permet de savoir s'il suit cette voie",
+      "4 succès - permet de déterminer quel chemin de la Voie il suit",
+      "5 succès ou + - permet de dire s'il est bas sur la Voie (1-4), moyennement avancé</a> (5-7) ou très avancé (8-10). Un échec critique le place d'office dans cette dernière catégorie."
+    ]
+  },
+  {
+    "name": "Révoquer le Don d'Adam",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": " 4" }] },
+      { "or": [{ "name": "Protean", "level": " 4" }] }
+    ],
+    "source": "Road of the Beast (20030) p72",
+    "description": [
+      "Dieu a donné à Adam le pouvoir sur les Bête.... les pratiquants de ce pouvoir veulent le pouvoir sur l'humain : ils transforment un humain en animal, avec sa pleine conscience d'être humain (donc capable de pensée, d'actions complexes etc...), le relâchent et le traquent. Ils disent que c'est la chasse la plus grisante qui soit. L'humain doit boire 2 Sang du vampire, puis le vampire se concentre, et touche les parties du corps qui se transforment au fur et à mesure. Le rituel dure 5 minutes. Par point de Sang supplémentaire, on peut faire varier la taille de l'animal obtenu de 10% de la masse (un autre vampire, ne connaissant pas ce pouvoir, peut donner son sang). L'effet prend fin à la fin de la nuit, la victime gardant une conscience parfaite de ce qui s'est passé, et souvent devenant folle."
+    ]
+  },
+  {
+    "name": "Une oreille pour le mensonge",
+    "requirements": [{ "or": [{ "name": "Auspex", "level": "2" }] }],
+    "source": "Road of Kings (20031) p72",
+    "description": [
+      "Permet de savoir si l'interlocuteur dit sciemment un mensonge ou non. Perception+Empathie SR Manipulation+Subterfuge"
+    ]
+  },
+  {
+    "name": "Inspirer la grandeur",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": " 3" }] },
+      {
+        "or": [
+          { "name": "Potence", "level": " 3" },
+          { "name": "Force d'Ame", "level": " 3" }
+        ]
+      }
+    ],
+    "source": "Road of Kings (20031) p72",
+    "description": [
+      "Le vampire, en motivant ses troupes par un discours, peut dépenser des poings de sang pour augmenter la Force (ou la Puissance pour une goule ou un vampire) et/ou la Vigueur (ou la Force d'Âme).  Charisme+Commandement SR7 indique le nombre de points de sang maximum dépensables, répartis ensuite. Ce nombre est limité par la génération. Les poings données peuvent faire dépasser les limites de génération, ou 5 pour des mortels."
+    ]
+  },
+  {
+    "name": "Inspirer la grandeur version forte",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": " 3" }] },
+      {
+        "or": [
+          { "name": "Potence", "level": " 3" },
+          { "name": "Force d'Ame", "level": " 3" }
+        ]
+      }
+    ],
+    "source": "Road of Kings (20031) p72",
+    "description": [
+      "Même chose que la version normale, mais le nombre de succès est répartissable en plus sur le nombre de personnes affectées.",
+      "1 succès - 2 personnes",
+      "2 succès - 4 personnes",
+      "3 succès - 8 personnes",
+      "4 succès - 20 personnes",
+      "5 succès ou + - Toute personne à proximité."
+    ]
+  },
+  {
+    "name": "La voix de la Vérité",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": " 2" }] },
+      { "or": [{ "name": "Présence", "level": "3" }] }
+    ],
+    "source": "Road of Kings (20031) p73",
+    "description": [
+      "Voir Aura de l'Indéniable vérité, mais applicable sur une seule personne."
+    ]
+  },
+  {
+    "name": "Son de la parole brisée",
+    "requirements": [
+      { "or": [{ "name": "Auspex", "level": " 4" }] },
+      {
+        "or": [
+          { "name": "Domination", "level": " 4" },
+          { "name": "Présence", "level": " 4" }
+        ]
+      }
+    ],
+    "source": "Road of Kings (20031) p73",
+    "description": [
+      "Perception+Commandement SR Volonté permet de savoir si un vassal a brisé sa parole:",
+      "1 succès - le vampire sait qu'un vassal a trahi",
+      "2 succès - le vampire a vaguement une idée de qui a pu trahir",
+      "3 succès - le vampire sait quel vassal a trahi, mais ne connaît les circonstances que vaguement",
+      "4 succès - le vampire comprend mieux les circonstances, quel serment ou obligation a été brisé",
+      "5 succès ou + - Vision du vassal pendant quelques secondes, possibilité donc de voir son environnement"
+    ]
+  },
+  {
+    "name": "Regard du juste",
+    "requirements": [
+      { "or": [{ "name": "Potence", "level": " 3" }] },
+      { "or": [{ "name": "Présence", "level": " 2" }] }
+    ],
+    "source": "Road of Heaven (20032) p68",
+    "description": [
+      "Le vampire peut brûler de l'intérieur ses victimes en utilisant son propre péché, imposant le jugement du juste sur elles. Un contact les yeux dans les yeux suffit. Jet de Voie SR Voie de la victime. Un échec critique indique l'obligation d'un acte de contrition avant de réutiliser ce pouvoir. Chaque succès inflige un aggravé, résistible par Force d'Ame SR7 +(7-Voie de la victime). Ce pouvoir n'est plus utilisable sur une même victime tant qu'elle n'a pas changé son niveau de Voie."
+    ]
+  },
+  {
+    "name": "Aura d'acier",
+    "requirements": [
+      { "or": [{ "name": "Force d'Ame", "level": " 3" }] },
+      { "or": [{ "name": "Volonté ", "level": "6" }] }
+    ],
+    "source": "Road of Heaven (20032) p69",
+    "description": [
+      "Ce pouvoir permet d'ignorer les pénalités des niveaux de blessures qu'on a, ainsi que ceux acquis lors des succès tours suivants, en utilisant la force de sa Foi. 1 Sang, Jet de Voie SR6. Ce pouvoir est un réflexe, et le Sang dépensé ne rentre pas dans la limite de génération."
+    ]
+  },
+  {
+    "name": "Moment de Grâce",
+    "requirements": [
+      { "or": [{ "name": "Présence", "level": " 3" }] },
+      { "or": [{ "name": "Domination", "level": " 4" }] }
+    ],
+    "source": "Road of Heaven (20032) p69",
+    "description": [
+      "Ce pouvoir permet de faire comprendre que la Voie du Paradis est LA Voie : elle ne fonctionne que sur ceux ne suivant pas la Voie du Paradis. 1 Volonté et 1 Sang, Voie SR Voie de la victime. Si c'est un succès, la victime a durant la scène suivante la Voie du Paradis à un niveau égal au nombre de succès du jet. Toute perte dans cette Voie temporaire du Paradis se répercute par une perte dans la Voie originale de la victime, la plongeant dans une spirale de dégénérescence."
+    ]
+  },
+  {
+    "name": "Communion de la Bête",
+    "requirements": [
+      { "or": [{ "name": "Animalisme", "level": " 3" }] },
+      { "or": [{ "name": "Auspex", "level": " 4" }] }
+    ],
+    "source": "Road of Humanity (20034) p70",
+    "description": [
+      "Permet de forcer la Bête d'un autre à parler de manière intelligible. La Bête s'exprime suivant le clan (Brujah = fier et violente, Ventrue = Froide et dominatrice etc.). 1 Volonté, Manipulation+Intimidation SR Volonté de la cible. Si c'est un succès, dépense d'un Sang, jet d'opposition Contrôle de Soi/Instinct vs Contrôle de Soi/Instinct, SR6 pour les 2 opposants. Si c'est un succès, la Bête est obligée de répondre, sans pouvoir agir violemment, pendant succès tours (succès sur le 1er jet de Manipulation+Intimidation). La Bête se souvient de toute action sous Frénésie, sait quand une influence extérieure a agit sur le vampire. Même si le sujet est volontaire, la Bête tente toujours de résister, car elle monte au niveau de l'esprit sain. Si le jet de Contrôle de Soi est un échec, on ne peut réutiliser ce pouvoir pendant une Lune."
+    ]
+  },
+  {
+    "name": "Peau mortelle",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": " 3" }] },
+      { "or": [{ "name": "Dissimulation", "level": " 3" }] }
+    ],
+    "source": "Road of Humanity (20034) p71",
+    "description": [
+      "Ce pouvoir fait croire aux mortels que le vampire a la peau chaude, respire, et tout ce qui fait de lui un humain. Son effet est à mi-chemin entre la Domination et la Dissimulation, les humains ne voyant que ce qu'ils veulent voir."
+    ]
+  },
+  {
+    "name": "Chant de la Vie",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": " 1" }] },
+      { "or": [{ "name": "Présence", "level": " 1" }] }
+    ],
+    "source": "Clanbook: Ventrue (1st Edition) (2058) p77",
+    "description": [
+      "Permet de déterminer par un mot ou deux d'une personne vivante quel est son véritable Comportement."
+    ]
+  },
+  {
+    "name": "Refus de la Faveur d'Aphrodite",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": " 3" }] },
+      { "or": [{ "name": "Force d'Ame", "level": " 3" }] }
+    ],
+    "source": "Clanbook: Ventrue (1st Edition) (2058) p77",
+    "description": [
+      "Permet d'ignorer les pouvoirs de Présence de niveau 1 à 3 des vampires de génération supérieure à la sienne."
+    ]
+  },
+  {
+    "name": "Aura d'Indéniable Vérité",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "4" }] },
+      { "or": [{ "name": "Présence", "level": "4" }] }
+    ],
+    "source": "Libellus Sanguinis I (2807) p94, Road of Kings (20031) p74",
+    "description": [
+      "Charisme+Commandement SR Volonté. Les personnes affectées ne peuvent mentir en présence du vampire.",
+      "1 succès - Prochaine phrase",
+      "2 succès - Prochaine minute",
+      "3 succès - 10 minutes",
+      "4 succès - Pour la scène",
+      "5 succès - Tant que le vampire est présent.",
+      "Ceci n'affecte que les vampires de générations inférieures."
+    ]
+  },
+  {
+    "name": "Ami distant",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "2" }] },
+      { "or": [{ "name": "Présence", "level": "4" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p104 ",
+    "description": [
+      "Une fois que le vampire a réussi a imposer un de ses pouvoirs de Présence sur la victime (quel que soit ce pouvoir), il peut engager un jet de Volonté SR8 résisté par Volonté SR8 avec la dite victime. Pendant les succès mois qui suivent, chaque fois que le nom du vampire est évoqué par la victime ou devant elle, elle se souvient de l'impression laissée par le pouvoir de Présence (souvent une influence de Présence 2, d'où le nom du pouvoir) et agit en fonction de cette impression. Si la victime est un ennemi du vampire, elle considéra qu'au fond, c'est ce qu'elle pense vraiment de lui."
+    ]
+  },
+  {
+    "name": "Quasi loyauté absolue",
+    "requirements": [
+      { "or": [{ "name": "Domination", "level": "5" }] },
+      { "or": [{ "name": "Présence", "level": "5" }] }
+    ],
+    "source": "Counsel of Primogen (2429) p104",
+    "description": [
+      "Le vampire capte le regard de la victime, et cette dernière tombe dans une transe quasi extatique vis à vis de lui : l'effet d'un lien du sang multiplié par 10, mais ne durant qu'une nuit. Quitter la présence de la victime provoque en elle une anxiété et un stress émotionnel. Une fois l'effet fini, il reste une sensation éthérée de ce qui s'est passé, avec parfois un désir que cela resurvienne. L'effet anesthésiant du pouvoir est tel que seuls les actes contraints les plus ignobles sont remémorés. Charisme+Manipulation SR Volonté. 1 succès indique une inclinaison forte de la victime pour le vampire, 2 succès ou plus un effet total."
+    ]
+  }
+]

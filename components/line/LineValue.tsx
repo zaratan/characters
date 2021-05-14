@@ -15,18 +15,7 @@ const TextContainer = styled.div`
   }
 `;
 
-const LineValue = ({
-  elem,
-  title,
-  maxValue,
-  diffPexCalc,
-  changeName,
-  remove,
-  placeholderName,
-  placeholderSub,
-  full,
-  inactive,
-}: {
+interface LineValueProps<T> {
   elem?: TempElemType<number>;
   maxValue?: number;
   title: string;
@@ -37,7 +26,24 @@ const LineValue = ({
   placeholderSub?: string;
   full?: boolean;
   inactive?: boolean;
-}) => {
+  autocomplete?: Array<T>;
+  infoLink?: string;
+}
+
+const LineValue = <T extends { name: string }>({
+  elem,
+  title,
+  maxValue,
+  diffPexCalc,
+  changeName,
+  remove,
+  placeholderName,
+  placeholderSub,
+  full,
+  inactive,
+  autocomplete,
+  infoLink,
+}: LineValueProps<T>) => {
   const { showPex } = useContext(PreferencesContext);
   return (
     <ul>
@@ -50,6 +56,8 @@ const LineValue = ({
           placeholder={placeholderName || 'Nouveau nom…'}
           full={full}
           inactive={inactive}
+          autocomplete={autocomplete}
+          infoLink={infoLink}
         />
         {elem ? (
           <TextContainer className={inactive ? 'inactive' : ''}>

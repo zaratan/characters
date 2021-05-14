@@ -33,7 +33,10 @@ const RitualMultiplicatorContainer = styled.span`
 
 const Disciplines = () => {
   const generation = useContext(GenerationContext);
-  const { disciplines: disciplineData } = useContext(DataContext);
+  const {
+    disciplines: disciplineData,
+    disciplinesCombi: disciplinesCombiData,
+  } = useContext(DataContext);
   const {
     clanDisciplines,
     outClanDisciplines,
@@ -177,6 +180,12 @@ const Disciplines = () => {
                   title={combinedDiscipline.title}
                   placeholderName="Nom de la discipline"
                   inactive={!editMode}
+                  autocomplete={disciplinesCombiData}
+                  infoLink={
+                    disciplinesCombiData.find(
+                      (discData) => discData.name === combinedDiscipline.title
+                    )?.url
+                  }
                 />
               </li>
             ))}

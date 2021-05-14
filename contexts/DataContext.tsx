@@ -8,12 +8,19 @@ export type DisciplineDataType = {
   th: boolean;
 };
 
+export type DisciplineCombiDataType = {
+  name: string;
+  url: string;
+};
+
 type ContextType = {
   disciplines: Array<DisciplineDataType>;
+  disciplinesCombi: Array<DisciplineCombiDataType>;
 };
 
 const defaultContext: ContextType = {
   disciplines: [],
+  disciplinesCombi: [],
 };
 const DataContext = createContext(defaultContext);
 export const DataProvider = ({ children }: { children: ReactNode }) => {
@@ -23,6 +30,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   });
   const context: ContextType = {
     disciplines: data?.disciplines || [],
+    disciplinesCombi: data?.disciplinesCombi || [],
   };
   return (
     <DataContext.Provider value={context}>{children}</DataContext.Provider>
