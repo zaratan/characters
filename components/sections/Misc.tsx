@@ -2,7 +2,6 @@ import React, { useContext } from 'react';
 import AdvFlawContext from '../../contexts/AdvFlawContext';
 import { HorizontalSection } from '../../styles/Sections';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
-import { LineValue } from '../Line';
 import { calcPexDiffAdvFlaw, calcPexAdvFlaw } from '../../helpers/pex';
 import { Container } from '../../styles/Container';
 import LanguagesContext from '../../contexts/LanguagesContext';
@@ -10,6 +9,7 @@ import AbilitiesContext from '../../contexts/AbilitiesContext';
 import { maxLanguages } from '../../helpers/maxLevels';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
+import LineValue from '../line/LineValue';
 
 const Misc = () => {
   const {

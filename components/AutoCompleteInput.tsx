@@ -1,4 +1,13 @@
-import React, { useState, useMemo, useRef, KeyboardEvent } from 'react';
+import React, {
+  useState,
+  useMemo,
+  useRef,
+  KeyboardEvent,
+  ComponentType,
+  InputHTMLAttributes,
+  DetailedHTMLProps,
+  useEffect,
+} from 'react';
 import { useDebounce, useClickAway } from 'react-use';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';
@@ -9,7 +18,11 @@ const SuggestionContainer = styled.span`
   left: 0;
   display: none;
   &.open {
+    width: 100%;
     display: inherit;
+    position: absolute;
+    z-index: 2;
+    background-color: ${(props) => props.theme.background};
   }
 `;
 
@@ -53,13 +66,17 @@ const Suggestion = styled.li`
 `;
 
 const generateHandleKeypressInput = (
-  listRef: React.MutableRefObject<HTMLUListElement>
+  listRef: React.MutableRefObject<HTMLUListElement>,
+  close: () => void
 ) => (e: KeyboardEvent) => {
-  if (e.key !== 'ArrowDown') {
+  console.log(e.key);
+  if (e.key !== 'ArrowDown' && e.key !== 'Escape') {
     return;
   }
   e.preventDefault();
-
+  if (e.key === 'Escape') {
+    return close();
+  }
   const span: HTMLSpanElement = listRef.current.querySelector('li span');
 
   return span && span.focus();
@@ -68,17 +85,24 @@ const generateHandleKeypressInput = (
 const generateHandleKeypressSpan = (
   changeFunc: (e: KeyboardEvent) => void,
   listRef: React.MutableRefObject<HTMLUListElement>,
-  inputRef: React.MutableRefObject<HTMLInputElement>
+  inputRef: React.MutableRefObject<HTMLInputElement>,
+  close: () => void
 ) => (e: KeyboardEvent) => {
   if (
     e.key !== 'Enter' &&
     e.key !== ' ' &&
     e.key !== 'ArrowDown' &&
-    e.key !== 'ArrowUp'
+    e.key !== 'ArrowUp' &&
+    e.key !== 'Escape'
   ) {
     return;
   }
   e.preventDefault();
+
+  if (e.key === 'Escape') {
+    inputRef.current.focus();
+    return close();
+  }
 
   if (e.key === 'Enter' || e.key === ' ') {
     changeFunc(e);
@@ -109,6 +133,9 @@ interface Props<T> {
   baseValue?: string;
   searchKeys: Array<string>;
   placeholder?: string;
+  StyledInput?: ComponentType<
+    DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+  >;
 }
 
 const AutoCompleteInput = <T extends Record<string, unknown>>({
@@ -118,6 +145,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
   baseValue = '',
   placeholder,
   searchKeys,
+  StyledInput = Input,
 }: Props<T>) => {
   const [inputValue, setInputValue] = useState(baseValue);
   const [isOpen, setIsOpen] = useState(false);
@@ -129,6 +157,9 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
       }),
     [autocompleteOptions, searchKeys]
   );
+  useEffect(() => {
+    setInputValue(baseValue);
+  }, [baseValue]);
   const [
     autocompleteMatchingOptions,
     setAutocompleteMatchingOptions,
@@ -138,7 +169,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
       setAutocompleteMatchingOptions(
         autocompleList.search(inputValue).map((e) => e.item)
       );
-      setIsOpen(inputValue !== '');
+      setIsOpen(inputValue !== baseValue || (isOpen && inputValue !== ''));
     },
     100,
     [inputValue]
@@ -158,7 +189,10 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
     generateHandleKeypressSpan(
       () => submitAction(value),
       suggestionListRef,
-      inputRef
+      inputRef,
+      () => {
+        setIsOpen(false);
+      }
     );
 
   const ref = useRef(null);
@@ -174,13 +208,15 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
       }}
       ref={ref}
     >
-      <Input
+      <StyledInput
         type="text"
         value={inputValue}
         onChange={(e) => setInputValue(e.currentTarget.value)}
         placeholder={placeholder}
         onFocus={() => setIsOpen(inputValue !== '')}
-        onKeyDown={generateHandleKeypressInput(suggestionListRef)}
+        onKeyDown={generateHandleKeypressInput(suggestionListRef, () =>
+          setIsOpen(false)
+        )}
         ref={inputRef}
       />
       <SuggestionContainer

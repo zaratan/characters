@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import styled from 'styled-components';
-import { AbilityLine } from '../Line';
 import { HorizontalSection } from '../../styles/Sections';
 import { maxDot } from '../../helpers/maxLevels';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
@@ -12,6 +11,7 @@ import { calcPexAbility, calcPexSpecialty } from '../../helpers/pex';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
+import AbilityLine from '../line/AbilityLine';
 
 const Container = styled.div`
   .col-button {

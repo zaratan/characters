@@ -12,7 +12,8 @@ import {
 } from '../../helpers/pex';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
 import ModeContext from '../../contexts/ModeContext';
-import Line, { LineValue } from '../Line';
+import Line from '../line/Line';
+import LineValue from '../line/LineValue';
 
 const HumanMagic = () => {
   const { useHumanMagic } = useContext(SectionsContext);

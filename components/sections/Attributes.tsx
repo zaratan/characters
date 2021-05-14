@@ -1,6 +1,5 @@
 import React, { useContext } from 'react';
 import { HorizontalSection } from '../../styles/Sections';
-import { AttributeLine } from '../Line';
 import { maxDot } from '../../helpers/maxLevels';
 import AttributesContext from '../../contexts/AttributesContext';
 import GenerationContext from '../../contexts/GenerationContext';
@@ -9,6 +8,7 @@ import { calcPexAttribute } from '../../helpers/pex';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
+import AttributeLine from '../line/AttributeLine';
 
 const Attributes = () => {
   const {
