@@ -63,7 +63,6 @@
     "url": "https://vampire.zaratan.fr/melpominee",
     "th": false
   },
-  { "name": "Mortis", "url": "https://vampire.zaratan.fr/mortis", "th": false },
   {
     "name": "Mytherceria",
     "url": "https://vampire.zaratan.fr/mytherceria",
@@ -176,11 +175,6 @@
   {
     "name": "Nécromancie",
     "url": "https://vampire.zaratan.fr/thaumaturgy/necromancie",
-    "th": true
-  },
-  {
-    "name": "Obtenebration",
-    "url": "https://vampire.zaratan.fr/thaumaturgy/obtenebration",
     "th": true
   },
   {
