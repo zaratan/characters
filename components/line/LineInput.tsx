@@ -28,6 +28,7 @@ const LineInput = <T extends { name: string }>({
         placeholder={placeholder}
         onSubmit={onSubmit}
         StyledInput={HandEditableText}
+        submitOnClickOut
       />
     );
   }

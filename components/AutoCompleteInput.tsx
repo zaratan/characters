@@ -136,6 +136,7 @@ interface Props<T> {
   StyledInput?: ComponentType<
     DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
   >;
+  submitOnClickOut?: boolean;
 }
 
 const AutoCompleteInput = <T extends Record<string, unknown>>({
@@ -146,6 +147,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
   placeholder,
   searchKeys,
   StyledInput = Input,
+  submitOnClickOut,
 }: Props<T>) => {
   const [inputValue, setInputValue] = useState(baseValue);
   const [isOpen, setIsOpen] = useState(false);
@@ -197,6 +199,11 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
 
   const ref = useRef(null);
   useClickAway(ref, () => {
+    if (!isOpen) return;
+
+    if (submitOnClickOut) {
+      submitAction(inputValue);
+    }
     setIsOpen(false);
   });
 
