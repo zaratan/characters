@@ -73,11 +73,6 @@
     "url": "https://vampire.zaratan.fr/nihilistics",
     "th": false
   },
-  {
-    "name": "Nécromancie",
-    "url": "https://vampire.zaratan.fr/necromancie",
-    "th": false
-  },
   { "name": "Obeah", "url": "https://vampire.zaratan.fr/obeah", "th": false },
   {
     "name": "Obtenebration",
@@ -153,11 +148,6 @@
     "th": false
   },
   {
-    "name": "Völuspà Discipline des Aésir",
-    "url": "https://vampire.zaratan.fr/voluspa-discipline-des-aesir",
-    "th": false
-  },
-  {
     "name": "Aljusuri",
     "url": "https://vampire.zaratan.fr/thaumaturgy/aljusuri",
     "th": true
@@ -220,11 +210,6 @@
   {
     "name": "Thaumaturgie hindou",
     "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie-hindou-(sadhana)",
-    "th": true
-  },
-  {
-    "name": "Visceratika",
-    "url": "https://vampire.zaratan.fr/thaumaturgy/visceratika",
     "th": true
   },
   {
