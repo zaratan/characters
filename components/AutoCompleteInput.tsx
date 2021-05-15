@@ -178,7 +178,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
   );
 
   const submitAction = (value: T | string) => {
-    setInputValue('');
+    setInputValue(baseValue);
     setIsOpen(false);
     onSubmit(value);
   };
