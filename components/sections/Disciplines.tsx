@@ -6,7 +6,7 @@ import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
 import DisciplinesContext, {
   TempThaumaturgyElemType,
 } from '../../contexts/DisciplinesContext';
-import Line, { LineValue } from '../Line';
+import Line from '../line/Line';
 import {
   calcPexDiffThaumaturgyPath,
   calcPexDiffInClanDiscipline,
@@ -23,6 +23,8 @@ import { Container } from '../../styles/Container';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
+import DataContext from '../../contexts/DataContext';
+import LineValue from '../line/LineValue';
 
 const RitualMultiplicatorContainer = styled.span`
   font-size: 1rem;
@@ -31,6 +33,10 @@ const RitualMultiplicatorContainer = styled.span`
 
 const Disciplines = () => {
   const generation = useContext(GenerationContext);
+  const {
+    disciplines: disciplineData,
+    disciplinesCombi: disciplinesCombiData,
+  } = useContext(DataContext);
   const {
     clanDisciplines,
     outClanDisciplines,
@@ -104,6 +110,12 @@ const Disciplines = () => {
                     active: discipline.isThaumaturgy,
                   }}
                   inactive={!editMode}
+                  autocomplete={disciplineData}
+                  infoLink={
+                    disciplineData.find(
+                      (discData) => discData.name === discipline.title
+                    )?.url
+                  }
                 />
               </li>
             ))}
@@ -136,6 +148,12 @@ const Disciplines = () => {
                     active: discipline.isThaumaturgy,
                   }}
                   inactive={!editMode}
+                  autocomplete={disciplineData}
+                  infoLink={
+                    disciplineData.find(
+                      (discData) => discData.name === discipline.title
+                    )?.url
+                  }
                 />
               </li>
             ))}
@@ -162,6 +180,12 @@ const Disciplines = () => {
                   title={combinedDiscipline.title}
                   placeholderName="Nom de la discipline"
                   inactive={!editMode}
+                  autocomplete={disciplinesCombiData}
+                  infoLink={
+                    disciplinesCombiData.find(
+                      (discData) => discData.name === combinedDiscipline.title
+                    )?.url
+                  }
                 />
               </li>
             ))}

@@ -43,38 +43,6 @@ const MyApp = ({ Component, pageProps }) => (
               href="https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&display=swap"
               rel="stylesheet"
             />
-            <link
-              rel="preconnect"
-              href="https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&display=swap"
-            />
-            <link
-              rel="preload"
-              href="https://fonts.gstatic.com/s/bilboswashcaps/v12/zrf-0GXbz-H3Wb4XBsGrTgq2PVmdmAripwZcOp4_mA.woff2"
-              as="font"
-              type="font/woff2"
-              crossOrigin="anonymous"
-            />
-            <link
-              rel="preload"
-              href="https://fonts.gstatic.com/s/bilboswashcaps/v12/zrf-0GXbz-H3Wb4XBsGrTgq2PVmdmATipwZcOp4.woff2"
-              as="font"
-              type="font/woff2"
-              crossOrigin="anonymous"
-            />
-            <link
-              rel="preload"
-              href="/CloisterBlack.ttf"
-              as="font"
-              type="font/ttf"
-              crossOrigin="anonymous"
-            />
-            <link
-              rel="preload"
-              href="/GreatVictorianQ.otf"
-              as="font"
-              type="font/otf"
-              crossOrigin="anonymous"
-            />
           </Head>
           <GlobalStyle />
           <SystemProvider>

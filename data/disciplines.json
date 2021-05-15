@@ -1,0 +1,230 @@
+[
+  {
+    "name": "Abombwe",
+    "url": "https://vampire.zaratan.fr/abombwe",
+    "th": false
+  },
+  {
+    "name": "Aliénation",
+    "url": "https://vampire.zaratan.fr/alienation",
+    "th": false
+  },
+  {
+    "name": "Animalisme",
+    "url": "https://vampire.zaratan.fr/animalisme",
+    "th": false
+  },
+  { "name": "Auspex", "url": "https://vampire.zaratan.fr/auspex", "th": false },
+  { "name": "Bardo", "url": "https://vampire.zaratan.fr/bardo", "th": false },
+  {
+    "name": "Chimérie",
+    "url": "https://vampire.zaratan.fr/chimerie",
+    "th": false
+  },
+  {
+    "name": "Cinétique",
+    "url": "https://vampire.zaratan.fr/cinetique",
+    "th": false
+  },
+  {
+    "name": "Célérité",
+    "url": "https://vampire.zaratan.fr/celerite",
+    "th": false
+  },
+  {
+    "name": "Daimoinon",
+    "url": "https://vampire.zaratan.fr/daimoinon",
+    "th": false
+  },
+  { "name": "Deimos", "url": "https://vampire.zaratan.fr/deimos", "th": false },
+  {
+    "name": "Dissimulation",
+    "url": "https://vampire.zaratan.fr/dissimulation",
+    "th": false
+  },
+  {
+    "name": "Domination",
+    "url": "https://vampire.zaratan.fr/domination",
+    "th": false
+  },
+  {
+    "name": "Force d'âme",
+    "url": "https://vampire.zaratan.fr/force-d'ame",
+    "th": false
+  },
+  {
+    "name": "Endurance",
+    "url": "https://vampire.zaratan.fr/force-d'ame",
+    "th": false
+  },
+  { "name": "Kai", "url": "https://vampire.zaratan.fr/kai", "th": false },
+  {
+    "name": "Maleficia",
+    "url": "https://vampire.zaratan.fr/maleficia",
+    "th": false
+  },
+  {
+    "name": "Melpominée",
+    "url": "https://vampire.zaratan.fr/melpominee",
+    "th": false
+  },
+  {
+    "name": "Mytherceria",
+    "url": "https://vampire.zaratan.fr/mytherceria",
+    "th": false
+  },
+  {
+    "name": "Nihilistics",
+    "url": "https://vampire.zaratan.fr/nihilistics",
+    "th": false
+  },
+  { "name": "Obeah", "url": "https://vampire.zaratan.fr/obeah", "th": false },
+  {
+    "name": "Obtenebration",
+    "url": "https://vampire.zaratan.fr/obtenebration",
+    "th": false
+  },
+  { "name": "Ogham", "url": "https://vampire.zaratan.fr/ogham", "th": false },
+  {
+    "name": "Protean",
+    "url": "https://vampire.zaratan.fr/protean",
+    "th": false
+  },
+  {
+    "name": "Présence",
+    "url": "https://vampire.zaratan.fr/presence",
+    "th": false
+  },
+  {
+    "name": "Puissance",
+    "url": "https://vampire.zaratan.fr/puissance",
+    "th": false
+  },
+  {
+    "name": "Potence",
+    "url": "https://vampire.zaratan.fr/puissance",
+    "th": false
+  },
+  {
+    "name": "Quietus",
+    "url": "https://vampire.zaratan.fr/quietus",
+    "th": false
+  },
+  { "name": "Rift", "url": "https://vampire.zaratan.fr/rift", "th": false },
+  {
+    "name": "Sanguinus",
+    "url": "https://vampire.zaratan.fr/sanguinus",
+    "th": false
+  },
+  {
+    "name": "Serpentis",
+    "url": "https://vampire.zaratan.fr/serpentis",
+    "th": false
+  },
+  {
+    "name": "Spiritus",
+    "url": "https://vampire.zaratan.fr/spiritus",
+    "th": false
+  },
+  { "name": "Striga", "url": "https://vampire.zaratan.fr/striga", "th": false },
+  {
+    "name": "Tellurian",
+    "url": "https://vampire.zaratan.fr/tellurian",
+    "th": false
+  },
+  {
+    "name": "Temporis",
+    "url": "https://vampire.zaratan.fr/temporis",
+    "th": false
+  },
+  {
+    "name": "Thanatosis",
+    "url": "https://vampire.zaratan.fr/thanatosis",
+    "th": false
+  },
+  {
+    "name": "Valeren",
+    "url": "https://vampire.zaratan.fr/valeren",
+    "th": false
+  },
+  {
+    "name": "Vicissitude",
+    "url": "https://vampire.zaratan.fr/vicissitude",
+    "th": false
+  },
+  {
+    "name": "Visceratika",
+    "url": "https://vampire.zaratan.fr/visceratika",
+    "th": false
+  },
+  {
+    "name": "Aljusuri",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/aljusuri",
+    "th": true
+  },
+  {
+    "name": "Koldunic",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/koldunic",
+    "th": true
+  },
+  {
+    "name": "Mortis",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/mortis",
+    "th": true
+  },
+  {
+    "name": "Nécromancie",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/necromancie",
+    "th": true
+  },
+  {
+    "name": "Sorcellerie Assamites",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/sorcellerie-assamites-(dur-an-ki)",
+    "th": true
+  },
+  {
+    "name": "Thaumaturgie",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie",
+    "th": true
+  },
+  {
+    "name": "Thaumaturgie Malféenne",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie-malfeenne",
+    "th": true
+  },
+  {
+    "name": "Thaumaturgie Nahuallotl",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie-nahuallotl",
+    "th": true
+  },
+  {
+    "name": "Thaumaturgie Noire",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie-noire",
+    "th": true
+  },
+  {
+    "name": "Thaumaturgie Sihr",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie-sihr-(magie-islamique)",
+    "th": true
+  },
+  {
+    "name": "Thaumaturgie Sétites",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie-setites-(akhu)",
+    "th": true
+  },
+  {
+    "name": "Thaumaturgie Wanga",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie-wanga",
+    "th": true
+  },
+  {
+    "name": "Thaumaturgie hindou",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/thaumaturgie-hindou-(sadhana)",
+    "th": true
+  },
+  {
+    "name": "Wangarr",
+    "url": "https://vampire.zaratan.fr/thaumaturgy/wangarr-thaumaturgie-aborigene",
+    "th": true
+  }
+]

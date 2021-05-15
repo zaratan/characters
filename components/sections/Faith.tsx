@@ -4,7 +4,7 @@ import FaithContext from '../../contexts/FaithContext';
 import { calcPexTrueFaith, clacPexDiffTrueFaith } from '../../helpers/pex';
 import { Container } from '../../styles/Container';
 import ColumnTitle from '../ColumnTitle';
-import Line from '../Line';
+import Line from '../line/Line';
 import ModeContext from '../../contexts/ModeContext';
 import { HorizontalSection } from '../../styles/Sections';
 import SectionsContext from '../../contexts/SectionsContext';

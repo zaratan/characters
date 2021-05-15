@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { useDebounce } from 'react-use';
 import { mutate } from 'swr';
 import { HorizontalSection } from '../../styles/Sections';
-import Line from '../Line';
+import Line from '../line/Line';
 import {
   calcPexDiffWillpower,
   calcPexDiffPathOrVirtue,
