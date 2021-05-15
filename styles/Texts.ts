@@ -105,5 +105,6 @@ export const HandEditableText = styled.input`
     width: 1rem;
     min-width: 0;
     appearance: none;
+    -moz-appearance: textfield;
   }
 `;
