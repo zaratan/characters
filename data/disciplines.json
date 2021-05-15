@@ -52,6 +52,11 @@
     "url": "https://vampire.zaratan.fr/force-d'ame",
     "th": false
   },
+  {
+    "name": "Endurance",
+    "url": "https://vampire.zaratan.fr/force-d'ame",
+    "th": false
+  },
   { "name": "Kai", "url": "https://vampire.zaratan.fr/kai", "th": false },
   {
     "name": "Maleficia",
@@ -92,6 +97,11 @@
   },
   {
     "name": "Puissance",
+    "url": "https://vampire.zaratan.fr/puissance",
+    "th": false
+  },
+  {
+    "name": "Potence",
     "url": "https://vampire.zaratan.fr/puissance",
     "th": false
   },
