@@ -70,9 +70,15 @@ const generateHandleKeypressInput = (
   close: () => void
 ) => (e: KeyboardEvent) => {
   console.log(e.key);
-  if (e.key !== 'ArrowDown' && e.key !== 'Escape') {
+  if (e.key !== 'ArrowDown' && e.key !== 'Escape' && e.key !== 'Tab') {
     return;
   }
+
+  if (e.shiftKey && e.key === 'Tab') {
+    close();
+    return;
+  }
+
   e.preventDefault();
   if (e.key === 'Escape') {
     return close();
@@ -232,7 +238,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
         }
       >
         <SuggestionList ref={suggestionListRef}>
-          {autocompleteMatchingOptions.slice(0, 5).map((match) => {
+          {autocompleteMatchingOptions.slice(0, 5).map((match, i) => {
             let displayName: string;
             if (typeof display === 'string') {
               displayName = String(match[display]);
@@ -246,6 +252,18 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
                   tabIndex={0}
                   onClick={clickHandler(match)}
                   onKeyDown={keyHandler(match)}
+                  onBlur={() => {
+                    console.log(i);
+                    if (
+                      i >=
+                      Math.min(
+                        5,
+                        autocompleteMatchingOptions.slice(0, 5).length
+                      ) -
+                        1
+                    )
+                      setIsOpen(false);
+                  }}
                   role="button"
                 >
                   {displayName}
