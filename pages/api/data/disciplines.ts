@@ -15,9 +15,9 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   const treatedDiscCombi = disciplinesCombi.map((disc) => ({
     name: disc.name,
-    url: `https://vampire.zaratan.fr/combo#combo-power-${slugify(
+    url: `https://wod.zaratan.fr/powers/combo#power-${slugify(
       disc.name
-    ).toLowerCase()}`,
+    ).toLowerCase()}-${disc.source.length}`,
   }));
 
   res.status(200).json({ disciplines, disciplinesCombi: treatedDiscCombi });
