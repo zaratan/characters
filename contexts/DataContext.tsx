@@ -62,8 +62,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const flawsNameSet = new Set();
   const flaws = advFlawData?.flaws?.reduce<Array<AdvFlawDataType>>(
     (res, nextFlaw) => {
-      if (!advantagesNameSet.has(nextFlaw.name)) {
-        advantagesNameSet.add(nextFlaw.name);
+      if (!flawsNameSet.has(nextFlaw.name)) {
+        flawsNameSet.add(nextFlaw.name);
         res.push(nextFlaw);
       }
       return res;
