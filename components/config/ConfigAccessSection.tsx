@@ -59,14 +59,8 @@ const AccessUser = styled.li`
 `;
 
 const ConfigAccessSection = ({ id }: { id: string }) => {
-  const {
-    editors,
-    addEditor,
-    removeEditor,
-    addViewer,
-    removeViewer,
-    viewers,
-  } = useContext(AccessesContext);
+  const { editors, addEditor, removeEditor, addViewer, removeViewer, viewers } =
+    useContext(AccessesContext);
   const { appId } = useContext(SystemContext);
 
   const { data: usersData } = useSWR('/api/users');

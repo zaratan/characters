@@ -133,16 +133,14 @@ const generateRemoveCustomAbility: (
 const generateChangeCustomAbilityTitle: (
   customAbilities: RawAbilitiesListType,
   setter: (value: RawAbilitiesListType) => void
-) => (key: string) => (newTitle: string) => void = (
-  customAbilities,
-  setter
-) => (key) => (newTitle) => {
-  setter(
-    customAbilities.map((ability) =>
-      ability.key === key ? { ...ability, title: newTitle } : ability
-    )
-  );
-};
+) => (key: string) => (newTitle: string) => void =
+  (customAbilities, setter) => (key) => (newTitle) => {
+    setter(
+      customAbilities.map((ability) =>
+        ability.key === key ? { ...ability, title: newTitle } : ability
+      )
+    );
+  };
 
 const defaultContext: {
   talents: AbilitiesListType;
@@ -278,10 +276,8 @@ export const AbilitiesProvider = ({
     knowledges,
     'knowledges'
   );
-  const [
-    tmpCustomKnowledges,
-    setTmpCustomKnowledges,
-  ] = useStateWithChangesAndTracker(customKnowledges, 'customKnowledges');
+  const [tmpCustomKnowledges, setTmpCustomKnowledges] =
+    useStateWithChangesAndTracker(customKnowledges, 'customKnowledges');
 
   const talentsCap = convertRawAbilitiesToAbilities(
     talents,

@@ -73,14 +73,10 @@ const PexSection = () => {
     knowledges,
     customKnowledges,
   } = useContext(AbilitiesContext);
-  const { willpower, conscience, courage, path, selfControl } = useContext(
-    MindContext
-  );
-  const {
-    clanDisciplines,
-    outClanDisciplines,
-    combinedDisciplines,
-  } = useContext(DisciplinesContext);
+  const { willpower, conscience, courage, path, selfControl } =
+    useContext(MindContext);
+  const { clanDisciplines, outClanDisciplines, combinedDisciplines } =
+    useContext(DisciplinesContext);
   const { advantages, flaws } = useContext(AdvFlawContext);
   const { editMode } = useContext(ModeContext);
   const generation = useContext(GenerationContext);

@@ -21,25 +21,17 @@ const Separator = styled.span`
 `;
 
 const Infos = () => {
-  const {
-    name,
-    playerName,
-    chronicle,
-    clan,
-    demeanor,
-    haven,
-    nature,
-    sire,
-  } = useContext(InfosContext);
+  const { name, playerName, chronicle, clan, demeanor, haven, nature, sire } =
+    useContext(InfosContext);
 
   const { editMode } = useContext(ModeContext);
   const generation = useContext(GenerationContext);
   const { useGeneration, useVampireInfos } = useContext(SectionsContext);
-  const handleChange = (changeFunction: (val: string) => void) => (
-    event: FormEvent<HTMLInputElement>
-  ) => {
-    changeFunction(event.currentTarget.value);
-  };
+  const handleChange =
+    (changeFunction: (val: string) => void) =>
+    (event: FormEvent<HTMLInputElement>) => {
+      changeFunction(event.currentTarget.value);
+    };
   const handleChangeGeneration = (event: FormEvent<HTMLInputElement>) => {
     generation.set(Number(event.currentTarget.value));
   };

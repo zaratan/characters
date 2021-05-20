@@ -21,12 +21,10 @@ const Misc = () => {
     removeAdvantage,
     removeFlaw,
   } = useContext(AdvFlawContext);
-  const { advantages: advantagesData, flaws: flawsData } = useContext(
-    DataContext
-  );
-  const { languages, addNewLanguage, removeLanguage } = useContext(
-    LanguagesContext
-  );
+  const { advantages: advantagesData, flaws: flawsData } =
+    useContext(DataContext);
+  const { languages, addNewLanguage, removeLanguage } =
+    useContext(LanguagesContext);
   const { knowledges } = useContext(AbilitiesContext);
   const { editMode } = useContext(ModeContext);
   const linguisticsValue =

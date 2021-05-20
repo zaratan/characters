@@ -38,31 +38,32 @@ const useStateWithTracker: useStateWithTrackerType = (
   return [tmpValue, setTmpValueWithChangeTracker];
 };
 
-export const useStateWithChangesAndTracker: useStateWithChangesAndTrackerType = (
-  defaultValue,
-  key,
-  { keepInChangeTracker = true } = {
-    keepInChangeTracker: true,
-  }
-) => {
-  const [tmpValue, setTmpValue] = useState({
-    val: defaultValue,
-    changed: false,
-  });
-  useEffect(() => {
-    if (tmpValue.changed) return;
-    setTmpValue({ val: defaultValue, changed: false });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(defaultValue)]);
+export const useStateWithChangesAndTracker: useStateWithChangesAndTrackerType =
+  (
+    defaultValue,
+    key,
+    { keepInChangeTracker = true } = {
+      keepInChangeTracker: true,
+    }
+  ) => {
+    const [tmpValue, setTmpValue] = useState({
+      val: defaultValue,
+      changed: false,
+    });
+    useEffect(() => {
+      if (tmpValue.changed) return;
+      setTmpValue({ val: defaultValue, changed: false });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [JSON.stringify(defaultValue)]);
 
-  const setter = setTmpValue;
+    const setter = setTmpValue;
 
-  const generateSetter = useChangeWatcher();
-  const setTmpValueWithChangeTracker = keepInChangeTracker
-    ? generateSetter(setter, tmpValue, defaultValue, key)
-    : setter;
+    const generateSetter = useChangeWatcher();
+    const setTmpValueWithChangeTracker = keepInChangeTracker
+      ? generateSetter(setter, tmpValue, defaultValue, key)
+      : setter;
 
-  return [tmpValue, setTmpValueWithChangeTracker];
-};
+    return [tmpValue, setTmpValueWithChangeTracker];
+  };
 
 export default useStateWithTracker;

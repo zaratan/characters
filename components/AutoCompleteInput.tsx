@@ -65,72 +65,72 @@ const Suggestion = styled.li`
   }
 `;
 
-const generateHandleKeypressInput = (
-  listRef: React.MutableRefObject<HTMLUListElement>,
-  close: () => void
-) => (e: KeyboardEvent) => {
-  console.log(e.key);
-  if (e.key !== 'ArrowDown' && e.key !== 'Escape' && e.key !== 'Tab') {
-    return;
-  }
-
-  if (e.shiftKey && e.key === 'Tab') {
-    close();
-    return;
-  }
-
-  e.preventDefault();
-  if (e.key === 'Escape') {
-    return close();
-  }
-  const span: HTMLSpanElement = listRef.current.querySelector('li span');
-
-  return span && span.focus();
-};
-
-const generateHandleKeypressSpan = (
-  changeFunc: (e: KeyboardEvent) => void,
-  listRef: React.MutableRefObject<HTMLUListElement>,
-  inputRef: React.MutableRefObject<HTMLInputElement>,
-  close: () => void
-) => (e: KeyboardEvent) => {
-  if (
-    e.key !== 'Enter' &&
-    e.key !== ' ' &&
-    e.key !== 'ArrowDown' &&
-    e.key !== 'ArrowUp' &&
-    e.key !== 'Escape'
-  ) {
-    return;
-  }
-  e.preventDefault();
-
-  if (e.key === 'Escape') {
-    inputRef.current.focus();
-    return close();
-  }
-
-  if (e.key === 'Enter' || e.key === ' ') {
-    changeFunc(e);
-  } else {
-    const focusedSpan: HTMLSpanElement = listRef.current.querySelector(
-      'li span:focus'
-    );
-    const spans: Array<HTMLSpanElement> = Array.from(
-      listRef.current.querySelectorAll('li span')
-    );
-    const currentIndex = spans.indexOf(focusedSpan);
-    if (e.key === 'ArrowDown') {
-      if (spans.length > currentIndex + 1) {
-        spans[currentIndex + 1].focus();
-      }
-    } else if (currentIndex > 0) {
-      spans[currentIndex - 1].focus();
-    } else {
-      inputRef.current.focus();
+const generateHandleKeypressInput =
+  (listRef: React.MutableRefObject<HTMLUListElement>, close: () => void) =>
+  (e: KeyboardEvent) => {
+    console.log(e.key);
+    if (e.key !== 'ArrowDown' && e.key !== 'Escape' && e.key !== 'Tab') {
+      return;
     }
-  }
-};
+
+    if (e.shiftKey && e.key === 'Tab') {
+      close();
+      return;
+    }
+
+    e.preventDefault();
+    if (e.key === 'Escape') {
+      return close();
+    }
+    const span: HTMLSpanElement = listRef.current.querySelector('li span');
+
+    return span && span.focus();
+  };
+
+const generateHandleKeypressSpan =
+  (
+    changeFunc: (e: KeyboardEvent) => void,
+    listRef: React.MutableRefObject<HTMLUListElement>,
+    inputRef: React.MutableRefObject<HTMLInputElement>,
+    close: () => void
+  ) =>
+  (e: KeyboardEvent) => {
+    if (
+      e.key !== 'Enter' &&
+      e.key !== ' ' &&
+      e.key !== 'ArrowDown' &&
+      e.key !== 'ArrowUp' &&
+      e.key !== 'Escape'
+    ) {
+      return;
+    }
+    e.preventDefault();
+
+    if (e.key === 'Escape') {
+      inputRef.current.focus();
+      return close();
+    }
+
+    if (e.key === 'Enter' || e.key === ' ') {
+      changeFunc(e);
+    } else {
+      const focusedSpan: HTMLSpanElement =
+        listRef.current.querySelector('li span:focus');
+      const spans: Array<HTMLSpanElement> = Array.from(
+        listRef.current.querySelectorAll('li span')
+      );
+      const currentIndex = spans.indexOf(focusedSpan);
+      if (e.key === 'ArrowDown') {
+        if (spans.length > currentIndex + 1) {
+          spans[currentIndex + 1].focus();
+        }
+      } else if (currentIndex > 0) {
+        spans[currentIndex - 1].focus();
+      } else {
+        inputRef.current.focus();
+      }
+    }
+  };
 
 interface Props<T> {
   onSubmit: (value: T | string) => void;
@@ -168,10 +168,8 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
   useEffect(() => {
     setInputValue(baseValue);
   }, [baseValue]);
-  const [
-    autocompleteMatchingOptions,
-    setAutocompleteMatchingOptions,
-  ] = useState<Array<T>>([]);
+  const [autocompleteMatchingOptions, setAutocompleteMatchingOptions] =
+    useState<Array<T>>([]);
   useDebounce(
     () => {
       setAutocompleteMatchingOptions(

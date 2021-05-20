@@ -71,11 +71,8 @@ export const useSave = () => {
     tempWillpower,
     willpower,
   } = useContext(MindContext);
-  const {
-    clanDisciplines,
-    outClanDisciplines,
-    combinedDisciplines,
-  } = useContext(DisciplinesContext);
+  const { clanDisciplines, outClanDisciplines, combinedDisciplines } =
+    useContext(DisciplinesContext);
   const { advantages, flaws } = useContext(AdvFlawContext);
   const { languages } = useContext(LanguagesContext);
   const { leftOver } = useContext(PexContext);

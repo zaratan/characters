@@ -481,20 +481,14 @@ export const DisciplinesProvider = ({
   outClanDisciplines: Array<DisciplineType | ThaumaturgyType>;
   combinedDisciplines: Array<CombinedDisciplineType>;
 }) => {
-  const [
-    tmpClanDisciplines,
-    setTmpClanDisciplines,
-  ] = useStateWithChangesAndTracker(clanDisciplines, 'clanDisciplines');
+  const [tmpClanDisciplines, setTmpClanDisciplines] =
+    useStateWithChangesAndTracker(clanDisciplines, 'clanDisciplines');
 
-  const [
-    tmpOutClanDisciplines,
-    setTmpOutClanDisciplines,
-  ] = useStateWithChangesAndTracker(outClanDisciplines, 'outClanDisciplines');
+  const [tmpOutClanDisciplines, setTmpOutClanDisciplines] =
+    useStateWithChangesAndTracker(outClanDisciplines, 'outClanDisciplines');
 
-  const [
-    tmpCombinedDisciplines,
-    setTmpCombinedDisciplines,
-  ] = useStateWithChangesAndTracker(combinedDisciplines, 'combinedDisciplines');
+  const [tmpCombinedDisciplines, setTmpCombinedDisciplines] =
+    useStateWithChangesAndTracker(combinedDisciplines, 'combinedDisciplines');
 
   return (
     <DisciplinesContext.Provider
