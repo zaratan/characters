@@ -10,6 +10,7 @@ import { maxLanguages } from '../../helpers/maxLevels';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
 import LineValue from '../line/LineValue';
+import DataContext from '../../contexts/DataContext';
 
 const Misc = () => {
   const {
@@ -20,6 +21,9 @@ const Misc = () => {
     removeAdvantage,
     removeFlaw,
   } = useContext(AdvFlawContext);
+  const { advantages: advantagesData, flaws: flawsData } = useContext(
+    DataContext
+  );
   const { languages, addNewLanguage, removeLanguage } = useContext(
     LanguagesContext
   );
@@ -68,6 +72,10 @@ const Misc = () => {
                   title={advantage.title}
                   placeholderName="Nouvel avantage"
                   inactive={!editMode}
+                  autocomplete={advantagesData}
+                  infoLink={
+                    advantagesData?.find((e) => e.name === advantage.title)?.url
+                  }
                 />
               </li>
             ))}
@@ -93,6 +101,8 @@ const Misc = () => {
                   placeholderName="Nouvel inconvénient"
                   placeholderSub="Niv."
                   inactive={!editMode}
+                  autocomplete={flawsData}
+                  infoLink={flawsData?.find((e) => e.name === flaw.title)?.url}
                 />
               </li>
             ))}
