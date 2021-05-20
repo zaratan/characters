@@ -47,10 +47,35 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     revalidateOnFocus: false,
   });
 
+  const advantagesNameSet = new Set();
+  const advantages = advFlawData?.advantages?.reduce<Array<AdvFlawDataType>>(
+    (res, nextAdvantage) => {
+      if (!advantagesNameSet.has(nextAdvantage.name)) {
+        advantagesNameSet.add(nextAdvantage.name);
+        res.push(nextAdvantage);
+      }
+      return res;
+    },
+    []
+  );
+
+  const flawsNameSet = new Set();
+  const flaws = advFlawData?.flaws?.reduce<Array<AdvFlawDataType>>(
+    (res, nextFlaw) => {
+      if (!advantagesNameSet.has(nextFlaw.name)) {
+        advantagesNameSet.add(nextFlaw.name);
+        res.push(nextFlaw);
+      }
+      return res;
+    },
+    []
+  );
+
   const context: ContextType = {
     disciplines: discData?.disciplines || [],
     disciplinesCombi: discData?.disciplinesCombi || [],
-    ...advFlawData,
+    advantages,
+    flaws,
   };
 
   return (
