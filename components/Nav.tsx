@@ -97,12 +97,14 @@ const LogButton = ({
   close,
   menuOpen,
   action,
+  returnTo,
 }: {
   data?: UserProfile;
   connected?: boolean;
   close: () => void;
   action: () => void;
   menuOpen: boolean;
+  returnTo?: string;
 }) => {
   const wrapperRef = useRef();
   useClickAway(wrapperRef, () => {
@@ -111,7 +113,7 @@ const LogButton = ({
   if (!connected) {
     return (
       <MenuContainer className="text-only">
-        <Link href="/api/auth/login">
+        <Link href={`/api/auth/login${returnTo ? `?return=${returnTo}` : ''}`}>
           <a>Connection</a>
         </Link>
       </MenuContainer>
@@ -184,9 +186,11 @@ export type ActionType = {
 const Nav = ({
   confirmNavigation,
   confirmText,
+  returnTo,
 }: {
   confirmNavigation?: boolean;
   confirmText?: string;
+  returnTo?: string;
 }) => {
   const { me, connected } = useContext(MeContext);
 
@@ -226,6 +230,7 @@ const Nav = ({
               action={openAction}
               close={close}
               menuOpen={menuOpen}
+              returnTo={returnTo}
             />
           </RightContainer>
         </Container>

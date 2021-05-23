@@ -50,7 +50,7 @@ const PageTitle = styled.div`
 const UnsavedChangeCloseText =
   'Il y a des changements sur la page, êtes vous sur de vouloir la quitter sans sauvegarder ?';
 
-const Sheet = ({ infos }: { infos: InfosType }) => {
+const Sheet = ({ infos, returnTo }: { infos: InfosType; returnTo: string }) => {
   const router = useRouter();
   const { unsavedChanges, rollback } = useContext(ModificationsContext);
   const { darkMode } = useContext(ThemeContext);
@@ -160,10 +160,12 @@ const SheetWrapper = ({
   editors,
   viewers,
   privateSheet,
+  returnTo,
 }: VampireType & {
   id: string;
   startEdit?: boolean;
   startPlay?: boolean;
+  returnTo: string;
 }) => (
   <ModificationsProvider>
     <PreferencesProvider>
@@ -204,7 +206,7 @@ const SheetWrapper = ({
                               >
                                 <LanguagesProvider languages={languages}>
                                   <PexProvider leftOverPex={leftOverPex}>
-                                    <Sheet infos={infos} />
+                                    <Sheet infos={infos} returnTo={returnTo} />
                                   </PexProvider>
                                 </LanguagesProvider>
                               </AdvFlawProvider>

@@ -8,6 +8,7 @@ import { EmptyLine } from '../styles/Lines';
 import MeContext from '../contexts/MeContext';
 import { fetcher } from '../helpers/fetcher';
 import SystemContext from '../contexts/SystemContext';
+import ErrorPage from '../components/ErrorPage';
 
 export const ERAS = {
   0: 'Age des ténèbres',
@@ -80,6 +81,11 @@ export const TextFallback = styled.strong`
   display: flex;
   justify-content: center;
   align-items: center;
+
+  a {
+    margin-left: 0.25rem;
+    text-decoration: underline;
+  }
 `;
 
 const Select = styled.select`
@@ -110,15 +116,7 @@ const NewCharPage = () => {
   const { appId } = useContext(SystemContext);
 
   if (!connected) {
-    return (
-      <Container>
-        <Nav />
-        <TextFallback>
-          Connectez vous pour créer un nouveau personnage.
-        </TextFallback>
-        <Footer />
-      </Container>
-    );
+    return <ErrorPage />;
   }
 
   const onSubmit = async (e: FormEvent) => {
@@ -134,7 +132,7 @@ const NewCharPage = () => {
 
   return (
     <Container>
-      <Nav />
+      <Nav returnTo="/new" />
       <FormContainer>
         <Form onSubmit={onSubmit}>
           <Header>Nouveau personnage</Header>

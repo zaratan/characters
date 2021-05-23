@@ -14,6 +14,7 @@ import { TextFallback } from '../../new';
 import MeContext from '../../../contexts/MeContext';
 import { AccessesProvider } from '../../../contexts/AccessesContext';
 import Config from '../../../components/config/Config';
+import ErrorPage from '../../../components/ErrorPage';
 
 const OuterContainer = styled.div`
   display: flex;
@@ -93,15 +94,7 @@ const ConfigWrapper = ({
   }
 
   if (!connected) {
-    return (
-      <OuterContainer>
-        <Nav />
-        <TextFallback>
-          Connectez vous pour configurer un personnage.
-        </TextFallback>
-        <Footer />
-      </OuterContainer>
-    );
+    return <ErrorPage />;
   }
 
   if (!(data.editors || ['github|3338913']).includes(me.sub)) {
@@ -118,7 +111,7 @@ const ConfigWrapper = ({
 
   return (
     <OuterContainer>
-      <Nav />
+      <Nav returnTo={`/vampires/${id}/config`} />
       <MainContainer>
         <SectionsProvider sections={data.sections}>
           <AccessesProvider

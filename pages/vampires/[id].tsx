@@ -10,6 +10,7 @@ import { fetchOneVampire } from '../api/vampires/[id]';
 import SystemContext from '../../contexts/SystemContext';
 import MeContext from '../../contexts/MeContext';
 import { DataProvider } from '../../contexts/DataContext';
+import ErrorPage from '../../components/ErrorPage';
 
 export async function getStaticPaths() {
   const vampires = await fetchVampireFromDB();
@@ -124,7 +125,7 @@ const Home = ({
     privateSheet &&
     !(connected && (editors.includes(me.sub) || viewers.includes(me.sub)))
   ) {
-    return 'You are not authorized to see this page.';
+    return <ErrorPage />;
   }
 
   // default era
@@ -159,6 +160,7 @@ const Home = ({
         editors={editors}
         viewers={viewers}
         privateSheet={privateSheet}
+        returnTo={`/vampires/${id}`}
       />
     </DataProvider>
   );
