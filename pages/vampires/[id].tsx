@@ -70,7 +70,7 @@ const Home = ({
   const { needPusherFallback } = useContext(SystemContext);
   const { connected, me } = useContext(MeContext);
   const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
-    initialData,
+    fallbackData: initialData,
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
     revalidateOnMount: true,
   });

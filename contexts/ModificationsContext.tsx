@@ -14,12 +14,15 @@ type ContextType = {
   addChange: (change: ChangeType) => void;
   resetSave: () => void;
   rollback: () => void;
+  changePexDuringPlay: number;
+  setChangePexDuringPlay: (newValue: number) => void;
 };
 
 export type ChangeType = {
   key: string;
   value: any;
   baseValue?: any;
+  pexCost: number;
   rollback: () => void;
 };
 
@@ -28,6 +31,8 @@ const defaultContext: ContextType = {
   addChange: () => {},
   resetSave: () => {},
   rollback: () => {},
+  changePexDuringPlay: 0,
+  setChangePexDuringPlay: () => {},
 };
 
 const ModificationsContext = createContext(defaultContext);
@@ -53,6 +58,7 @@ export const ModificationsProvider = ({
   children: ReactNode;
 }) => {
   const [unsavedChanges, setUnsavedChanges] = useState(false);
+  const [changePexDuringPlay, setChangePexDuringPlay] = useState(0);
   const changes = useRef<ChangeType[]>([]);
   const addChange = (change: ChangeType) => {
     if (
@@ -63,11 +69,15 @@ export const ModificationsProvider = ({
     )
       return;
     changes.current = [change, ...changes.current];
+    setChangePexDuringPlay(changePexDuringPlay + change.pexCost);
     setUnsavedChanges(anyChanges([change, ...changes.current]));
   };
   const rollback = () => {
     const [changeToRollback, ...otherChanges] = changes.current;
-    if (changeToRollback) changeToRollback.rollback();
+    if (changeToRollback) {
+      changeToRollback.rollback();
+      setChangePexDuringPlay(changePexDuringPlay - changeToRollback.pexCost);
+    }
     changes.current = otherChanges;
     setUnsavedChanges(anyChanges(otherChanges));
   };
@@ -78,10 +88,13 @@ export const ModificationsProvider = ({
       resetSave: () => {
         changes.current = [];
         setUnsavedChanges(false);
+        setChangePexDuringPlay(0);
       },
       rollback,
+      changePexDuringPlay,
+      setChangePexDuringPlay,
     }),
-    [unsavedChanges]
+    [unsavedChanges, changePexDuringPlay]
   );
   return (
     <ModificationsContext.Provider value={context}>

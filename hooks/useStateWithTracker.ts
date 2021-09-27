@@ -4,7 +4,10 @@ import useChangeWatcher from './useChangeWatcher';
 type useStateWithChangesAndTrackerType = <T>(
   defaultValue: T,
   key: string,
-  options?: { keepInChangeTracker?: boolean }
+  options?: {
+    keepInChangeTracker?: boolean;
+    pexCostCalc?: (oldVal: number, newVal: number) => number;
+  }
 ) => [{ val: T; changed: boolean }, (newValue: T) => void];
 
 type useStateWithTrackerType = <T>(
@@ -12,13 +15,14 @@ type useStateWithTrackerType = <T>(
   key: string,
   options?: {
     keepInChangeTracker?: boolean;
+    pexCostCalc?: (oldVal: number, newVal: number) => number;
   }
 ) => [T, (newValue: T) => void];
 
 const useStateWithTracker: useStateWithTrackerType = (
   defaultValue,
   key,
-  { keepInChangeTracker = true } = {
+  { keepInChangeTracker = true, pexCostCalc } = {
     keepInChangeTracker: true,
   }
 ) => {
@@ -32,7 +36,7 @@ const useStateWithTracker: useStateWithTrackerType = (
 
   const generateSetter = useChangeWatcher();
   const setTmpValueWithChangeTracker = keepInChangeTracker
-    ? generateSetter(setter, tmpValue, defaultValue, key, true)
+    ? generateSetter(setter, tmpValue, defaultValue, key, pexCostCalc, true)
     : setter;
 
   return [tmpValue, setTmpValueWithChangeTracker];
@@ -42,7 +46,7 @@ export const useStateWithChangesAndTracker: useStateWithChangesAndTrackerType =
   (
     defaultValue,
     key,
-    { keepInChangeTracker = true } = {
+    { keepInChangeTracker = true, pexCostCalc } = {
       keepInChangeTracker: true,
     }
   ) => {
@@ -60,7 +64,7 @@ export const useStateWithChangesAndTracker: useStateWithChangesAndTrackerType =
 
     const generateSetter = useChangeWatcher();
     const setTmpValueWithChangeTracker = keepInChangeTracker
-      ? generateSetter(setter, tmpValue, defaultValue, key)
+      ? generateSetter(setter, tmpValue, defaultValue, key, pexCostCalc, false)
       : setter;
 
     return [tmpValue, setTmpValueWithChangeTracker];

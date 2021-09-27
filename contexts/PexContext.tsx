@@ -3,7 +3,9 @@ import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
 import useStateWithChanges from '../hooks/useStateWithTracker';
 
-type ContextType = { leftOver: TempElemType<number> };
+type ContextType = {
+  leftOver: TempElemType<number>;
+};
 
 const defaultContext: ContextType = {
   leftOver: {

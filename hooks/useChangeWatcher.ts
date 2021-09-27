@@ -4,7 +4,14 @@ import ModificationsContext from '../contexts/ModificationsContext';
 const useChangeWatcher = () => {
   const { addChange } = useContext(ModificationsContext);
   const generateSetter =
-    (setter, oldValue, baseValue, key, noChanged = false) =>
+    (
+      setter,
+      oldValue,
+      baseValue,
+      key,
+      pexCostCalc?: (oldValue: number, newValue: number) => number,
+      noChanged = false
+    ) =>
     (newValue) => {
       addChange({
         key: `${key}-value`,
@@ -13,6 +20,7 @@ const useChangeWatcher = () => {
         rollback: () => {
           setter(oldValue);
         },
+        pexCost: pexCostCalc ? pexCostCalc(oldValue, newValue) : 0,
       });
       if (noChanged) {
         setter(newValue);

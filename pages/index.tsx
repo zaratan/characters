@@ -55,7 +55,7 @@ const Home = ({
   const { needPusherFallback } = useContext(SystemContext);
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const { data, mutate } = useSWR(`/api/vampires`, {
-    initialData,
+    fallbackData: initialData,
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
     revalidateOnMount: true,
   });
