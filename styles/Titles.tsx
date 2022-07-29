@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const Title = styled.h1`
   font-family: CloisterBlack;
+  font-size: 2rem;
   &.victorian-queen {
     font-family: VictorianQ;
     font-size: 6rem;
@@ -20,6 +21,7 @@ export const StyledColumnTitle = styled(Title)`
 
 export const SubTitle = styled.h2`
   font-family: CloisterBlack;
+  font-size: 1.6rem;
   color: ${(props) => props.theme.titleColor};
   display: inline;
   white-space: nowrap;
