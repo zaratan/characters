@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
 type ContextType = {

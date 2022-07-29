@@ -39,10 +39,6 @@ const MyApp = ({ Component, pageProps }) => (
               name="viewport"
               content="width=device-width, initial-scale=1, shrink-to-fit=no"
             />
-            <link
-              href="https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&display=swap"
-              rel="stylesheet"
-            />
           </Head>
           <GlobalStyle />
           <SystemProvider>

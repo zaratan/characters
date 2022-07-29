@@ -46,7 +46,7 @@ export const fetchVampireFromDB = async (userId?: string) => {
   }
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = getSession(req, res);
   const result = await fetchVampireFromDB(session?.user?.sub);
 
@@ -58,3 +58,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json(result);
   }
 };
+
+export default handler;

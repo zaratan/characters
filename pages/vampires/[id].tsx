@@ -52,7 +52,6 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   };
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const Home = ({
   initialData,
   notFound,

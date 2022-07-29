@@ -102,7 +102,7 @@ const ConfigWrapper = ({
       <OuterContainer>
         <Nav />
         <TextFallback>
-          Vous n'avez pas accès à la configuration de ce personnage.
+          Vous n&apos;avez pas accès à la configuration de ce personnage.
         </TextFallback>
         <Footer />
       </OuterContainer>

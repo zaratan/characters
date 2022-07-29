@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, ReactNode } from 'react';
 import { v4 as uuid } from 'uuid';
 import { TempElemType } from '../types/TempElemType';

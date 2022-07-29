@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import { useEffect, useState } from 'react';
 import throttle from 'lodash/throttle';
 

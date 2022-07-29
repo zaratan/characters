@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, ReactNode } from 'react';
 import { UserProfile, useUser } from '@auth0/nextjs-auth0';
 

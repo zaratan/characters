@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
 import useStateWithTracker from '../hooks/useStateWithTracker';

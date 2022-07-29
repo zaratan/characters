@@ -75,7 +75,6 @@ interface LineTitleProps<T> {
 
 const LineTitle = <T extends { name: string }>({
   custom,
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   changeName = () => {},
   remove,
   title,

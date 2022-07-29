@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import produce from 'immer';
 

@@ -198,7 +198,6 @@ const Dot = ({
     ${hidden ? 'hidden' : ''}
   `;
 
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   const clickAction = !inactive ? onClick : () => {};
 
   const handleClick = generateHandleClick(clickAction);

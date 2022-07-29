@@ -132,7 +132,6 @@ const PexSection = () => {
             cap.specialties && {
               baseValue: cap.baseSpecialtiesCount,
               value: cap.specialties.length,
-              // eslint-disable-next-line @typescript-eslint/no-empty-function
               set: () => {},
             }
         )

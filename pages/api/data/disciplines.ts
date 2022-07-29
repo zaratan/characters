@@ -3,7 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import slugify from 'slugify';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const dataDirectory = path.join(process.cwd(), 'data');
   const disciplinePath = path.join(dataDirectory, 'disciplines.json');
   const disciplinesJson = fs.readFileSync(disciplinePath, 'utf8');
@@ -22,3 +22,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
   res.status(200).json({ disciplines, disciplinesCombi: treatedDiscCombi });
 };
+
+export default handler;

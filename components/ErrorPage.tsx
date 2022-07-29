@@ -32,9 +32,9 @@ const ErrorPage = () => {
     <MainContainer>
       <Nav returnTo={returnUrl} />
       <ErrorMessage>
-        Vous n'êtes pas autorisé à voir cette page.
+        Vous n&apos;êtes pas autorisé à voir cette page.
         <a href={`/api/auth/login?return=${returnUrl}`}>
-          Connectez-vous s'il vous plaît.
+          Connectez-vous s&apos;il vous plaît.
         </a>
       </ErrorMessage>
       <Footer withoutEmptyLines />

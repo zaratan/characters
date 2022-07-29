@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable no-nested-ternary */
 import React, { useState, useRef, ReactNode, useContext } from 'react';
 import Link from 'next/link';
@@ -90,7 +89,6 @@ const MenuDropdown = styled.ul`
   background-color: ${(props) => props.theme.navBackground};
 `;
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const LogButton = ({
   data,
   connected,

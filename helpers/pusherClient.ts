@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import PusherClient from 'pusher-js/with-encryption';
 import { sheetsChannel, sheetChannel, UPDATE_EVENT } from './pusherConst';
 

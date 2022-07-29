@@ -31,7 +31,12 @@ class MyDocument extends Document {
   render() {
     return (
       <Html lang="fr">
-        <Head />
+        <Head>
+          <link
+            href="https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&display=swap"
+            rel="stylesheet"
+          />
+        </Head>
         <body>
           <Main />
 

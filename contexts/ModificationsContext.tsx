@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-empty-function */
 import React, {
   createContext,
   useState,
@@ -94,6 +92,7 @@ export const ModificationsProvider = ({
       changePexDuringPlay,
       setChangePexDuringPlay,
     }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [unsavedChanges, changePexDuringPlay]
   );
   return (

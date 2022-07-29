@@ -20,7 +20,6 @@ export default withApiAuthRequired(
 
     try {
       const vampire: {
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         data: Array<{ data: VampireType; ref: any }>;
       } = await client.query(
         q.Map(

@@ -157,7 +157,9 @@ const NewCharPage = () => {
               onChange={(e) => setEra(Number(e.target.value))}
             >
               {Object.entries(ERAS).map(([key, value]) => (
-                <option value={key}>{value}</option>
+                <option key={key} value={key}>
+                  {value}
+                </option>
               ))}
             </Select>
           </Field>
@@ -170,7 +172,9 @@ const NewCharPage = () => {
               onChange={(e) => setType(Number(e.target.value))}
             >
               {Object.entries(TYPES).map(([key, value]) => (
-                <option value={key}>{value}</option>
+                <option key={key} value={key}>
+                  {value}
+                </option>
               ))}
             </Select>
           </Field>

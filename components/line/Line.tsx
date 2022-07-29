@@ -70,8 +70,7 @@ const Line = <T extends { name: string }>({
       ? (val: number) => () => {
           elem.set(val);
         }
-      : // eslint-disable-next-line @typescript-eslint/no-empty-function
-        () => () => {};
+      : () => () => {};
 
   const { showPex } = useContext(PreferencesContext);
 

@@ -8,7 +8,6 @@ const client = new faunadb.Client({ secret });
 
 export const fetchOneVampire = async (id: string) => {
   try {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const dbs: { data: Array<{ data: any }> } = await client.query(
       q.Map(
         // iterate each item in result
@@ -31,7 +30,7 @@ export const fetchOneVampire = async (id: string) => {
   }
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: { id },
   } = req;
@@ -44,3 +43,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json(vampire);
   }
 };
+
+export default handler;

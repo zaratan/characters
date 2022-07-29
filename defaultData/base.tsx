@@ -58,7 +58,7 @@ const humanMagic: HumanMagicType = {
   theurgy: [],
 };
 
-export default {
+const defaultConstants = {
   generation,
   infos,
   attributes,
@@ -73,3 +73,5 @@ export default {
   trueFaith,
   humanMagic,
 };
+
+export default defaultConstants;

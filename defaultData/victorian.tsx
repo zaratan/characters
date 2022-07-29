@@ -43,7 +43,7 @@ const talents = [
 
 const customTalents = [];
 
-export default {
+const constants = {
   knowledges,
   customKnowledges,
   skills,
@@ -51,3 +51,5 @@ export default {
   talents,
   customTalents,
 };
+
+export default constants;

@@ -208,7 +208,6 @@ const Disciplines = () => {
                     elem={{
                       value: thau.value,
                       baseValue: thau.baseValue,
-                      // eslint-disable-next-line @typescript-eslint/no-empty-function
                       set: () => {},
                     }}
                     maxLevel={5}
