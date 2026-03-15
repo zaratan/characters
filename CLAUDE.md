@@ -97,7 +97,15 @@ Copy `.env.sample` to `.env.local` and fill in values:
 ## Key Architectural Notes
 
 - **No test suite** — there are no tests or test runner configured
-- **No CI/CD pipeline** — no GitHub Actions; likely deployed via Vercel
+- **Deployment** — hosted on Vercel (`.vercel` in `.gitignore`)
 - **Real-time collaboration** — Pusher enables multiple users to edit the same character sheet simultaneously
 - **Character types** — supports Vampire, Ghoul, Human, Dark Ages, and Victorian era templates in `defaultData/`
 - **Experience points** — custom PEX (experience) calculation logic lives in `helpers/pex.ts`
+
+## External Dependency: wod.zaratan.fr
+
+This app relies on **[wod.zaratan.fr](https://wod.zaratan.fr)**, a companion World of Darkness reference site (also by zaratan), for two things:
+
+1. **Discipline reference links** — Every discipline in `data/disciplines.json` has a `url` field pointing to `https://wod.zaratan.fr/powers/<discipline-name>`. These links are displayed in the character sheet UI so players can look up discipline details. Combo disciplines are linked to `https://wod.zaratan.fr/powers/combo#power-<slug>` (built dynamically in `pages/api/data/disciplines.ts`).
+
+2. **Advantages & Flaws API** — `DataContext.tsx` fetches advantage/flaw data directly from `https://wod.zaratan.fr/api/characters/adv_flaws` via SWR. This is a live external API call, not a local data file. The response provides names, URLs, and level arrays used to populate the character sheet's advantages and flaws sections.
