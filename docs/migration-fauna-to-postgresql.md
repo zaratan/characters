@@ -453,7 +453,64 @@ Plusieurs utilisateurs peuvent éditer en même temps. Le pattern actuel est "la
 
 ---
 
-## 9. Résumé des dépendances
+## 9. Estimation de l'effort
+
+### Vue d'ensemble
+
+| Phase | Effort | Complexité | Risque |
+|-------|--------|------------|--------|
+| Setup infra (Vercel Postgres + Prisma) | ~30 min | Faible | Faible |
+| Schema Prisma + migration initiale | ~30 min | Faible | Faible |
+| Réécriture des API routes | ~2h | Faible-Moyenne | Moyen |
+| Sérialisation / helpers | ~30 min | Faible | Faible |
+| Tests manuels end-to-end | ~1h | - | - |
+| Nettoyage (env vars, docs, deps) | ~15 min | Faible | Faible |
+| **Total** | **~4-5h** | | |
+
+### Détail par fichier
+
+Les 7 fichiers à réécrire sont tous courts et simples. Aucune logique métier complexe — c'est du CRUD direct.
+
+| Fichier | Lignes | Opérations Fauna | Difficulté | Effort | Notes |
+|---------|--------|------------------|------------|--------|-------|
+| `pages/api/vampires/create.ts` | 62 | `q.Create()` | Facile | 20 min | Le plus de travail : décomposer le VampireType en colonnes Prisma + créer les relations `editors`/`viewers` via `connectOrCreate` |
+| `pages/api/vampires.ts` | 62 | `q.Map/Paginate/Match` | Facile | 15 min | Le filtrage privé/public passe dans le `WHERE` Prisma — plus propre qu'avant. La fonction exportée `fetchVampireFromDB()` est aussi utilisée dans `getStaticPaths` |
+| `pages/api/vampires/[id].ts` | 47 | `q.Map/Paginate/Match/Get` | Trivial | 10 min | Simple `findUnique`. La fonction exportée `fetchOneVampire()` est aussi utilisée dans `getStaticProps` |
+| `pages/api/vampires/[id]/update.ts` | 63 | `q.Map/Paginate/Replace` | Facile | 20 min | Fetch + check auth + `Replace` -> `findUnique` + check + `update`. Attention : le body est un JSON brut à décomposer en colonnes |
+| `pages/api/vampires/[id]/update_partial.ts` | 60 | `q.Map/Paginate/Update` | Facile | 15 min | Quasi identique à update.ts. `q.Update` (merge partiel) -> `prisma.update` avec seulement les champs envoyés |
+| `pages/api/vampires/[id]/delete.ts` | 55 | `q.Map/Paginate/Delete` | Trivial | 10 min | Fetch + check auth + `Delete` -> `findUnique` + check + `delete`. Le cascade nettoie les jointures |
+| `pages/api/users.ts` | 64 | `q.Map/Paginate/Match` | Trivial | 10 min | Simple `findMany` avec `select`. Plus besoin du `lodash.pick` |
+
+### Ce qui rend cette migration simple
+
+1. **Fichiers courts** — les 7 routes font entre 47 et 64 lignes. Code boilerplate Fauna répétitif (init client + `q.Map(q.Paginate(q.Match(...)))`)
+2. **Pas de logique métier dans le DB layer** — tout est CRUD basique. Pas de transactions, pas de requêtes complexes, pas d'agrégations
+3. **Le front ne change pas** — les API routes gardent les mêmes URLs et les mêmes shapes de réponse. SWR, contexts, hooks : rien à toucher
+4. **Pas de migration de données** — on repart de zéro, donc pas de script d'export/import/transformation
+5. **Pattern identique** — les 4 routes update/delete/update_partial ont exactement le même pattern "fetch by index -> check auth -> opération". Quand t'en as fait une, les autres c'est du copier-coller
+
+### Ce qui demande de l'attention
+
+| Point | Détail | Impact |
+|-------|--------|--------|
+| **Sérialisation create/update** | Le front envoie un objet `VampireType` aplati. Il faut le décomposer en colonnes Prisma (`infos`, `attributes`, `mind`, etc.) et extraire `editors`/`viewers` pour les tables de jointure | Moyen — un helper `vampireTypeToPrismaData()` à écrire une fois |
+| **Reconstruction de la réponse** | `GET /api/vampires/[id]` doit retourner un objet plat `VampireType`, pas la structure Prisma avec relations imbriquées | Faible — un helper `prismaToVampireType()` inverse |
+| **`update_partial`** | L'update partiel envoie un sous-ensemble du VampireType. Il faut ne mettre à jour que les colonnes envoyées, pas écraser les autres avec `undefined` | Moyen — filtrer les clés `undefined` avant l'appel Prisma |
+| **Functions exportées** | `fetchVampireFromDB()` et `fetchOneVampire()` sont importées dans les pages pour `getStaticPaths`/`getStaticProps`. La signature de retour doit rester identique | Faible — juste s'assurer du même format de retour |
+| **Hardcoded viewer** | `'github|3338913'` est hardcodé comme viewer par défaut dans `create.ts`. Il faut que ce user existe dans la table `User` | Faible — `connectOrCreate` gère ça |
+
+### Comparaison avec d'autres approches
+
+| Approche | Effort estimé | Commentaire |
+|----------|---------------|-------------|
+| **Prisma + JSONB hybride** (recommandé) | ~4-5h | Schema propre, peu de tables, typage auto |
+| SQL brut (`@vercel/postgres`) | ~5-6h | Même travail + écrire le SQL à la main + pas de migration tooling |
+| Drizzle ORM | ~4-5h | Comparable à Prisma, moins de docs/exemples pour ce use case |
+| Tout normaliser en tables (full relationnel) | ~8-12h | Tables pour abilities, disciplines, rituals, paths... Disproportionné pour le besoin |
+
+---
+
+## 10. Résumé des dépendances
 
 ### À ajouter
 ```json
