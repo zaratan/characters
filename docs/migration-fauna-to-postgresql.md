@@ -1007,3 +1007,112 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
   "faunadb": "^4.6.0"
 }
 ```
+
+---
+
+## 12. Compatibilité avec une future migration Auth0 → NextAuth
+
+### Inventaire Auth0 actuel
+
+L'utilisation d'Auth0 est minimale — pas de features avancées :
+
+| Feature Auth0 | Utilisé ? | Détail |
+|---------------|-----------|--------|
+| Login/Logout (hosted page) | Oui | Via `handleAuth()` dans `pages/api/auth/[...auth0].ts` |
+| `user.sub` comme identifiant | Oui | Stocké dans `editors[]`/`viewers[]`, utilisé partout pour le contrôle d'accès |
+| Profil basique (`name`, `email`, `picture`, `nickname`) | Oui | Affiché dans la nav et stocké dans la table `users` |
+| `withApiAuthRequired()` (middleware) | Oui | 4 routes protégées (create, update, update_partial, delete) |
+| `getSession()` (server-side) | Oui | 6 routes API pour récupérer le user courant |
+| `useUser()` (client-side) | Oui | Via `MeContext.tsx` qui expose `me` et `connected` |
+| `UserProvider` (wrapper app) | Oui | Dans `_app.tsx` |
+| Roles / Permissions | Non | |
+| Custom claims / metadata | Non | |
+| Rules / Actions | Non | |
+| Organizations / MFA | Non | |
+| API Authorization (audience) | Non | |
+
+### Fichiers impactés (13 fichiers)
+
+| Fichier | Ce qui change |
+|---------|--------------|
+| `pages/api/auth/[...auth0].ts` | Remplacé par `pages/api/auth/[...nextauth].ts` |
+| `pages/_app.tsx` | `UserProvider` → `SessionProvider` |
+| `contexts/MeContext.tsx` | `useUser()` → `useSession()` |
+| `types/MeType.ts` | `UserProfile` Auth0 → `Session['user']` NextAuth |
+| `hooks/useMe.ts` | Simplifié (plus besoin de fetch `/api/me`) |
+| `components/Nav.tsx` | URLs login/logout changent |
+| `pages/api/vampires/create.ts` | `withApiAuthRequired` + `getSession` → `getServerSession` |
+| `pages/api/vampires/[id]/update.ts` | Idem |
+| `pages/api/vampires/[id]/update_partial.ts` | Idem |
+| `pages/api/vampires/[id]/delete.ts` | Idem |
+| `pages/api/vampires.ts` | `getSession` → `getServerSession` |
+| `pages/api/users.ts` | `withApiAuthRequired` → check session |
+| `contexts/AccessesContext.tsx` | Pas de changement structurel, juste le type user |
+
+### La migration PostgreSQL facilite la migration NextAuth
+
+La migration Fauna → PostgreSQL qu'on prépare rend la future migration Auth0 → NextAuth **plus facile**, pas plus difficile :
+
+#### 1. La table `users` existe déjà
+
+NextAuth a besoin d'une table `users` pour stocker les comptes. On en a déjà une avec exactement les bons champs :
+
+```sql
+-- Notre table (migration Fauna → PG)
+CREATE TABLE users (
+  id TEXT PRIMARY KEY,
+  sub TEXT UNIQUE NOT NULL,    -- identifiant Auth0 actuel
+  email TEXT NOT NULL,
+  name TEXT NOT NULL,
+  nickname TEXT NOT NULL,
+  picture TEXT NOT NULL
+);
+```
+
+NextAuth avec l'adapter PostgreSQL attend :
+
+```sql
+-- Ce que NextAuth attend
+CREATE TABLE users (
+  id TEXT PRIMARY KEY,
+  name TEXT,
+  email TEXT UNIQUE,
+  "emailVerified" TIMESTAMPTZ,
+  image TEXT
+);
+```
+
+Une migration `node-pg-migrate` suffit pour adapter : renommer `picture` → `image`, ajouter `emailVerified`, gérer le mapping `sub` → `accounts.providerAccountId`.
+
+#### 2. `user.sub` → `user.id` : un seul endroit à changer
+
+Avec Auth0, l'identifiant est `user.sub` (ex : `github|3338913`). Avec NextAuth, c'est `user.id`.
+
+Grâce au helper `lib/db.ts`, toutes les requêtes SQL qui utilisent `sub` sont centralisées dans un seul fichier. Le changement se fait à un endroit, pas dans 7 routes.
+
+#### 3. Les tables de jointure sont compatibles
+
+`vampire_editors` et `vampire_viewers` lient un vampire à un user par `user_id`. Que l'identifiant vienne d'Auth0 ou de NextAuth, la structure reste identique. Seule la valeur de `user_id` change.
+
+### Ce qu'il faudra faire pour la migration NextAuth
+
+| Étape | Effort | Détail |
+|-------|--------|--------|
+| Installer `next-auth` + adapter PostgreSQL | 10 min | `yarn add next-auth @next-auth/pg-adapter` |
+| Créer `pages/api/auth/[...nextauth].ts` | 15 min | Config provider (GitHub, Google, etc.) |
+| Migration DB (adapter la table `users` + créer `accounts`, `sessions`) | 20 min | Une migration `node-pg-migrate` |
+| Remplacer `UserProvider` par `SessionProvider` | 5 min | Dans `_app.tsx` |
+| Réécrire `MeContext.tsx` | 10 min | `useUser()` → `useSession()` |
+| Remplacer `getSession` / `withApiAuthRequired` dans les 6 routes | 30 min | Pattern mécanique : `getServerSession(req, res, authOptions)` |
+| Mettre à jour `Nav.tsx` (URLs login/logout) | 5 min | `signIn()` / `signOut()` de `next-auth/react` |
+| Migrer les `sub` existants vers le nouveau format d'ID | 15 min | Script SQL one-shot ou migration |
+| **Total** | **~2h** | |
+
+### Recommandation
+
+Ne pas faire la migration NextAuth en même temps que Fauna → PostgreSQL. Faire les deux séparément :
+
+1. **D'abord** : Fauna → PostgreSQL (ce doc). On garde Auth0, ça marche.
+2. **Ensuite** : Auth0 → NextAuth. La table `users` et le helper `lib/db.ts` sont déjà en place, la migration sera quasi mécanique.
+
+Faire les deux en même temps augmente le risque de bugs et rend le debugging plus compliqué (on ne sait plus si le problème vient de la DB ou de l'auth).
