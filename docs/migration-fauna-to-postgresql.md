@@ -144,20 +144,59 @@ await db.delete(vampires).where(eq(vampires.id, id));
 | Relations editors/viewers | `JOIN` SQL manuels | `include` / `connectOrCreate` | `JOIN` TS typé |
 | Adapté à la complexité du projet | Oui | Surdimensionné | Oui |
 
-### Recommandation
+### Recommandation : `@vercel/postgres` + `node-pg-migrate`
 
-Pour ce projet, **`@vercel/postgres` (SQL brut) ou Drizzle** sont les choix les plus adaptés.
+C'est le combo le plus adapté à ce projet : SQL brut pour les requêtes, migrations versionnées pour le schema. Zéro magie, zéro abstraction inutile.
 
 **Pourquoi pas Prisma ?**
 - On a 5 requêtes SQL triviales. Prisma apporte un engine Rust, un build step, un DSL à apprendre, et un cold start rallongé… pour écrire `SELECT * FROM vampires WHERE id = $1`.
 - Le typage auto est un vrai plus, mais on a déjà `VampireType` côté front. Un cast manuel sur 5 requêtes n'est pas un fardeau.
 - Les relations `editors`/`viewers` sont le seul endroit où Prisma simplifie vraiment les choses, mais un `JOIN` SQL classique fait le même travail en 2 lignes.
 
-**`@vercel/postgres`** si tu veux le minimum absolu — pas d'abstraction, pas de magie, juste du SQL dans 7 fichiers.
+**Pourquoi pas Drizzle ?**
+- Bon outil, mais ça reste un ORM à apprendre et maintenir pour 5 requêtes. Le gain de typage ne justifie pas la dépendance supplémentaire ici.
 
-**Drizzle** si tu veux le typage auto sans le poids de Prisma — bon compromis, schema en TS, migrations incluses.
+### Inconvénients de `@vercel/postgres` + `node-pg-migrate`
 
-**Prisma** reste un bon choix si tu prévois que le projet va grossir significativement (nouvelles tables, requêtes complexes, etc.). Mais en l'état, c'est de l'over-engineering.
+On choisit cette stack en connaissance de cause. Voici ce qu'on perd et ce qu'on accepte :
+
+#### Ce qu'on perd par rapport à un ORM (Prisma/Drizzle)
+
+| Inconvénient | Impact réel sur ce projet |
+|-------------|--------------------------|
+| **Pas de typage auto des résultats SQL** — `sql\`SELECT ...\`` retourne `QueryResult<any>`. Il faut caster manuellement vers `VampireType` | **Faible.** On a déjà les types côté front. Un helper `rowToVampire()` écrit une fois suffit. Mais c'est du code en plus à maintenir si les types changent |
+| **Pas de validation schema ↔ types** — rien ne garantit que les colonnes SQL correspondent aux types TS. Si tu renommes une colonne en DB, le compilateur ne te dira rien | **Moyen.** Avec un ORM, un `prisma generate` ou un changement de schema Drizzle casse le build immédiatement. Ici, tu le découvres au runtime |
+| **SQL à écrire à la main** — les requêtes sont simples, mais il faut quand même écrire les `INSERT INTO ... VALUES (...)` avec 20+ colonnes JSONB | **Faible mais pénible.** Les `INSERT` et `UPDATE` avec beaucoup de colonnes JSONB sont verbeux. Un helper `buildInsert()` aide, mais c'est du plumbing qu'un ORM fait pour toi |
+| **Pas de gestion automatique des relations** — les `JOIN` pour `editors`/`viewers` sont manuels. Pas de `include: { editors: true }` | **Faible.** C'est 2 `JOIN` sur 2 tables. Mais si on ajoute d'autres relations plus tard, ça devient plus fastidieux |
+
+#### Inconvénients spécifiques à `@vercel/postgres`
+
+| Inconvénient | Détail |
+|-------------|--------|
+| **Lock-in Vercel** — `@vercel/postgres` est un wrapper autour de `@neondatabase/serverless`. Si tu quittes Vercel, il faut passer à `pg` ou `@neondatabase/serverless` directement | Pas bloquant : le SQL reste le même, seul l'import change. Mais c'est une dépendance à un hébergeur |
+| **Pas de connection pool configurable** — le pooling est géré par Vercel/Neon, tu ne contrôles pas PgBouncer toi-même | Pas un problème pour ce volume d'utilisation |
+| **Tagged template literals uniquement** — `sql\`...\`` oblige à utiliser la syntaxe template. Pas de query builder, pas de composition de requêtes | Pour du CRUD simple c'est parfait. Ça deviendrait pénible pour des requêtes dynamiques (filtres optionnels, pagination variable, etc.) |
+
+#### Inconvénients spécifiques à `node-pg-migrate`
+
+| Inconvénient | Détail |
+|-------------|--------|
+| **Spécifique PostgreSQL** — si un jour tu migres vers MySQL ou SQLite, l'outil ne suit pas | Pas un risque réel ici |
+| **Pas de "schema drift detection"** — l'outil ne vérifie pas si la DB est désynchronisée avec les migrations. Si quelqu'un modifie la DB à la main, les migrations ne le savent pas | Mitigé par le fait qu'on est seul sur ce projet |
+| **Pas de `prisma studio` ou `drizzle studio`** — pas d'interface graphique intégrée pour explorer la DB | Il faut utiliser un client SQL externe (pgAdmin, TablePlus, psql). Pas un drame mais c'est moins pratique en dev |
+| **Deux sources de vérité pour le schema** — les migrations JS/SQL définissent le schema DB, les types TS définissent le shape côté app. Il faut les garder synchronisés manuellement | C'est le principal trade-off. Avec Prisma/Drizzle, le schema est unique et les types en découlent |
+
+#### Le vrai risque à long terme
+
+Le seul scénario où ce choix pourrait coincer : **si le projet grossit significativement** (nouvelles tables, requêtes complexes, filtres dynamiques, pagination). À ce stade, l'absence d'ORM se ferait sentir et il faudrait soit :
+- Ajouter Drizzle par-dessus (les migrations `node-pg-migrate` restent compatibles)
+- Écrire plus de helpers SQL maison
+
+Pour un projet de cette taille (5 requêtes CRUD, 4 tables), ce risque est théorique.
+
+#### En résumé
+
+On accepte consciemment : du SQL verbeux sur les gros `INSERT`/`UPDATE`, du cast manuel sur les résultats, et deux sources de vérité (migrations + types TS). En échange, on a zéro build step, zéro engine externe, un cold start rapide, et une stack qu'on comprend de bout en bout.
 
 ---
 
