@@ -1373,15 +1373,16 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 
 | Phase | Effort | Complexité | Risque |
 |-------|--------|------------|--------|
-| **Next.js 12 → 14** (codemods + vérif) | ~20 min | Faible | Faible |
-| Setup infra (Vercel Postgres + deps + OAuth app) | ~30 min | Faible | Faible |
-| Auth — NextAuth (config, contexts, nav, types) | ~30 min | Faible | Faible |
-| DB — `lib/db.ts` + migration initiale | ~45 min | Faible | Faible |
-| Réécriture des 7 API routes (DB + auth + isAdmin) | ~1-2h | Faible-Moyenne | Moyen |
-| Frontend auth + isAdmin (MeContext, Nav, _app, config) | ~20 min | Faible | Faible |
+| Phase | Effort | Complexité | Risque |
+|-------|--------|------------|--------|
+| **Phase 0** — Next.js 12 → 14 (codemods + vérif) | ~20 min | Faible | Faible |
+| **Phase 1** — Setup infra (Vercel Postgres + deps + OAuth app) | ~30 min | Faible | Faible |
+| **Phase 2** — Auth NextAuth (config, contexts, nav, types) | ~30 min | Faible | Faible |
+| **Phase 3** — DB helper + réécriture des 7 API routes | ~1h30 | Faible-Moyenne | Moyen |
+| **Phase 3.5** — Se mettre admin | ~2 min | Faible | Faible |
+| **Phase 4** — Nettoyage (env vars, docs, deps) | ~15 min | Faible | Faible |
 | Tests manuels end-to-end | ~1h | - | - |
-| Nettoyage (env vars, docs, deps) | ~15 min | Faible | Faible |
-| **Total** | **~5-6h** | | |
+| **Total** | **~4h** | | |
 
 ### Détail par fichier
 
