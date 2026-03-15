@@ -36,189 +36,15 @@
 
 ---
 
-## 2. Choix technique : ORM / query builder
+## 2. Stack technique
 
-### Contexte : qu'est-ce qu'on fait réellement ?
+**`@vercel/postgres`** (SQL brut) + **`node-pg-migrate`** (migrations versionnées).
 
-Les 7 routes API font du CRUD trivial :
-- `CREATE` un document
-- `SELECT` par ID ou liste complète
-- `UPDATE` (full replace ou partiel)
-- `DELETE` par ID
-
-Pas de jointures complexes, pas de transactions, pas d'agrégations, pas de requêtes dynamiques. Les seules "relations" sont `editors`/`viewers` (des tableaux de strings dans Fauna, qui deviendraient des tables de jointure en SQL).
-
-C'est important parce que ça veut dire qu'**on n'a pas besoin de la puissance d'un ORM**. La question est : est-ce qu'on en veut quand même pour le confort ?
-
-### Option A : `@vercel/postgres` + SQL brut
-
-Le plus direct. Zéro abstraction entre toi et la DB.
-
-```typescript
-import { sql } from '@vercel/postgres';
-
-// GET one vampire
-const { rows } = await sql`SELECT * FROM vampires WHERE id = ${id}`;
-
-// CREATE
-await sql`INSERT INTO vampires (id, infos, attributes, ...) VALUES (${id}, ${JSON.stringify(infos)}, ...)`;
-
-// UPDATE
-await sql`UPDATE vampires SET infos = ${JSON.stringify(infos)}, ... WHERE id = ${id}`;
-
-// DELETE
-await sql`DELETE FROM vampires WHERE id = ${id}`;
-```
-
-| Pour | Contre |
-|------|--------|
-| Zéro dépendance lourde — juste `@vercel/postgres` (~léger) | SQL à écrire à la main (mais c'est 5 requêtes triviales) |
-| Pas de build step supplémentaire (`prisma generate`) | Pas de typage auto sur les résultats (faut caster soi-même) |
-| Pas de fichier schema séparé à maintenir | Migrations manuelles (un fichier `init.sql` suffit ici) |
-| Cold start plus rapide (pas de Prisma engine) | Pas de tooling pour introspection ou studio |
-| Fonctionne tel quel dans les edge functions | Sérialisation/désérialisation JSON manuelle |
-
-**Pour le schema :** un simple fichier `schema.sql` versionné dans le repo, exécuté une fois au setup.
-
-**Pour le typage :** on a déjà `VampireType` — un type d'interface suffit pour les résultats.
-
-### Option B : Prisma
-
-L'ORM le plus populaire en Next.js. Schema déclaratif, client typé auto-généré, migrations versionnées.
-
-```typescript
-import { prisma } from '../../../lib/prisma';
-
-// GET one vampire
-const vampire = await prisma.vampire.findUnique({ where: { id } });
-
-// CREATE
-await prisma.vampire.create({ data: { ... } });
-
-// UPDATE
-await prisma.vampire.update({ where: { id }, data: { ... } });
-
-// DELETE
-await prisma.vampire.delete({ where: { id } });
-```
-
-| Pour | Contre |
-|------|--------|
-| Client typé : `prisma.vampire.findUnique()` retourne un type exact | **Dépendance lourde** : Prisma engine (binaire Rust ~15 MB), `prisma generate` obligatoire |
-| Migrations auto-générées et versionnées | Build step en plus (`prisma generate` dans `postinstall` ou `build`) |
-| Relations `editors`/`viewers` gérées élégamment (`connectOrCreate`, `include`) | Cold start plus lent sur serverless (chargement de l'engine) |
-| `prisma studio` pour inspecter la DB en dev | Overkill pour 5 requêtes CRUD — comme prendre un camion pour aller chercher le pain |
-| Très bien documenté | Couche d'abstraction en plus à comprendre/débugger |
-| Fonctionne bien avec Vercel + Neon | Nécessite le pattern singleton en dev (hot reload) |
-
-### Option C : Drizzle ORM
-
-ORM léger, TypeScript-first, proche du SQL. Pas de binaire externe.
-
-```typescript
-import { db } from '../../../lib/db';
-import { vampires } from '../../../lib/schema';
-import { eq } from 'drizzle-orm';
-
-// GET one vampire
-const vampire = await db.select().from(vampires).where(eq(vampires.id, id));
-
-// CREATE
-await db.insert(vampires).values({ ... });
-
-// UPDATE
-await db.update(vampires).set({ ... }).where(eq(vampires.id, id));
-
-// DELETE
-await db.delete(vampires).where(eq(vampires.id, id));
-```
-
-| Pour | Contre |
-|------|--------|
-| Léger, pas de binaire externe, pas d'engine | Moins de tooling que Prisma (mais suffisant ici) |
-| TypeScript-first, schema = code TS | API un peu plus verbeuse que Prisma pour les relations |
-| Proche du SQL — tu sais ce qui est généré | Communauté plus petite (mais en croissance rapide) |
-| Migrations via `drizzle-kit` | Un peu moins de docs/exemples |
-| Cold start rapide | Schema TS à maintenir (comme Prisma, mais en TS au lieu de `.prisma`) |
-
-### Matrice de décision
-
-| Critère | `@vercel/postgres` | Prisma | Drizzle |
-|---------|-------------------|--------|---------|
-| Complexité ajoutée | Nulle | Haute | Faible |
-| Typage auto des résultats | Non (cast manuel) | Oui | Oui |
-| Poids des dépendances | ~léger | ~lourd (engine Rust) | ~moyen |
-| Migrations tooling | Non (fichier SQL) | Oui (auto) | Oui (drizzle-kit) |
-| Cold start serverless | Rapide | Plus lent | Rapide |
-| Courbe d'apprentissage | SQL | Prisma DSL | SQL-like TS |
-| Relations editors/viewers | `JOIN` SQL manuels | `include` / `connectOrCreate` | `JOIN` TS typé |
-| Adapté à la complexité du projet | Oui | Surdimensionné | Oui |
-
-### Recommandation : `@vercel/postgres` + `node-pg-migrate`
-
-C'est le combo le plus adapté à ce projet : SQL brut pour les requêtes, migrations versionnées pour le schema. Zéro magie, zéro abstraction inutile.
-
-**Pourquoi pas Prisma ?**
-- On a 5 requêtes SQL triviales. Prisma apporte un engine Rust, un build step, un DSL à apprendre, et un cold start rallongé… pour écrire `SELECT * FROM vampires WHERE id = $1`.
-- Le typage auto est un vrai plus, mais on a déjà `VampireType` côté front. Un cast manuel sur 5 requêtes n'est pas un fardeau.
-- Les relations `editors`/`viewers` sont le seul endroit où Prisma simplifie vraiment les choses, mais un `JOIN` SQL classique fait le même travail en 2 lignes.
-
-**Pourquoi pas Drizzle ?**
-- Bon outil, mais ça reste un ORM à apprendre et maintenir pour 5 requêtes. Le gain de typage ne justifie pas la dépendance supplémentaire ici.
-
-### Inconvénients de `@vercel/postgres` + `node-pg-migrate`
-
-On choisit cette stack en connaissance de cause. Voici ce qu'on perd et ce qu'on accepte :
-
-#### Ce qu'on perd par rapport à un ORM (Prisma/Drizzle)
-
-| Inconvénient | Impact réel sur ce projet |
-|-------------|--------------------------|
-| **Pas de typage auto des résultats SQL** — `sql\`SELECT ...\`` retourne `QueryResult<any>`. Il faut caster manuellement vers `VampireType` | **Faible.** On a déjà les types côté front. Un helper `rowToVampire()` écrit une fois suffit. Mais c'est du code en plus à maintenir si les types changent |
-| **Pas de validation schema ↔ types** — rien ne garantit que les colonnes SQL correspondent aux types TS. Si tu renommes une colonne en DB, le compilateur ne te dira rien | **Moyen.** Avec un ORM, un `prisma generate` ou un changement de schema Drizzle casse le build immédiatement. Ici, tu le découvres au runtime |
-| **SQL à écrire à la main** — les requêtes sont simples, mais il faut quand même écrire les `INSERT INTO ... VALUES (...)` avec 20+ colonnes JSONB | **Faible mais pénible.** Les `INSERT` et `UPDATE` avec beaucoup de colonnes JSONB sont verbeux. Un helper `buildInsert()` aide, mais c'est du plumbing qu'un ORM fait pour toi |
-| **Pas de gestion automatique des relations** — les `JOIN` pour `editors`/`viewers` sont manuels. Pas de `include: { editors: true }` | **Faible.** C'est 2 `JOIN` sur 2 tables. Mais si on ajoute d'autres relations plus tard, ça devient plus fastidieux |
-
-#### Inconvénients spécifiques à `@vercel/postgres`
-
-| Inconvénient | Détail |
-|-------------|--------|
-| **Lock-in Vercel** — `@vercel/postgres` est un wrapper autour de `@neondatabase/serverless`. Si tu quittes Vercel, il faut passer à `pg` ou `@neondatabase/serverless` directement | Pas bloquant : le SQL reste le même, seul l'import change. Mais c'est une dépendance à un hébergeur |
-| **Pas de connection pool configurable** — le pooling est géré par Vercel/Neon, tu ne contrôles pas PgBouncer toi-même | Pas un problème pour ce volume d'utilisation |
-| **Tagged template literals uniquement** — `sql\`...\`` oblige à utiliser la syntaxe template. Pas de query builder, pas de composition de requêtes | Pour du CRUD simple c'est parfait. Ça deviendrait pénible pour des requêtes dynamiques (filtres optionnels, pagination variable, etc.) |
-
-#### Inconvénients spécifiques à `node-pg-migrate`
-
-| Inconvénient | Détail |
-|-------------|--------|
-| **Spécifique PostgreSQL** — si un jour tu migres vers MySQL ou SQLite, l'outil ne suit pas | Pas un risque réel ici |
-| **Pas de "schema drift detection"** — l'outil ne vérifie pas si la DB est désynchronisée avec les migrations. Si quelqu'un modifie la DB à la main, les migrations ne le savent pas | Mitigé par le fait qu'on est seul sur ce projet |
-| **Pas de `prisma studio` ou `drizzle studio`** — pas d'interface graphique intégrée pour explorer la DB | Il faut utiliser un client SQL externe (pgAdmin, TablePlus, psql). Pas un drame mais c'est moins pratique en dev |
-| **Deux sources de vérité pour le schema** — les migrations JS/SQL définissent le schema DB, les types TS définissent le shape côté app. Il faut les garder synchronisés manuellement | C'est le principal trade-off. Avec Prisma/Drizzle, le schema est unique et les types en découlent |
-
-#### Le vrai risque à long terme
-
-Le seul scénario où ce choix pourrait coincer : **si le projet grossit significativement** (nouvelles tables, requêtes complexes, filtres dynamiques, pagination). À ce stade, l'absence d'ORM se ferait sentir et il faudrait soit :
-- Ajouter Drizzle par-dessus (les migrations `node-pg-migrate` restent compatibles)
-- Écrire plus de helpers SQL maison
-
-Pour un projet de cette taille (5 requêtes CRUD, 4 tables), ce risque est théorique.
-
-#### En résumé
-
-On accepte consciemment : du SQL verbeux sur les gros `INSERT`/`UPDATE`, du cast manuel sur les résultats, et deux sources de vérité (migrations + types TS). En échange, on a zéro build step, zéro engine externe, un cold start rapide, et une stack qu'on comprend de bout en bout.
+Pas d'ORM — le projet fait du CRUD trivial sur 7 routes. Un helper `lib/db.ts` centralise tout le SQL.
 
 ---
 
-## 3. Gestion des migrations de schema
-
-### Le besoin
-
-On veut un système de migrations versionné, comme Rails : des fichiers numérotés, exécutés dans l'ordre, avec un suivi de ce qui a déjà tourné. Pas juste un `init.sql` qu'on lance à la main.
-
-### Les options
-
-#### Option A : `node-pg-migrate` (recommandé avec `@vercel/postgres`)
+## 3. Migrations de schema (`node-pg-migrate`)
 
 L'outil de migration standalone le plus utilisé en Node.js (~200k téléchargements/semaine npm). Spécifique PostgreSQL.
 
@@ -364,87 +190,6 @@ Connection via `DATABASE_URL` (= `POSTGRES_URL` de Vercel).
 | ~200k downloads/semaine, maintenu activement | |
 | Zéro binaire externe | |
 
-#### Option B : `dbmate` (si tu préfères du SQL pur)
-
-Outil Go distribué comme binaire standalone. SQL uniquement, multi-DB.
-
-```bash
-# Install (macOS)
-brew install dbmate
-
-# ou via npm (wrapper)
-npx dbmate
-```
-
-**Créer une migration :**
-```bash
-dbmate new init-schema
-# => db/migrations/20240315120000_init-schema.sql
-```
-
-**Fichier de migration :**
-```sql
--- migrate:up
-CREATE TABLE users (
-  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
-  sub TEXT UNIQUE NOT NULL,
-  ...
-);
-
-CREATE TABLE vampires ( ... );
-CREATE TABLE vampire_editors ( ... );
-CREATE TABLE vampire_viewers ( ... );
-
--- migrate:down
-DROP TABLE IF EXISTS vampire_viewers;
-DROP TABLE IF EXISTS vampire_editors;
-DROP TABLE IF EXISTS vampires;
-DROP TABLE IF EXISTS users;
-```
-
-**Commandes :**
-```bash
-dbmate up          # Applique les migrations pending
-dbmate down        # Rollback la dernière
-dbmate status      # Voir l'état des migrations
-dbmate new <name>  # Créer une migration
-dbmate dump        # Dump le schema actuel
-```
-
-| Pour | Contre |
-|------|--------|
-| SQL pur, rien à apprendre | Binaire Go externe (pas un package npm natif) |
-| Très simple, zéro config | Pas de DSL JS — que du SQL |
-| Supporte PG, MySQL, SQLite, ClickHouse | Moins intégré à l'écosystème Node.js |
-| Dump automatique du schema | |
-| Migrations atomiques (transactionnelles) | |
-
-#### Option C : `drizzle-kit` (si tu choisis Drizzle ORM)
-
-Inclus avec Drizzle. Les migrations sont auto-générées à partir du schema TS.
-
-```bash
-npx drizzle-kit generate   # Génère les migrations SQL à partir du schema TS
-npx drizzle-kit migrate    # Applique les migrations
-npx drizzle-kit studio     # Interface web pour explorer la DB
-```
-
-Pas besoin d'écrire le SQL à la main — il est inféré du schema TypeScript. Mais tu peux modifier les fichiers SQL générés avant de les appliquer.
-
-#### Et Prisma ?
-
-Si tu choisis Prisma comme ORM, `prisma migrate` est intégré. Pas besoin d'un outil séparé. Mais on a déjà expliqué pourquoi Prisma est surdimensionné pour ce projet (section 2).
-
-### Recommandation
-
-| Si tu choisis... | Outil de migration |
-|------------------|--------------------|
-| `@vercel/postgres` (SQL brut) | **`node-pg-migrate`** — Node.js natif, le plus naturel avec le reste du stack |
-| Drizzle | **`drizzle-kit`** — intégré, pas de dépendance en plus |
-| Prisma | **`prisma migrate`** — intégré |
-
-**`node-pg-migrate`** est le meilleur choix standalone : c'est le Rails `db:migrate` de Node.js. Tu écris tes migrations en JS (avec un DSL type `pgm.createTable(...)`) ou en SQL pur, elles sont numérotées par timestamp, et l'outil track ce qui a tourné dans une table `pgmigrations`.
-
 ### Intégration avec Vercel (déploiement)
 
 Les migrations doivent tourner **pendant le build**, pas au runtime des serverless functions :
@@ -468,26 +213,7 @@ Vercel exécute `yarn build` à chaque déploiement -> les migrations tournent a
 
 ## 4. Schema de base de données
 
-### 4.1 Le vrai problème : le mapping
-
-Avec Fauna, on n'a aucun mapping. `VampireType` EST le document :
-
-```typescript
-// CREATE — c'est tout
-await client.query(q.Create(q.Collection('vampires'), { data: vampireData }));
-
-// READ — c'est tout
-const result = await client.query(q.Get(ref));
-return result.data; // c'est déjà un VampireType
-```
-
-Si on éclate `VampireType` en 20+ colonnes PostgreSQL, on s'inflige un problème de mapping qui n'existait pas. Chaque `INSERT`, `UPDATE`, `SELECT` doit lister toutes les colonnes et transformer dans les deux sens. C'est ça le vrai coût de la migration, pas le SQL.
-
-### 4.2 Deux approches de schema
-
-#### Approche A : Document JSONB unique (recommandé)
-
-On garde la philosophie Fauna : **une seule colonne `data JSONB`** qui contient tout le `VampireType`. On ne sort en colonnes relationnelles que ce qui a besoin d'être filtré/requêté.
+Une seule colonne `data JSONB` contient tout le `VampireType` — même philosophie que Fauna. Seuls `private_sheet` et les relations `editors`/`viewers` sont en colonnes relationnelles.
 
 ```sql
 -- ============================
@@ -597,35 +323,9 @@ await sql`DELETE FROM vampires WHERE id = ${id}`;
 
 C'est le même niveau de simplicité que Fauna. Pas de mapping 20 colonnes.
 
-| Pour | Contre |
-|------|--------|
-| Zéro mapping — `JSON.stringify(data)` et c'est réglé | Pas de validation côté DB (un champ manquant passe silencieusement) |
-| Les routes sont quasi identiques à l'existant Fauna | Pas de requêtes SQL sur les champs internes (mais on n'en a pas besoin) |
-| `UPDATE` partiel = `jsonb_merge` natif PostgreSQL | Si un jour on veut filtrer par `generation` ou `clan`, il faudra ajouter une colonne ou un index JSONB |
-| Schema ultra simple : 4 tables, ~10 colonnes au total | |
-| Migration quasi mécanique depuis Fauna | |
+### 4.3 Helper layer : `lib/db.ts`
 
-#### Approche B : Colonnes JSONB éclatées (schema précédent)
-
-Ce qu'on avait documenté avant : chaque sous-objet de `VampireType` devient une colonne (`infos JSONB`, `attributes JSONB`, `mind JSONB`, etc.). 20+ colonnes.
-
-**On la garde en option** si tu veux pouvoir évoluer vers des requêtes sur des sous-parties du document (ex : filtrer par clan, requêter les disciplines, etc.). Mais pour l'instant, c'est du mapping gratuit.
-
-### 4.3 Recommandation
-
-**Approche A (document JSONB unique)**. C'est la continuité logique de Fauna :
-- Même philosophie (document store)
-- Même simplicité côté code
-- On profite de PostgreSQL pour ce qu'il apporte vraiment : les relations (`editors`/`viewers`) et la fiabilité
-
-Si plus tard le projet a besoin de requêter les champs internes, on peut :
-1. Ajouter des **colonnes générées** (`generation INT GENERATED ALWAYS AS ((data->>'generation')::int) STORED`) — sans changer le code
-2. Ajouter des **index GIN** sur le JSONB (`CREATE INDEX ON vampires USING GIN (data)`)
-3. Extraire des colonnes à ce moment-là, quand le besoin est réel
-
-### 4.4 Helper layer : `lib/db.ts`
-
-Quel que soit le schema, on écrit un petit helper qui fait le pont entre `VampireType` et la DB. L'idée : les routes API ne voient jamais de SQL, juste des fonctions typées.
+Un helper fait le pont entre `VampireType` et la DB. Les routes API ne voient jamais de SQL, juste des fonctions typées.
 
 ```typescript
 import { sql } from '@vercel/postgres';
@@ -811,23 +511,11 @@ await db.vampires.delete(id);
 
 C'est **plus simple qu'avant**. Le boilerplate Fauna (`q.Map(q.Paginate(q.Match(q.Index(...))))`) disparaît.
 
-### 4.5 Pourquoi ce découpage helpers/routes ?
-
-- **Les routes ne contiennent que de la logique HTTP** : parsing du body, auth check, status codes, Pusher
-- **`lib/db.ts` contient tout le SQL** : un seul fichier à toucher si le schema évolue
-- **Le typage est centralisé** : `rowToVampire()` et `vampireToRow()` sont les deux seuls endroits qui font la conversion. Si `VampireType` change, on change ici
-- **Testable** (si un jour on ajoute des tests) : on peut mocker `db.vampires` sans toucher au SQL
-
 ---
 
 ## 5. Couche authentification : Auth0 → NextAuth
 
-### 5.1 Pourquoi NextAuth
-
-- Auth0 est un service externe payant dont le compte n'existe plus
-- NextAuth est open-source, self-hosted, intégré à Next.js
-- La DB PostgreSQL qu'on crée sert aussi de backend auth (tables `users`, `accounts`, `sessions`)
-- Pas de service externe supplémentaire — tout est dans Vercel
+NextAuth : open-source, self-hosted, intégré à Next.js. La DB PostgreSQL sert aussi de backend auth.
 
 ### 5.2 Config NextAuth : `pages/api/auth/[...nextauth].ts`
 
@@ -940,33 +628,7 @@ export const useMe = () => useContext(MeContext);
 
 ### 5.5 Impact sur `lib/db.ts`
 
-Le seul changement dans le helper DB : `sub` disparaît, remplacé par `user.id` direct.
-
-Les jointures `vampire_editors` / `vampire_viewers` lient désormais directement à `users.id` (la clé primaire NextAuth) au lieu de passer par une colonne `sub` intermédiaire. C'est plus simple qu'avant.
-
-```typescript
-// AVANT (Auth0) — recherche par sub
-async isEditor(vampireId: string, userSub: string): Promise<boolean> {
-  const { rows } = await sql`
-    SELECT 1 FROM vampire_editors ve
-    JOIN users u ON u.id = ve.user_id
-    WHERE ve.vampire_id = ${vampireId} AND u.sub = ${userSub}
-  `;
-  return rows.length > 0;
-}
-
-// APRÈS (NextAuth) — recherche directe par user.id, admin bypass
-async isEditor(vampireId: string, userId: string, isAdmin = false): Promise<boolean> {
-  if (isAdmin) return true;
-  const { rows } = await sql`
-    SELECT 1 FROM vampire_editors
-    WHERE vampire_id = ${vampireId} AND user_id = ${userId}
-  `;
-  return rows.length > 0;
-}
-```
-
-Plus de `JOIN` pour résoudre `sub` → `id`. Le `user.id` NextAuth est directement la FK dans les tables de jointure.
+`sub` disparaît, remplacé par `user.id` direct (la clé primaire NextAuth). Plus de `JOIN` pour résoudre `sub` → `id`. Le code complet est dans la section 4.3.
 
 ### 5.6 Impact sur les types
 
@@ -995,12 +657,7 @@ Plus besoin de `sub`, `nickname`, `picture` (renommé `image` par NextAuth), `em
 
 ## 5bis. Upgrade Next.js 12 → 14
 
-### 5bis.1 Pourquoi Next 14 (et pas 13 ou 15)
-
-- **Next 13** est EOL depuis décembre 2024 — aucun intérêt d'y aller
-- **Next 15** exige React 19 — c'est un chantier en plus, pas nécessaire maintenant
-- **Next 14** est la dernière version compatible React 18.2 (déjà en place), avec support LTS
-- Le **Pages Router** est toujours pleinement supporté dans Next 14 — pas besoin de migrer vers App Router
+Next 14 : dernière version compatible React 18.2 (déjà en place). Next 13 est EOL, Next 15 exige React 19. Pages Router toujours supporté.
 
 ### 5bis.2 Breaking changes (Pages Router uniquement)
 
@@ -1473,21 +1130,3 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 }
 ```
 
----
-
-## 12. Inventaire Auth0 (référence)
-
-L'utilisation d'Auth0 est minimale — uniquement les features basiques :
-
-| Feature Auth0 | Utilisé ? |
-|---------------|-----------|
-| Login/Logout (hosted page) | Oui |
-| `user.sub` comme identifiant | Oui |
-| Profil basique (`name`, `email`, `picture`, `nickname`) | Oui |
-| `withApiAuthRequired()` (middleware) | Oui (4 routes) |
-| `getSession()` (server-side) | Oui (6 routes) |
-| `useUser()` (client-side) | Oui (`MeContext`) |
-| `UserProvider` (wrapper app) | Oui (`_app.tsx`) |
-| Roles / Permissions / Custom claims / Rules / Actions / MFA | Non |
-
-C'est ce qui rend la migration vers NextAuth mécanique : aucune feature avancée Auth0 à reproduire.
