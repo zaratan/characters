@@ -12,10 +12,11 @@
 | Avant | Après |
 |-------|-------|
 | FaunaDB (serverless, FQL) | Vercel Postgres (Neon, SQL) |
-| `faunadb` npm package | `@vercel/postgres` ou Prisma |
-| Documents JSON imbriqués | Tables relationnelles |
+| `faunadb` npm package | `@vercel/postgres` + `node-pg-migrate` |
+| Documents JSON imbriqués | JSONB unique + tables relationnelles pour les accès |
 | Indexes FaunaDB (`one_vampire`, `all_vampires_full`, `all_users`) | Index SQL classiques |
 | `FAUNADB_SECRET_KEY` | `POSTGRES_URL` (auto-provisionné par Vercel) |
+| Pas de migration tooling | `node-pg-migrate` (migrations versionnées, up/down) |
 
 ### Ce qui ne change pas
 
@@ -438,288 +439,425 @@ Vercel exécute `yarn build` à chaque déploiement -> les migrations tournent a
 
 ## 4. Schema de base de données
 
-### 4.1 Approche : hybride relationnel + JSONB
+### 4.1 Le vrai problème : le mapping
 
-Le `VampireType` actuel est un gros document JSON imbriqué. Tout normaliser en tables serait disproportionné pour ce projet. On utilise une approche hybride :
-- **Tables relationnelles** pour les entités principales et les relations (accès, recherche)
-- **Colonnes JSONB** pour les données imbriquées qui sont toujours lues/écrites en bloc
+Avec Fauna, on n'a aucun mapping. `VampireType` EST le document :
 
-### 4.2 Schema Prisma
+```typescript
+// CREATE — c'est tout
+await client.query(q.Create(q.Collection('vampires'), { data: vampireData }));
 
-```prisma
-generator client {
-  provider = "prisma-client-js"
-}
-
-datasource db {
-  provider  = "postgresql"
-  url       = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
-}
-
-model User {
-  id        String   @id @default(cuid())
-  sub       String   @unique          // Auth0 subject ID
-  email     String
-  name      String
-  nickname  String
-  picture   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
-  editableVampires VampireEditor[]
-  viewableVampires VampireViewer[]
-}
-
-model Vampire {
-  id           String   @id @default(uuid())
-  privateSheet Boolean  @default(false)
-  generation   Int      @default(12)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-
-  // Données du personnage stockées en JSONB
-  infos        Json     // { name, playerName, chronicle, clan, ... }
-  attributes   Json     // { strength, dexterity, ... }
-  mind         Json     // { willpower, tempWillpower, health, ... }
-  sections     Json     // { blood, path, disciplines, ... }
-
-  // Abilities
-  talents          Json  // RawAbilitiesListType[]
-  customTalents    Json  @default("[]")
-  skills           Json
-  customSkills     Json  @default("[]")
-  knowledges       Json
-  customKnowledges Json  @default("[]")
-
-  // Disciplines
-  clanDisciplines    Json @default("[]")
-  outClanDisciplines Json @default("[]")
-  combinedDisciplines Json @default("[]")
-
-  // Advantages, flaws, languages
-  advantages Json @default("[]")
-  flaws      Json @default("[]")
-  languages  Json @default("[]")
-
-  // Experience
-  leftOverPex Int @default(0)
-
-  // Pouvoirs optionnels
-  trueFaith  Int  @default(0)
-  humanMagic Json @default("{\"psy\":[],\"staticMagic\":[],\"theurgy\":[]}")
-
-  // Relations d'accès
-  editors VampireEditor[]
-  viewers VampireViewer[]
-}
-
-// Tables de jointure pour le contrôle d'accès
-model VampireEditor {
-  vampireId String
-  userId    String
-  vampire   Vampire @relation(fields: [vampireId], references: [id], onDelete: Cascade)
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([vampireId, userId])
-}
-
-model VampireViewer {
-  vampireId String
-  userId    String
-  vampire   Vampire @relation(fields: [vampireId], references: [id], onDelete: Cascade)
-  user      User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@id([vampireId, userId])
-}
+// READ — c'est tout
+const result = await client.query(q.Get(ref));
+return result.data; // c'est déjà un VampireType
 ```
 
-### 4.3 Pourquoi ce découpage ?
+Si on éclate `VampireType` en 20+ colonnes PostgreSQL, on s'inflige un problème de mapping qui n'existait pas. Chaque `INSERT`, `UPDATE`, `SELECT` doit lister toutes les colonnes et transformer dans les deux sens. C'est ça le vrai coût de la migration, pas le SQL.
 
-| Colonne | Pourquoi JSONB et pas une table ? |
-|---------|-----------------------------------|
-| `infos` | Toujours lu/écrit en bloc, jamais filtré |
-| `attributes` | 9 champs fixes, pas de requête dessus |
-| `mind` | Idem, structure fixe |
-| `talents`, `skills`, etc. | Tableaux d'objets à taille variable, jamais requêtés individuellement |
-| `disciplines` | Structure complexe et imbriquée (paths, rituals) |
+### 4.2 Deux approches de schema
 
-| Donnée | Pourquoi une table/colonne ? |
-|--------|------------------------------|
-| `editors`/`viewers` | Besoin de filtrer "les vampires que je peux voir/éditer" |
-| `privateSheet` | Filtrage dans les listes |
-| `generation` | Colonne scalaire, potentiellement filtrable |
-| `id` | Clé primaire |
+#### Approche A : Document JSONB unique (recommandé)
+
+On garde la philosophie Fauna : **une seule colonne `data JSONB`** qui contient tout le `VampireType`. On ne sort en colonnes relationnelles que ce qui a besoin d'être filtré/requêté.
+
+```sql
+CREATE TABLE users (
+  id    TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  sub   TEXT UNIQUE NOT NULL,
+  email TEXT NOT NULL,
+  name  TEXT NOT NULL,
+  nickname TEXT NOT NULL,
+  picture  TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE vampires (
+  id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  private_sheet BOOLEAN NOT NULL DEFAULT false,
+  data          JSONB NOT NULL,                              -- LE VampireType entier
+  created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE vampire_editors (
+  vampire_id UUID NOT NULL REFERENCES vampires(id) ON DELETE CASCADE,
+  user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  PRIMARY KEY (vampire_id, user_id)
+);
+
+CREATE TABLE vampire_viewers (
+  vampire_id UUID NOT NULL REFERENCES vampires(id) ON DELETE CASCADE,
+  user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  PRIMARY KEY (vampire_id, user_id)
+);
+```
+
+**Pourquoi ça marche :** on ne requête JAMAIS les champs internes du vampire. On ne fait que :
+- Lister les vampires (filtre sur `private_sheet` + jointure `editors`/`viewers`)
+- Lire un vampire par `id`
+- Remplacer tout le document
+- Supprimer par `id`
+
+Le contenu du personnage est toujours lu/écrit en bloc. Le seul champ qu'on extrait dans la liste c'est `data->>'name'` pour l'affichage (ou `data->'infos'->>'name'`).
+
+**Les routes deviennent triviales :**
+
+```typescript
+import { sql } from '@vercel/postgres';
+import { VampireType } from '../../types/VampireType';
+
+// CREATE — presque identique à Fauna
+const { editors, viewers, privateSheet, ...charData } = vampireData;
+await sql`
+  INSERT INTO vampires (id, private_sheet, data)
+  VALUES (${id}, ${privateSheet}, ${JSON.stringify(charData)})
+`;
+
+// READ — presque identique à Fauna
+const { rows } = await sql`SELECT * FROM vampires WHERE id = ${id}`;
+const vampire = { ...rows[0].data, id: rows[0].id, privateSheet: rows[0].private_sheet };
+
+// UPDATE (full replace) — presque identique à Fauna
+await sql`
+  UPDATE vampires SET data = ${JSON.stringify(charData)}, updated_at = now()
+  WHERE id = ${id}
+`;
+
+// DELETE — identique
+await sql`DELETE FROM vampires WHERE id = ${id}`;
+```
+
+C'est le même niveau de simplicité que Fauna. Pas de mapping 20 colonnes.
+
+| Pour | Contre |
+|------|--------|
+| Zéro mapping — `JSON.stringify(data)` et c'est réglé | Pas de validation côté DB (un champ manquant passe silencieusement) |
+| Les routes sont quasi identiques à l'existant Fauna | Pas de requêtes SQL sur les champs internes (mais on n'en a pas besoin) |
+| `UPDATE` partiel = `jsonb_merge` natif PostgreSQL | Si un jour on veut filtrer par `generation` ou `clan`, il faudra ajouter une colonne ou un index JSONB |
+| Schema ultra simple : 4 tables, ~10 colonnes au total | |
+| Migration quasi mécanique depuis Fauna | |
+
+#### Approche B : Colonnes JSONB éclatées (schema précédent)
+
+Ce qu'on avait documenté avant : chaque sous-objet de `VampireType` devient une colonne (`infos JSONB`, `attributes JSONB`, `mind JSONB`, etc.). 20+ colonnes.
+
+**On la garde en option** si tu veux pouvoir évoluer vers des requêtes sur des sous-parties du document (ex : filtrer par clan, requêter les disciplines, etc.). Mais pour l'instant, c'est du mapping gratuit.
+
+### 4.3 Recommandation
+
+**Approche A (document JSONB unique)**. C'est la continuité logique de Fauna :
+- Même philosophie (document store)
+- Même simplicité côté code
+- On profite de PostgreSQL pour ce qu'il apporte vraiment : les relations (`editors`/`viewers`) et la fiabilité
+
+Si plus tard le projet a besoin de requêter les champs internes, on peut :
+1. Ajouter des **colonnes générées** (`generation INT GENERATED ALWAYS AS ((data->>'generation')::int) STORED`) — sans changer le code
+2. Ajouter des **index GIN** sur le JSONB (`CREATE INDEX ON vampires USING GIN (data)`)
+3. Extraire des colonnes à ce moment-là, quand le besoin est réel
+
+### 4.4 Helper layer : `lib/db.ts`
+
+Quel que soit le schema, on écrit un petit helper qui fait le pont entre `VampireType` et la DB. L'idée : les routes API ne voient jamais de SQL, juste des fonctions typées.
+
+```typescript
+import { sql } from '@vercel/postgres';
+import { VampireType } from '../types/VampireType';
+
+// ---- Types ----
+
+type VampireRow = {
+  id: string;
+  private_sheet: boolean;
+  data: Omit<VampireType, 'id' | 'privateSheet' | 'editors' | 'viewers'>;
+  editors: string[];
+  viewers: string[];
+};
+
+type VampireListItem = { key: string; name: string };
+
+// ---- Helpers internes ----
+
+function rowToVampire(row: VampireRow, editors: string[], viewers: string[]): VampireType {
+  return {
+    ...row.data,
+    id: row.id,
+    privateSheet: row.private_sheet,
+    editors,
+    viewers,
+  };
+}
+
+function vampireToRow(v: VampireType) {
+  const { id, privateSheet, editors, viewers, ...data } = v;
+  return { id, privateSheet, data: JSON.stringify(data) };
+}
+
+// ---- API publique ----
+
+export const db = {
+  vampires: {
+    async findAll(userId?: string): Promise<VampireListItem[]> {
+      const { rows } = await sql`
+        SELECT v.id, v.data->'infos'->>'name' as name, v.private_sheet
+        FROM vampires v
+        LEFT JOIN vampire_editors ve ON ve.vampire_id = v.id
+        LEFT JOIN users u ON u.id = ve.user_id AND u.sub = ${userId ?? ''}
+        LEFT JOIN vampire_viewers vv ON vv.vampire_id = v.id
+        LEFT JOIN users u2 ON u2.id = vv.user_id AND u2.sub = ${userId ?? ''}
+        WHERE v.private_sheet = false
+           OR u.id IS NOT NULL
+           OR u2.id IS NOT NULL
+      `;
+      return rows.map((r) => ({ key: r.id, name: r.name }));
+    },
+
+    async findById(id: string): Promise<VampireType | null> {
+      const { rows } = await sql`SELECT * FROM vampires WHERE id = ${id}`;
+      if (!rows[0]) return null;
+
+      const { rows: editors } = await sql`
+        SELECT u.sub FROM vampire_editors ve JOIN users u ON u.id = ve.user_id
+        WHERE ve.vampire_id = ${id}
+      `;
+      const { rows: viewers } = await sql`
+        SELECT u.sub FROM vampire_viewers vv JOIN users u ON u.id = vv.user_id
+        WHERE vv.vampire_id = ${id}
+      `;
+
+      return rowToVampire(
+        rows[0],
+        editors.map((e) => e.sub),
+        viewers.map((v) => v.sub),
+      );
+    },
+
+    async create(vampire: VampireType): Promise<void> {
+      const { id, privateSheet, data } = vampireToRow(vampire);
+      await sql`
+        INSERT INTO vampires (id, private_sheet, data)
+        VALUES (${id}, ${privateSheet}, ${data})
+      `;
+      // editors/viewers gérés séparément
+    },
+
+    async update(id: string, vampire: VampireType): Promise<void> {
+      const { privateSheet, data } = vampireToRow(vampire);
+      await sql`
+        UPDATE vampires
+        SET data = ${data}, private_sheet = ${privateSheet}, updated_at = now()
+        WHERE id = ${id}
+      `;
+    },
+
+    async updatePartial(id: string, partial: Partial<VampireType>): Promise<void> {
+      // Merge JSONB côté PostgreSQL — pas besoin de tout renvoyer
+      const { privateSheet, ...rest } = partial;
+      const { id: _, editors, viewers, ...dataFields } = rest;
+
+      if (Object.keys(dataFields).length > 0) {
+        await sql`
+          UPDATE vampires
+          SET data = data || ${JSON.stringify(dataFields)}::jsonb, updated_at = now()
+          WHERE id = ${id}
+        `;
+      }
+      if (privateSheet !== undefined) {
+        await sql`
+          UPDATE vampires SET private_sheet = ${privateSheet} WHERE id = ${id}
+        `;
+      }
+    },
+
+    async delete(id: string): Promise<void> {
+      await sql`DELETE FROM vampires WHERE id = ${id}`;
+    },
+
+    async isEditor(vampireId: string, userSub: string): Promise<boolean> {
+      const { rows } = await sql`
+        SELECT 1 FROM vampire_editors ve
+        JOIN users u ON u.id = ve.user_id
+        WHERE ve.vampire_id = ${vampireId} AND u.sub = ${userSub}
+      `;
+      return rows.length > 0;
+    },
+  },
+
+  users: {
+    async findAll() {
+      const { rows } = await sql`
+        SELECT sub, email, name, nickname, picture FROM users
+      `;
+      return rows;
+    },
+
+    async findOrCreate(sub: string, data: { email: string; name: string; nickname: string; picture: string }) {
+      const { rows } = await sql`
+        INSERT INTO users (sub, email, name, nickname, picture)
+        VALUES (${sub}, ${data.email}, ${data.name}, ${data.nickname}, ${data.picture})
+        ON CONFLICT (sub) DO UPDATE SET email = ${data.email}, name = ${data.name}
+        RETURNING id
+      `;
+      return rows[0].id;
+    },
+  },
+};
+```
+
+**Résultat : les routes deviennent :**
+
+```typescript
+// pages/api/vampires/create.ts — AVANT (Fauna)
+await client.query(q.Create(q.Collection('vampires'), { data }));
+
+// pages/api/vampires/create.ts — APRÈS
+await db.vampires.create(data);
+
+
+// pages/api/vampires/[id].ts — AVANT
+const dbs = await client.query(q.Map(q.Paginate(q.Match(q.Index('one_vampire'), id)), (ref) => q.Get(ref)));
+return dbs.data[0].data;
+
+// pages/api/vampires/[id].ts — APRÈS
+const vampire = await db.vampires.findById(id);
+
+
+// pages/api/vampires/[id]/update.ts — AVANT
+await client.query(q.Replace(vId, { data }));
+
+// pages/api/vampires/[id]/update.ts — APRÈS
+await db.vampires.update(id, data);
+
+
+// pages/api/vampires/[id]/delete.ts — AVANT
+await client.query(q.Delete(vId));
+
+// pages/api/vampires/[id]/delete.ts — APRÈS
+await db.vampires.delete(id);
+```
+
+C'est **plus simple qu'avant**. Le boilerplate Fauna (`q.Map(q.Paginate(q.Match(q.Index(...))))`) disparaît.
+
+### 4.5 Pourquoi ce découpage helpers/routes ?
+
+- **Les routes ne contiennent que de la logique HTTP** : parsing du body, auth check, status codes, Pusher
+- **`lib/db.ts` contient tout le SQL** : un seul fichier à toucher si le schema évolue
+- **Le typage est centralisé** : `rowToVampire()` et `vampireToRow()` sont les deux seuls endroits qui font la conversion. Si `VampireType` change, on change ici
+- **Testable** (si un jour on ajoute des tests) : on peut mocker `db.vampires` sans toucher au SQL
 
 ---
 
 ## 5. Fichiers à modifier
 
-### 6.1Fichiers à supprimer
+### 5.1 Fichiers à supprimer
 
 Aucun fichier n'est à supprimer — on réécrit le contenu des API routes.
 
-### 6.2Fichiers à modifier (7 fichiers)
+### 5.2 Fichiers à modifier (7 fichiers)
 
 | Fichier | Changement |
 |---------|------------|
-| `pages/api/vampires/create.ts` | `q.Create()` -> `prisma.vampire.create()` |
-| `pages/api/vampires.ts` | `q.Paginate(q.Match(...))` -> `prisma.vampire.findMany()` |
-| `pages/api/vampires/[id].ts` | `q.Match(q.Index('one_vampire'))` -> `prisma.vampire.findUnique()` |
-| `pages/api/vampires/[id]/update.ts` | `q.Replace()` -> `prisma.vampire.update()` |
-| `pages/api/vampires/[id]/update_partial.ts` | `q.Update()` -> `prisma.vampire.update()` |
-| `pages/api/vampires/[id]/delete.ts` | `q.Delete()` -> `prisma.vampire.delete()` |
-| `pages/api/users.ts` | `q.Paginate(q.Match(...))` -> `prisma.user.findMany()` |
+| `pages/api/vampires/create.ts` | `q.Create()` -> `db.vampires.create()` |
+| `pages/api/vampires.ts` | `q.Map(q.Paginate(q.Match(...)))` -> `db.vampires.findAll()` |
+| `pages/api/vampires/[id].ts` | `q.Map(q.Paginate(q.Match(q.Index('one_vampire'))))` -> `db.vampires.findById()` |
+| `pages/api/vampires/[id]/update.ts` | `q.Replace()` -> `db.vampires.update()` |
+| `pages/api/vampires/[id]/update_partial.ts` | `q.Update()` -> `db.vampires.updatePartial()` |
+| `pages/api/vampires/[id]/delete.ts` | `q.Delete()` -> `db.vampires.delete()` |
+| `pages/api/users.ts` | `q.Map(q.Paginate(q.Match(...)))` -> `db.users.findAll()` |
 
-### 6.3Fichiers à créer
+### 5.3 Fichiers à créer
 
 | Fichier | Contenu |
 |---------|---------|
-| `prisma/schema.prisma` | Schema ci-dessus |
-| `lib/prisma.ts` | Singleton du client Prisma (pattern Next.js) |
-
-### 6.4`lib/prisma.ts` — Singleton client
-
-```typescript
-import { PrismaClient } from '@prisma/client';
-
-const globalForPrisma = global as unknown as { prisma: PrismaClient };
-
-export const prisma = globalForPrisma.prisma || new PrismaClient();
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
-```
+| `lib/db.ts` | Helper layer (section 4.4) |
+| `migrations/TIMESTAMP_init-schema.js` | Migration initiale (section 3) |
 
 ---
 
 ## 6. Détail des réécritures par route
 
-### 6.1`POST /api/vampires/create`
+Chaque route remplace le boilerplate Fauna par un appel à `db.*`. Le SQL est encapsulé dans `lib/db.ts` (section 4.4).
 
-**Avant (Fauna)** :
+### 6.1 `POST /api/vampires/create`
+
 ```typescript
-await client.query(q.Create(q.Collection('vampires'), { data: vampireData }));
+// AVANT
+const client = new faunadb.Client({ secret });
+await client.query(q.Create(q.Collection('vampires'), { data }));
+
+// APRÈS
+import { db } from '../../../lib/db';
+
+await db.vampires.create(data);
+const editorUserId = await db.users.findOrCreate(session.user.sub, session.user);
+// + INSERT dans vampire_editors
 ```
 
-**Après (Prisma)** :
-```typescript
-import { prisma } from '../../../lib/prisma';
+### 6.2 `GET /api/vampires` (liste)
 
-const vampire = await prisma.vampire.create({
-  data: {
-    id: uuidv4(),
-    infos: vampireData.infos,
-    attributes: vampireData.attributes,
-    mind: vampireData.mind,
-    sections: vampireData.sections,
-    talents: vampireData.talents,
-    customTalents: vampireData.customTalents,
-    skills: vampireData.skills,
-    customSkills: vampireData.customSkills,
-    knowledges: vampireData.knowledges,
-    customKnowledges: vampireData.customKnowledges,
-    clanDisciplines: vampireData.clanDisciplines,
-    outClanDisciplines: vampireData.outClanDisciplines,
-    combinedDisciplines: vampireData.combinedDisciplines,
-    advantages: vampireData.advantages,
-    flaws: vampireData.flaws,
-    languages: vampireData.languages,
-    leftOverPex: vampireData.leftOverPex,
-    trueFaith: vampireData.trueFaith,
-    humanMagic: vampireData.humanMagic,
-    generation: vampireData.generation,
-    privateSheet: false,
-    editors: {
-      create: [{ user: { connectOrCreate: {
-        where: { sub: userId },
-        create: { sub: userId, email, name, nickname, picture }
-      }}}]
-    },
-    viewers: {
-      create: [{ user: { connectOrCreate: {
-        where: { sub: 'github|3338913' },
-        create: { sub: 'github|3338913', email: '', name: '', nickname: '', picture: '' }
-      }}}]
-    }
-  }
-});
+```typescript
+// AVANT — fetch tout + filtre côté app
+const dbs = await client.query(q.Map(q.Paginate(q.Match(q.Index('all_vampires_full'))), (ref) => q.Get(ref)));
+const filtered = dbs.data.filter((v) => !v.data.privateSheet || ...);
+
+// APRÈS — filtre côté SQL
+const vampires = await db.vampires.findAll(session?.user?.sub);
 ```
 
-### 6.2`GET /api/vampires` (liste)
+Le filtrage privé/public passe côté SQL (dans le `WHERE` + `JOIN`). Plus efficace, plus propre.
 
-**Après** :
+### 6.3 `GET /api/vampires/[id]`
+
 ```typescript
-const vampires = await prisma.vampire.findMany({
-  where: userId
-    ? {
-        OR: [
-          { privateSheet: false },
-          { editors: { some: { user: { sub: userId } } } },
-          { viewers: { some: { user: { sub: userId } } } },
-        ],
-      }
-    : { privateSheet: false },
-  select: {
-    id: true,
-    infos: true,
-  },
-});
-```
+// AVANT
+const dbs = await client.query(q.Map(q.Paginate(q.Match(q.Index('one_vampire'), id)), (ref) => q.Get(ref)));
+return dbs.data[0].data;
 
-> Note : le filtrage privé/public qui était fait côté application passe côté SQL. Plus efficace.
-
-### 6.3`GET /api/vampires/[id]`
-
-**Après** :
-```typescript
-const vampire = await prisma.vampire.findUnique({
-  where: { id },
-  include: { editors: { include: { user: true } }, viewers: { include: { user: true } } },
-});
-
+// APRÈS
+const vampire = await db.vampires.findById(String(id));
 if (!vampire) return res.status(404).json({ error: 'not found' });
 ```
 
-### 6.4`PUT /api/vampires/[id]/update`
+### 6.4 `PUT /api/vampires/[id]/update`
 
-**Après** :
 ```typescript
-// Vérifier l'autorisation
-const vampire = await prisma.vampire.findUnique({
-  where: { id },
-  include: { editors: { include: { user: true } } },
-});
+// AVANT
+const vampire = await client.query(q.Map(...));
+if (!vampire.data[0].data.editors.includes(user.sub)) return res.status(403)...;
+await client.query(q.Replace(vampire.data[0].ref, { data }));
 
-const isEditor = vampire.editors.some((e) => e.user.sub === user.sub);
-if (!isEditor) return res.status(403).json({ error: 'unauthorized' });
-
-// Mise à jour complète
-await prisma.vampire.update({
-  where: { id },
-  data: { ...newVampireData },
-});
+// APRÈS
+if (!(await db.vampires.isEditor(id, user.sub))) return res.status(403)...;
+await db.vampires.update(id, data);
 ```
 
-### 6.5`PATCH /api/vampires/[id]/update_partial`
+### 6.5 `PATCH /api/vampires/[id]/update_partial`
 
-Même pattern que update, mais avec un sous-ensemble des champs.
-
-### 6.6`DELETE /api/vampires/[id]/delete`
-
-**Après** :
 ```typescript
-await prisma.vampire.delete({ where: { id } });
+// APRÈS — merge JSONB natif PostgreSQL, pas besoin de tout renvoyer
+if (!(await db.vampires.isEditor(id, user.sub))) return res.status(403)...;
+await db.vampires.updatePartial(id, partialData);
 ```
 
-Le `onDelete: Cascade` sur les relations nettoie automatiquement `VampireEditor` et `VampireViewer`.
+### 6.6 `DELETE /api/vampires/[id]/delete`
 
-### 6.7`GET /api/users`
-
-**Après** :
 ```typescript
-const users = await prisma.user.findMany({
-  select: { email: true, name: true, nickname: true, picture: true, sub: true },
-});
+// APRÈS
+if (!(await db.vampires.isEditor(id, user.sub))) return res.status(403)...;
+await db.vampires.delete(id);
+```
+
+Le `ON DELETE CASCADE` sur les tables de jointure nettoie `vampire_editors` et `vampire_viewers` automatiquement.
+
+### 6.7 `GET /api/users`
+
+```typescript
+// AVANT
+const dbs = await client.query(q.Map(q.Paginate(q.Match(q.Index('all_users'))), (ref) => q.Get(ref)));
+return dbs.data.map((e) => pick(e.data, [...]));
+
+// APRÈS
+const users = await db.users.findAll();
 ```
 
 ---
@@ -729,58 +867,38 @@ const users = await prisma.user.findMany({
 ### Phase 1 : Setup (30 min)
 
 1. **Provisionner Vercel Postgres** dans le dashboard Vercel (Storage -> Create -> Postgres)
-2. Les variables d'env `POSTGRES_URL`, `POSTGRES_PRISMA_URL`, `POSTGRES_URL_NON_POOLING` sont auto-ajoutées
-3. `yarn add prisma @prisma/client`
+2. Les variables d'env `POSTGRES_URL` etc. sont auto-ajoutées
+3. `yarn add @vercel/postgres` et `yarn add -D node-pg-migrate`
 4. `yarn remove faunadb`
-5. Créer `prisma/schema.prisma`
-6. Créer `lib/prisma.ts`
-7. `npx prisma migrate dev --name init` (crée les tables)
+5. Créer la migration initiale : `npx node-pg-migrate create init-schema`
+6. Écrire le schema (section 4.2) dans le fichier de migration
+7. `npx node-pg-migrate up` (crée les tables)
+8. Ajouter les scripts dans `package.json` :
+   ```json
+   "migrate:up": "node-pg-migrate up",
+   "migrate:down": "node-pg-migrate down",
+   "migrate:create": "node-pg-migrate create",
+   "build": "node-pg-migrate up && next build"
+   ```
 
-### Phase 2 : Réécriture des API routes (2-3h)
+### Phase 2 : Créer `lib/db.ts` (30 min)
 
-Réécrire les 7 fichiers listés en section 5.2, un par un. Pour chaque fichier :
-1. Remplacer l'import `faunadb` par l'import `prisma`
-2. Réécrire les requêtes FQL en appels Prisma
-3. Adapter la shape de retour si nécessaire (normalement identique)
-4. Tester manuellement
+Écrire le helper layer (section 4.4). C'est le seul fichier qui contient du SQL. Toutes les routes l'importent.
 
-### Phase 3 : Adaptation de la sérialisation (1h)
+### Phase 3 : Réécriture des API routes (1-2h)
 
-Le front envoie un gros objet `VampireType` aplati. Il faut s'assurer que la route `update` décompose correctement cet objet en colonnes Prisma :
+Réécrire les 7 fichiers listés en section 5.2. Chaque fichier :
+1. Remplacer `import faunadb` par `import { db } from '../../lib/db'`
+2. Remplacer les appels FQL par des appels `db.*`
+3. Supprimer le boilerplate Fauna (client init, `q.Map(q.Paginate(...))`)
 
-```typescript
-function vampireTypeToPrismaData(v: VampireType) {
-  return {
-    infos: v.infos,
-    attributes: v.attributes,
-    mind: v.mind,
-    sections: v.sections,
-    talents: v.talents,
-    customTalents: v.customTalents,
-    skills: v.skills,
-    customSkills: v.customSkills,
-    knowledges: v.knowledges,
-    customKnowledges: v.customKnowledges,
-    clanDisciplines: v.clanDisciplines,
-    outClanDisciplines: v.outClanDisciplines,
-    combinedDisciplines: v.combinedDisciplines,
-    advantages: v.advantages,
-    flaws: v.flaws,
-    languages: v.languages,
-    leftOverPex: v.leftOverPex,
-    trueFaith: v.trueFaith,
-    humanMagic: v.humanMagic,
-    generation: v.generation,
-    privateSheet: v.privateSheet,
-  };
-}
-```
+Grâce au schema JSONB unique et au helper layer, **il n'y a pas de phase de sérialisation séparée**. Le mapping `VampireType` ↔ DB est encapsulé dans `lib/db.ts`.
 
 ### Phase 4 : Nettoyage
 
 1. Supprimer `FAUNADB_SECRET_KEY` des env vars Vercel
 2. Mettre à jour `.env.sample`
-3. Mettre à jour `CLAUDE.md` (remplacer FaunaDB par PostgreSQL/Prisma)
+3. Mettre à jour `CLAUDE.md` (remplacer FaunaDB par PostgreSQL)
 
 ---
 
@@ -793,9 +911,8 @@ FAUNADB_SECRET_KEY
 
 ### Ajoutées automatiquement par Vercel Postgres
 ```
-POSTGRES_URL                # Connection pooling URL (pour Prisma)
-POSTGRES_PRISMA_URL         # URL avec pgbouncer pour Prisma
-POSTGRES_URL_NON_POOLING    # Direct connection (pour les migrations)
+POSTGRES_URL                # Connection pooling URL (utilisé par @vercel/postgres)
+POSTGRES_URL_NON_POOLING    # Direct connection (utilisé par node-pg-migrate)
 POSTGRES_USER
 POSTGRES_HOST
 POSTGRES_PASSWORD
@@ -808,32 +925,25 @@ POSTGRES_DATABASE
 
 ### getStaticPaths / getStaticProps
 
-Les fonctions `fetchVampireFromDB()` et `fetchOneVampire()` sont appelées au build time et dans ISR. Elles importent directement le client Fauna. Il faut les réécrire avec Prisma.
+Les fonctions `fetchVampireFromDB()` et `fetchOneVampire()` sont appelées au build time et dans ISR. Elles importent directement le client Fauna. Il faut les réécrire pour utiliser `db.vampires.findAll()` et `db.vampires.findById()`.
 
-Prisma fonctionne sans problème dans `getStaticProps` / `getServerSideProps`.
-
-### Prisma en dev vs production
-
-En dev, Next.js hot-reload recrée les modules. Sans le singleton (`lib/prisma.ts`), on se retrouve avec des dizaines de connexions. Le pattern singleton ci-dessus règle ce problème.
+`@vercel/postgres` fonctionne sans problème dans `getStaticProps` / `getServerSideProps`.
 
 ### JSONB et typage
 
-Prisma type les colonnes `Json` comme `Prisma.JsonValue`. Pour garder le typage fort côté application, caster explicitement :
-
-```typescript
-const vampire = await prisma.vampire.findUnique({ where: { id } });
-const infos = vampire.infos as VampireType['infos'];
-```
-
-Ou créer un helper de transformation qui reconstruit un `VampireType` complet à partir du résultat Prisma.
+`@vercel/postgres` retourne les colonnes JSONB déjà parsées (pas besoin de `JSON.parse`). Le helper `rowToVampire()` dans `lib/db.ts` centralise le cast vers `VampireType`. Un seul endroit à maintenir.
 
 ### Taille des payloads
 
-Les update full envoient tout le personnage. Avec Fauna c'était un `Replace` atomique. Avec Prisma `update`, c'est pareil — pas de changement de comportement.
+Les update full envoient tout le personnage. Avec Fauna c'était un `Replace` atomique. Avec `UPDATE SET data = ...`, c'est pareil — pas de changement de comportement.
 
 ### Concurrence (Pusher)
 
 Plusieurs utilisateurs peuvent éditer en même temps. Le pattern actuel est "last write wins" (pas de conflit resolution). PostgreSQL se comporte pareil — pas de régression.
+
+### Update partiel et merge JSONB
+
+L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_partial` envoie `{ infos: { name: "New" } }`, ça **remplace** tout l'objet `infos`, pas juste le champ `name`. C'est le même comportement que le `q.Update()` de Fauna (merge au premier niveau). Vérifier que le front envoie des sous-objets complets, pas des champs individuels.
 
 ---
 
@@ -843,54 +953,35 @@ Plusieurs utilisateurs peuvent éditer en même temps. Le pattern actuel est "la
 
 | Phase | Effort | Complexité | Risque |
 |-------|--------|------------|--------|
-| Setup infra (Vercel Postgres + Prisma) | ~30 min | Faible | Faible |
-| Schema Prisma + migration initiale | ~30 min | Faible | Faible |
-| Réécriture des API routes | ~2h | Faible-Moyenne | Moyen |
-| Sérialisation / helpers | ~30 min | Faible | Faible |
-| Tests manuels end-to-end | ~1h | - | - |
+| Setup infra (Vercel Postgres + deps) | ~20 min | Faible | Faible |
+| Migration initiale + `lib/db.ts` | ~45 min | Faible | Faible |
+| Réécriture des 7 API routes | ~1-2h | Faible | Faible |
+| Tests manuels end-to-end | ~45 min | - | - |
 | Nettoyage (env vars, docs, deps) | ~15 min | Faible | Faible |
-| **Total** | **~4-5h** | | |
+| **Total** | **~3-4h** | | |
+
+> L'estimation a baissé par rapport aux versions précédentes du doc. Le schema JSONB unique supprime la phase de sérialisation et rend les routes quasi mécaniques.
 
 ### Détail par fichier
 
-Les 7 fichiers à réécrire sont tous courts et simples. Aucune logique métier complexe — c'est du CRUD direct.
-
-| Fichier | Lignes | Opérations Fauna | Difficulté | Effort | Notes |
-|---------|--------|------------------|------------|--------|-------|
-| `pages/api/vampires/create.ts` | 62 | `q.Create()` | Facile | 20 min | Le plus de travail : décomposer le VampireType en colonnes Prisma + créer les relations `editors`/`viewers` via `connectOrCreate` |
-| `pages/api/vampires.ts` | 62 | `q.Map/Paginate/Match` | Facile | 15 min | Le filtrage privé/public passe dans le `WHERE` Prisma — plus propre qu'avant. La fonction exportée `fetchVampireFromDB()` est aussi utilisée dans `getStaticPaths` |
-| `pages/api/vampires/[id].ts` | 47 | `q.Map/Paginate/Match/Get` | Trivial | 10 min | Simple `findUnique`. La fonction exportée `fetchOneVampire()` est aussi utilisée dans `getStaticProps` |
-| `pages/api/vampires/[id]/update.ts` | 63 | `q.Map/Paginate/Replace` | Facile | 20 min | Fetch + check auth + `Replace` -> `findUnique` + check + `update`. Attention : le body est un JSON brut à décomposer en colonnes |
-| `pages/api/vampires/[id]/update_partial.ts` | 60 | `q.Map/Paginate/Update` | Facile | 15 min | Quasi identique à update.ts. `q.Update` (merge partiel) -> `prisma.update` avec seulement les champs envoyés |
-| `pages/api/vampires/[id]/delete.ts` | 55 | `q.Map/Paginate/Delete` | Trivial | 10 min | Fetch + check auth + `Delete` -> `findUnique` + check + `delete`. Le cascade nettoie les jointures |
-| `pages/api/users.ts` | 64 | `q.Map/Paginate/Match` | Trivial | 10 min | Simple `findMany` avec `select`. Plus besoin du `lodash.pick` |
-
-### Ce qui rend cette migration simple
-
-1. **Fichiers courts** — les 7 routes font entre 47 et 64 lignes. Code boilerplate Fauna répétitif (init client + `q.Map(q.Paginate(q.Match(...)))`)
-2. **Pas de logique métier dans le DB layer** — tout est CRUD basique. Pas de transactions, pas de requêtes complexes, pas d'agrégations
-3. **Le front ne change pas** — les API routes gardent les mêmes URLs et les mêmes shapes de réponse. SWR, contexts, hooks : rien à toucher
-4. **Pas de migration de données** — on repart de zéro, donc pas de script d'export/import/transformation
-5. **Pattern identique** — les 4 routes update/delete/update_partial ont exactement le même pattern "fetch by index -> check auth -> opération". Quand t'en as fait une, les autres c'est du copier-coller
+| Fichier | Lignes | Avant | Après | Effort | Notes |
+|---------|--------|-------|-------|--------|-------|
+| `lib/db.ts` | *nouveau* | - | Helper layer complet | 45 min | Le gros du travail. Écrit une fois, utilisé partout |
+| `pages/api/vampires/create.ts` | 62 | `q.Create()` | `db.vampires.create()` | 10 min | Quasi mécanique : remplacer import + appel |
+| `pages/api/vampires.ts` | 62 | `q.Map/Paginate/Match` + filtre JS | `db.vampires.findAll()` | 10 min | Le filtre privé/public passe côté SQL — plus propre. `fetchVampireFromDB()` aussi utilisée dans `getStaticPaths` |
+| `pages/api/vampires/[id].ts` | 47 | `q.Map/Paginate/Match/Get` | `db.vampires.findById()` | 5 min | Trivial. `fetchOneVampire()` aussi utilisée dans `getStaticProps` |
+| `pages/api/vampires/[id]/update.ts` | 63 | `q.Map + q.Replace` | `db.vampires.isEditor()` + `db.vampires.update()` | 10 min | Deux appels au lieu du boilerplate Fauna |
+| `pages/api/vampires/[id]/update_partial.ts` | 60 | `q.Map + q.Update` | `db.vampires.isEditor()` + `db.vampires.updatePartial()` | 10 min | Merge JSONB natif PostgreSQL |
+| `pages/api/vampires/[id]/delete.ts` | 55 | `q.Map + q.Delete` | `db.vampires.isEditor()` + `db.vampires.delete()` | 5 min | Trivial. Cascade auto |
+| `pages/api/users.ts` | 64 | `q.Map/Paginate/Match` + `lodash.pick` | `db.users.findAll()` | 5 min | Plus besoin de `lodash.pick` |
 
 ### Ce qui demande de l'attention
 
 | Point | Détail | Impact |
 |-------|--------|--------|
-| **Sérialisation create/update** | Le front envoie un objet `VampireType` aplati. Il faut le décomposer en colonnes Prisma (`infos`, `attributes`, `mind`, etc.) et extraire `editors`/`viewers` pour les tables de jointure | Moyen — un helper `vampireTypeToPrismaData()` à écrire une fois |
-| **Reconstruction de la réponse** | `GET /api/vampires/[id]` doit retourner un objet plat `VampireType`, pas la structure Prisma avec relations imbriquées | Faible — un helper `prismaToVampireType()` inverse |
-| **`update_partial`** | L'update partiel envoie un sous-ensemble du VampireType. Il faut ne mettre à jour que les colonnes envoyées, pas écraser les autres avec `undefined` | Moyen — filtrer les clés `undefined` avant l'appel Prisma |
-| **Functions exportées** | `fetchVampireFromDB()` et `fetchOneVampire()` sont importées dans les pages pour `getStaticPaths`/`getStaticProps`. La signature de retour doit rester identique | Faible — juste s'assurer du même format de retour |
-| **Hardcoded viewer** | `'github|3338913'` est hardcodé comme viewer par défaut dans `create.ts`. Il faut que ce user existe dans la table `User` | Faible — `connectOrCreate` gère ça |
-
-### Comparaison de l'effort selon l'approche
-
-| Approche | Effort estimé | Commentaire |
-|----------|---------------|-------------|
-| **`@vercel/postgres` + SQL brut** | ~3-4h | Le plus rapide : pas de setup ORM, pas de schema à maintenir. 5 requêtes SQL à écrire, un fichier `init.sql` |
-| **Drizzle ORM** | ~4-5h | Schema TS + setup `drizzle-kit`. Typage auto, migrations incluses |
-| **Prisma** | ~4-5h | Schema `.prisma` + `prisma generate` + singleton. Plus de setup, mais client typé |
-| Tout normaliser en tables (full relationnel) | ~8-12h | Tables pour abilities, disciplines, rituals, paths... Disproportionné pour le besoin |
+| **Functions exportées** | `fetchVampireFromDB()` et `fetchOneVampire()` sont importées dans les pages pour `getStaticPaths`/`getStaticProps`. Il faut les réécrire pour appeler `db.*` | Faible — juste s'assurer du même format de retour |
+| **Hardcoded viewer** | `'github|3338913'` est hardcodé comme viewer par défaut dans `create.ts`. Il faut que ce user existe dans la table `users` | Faible — `INSERT ... ON CONFLICT DO UPDATE` gère ça |
+| **Merge JSONB shallow** | `data \|\| patch` merge au premier niveau. Si le front envoie un `infos` partiel (juste `name`), ça écrase les autres champs d'`infos` | Moyen — vérifier le comportement du front (cf. section 9) |
 
 ---
 
@@ -899,8 +990,14 @@ Les 7 fichiers à réécrire sont tous courts et simples. Aucune logique métier
 ### À ajouter
 ```json
 {
-  "prisma": "^6.x",
-  "@prisma/client": "^6.x"
+  "@vercel/postgres": "^0.10.x"
+}
+```
+
+### À ajouter (devDependencies)
+```json
+{
+  "node-pg-migrate": "^7.x"
 }
 ```
 
