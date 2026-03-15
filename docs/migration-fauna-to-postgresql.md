@@ -855,6 +855,9 @@ export const authOptions = {
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      // Permet de lier un login GitHub à un compte existant (créé via magic link)
+      // si l'email est le même. Safe car GitHub vérifie les emails.
+      allowDangerousEmailAccountLinking: true,
     }),
   ],
   pages: {
@@ -874,6 +877,8 @@ export default NextAuth(authOptions);
 ```
 
 > **Deux providers** : Email (magic link, provider principal) + GitHub (pour ceux qui préfèrent). L'utilisateur choisit sur la page de login.
+>
+> **Linking de comptes** : si un user se connecte d'abord par magic link puis par GitHub (ou l'inverse), NextAuth lie les deux comptes automatiquement si l'email est identique (`allowDangerousEmailAccountLinking`). Le nom est alarmiste mais c'est safe dans notre cas : GitHub vérifie les emails, et le magic link aussi par définition. Résultat : un seul user dans la table `users`, deux entrées dans `accounts` (une `email`, une `github`).
 >
 > **Resend** : gratuit jusqu'à 100 emails/jour, une seule clé API. Le domaine d'envoi doit être vérifié dans le dashboard Resend.
 >
