@@ -161,15 +161,251 @@ Pour ce projet, **`@vercel/postgres` (SQL brut) ou Drizzle** sont les choix les 
 
 ---
 
-## 3. Schema de base de données
+## 3. Gestion des migrations de schema
 
-### 3.1 Approche : hybride relationnel + JSONB
+### Le besoin
+
+On veut un système de migrations versionné, comme Rails : des fichiers numérotés, exécutés dans l'ordre, avec un suivi de ce qui a déjà tourné. Pas juste un `init.sql` qu'on lance à la main.
+
+### Les options
+
+#### Option A : `node-pg-migrate` (recommandé avec `@vercel/postgres`)
+
+L'outil de migration standalone le plus utilisé en Node.js (~200k téléchargements/semaine npm). Spécifique PostgreSQL.
+
+```bash
+yarn add -D node-pg-migrate
+```
+
+**Créer une migration :**
+```bash
+npx node-pg-migrate create init-schema
+# => migrations/1710000000000_init-schema.js
+```
+
+**Fichier de migration (JS) :**
+```javascript
+exports.up = (pgm) => {
+  pgm.createTable('users', {
+    id: { type: 'text', primaryKey: true, default: pgm.func("gen_random_uuid()") },
+    sub: { type: 'text', notNull: true, unique: true },
+    email: { type: 'text', notNull: true },
+    name: { type: 'text', notNull: true },
+    nickname: { type: 'text', notNull: true },
+    picture: { type: 'text', notNull: true },
+    created_at: { type: 'timestamptz', notNull: true, default: pgm.func('now()') },
+    updated_at: { type: 'timestamptz', notNull: true, default: pgm.func('now()') },
+  });
+
+  pgm.createTable('vampires', {
+    id: { type: 'uuid', primaryKey: true, default: pgm.func('gen_random_uuid()') },
+    private_sheet: { type: 'boolean', notNull: true, default: false },
+    generation: { type: 'integer', notNull: true, default: 12 },
+    infos: { type: 'jsonb', notNull: true },
+    attributes: { type: 'jsonb', notNull: true },
+    mind: { type: 'jsonb', notNull: true },
+    sections: { type: 'jsonb', notNull: true },
+    talents: { type: 'jsonb', notNull: true },
+    custom_talents: { type: 'jsonb', notNull: true, default: '[]' },
+    skills: { type: 'jsonb', notNull: true },
+    custom_skills: { type: 'jsonb', notNull: true, default: '[]' },
+    knowledges: { type: 'jsonb', notNull: true },
+    custom_knowledges: { type: 'jsonb', notNull: true, default: '[]' },
+    clan_disciplines: { type: 'jsonb', notNull: true, default: '[]' },
+    out_clan_disciplines: { type: 'jsonb', notNull: true, default: '[]' },
+    combined_disciplines: { type: 'jsonb', notNull: true, default: '[]' },
+    advantages: { type: 'jsonb', notNull: true, default: '[]' },
+    flaws: { type: 'jsonb', notNull: true, default: '[]' },
+    languages: { type: 'jsonb', notNull: true, default: '[]' },
+    left_over_pex: { type: 'integer', notNull: true, default: 0 },
+    true_faith: { type: 'integer', notNull: true, default: 0 },
+    human_magic: { type: 'jsonb', notNull: true, default: '{"psy":[],"staticMagic":[],"theurgy":[]}' },
+    created_at: { type: 'timestamptz', notNull: true, default: pgm.func('now()') },
+    updated_at: { type: 'timestamptz', notNull: true, default: pgm.func('now()') },
+  });
+
+  pgm.createTable('vampire_editors', {
+    vampire_id: { type: 'uuid', notNull: true, references: 'vampires', onDelete: 'CASCADE' },
+    user_id: { type: 'text', notNull: true, references: 'users', onDelete: 'CASCADE' },
+  });
+  pgm.addConstraint('vampire_editors', 'vampire_editors_pkey', { primaryKey: ['vampire_id', 'user_id'] });
+
+  pgm.createTable('vampire_viewers', {
+    vampire_id: { type: 'uuid', notNull: true, references: 'vampires', onDelete: 'CASCADE' },
+    user_id: { type: 'text', notNull: true, references: 'users', onDelete: 'CASCADE' },
+  });
+  pgm.addConstraint('vampire_viewers', 'vampire_viewers_pkey', { primaryKey: ['vampire_id', 'user_id'] });
+};
+
+exports.down = (pgm) => {
+  pgm.dropTable('vampire_viewers');
+  pgm.dropTable('vampire_editors');
+  pgm.dropTable('vampires');
+  pgm.dropTable('users');
+};
+```
+
+**Ou en SQL pur** (avec `--migration-file-language sql`) :
+```bash
+npx node-pg-migrate create init-schema --migration-file-language sql
+# => migrations/1710000000000_init-schema.sql
+```
+
+```sql
+-- Up Migration
+CREATE TABLE users ( ... );
+CREATE TABLE vampires ( ... );
+
+-- Down Migration
+DROP TABLE vampire_viewers;
+DROP TABLE vampire_editors;
+DROP TABLE vampires;
+DROP TABLE users;
+```
+
+**Commandes :**
+```bash
+npx node-pg-migrate up                    # Applique toutes les migrations pending
+npx node-pg-migrate down                  # Rollback la dernière migration
+npx node-pg-migrate redo                  # down + up (pratique en dev)
+npx node-pg-migrate create add-index      # Crée une nouvelle migration
+```
+
+**Suivi d'état :** table `pgmigrations` créée automatiquement dans la DB, avec le nom et la date d'exécution de chaque migration.
+
+**Config** (`package.json`) :
+```json
+{
+  "scripts": {
+    "migrate:up": "node-pg-migrate up",
+    "migrate:down": "node-pg-migrate down",
+    "migrate:create": "node-pg-migrate create"
+  }
+}
+```
+
+Connection via `DATABASE_URL` (= `POSTGRES_URL` de Vercel).
+
+| Pour | Contre |
+|------|--------|
+| Node.js natif, s'installe via yarn | API JS un peu verbeuse pour les `CREATE TABLE` |
+| Supporte JS, TS et SQL pur | Spécifique PostgreSQL (pas un problème ici) |
+| Up + Down, rollback, redo | |
+| Table de suivi auto (`pgmigrations`) | |
+| ~200k downloads/semaine, maintenu activement | |
+| Zéro binaire externe | |
+
+#### Option B : `dbmate` (si tu préfères du SQL pur)
+
+Outil Go distribué comme binaire standalone. SQL uniquement, multi-DB.
+
+```bash
+# Install (macOS)
+brew install dbmate
+
+# ou via npm (wrapper)
+npx dbmate
+```
+
+**Créer une migration :**
+```bash
+dbmate new init-schema
+# => db/migrations/20240315120000_init-schema.sql
+```
+
+**Fichier de migration :**
+```sql
+-- migrate:up
+CREATE TABLE users (
+  id TEXT PRIMARY KEY DEFAULT gen_random_uuid()::text,
+  sub TEXT UNIQUE NOT NULL,
+  ...
+);
+
+CREATE TABLE vampires ( ... );
+CREATE TABLE vampire_editors ( ... );
+CREATE TABLE vampire_viewers ( ... );
+
+-- migrate:down
+DROP TABLE IF EXISTS vampire_viewers;
+DROP TABLE IF EXISTS vampire_editors;
+DROP TABLE IF EXISTS vampires;
+DROP TABLE IF EXISTS users;
+```
+
+**Commandes :**
+```bash
+dbmate up          # Applique les migrations pending
+dbmate down        # Rollback la dernière
+dbmate status      # Voir l'état des migrations
+dbmate new <name>  # Créer une migration
+dbmate dump        # Dump le schema actuel
+```
+
+| Pour | Contre |
+|------|--------|
+| SQL pur, rien à apprendre | Binaire Go externe (pas un package npm natif) |
+| Très simple, zéro config | Pas de DSL JS — que du SQL |
+| Supporte PG, MySQL, SQLite, ClickHouse | Moins intégré à l'écosystème Node.js |
+| Dump automatique du schema | |
+| Migrations atomiques (transactionnelles) | |
+
+#### Option C : `drizzle-kit` (si tu choisis Drizzle ORM)
+
+Inclus avec Drizzle. Les migrations sont auto-générées à partir du schema TS.
+
+```bash
+npx drizzle-kit generate   # Génère les migrations SQL à partir du schema TS
+npx drizzle-kit migrate    # Applique les migrations
+npx drizzle-kit studio     # Interface web pour explorer la DB
+```
+
+Pas besoin d'écrire le SQL à la main — il est inféré du schema TypeScript. Mais tu peux modifier les fichiers SQL générés avant de les appliquer.
+
+#### Et Prisma ?
+
+Si tu choisis Prisma comme ORM, `prisma migrate` est intégré. Pas besoin d'un outil séparé. Mais on a déjà expliqué pourquoi Prisma est surdimensionné pour ce projet (section 2).
+
+### Recommandation
+
+| Si tu choisis... | Outil de migration |
+|------------------|--------------------|
+| `@vercel/postgres` (SQL brut) | **`node-pg-migrate`** — Node.js natif, le plus naturel avec le reste du stack |
+| Drizzle | **`drizzle-kit`** — intégré, pas de dépendance en plus |
+| Prisma | **`prisma migrate`** — intégré |
+
+**`node-pg-migrate`** est le meilleur choix standalone : c'est le Rails `db:migrate` de Node.js. Tu écris tes migrations en JS (avec un DSL type `pgm.createTable(...)`) ou en SQL pur, elles sont numérotées par timestamp, et l'outil track ce qui a tourné dans une table `pgmigrations`.
+
+### Intégration avec Vercel (déploiement)
+
+Les migrations doivent tourner **pendant le build**, pas au runtime des serverless functions :
+
+```json
+{
+  "scripts": {
+    "build": "node-pg-migrate up && next build",
+    "migrate:up": "node-pg-migrate up",
+    "migrate:down": "node-pg-migrate down",
+    "migrate:create": "node-pg-migrate create"
+  }
+}
+```
+
+Vercel exécute `yarn build` à chaque déploiement -> les migrations tournent avant le build Next.js -> la DB est à jour quand l'app démarre.
+
+> **Note** : il faut que `POSTGRES_URL` (ou `DATABASE_URL`) soit accessible au build time. C'est le cas par défaut avec Vercel Postgres.
+
+---
+
+## 4. Schema de base de données
+
+### 4.1 Approche : hybride relationnel + JSONB
 
 Le `VampireType` actuel est un gros document JSON imbriqué. Tout normaliser en tables serait disproportionné pour ce projet. On utilise une approche hybride :
 - **Tables relationnelles** pour les entités principales et les relations (accès, recherche)
 - **Colonnes JSONB** pour les données imbriquées qui sont toujours lues/écrites en bloc
 
-### 3.2 Schema Prisma
+### 4.2 Schema Prisma
 
 ```prisma
 generator client {
@@ -259,7 +495,7 @@ model VampireViewer {
 }
 ```
 
-### 3.3 Pourquoi ce découpage ?
+### 4.3 Pourquoi ce découpage ?
 
 | Colonne | Pourquoi JSONB et pas une table ? |
 |---------|-----------------------------------|
@@ -278,13 +514,13 @@ model VampireViewer {
 
 ---
 
-## 4. Fichiers à modifier
+## 5. Fichiers à modifier
 
-### 4.1 Fichiers à supprimer
+### 6.1Fichiers à supprimer
 
 Aucun fichier n'est à supprimer — on réécrit le contenu des API routes.
 
-### 4.2 Fichiers à modifier (7 fichiers)
+### 6.2Fichiers à modifier (7 fichiers)
 
 | Fichier | Changement |
 |---------|------------|
@@ -296,14 +532,14 @@ Aucun fichier n'est à supprimer — on réécrit le contenu des API routes.
 | `pages/api/vampires/[id]/delete.ts` | `q.Delete()` -> `prisma.vampire.delete()` |
 | `pages/api/users.ts` | `q.Paginate(q.Match(...))` -> `prisma.user.findMany()` |
 
-### 4.3 Fichiers à créer
+### 6.3Fichiers à créer
 
 | Fichier | Contenu |
 |---------|---------|
 | `prisma/schema.prisma` | Schema ci-dessus |
 | `lib/prisma.ts` | Singleton du client Prisma (pattern Next.js) |
 
-### 4.4 `lib/prisma.ts` — Singleton client
+### 6.4`lib/prisma.ts` — Singleton client
 
 ```typescript
 import { PrismaClient } from '@prisma/client';
@@ -317,9 +553,9 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma;
 
 ---
 
-## 5. Détail des réécritures par route
+## 6. Détail des réécritures par route
 
-### 5.1 `POST /api/vampires/create`
+### 6.1`POST /api/vampires/create`
 
 **Avant (Fauna)** :
 ```typescript
@@ -370,7 +606,7 @@ const vampire = await prisma.vampire.create({
 });
 ```
 
-### 5.2 `GET /api/vampires` (liste)
+### 6.2`GET /api/vampires` (liste)
 
 **Après** :
 ```typescript
@@ -393,7 +629,7 @@ const vampires = await prisma.vampire.findMany({
 
 > Note : le filtrage privé/public qui était fait côté application passe côté SQL. Plus efficace.
 
-### 5.3 `GET /api/vampires/[id]`
+### 6.3`GET /api/vampires/[id]`
 
 **Après** :
 ```typescript
@@ -405,7 +641,7 @@ const vampire = await prisma.vampire.findUnique({
 if (!vampire) return res.status(404).json({ error: 'not found' });
 ```
 
-### 5.4 `PUT /api/vampires/[id]/update`
+### 6.4`PUT /api/vampires/[id]/update`
 
 **Après** :
 ```typescript
@@ -425,11 +661,11 @@ await prisma.vampire.update({
 });
 ```
 
-### 5.5 `PATCH /api/vampires/[id]/update_partial`
+### 6.5`PATCH /api/vampires/[id]/update_partial`
 
 Même pattern que update, mais avec un sous-ensemble des champs.
 
-### 5.6 `DELETE /api/vampires/[id]/delete`
+### 6.6`DELETE /api/vampires/[id]/delete`
 
 **Après** :
 ```typescript
@@ -438,7 +674,7 @@ await prisma.vampire.delete({ where: { id } });
 
 Le `onDelete: Cascade` sur les relations nettoie automatiquement `VampireEditor` et `VampireViewer`.
 
-### 5.7 `GET /api/users`
+### 6.7`GET /api/users`
 
 **Après** :
 ```typescript
@@ -449,7 +685,7 @@ const users = await prisma.user.findMany({
 
 ---
 
-## 6. Étapes de migration
+## 7. Étapes de migration
 
 ### Phase 1 : Setup (30 min)
 
@@ -463,7 +699,7 @@ const users = await prisma.user.findMany({
 
 ### Phase 2 : Réécriture des API routes (2-3h)
 
-Réécrire les 7 fichiers listés en section 4.2, un par un. Pour chaque fichier :
+Réécrire les 7 fichiers listés en section 5.2, un par un. Pour chaque fichier :
 1. Remplacer l'import `faunadb` par l'import `prisma`
 2. Réécrire les requêtes FQL en appels Prisma
 3. Adapter la shape de retour si nécessaire (normalement identique)
@@ -509,7 +745,7 @@ function vampireTypeToPrismaData(v: VampireType) {
 
 ---
 
-## 7. Env vars
+## 8. Env vars
 
 ### À supprimer
 ```
@@ -529,7 +765,7 @@ POSTGRES_DATABASE
 
 ---
 
-## 8. Points d'attention
+## 9. Points d'attention
 
 ### getStaticPaths / getStaticProps
 
@@ -562,7 +798,7 @@ Plusieurs utilisateurs peuvent éditer en même temps. Le pattern actuel est "la
 
 ---
 
-## 9. Estimation de l'effort
+## 10. Estimation de l'effort
 
 ### Vue d'ensemble
 
@@ -619,7 +855,7 @@ Les 7 fichiers à réécrire sont tous courts et simples. Aucune logique métier
 
 ---
 
-## 10. Résumé des dépendances
+## 11. Résumé des dépendances
 
 ### À ajouter
 ```json
