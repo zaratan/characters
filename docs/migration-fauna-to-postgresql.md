@@ -820,25 +820,40 @@ C'est **plus simple qu'avant**. Le boilerplate Fauna (`q.Map(q.Paginate(q.Match(
 
 ```typescript
 import NextAuth from 'next-auth';
+import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';
-import { sql } from '@vercel/postgres';
+import { Resend } from 'resend';
 
-// Adapter PostgreSQL custom (léger, pas besoin du package @next-auth/pg-adapter)
-// car on utilise @vercel/postgres et pas le client pg directement
 import { customPgAdapter } from '../../../lib/auth-adapter';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export const authOptions = {
   adapter: customPgAdapter(),
   providers: [
+    EmailProvider({
+      // Magic link par email via Resend
+      from: process.env.EMAIL_FROM, // ex: "Vampire Char <noreply@ton-domaine.com>"
+      sendVerificationRequest: async ({ identifier: email, url }) => {
+        await resend.emails.send({
+          from: process.env.EMAIL_FROM,
+          to: email,
+          subject: 'Connexion à Vampire Char',
+          html: `<p>Clique sur ce lien pour te connecter :</p><p><a href="${url}">Se connecter</a></p>`,
+        });
+      },
+    }),
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
     }),
-    // Ajouter d'autres providers si besoin : Google, Discord, etc.
   ],
+  pages: {
+    signIn: '/auth/signin',       // Page de login custom (optionnel)
+    verifyRequest: '/auth/verify', // Page "check ton email" (optionnel)
+  },
   callbacks: {
     async session({ session, user }) {
-      // Injecter user.id dans la session (accessible côté client)
       session.user.id = user.id;
       return session;
     },
@@ -848,7 +863,11 @@ export const authOptions = {
 export default NextAuth(authOptions);
 ```
 
-> **Note** : on peut aussi utiliser `@next-auth/pg-adapter` directement si on veut éviter un adapter custom. Il faut juste un client `pg` (Pool) au lieu de `@vercel/postgres`. À décider à l'implémentation.
+> **Deux providers** : Email (magic link, provider principal) + GitHub (pour ceux qui préfèrent). L'utilisateur choisit sur la page de login.
+>
+> **Resend** : gratuit jusqu'à 100 emails/jour, une seule clé API. Le domaine d'envoi doit être vérifié dans le dashboard Resend.
+>
+> **Note adapter** : on peut aussi utiliser `@next-auth/pg-adapter` directement si on veut éviter un adapter custom.
 
 ### 5.3 Remplacement des patterns Auth0 → NextAuth
 
@@ -861,7 +880,7 @@ export default NextAuth(authOptions);
 | `import { UserProvider } from '@auth0/nextjs-auth0'` | `import { SessionProvider } from 'next-auth/react'` | `_app.tsx` |
 | `import { useUser } from '@auth0/nextjs-auth0'` | `import { useSession } from 'next-auth/react'` | `MeContext.tsx` |
 | `const { user } = useUser()` | `const { data: session } = useSession()` | `MeContext.tsx` |
-| `/api/auth/login` | `signIn()` de `next-auth/react` | `Nav.tsx` |
+| `/api/auth/login` | `signIn()` de `next-auth/react` (redirige vers page avec choix Email / GitHub) | `Nav.tsx` |
 | `/api/auth/logout` | `signOut()` de `next-auth/react` | `Nav.tsx` |
 
 ### 5.4 `MeContext.tsx` — réécriture
@@ -1091,12 +1110,13 @@ const users = await db.users.findAll();
 ### Phase 1 : Setup infra + dépendances (30 min)
 
 1. **Provisionner Vercel Postgres** dans le dashboard Vercel (Storage -> Create -> Postgres)
-2. **Créer une app OAuth GitHub** (Settings -> Developer settings -> OAuth Apps)
+2. **Créer un compte Resend** + vérifier le domaine d'envoi (pour les magic links email)
+3. **Créer une app OAuth GitHub** (Settings -> Developer settings -> OAuth Apps)
    - Callback URL : `https://<ton-domaine>/api/auth/callback/github`
    - (ou `http://localhost:3000/api/auth/callback/github` en dev)
-3. Installer les dépendances :
+4. Installer les dépendances :
    ```bash
-   yarn add @vercel/postgres next-auth
+   yarn add @vercel/postgres next-auth resend
    yarn add -D node-pg-migrate
    yarn remove faunadb @auth0/nextjs-auth0
    ```
@@ -1136,7 +1156,7 @@ const users = await db.users.findAll();
 ### Phase 4 : Nettoyage (15 min)
 
 1. Supprimer `FAUNADB_SECRET_KEY`, `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET` des env vars Vercel
-2. Ajouter `NEXTAUTH_SECRET`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
+2. Ajouter `NEXTAUTH_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
 3. Mettre à jour `.env.sample`
 4. Mettre à jour `CLAUDE.md`
 
@@ -1156,6 +1176,8 @@ AUTH0_CLIENT_SECRET
 ```
 NEXTAUTH_SECRET              # Généré avec `openssl rand -base64 32`
 NEXTAUTH_URL                 # https://ton-domaine.vercel.app (ou http://localhost:3000 en dev)
+RESEND_API_KEY               # Depuis le dashboard Resend (pour magic links email)
+EMAIL_FROM                   # Ex: "Vampire Char <noreply@ton-domaine.com>" (domaine vérifié dans Resend)
 GITHUB_CLIENT_ID             # Depuis GitHub OAuth App
 GITHUB_CLIENT_SECRET         # Depuis GitHub OAuth App
 ```
@@ -1265,7 +1287,8 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 ```json
 {
   "@vercel/postgres": "^0.10.x",
-  "next-auth": "^4.x"
+  "next-auth": "^4.x",
+  "resend": "^4.x"
 }
 ```
 
