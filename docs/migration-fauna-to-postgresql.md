@@ -1,7 +1,7 @@
-# Migration FaunaDB + Auth0 → PostgreSQL + NextAuth
+# Migration FaunaDB + Auth0 + Next 12 → PostgreSQL + NextAuth + Next 14
 
-> **Contexte** : FaunaDB est mort, le compte Auth0 n'existe plus. Le projet n'a pas été maintenu.
-> On migre tout d'un coup : base de données ET authentification.
+> **Contexte** : FaunaDB est mort, le compte Auth0 n'existe plus, Next.js 12 est EOL. Le projet n'a pas été maintenu.
+> On migre tout d'un coup : base de données, authentification, et framework.
 > Pas de migration de données — on repart de zéro.
 
 ---
@@ -22,9 +22,13 @@
 | Auth0 hosted login page | NextAuth providers (GitHub, Google, etc.) |
 | `user.sub` (ex: `github\|3338913`) | `user.id` (généré par NextAuth) |
 | `AUTH0_DOMAIN` + `AUTH0_CLIENT_ID` + `AUTH0_CLIENT_SECRET` | `NEXTAUTH_SECRET` + credentials providers |
+| Next.js 12.2.3 (EOL) | Next.js 14 (LTS, Pages Router toujours supporté) |
+| `next/image` (ancien comportement) | `next/legacy/image` ou nouveau `next/image` |
+| `<Link><a>...</a></Link>` | `<Link>...</Link>` (sans `<a>` enfant) |
 
 ### Ce qui ne change pas
 
+- **Pages Router** — on reste dessus, pas de migration vers App Router
 - Les API routes (mêmes URLs, mêmes shapes de réponse pour les données)
 - Le front-end (SWR, contexts, hooks) — sauf `MeContext` qui change de source
 - Pusher
@@ -989,6 +993,86 @@ Plus besoin de `sub`, `nickname`, `picture` (renommé `image` par NextAuth), `em
 
 ---
 
+## 5bis. Upgrade Next.js 12 → 14
+
+### 5bis.1 Pourquoi Next 14 (et pas 13 ou 15)
+
+- **Next 13** est EOL depuis décembre 2024 — aucun intérêt d'y aller
+- **Next 15** exige React 19 — c'est un chantier en plus, pas nécessaire maintenant
+- **Next 14** est la dernière version compatible React 18.2 (déjà en place), avec support LTS
+- Le **Pages Router** est toujours pleinement supporté dans Next 14 — pas besoin de migrer vers App Router
+
+### 5bis.2 Breaking changes (Pages Router uniquement)
+
+L'impact est **très faible** pour ce projet. Seulement 4 fichiers touchés.
+
+#### `next/link` — supprimer le `<a>` enfant (3 occurrences)
+
+```tsx
+// AVANT (Next 12)
+<Link href="/foo"><a className="bar">text</a></Link>
+
+// APRÈS (Next 14)
+<Link href="/foo" className="bar">text</Link>
+```
+
+**Fichiers impactés :**
+
+| Fichier | Ligne(s) | Détail |
+|---------|----------|--------|
+| `components/Nav.tsx` | ~114-116 | `<Link href={loginUrl}><a>Connection</a></Link>` |
+| `components/ActionsFooter.tsx` | ~145-146, ~214-215 | 2 occurrences dans les actions footer |
+
+#### `next/image` — comportement changé (1 occurrence)
+
+```tsx
+// Option A : garder l'ancien comportement
+import Image from 'next/legacy/image';
+
+// Option B : adapter au nouveau composant (recommandé)
+// Le nouveau next/image a un layout plus simple (pas de layout="fill" etc.)
+import Image from 'next/image';
+```
+
+**Fichier impacté :**
+
+| Fichier | Ligne | Détail |
+|---------|-------|--------|
+| `components/Sheet.tsx` | ~4, ~97-102 | Image de titre (`title.png` / `title_dark.png`), utilise `width`/`height` — compatible tel quel avec le nouveau `next/image` |
+
+> L'image dans `Sheet.tsx` utilise déjà `width` et `height` explicites, donc elle devrait fonctionner sans changement avec le nouveau `next/image`. À vérifier visuellement.
+
+#### Pas d'impact sur ce projet
+
+- `next export` → pas utilisé
+- `@next/font` → pas utilisé
+- App Router APIs (`cookies()`, `headers()` async) → pas concerné (Pages Router)
+
+### 5bis.3 Commandes d'upgrade
+
+```bash
+# Upgrade Next.js + ESLint config
+yarn add next@14 eslint-config-next@14
+
+# Codemods automatiques (optionnel, gère next/link et next/image)
+npx @next/codemod@latest next-image-to-legacy-image .
+npx @next/codemod@latest new-link .
+```
+
+Les codemods font les changements mécaniquement — pas besoin de le faire à la main.
+
+### 5bis.4 Dépendances à mettre à jour en même temps
+
+| Package | Actuel | Cible | Raison |
+|---------|--------|-------|--------|
+| `next` | 12.2.3 | 14.x | Framework |
+| `eslint-config-next` | 12.2.3 | 14.x | Doit matcher la version de Next |
+| `typescript` | 4.7 | 5.x | Next 14 recommande TS 5+ |
+| `@types/react` | 18.0.15 | 18.2.x | Aligner avec React 18.2 |
+| `@types/node` | 18.6.2 | 20.x | Aligner avec Node 20+ |
+
+---
+
 ## 6. Fichiers à modifier
 
 ### 6.1 Fichiers à supprimer
@@ -1011,7 +1095,7 @@ Plus besoin de `sub`, `nickname`, `picture` (renommé `image` par NextAuth), `em
 | `pages/api/vampires/[id]/delete.ts` | `q.Delete()` → `db.vampires.delete()` | idem |
 | `pages/api/users.ts` | `q.Map(...)` → `db.users.findAll()` | `withApiAuthRequired` → check session |
 
-**Frontend (Auth seulement) :**
+**Frontend (Auth) :**
 
 | Fichier | Changement |
 |---------|------------|
@@ -1024,6 +1108,14 @@ Plus besoin de `sub`, `nickname`, `picture` (renommé `image` par NextAuth), `em
 | `pages/vampires/[id].tsx` | Supprimer fallback `editors \|\| ['github\|3338913']` → utiliser `me.isAdmin` |
 | `pages/vampires/[id]/config.tsx` | Idem — `me.isAdmin \|\| editors.includes(me.id)` |
 | `components/SheetActionsFooter.tsx` | `ownerActions` conditionné par `me.isAdmin \|\| editors.includes(me.id)` |
+
+**Next.js 14 upgrade (codemods) :**
+
+| Fichier | Changement |
+|---------|------------|
+| `components/Nav.tsx` | `<Link><a>Connection</a></Link>` → `<Link>Connection</Link>` |
+| `components/ActionsFooter.tsx` | 2× `<Link><a>...</a></Link>` → `<Link>...</Link>` |
+| `components/Sheet.tsx` | Vérifier `next/image` — probablement ok tel quel (utilise déjà `width`/`height`) |
 
 ### 6.3 Fichiers à créer
 
@@ -1128,6 +1220,27 @@ const users = await db.users.findAll();
 
 ## 7. Étapes de migration
 
+### Phase 0 : Upgrade Next.js 12 → 14 (20 min)
+
+On commence par l'upgrade Next car ça permet de valider que l'app démarre avant de toucher à la DB et l'auth.
+
+1. Upgrade les packages :
+   ```bash
+   yarn add next@14 eslint-config-next@14
+   yarn add -D typescript@5 @types/react@18.2 @types/node@20
+   ```
+2. Lancer les codemods automatiques :
+   ```bash
+   npx @next/codemod@latest new-link .           # Fix <Link><a> → <Link>
+   npx @next/codemod@latest next-image-to-legacy-image .  # Fix next/image (si besoin)
+   ```
+3. Vérifier manuellement les 3 fichiers touchés :
+   - `components/Nav.tsx` (1 Link)
+   - `components/ActionsFooter.tsx` (2 Links)
+   - `components/Sheet.tsx` (1 Image — probablement ok sans changement)
+4. `yarn build` — vérifier que ça compile
+5. `yarn dev` — vérifier visuellement que rien n'est cassé
+
 ### Phase 1 : Setup infra + dépendances (30 min)
 
 1. **Provisionner Vercel Postgres** dans le dashboard Vercel (Storage -> Create -> Postgres)
@@ -1141,13 +1254,13 @@ const users = await db.users.findAll();
    yarn add -D node-pg-migrate
    yarn remove faunadb @auth0/nextjs-auth0
    ```
-4. Créer la migration initiale + appliquer :
+5. Créer la migration initiale + appliquer :
    ```bash
    npx node-pg-migrate create init-schema
    # écrire le schema (section 4.2) dans le fichier
    npx node-pg-migrate up
    ```
-5. Ajouter les scripts dans `package.json` :
+6. Ajouter les scripts dans `package.json` :
    ```json
    "migrate:up": "node-pg-migrate up",
    "migrate:down": "node-pg-migrate down",
@@ -1260,14 +1373,15 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 
 | Phase | Effort | Complexité | Risque |
 |-------|--------|------------|--------|
+| **Next.js 12 → 14** (codemods + vérif) | ~20 min | Faible | Faible |
 | Setup infra (Vercel Postgres + deps + OAuth app) | ~30 min | Faible | Faible |
 | Auth — NextAuth (config, contexts, nav, types) | ~30 min | Faible | Faible |
 | DB — `lib/db.ts` + migration initiale | ~45 min | Faible | Faible |
-| Réécriture des 7 API routes (DB + auth) | ~1-2h | Faible-Moyenne | Moyen |
-| Frontend auth (MeContext, Nav, _app) | ~20 min | Faible | Faible |
+| Réécriture des 7 API routes (DB + auth + isAdmin) | ~1-2h | Faible-Moyenne | Moyen |
+| Frontend auth + isAdmin (MeContext, Nav, _app, config) | ~20 min | Faible | Faible |
 | Tests manuels end-to-end | ~1h | - | - |
 | Nettoyage (env vars, docs, deps) | ~15 min | Faible | Faible |
-| **Total** | **~4-5h** | | |
+| **Total** | **~5-6h** | | |
 
 ### Détail par fichier
 
@@ -1316,6 +1430,23 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 ---
 
 ## 11. Résumé des dépendances
+
+### À upgrader
+```json
+{
+  "next": "12.2.3 → 14.x",
+  "eslint-config-next": "12.2.3 → 14.x"
+}
+```
+
+### À upgrader (devDependencies)
+```json
+{
+  "typescript": "4.7 → 5.x",
+  "@types/react": "18.0.15 → 18.2.x",
+  "@types/node": "18.6.2 → 20.x"
+}
+```
 
 ### À ajouter
 ```json
