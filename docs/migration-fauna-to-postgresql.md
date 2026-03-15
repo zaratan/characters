@@ -238,6 +238,7 @@ exports.up = (pgm) => {
     email: { type: 'text', unique: true },
     emailVerified: { type: 'timestamptz' },
     image: { type: 'text' },
+    is_admin: { type: 'boolean', notNull: true, default: false },
     created_at: { type: 'timestamptz', notNull: true, default: pgm.func('now()') },
     updated_at: { type: 'timestamptz', notNull: true, default: pgm.func('now()') },
   });
@@ -495,6 +496,7 @@ CREATE TABLE users (
   email           TEXT UNIQUE,
   "emailVerified" TIMESTAMPTZ,
   image           TEXT,
+  is_admin        BOOLEAN NOT NULL DEFAULT false,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
@@ -656,8 +658,14 @@ function vampireToRow(v: VampireType) {
 
 export const db = {
   vampires: {
-    // userId = NextAuth session.user.id (clé primaire de la table users)
-    async findAll(userId?: string): Promise<VampireListItem[]> {
+    // isAdmin = true → voit tout (plus besoin de hardcoder un sub)
+    async findAll(userId?: string, isAdmin = false): Promise<VampireListItem[]> {
+      if (isAdmin) {
+        const { rows } = await sql`
+          SELECT id, data->'infos'->>'name' as name FROM vampires
+        `;
+        return rows.map((r) => ({ key: r.id, name: r.name }));
+      }
       const { rows } = await sql`
         SELECT DISTINCT v.id, v.data->'infos'->>'name' as name
         FROM vampires v
@@ -741,8 +749,9 @@ export const db = {
       await sql`DELETE FROM vampires WHERE id = ${id}`;
     },
 
-    // userId = NextAuth session.user.id — plus besoin de JOIN, c'est la FK directe
-    async isEditor(vampireId: string, userId: string): Promise<boolean> {
+    // Admin peut tout éditer — plus besoin de hardcoder 'github|3338913'
+    async isEditor(vampireId: string, userId: string, isAdmin = false): Promise<boolean> {
+      if (isAdmin) return true;
       const { rows } = await sql`
         SELECT 1 FROM vampire_editors
         WHERE vampire_id = ${vampireId} AND user_id = ${userId}
@@ -855,6 +864,7 @@ export const authOptions = {
   callbacks: {
     async session({ session, user }) {
       session.user.id = user.id;
+      session.user.isAdmin = user.isAdmin; // colonne is_admin de la table users
       return session;
     },
   },
@@ -890,7 +900,7 @@ import { useSession } from 'next-auth/react';
 import { createContext, useContext, useMemo } from 'react';
 
 type MeContextType = {
-  me?: { id: string; name: string; email: string; image: string };
+  me?: { id: string; name: string; email: string; image: string; isAdmin: boolean };
   connected: boolean;
 };
 
@@ -906,6 +916,7 @@ export const MeProvider = ({ children }) => {
         name: session.user.name,
         email: session.user.email,
         image: session.user.image,
+        isAdmin: session.user.isAdmin ?? false,
       } : undefined,
       connected: status === 'authenticated',
     }),
@@ -935,8 +946,9 @@ async isEditor(vampireId: string, userSub: string): Promise<boolean> {
   return rows.length > 0;
 }
 
-// APRÈS (NextAuth) — recherche directe par user.id
-async isEditor(vampireId: string, userId: string): Promise<boolean> {
+// APRÈS (NextAuth) — recherche directe par user.id, admin bypass
+async isEditor(vampireId: string, userId: string, isAdmin = false): Promise<boolean> {
+  if (isAdmin) return true;
   const { rows } = await sql`
     SELECT 1 FROM vampire_editors
     WHERE vampire_id = ${vampireId} AND user_id = ${userId}
@@ -950,12 +962,13 @@ Plus de `JOIN` pour résoudre `sub` → `id`. Le `user.id` NextAuth est directem
 ### 5.6 Impact sur les types
 
 ```typescript
-// types/MeType.ts — simplifié
+// types/MeType.ts — simplifié, avec isAdmin
 export type MeType = {
   id: string;
   name: string;
   email: string;
   image: string;
+  isAdmin: boolean;
 };
 
 // types/UserType.ts — aligné avec NextAuth
@@ -967,7 +980,7 @@ export type UserType = {
 };
 ```
 
-Plus besoin de `sub`, `nickname`, `picture` (renommé `image` par NextAuth), `email_verified`. Les types sont plus simples.
+Plus besoin de `sub`, `nickname`, `picture` (renommé `image` par NextAuth), `email_verified`. `isAdmin` remplace le hardcoded `github|3338913`.
 
 ---
 
@@ -1003,6 +1016,9 @@ Plus besoin de `sub`, `nickname`, `picture` (renommé `image` par NextAuth), `em
 | `types/UserType.ts` | Supprimer `sub`, `nickname`, `picture` → `id`, `image` |
 | `hooks/useMe.ts` | Simplifié (plus de fetch `/api/me`) |
 | `components/Nav.tsx` | `/api/auth/login` → `signIn()`, `/api/auth/logout` → `signOut()` |
+| `pages/vampires/[id].tsx` | Supprimer fallback `editors \|\| ['github\|3338913']` → utiliser `me.isAdmin` |
+| `pages/vampires/[id]/config.tsx` | Idem — `me.isAdmin \|\| editors.includes(me.id)` |
+| `components/SheetActionsFooter.tsx` | `ownerActions` conditionné par `me.isAdmin \|\| editors.includes(me.id)` |
 
 ### 6.3 Fichiers à créer
 
@@ -1032,7 +1048,7 @@ import { db } from '../../../lib/db';
 const session = await getServerSession(req, res, authOptions);
 await db.vampires.create(data);
 await db.vampires.addEditor(data.id, session.user.id);
-// NextAuth gère la création du user automatiquement au login
+// Plus de viewers: ['github|3338913'] hardcodé — l'admin voit tout via isAdmin
 ```
 
 ### 6.2 `GET /api/vampires` (liste)
@@ -1044,7 +1060,7 @@ const filtered = dbs.data.filter((v) => !v.data.privateSheet || ...);
 
 // APRÈS — filtre côté SQL
 const session = await getServerSession(req, res, authOptions);
-const vampires = await db.vampires.findAll(session?.user?.id);
+const vampires = await db.vampires.findAll(session?.user?.id, session?.user?.isAdmin);
 ```
 
 Le filtrage privé/public passe côté SQL (dans le `WHERE` + `JOIN`). Plus efficace, plus propre.
@@ -1070,7 +1086,7 @@ if (!vampire.data[0].data.editors.includes(user.sub)) return res.status(403)...;
 await client.query(q.Replace(vampire.data[0].ref, { data }));
 
 // APRÈS
-if (!(await db.vampires.isEditor(id, session.user.id))) return res.status(403)...;
+if (!(await db.vampires.isEditor(id, session.user.id, session.user.isAdmin))) return res.status(403)...;
 await db.vampires.update(id, data);
 ```
 
@@ -1078,7 +1094,7 @@ await db.vampires.update(id, data);
 
 ```typescript
 // APRÈS — merge JSONB natif PostgreSQL, pas besoin de tout renvoyer
-if (!(await db.vampires.isEditor(id, session.user.id))) return res.status(403)...;
+if (!(await db.vampires.isEditor(id, session.user.id, session.user.isAdmin))) return res.status(403)...;
 await db.vampires.updatePartial(id, partialData);
 ```
 
@@ -1086,7 +1102,7 @@ await db.vampires.updatePartial(id, partialData);
 
 ```typescript
 // APRÈS
-if (!(await db.vampires.isEditor(id, session.user.id))) return res.status(403)...;
+if (!(await db.vampires.isEditor(id, session.user.id, session.user.isAdmin))) return res.status(403)...;
 await db.vampires.delete(id);
 ```
 
@@ -1152,6 +1168,19 @@ const users = await db.users.findAll();
    - Remplacer `getSession` / `withApiAuthRequired` par `getServerSession(req, res, authOptions)`
    - Remplacer les appels FQL par des appels `db.*`
    - `user.sub` → `session.user.id`
+   - Passer `session.user.isAdmin` aux helpers `isEditor()` / `findAll()`
+3. Côté front : supprimer tous les fallback `|| ['github|3338913']` dans :
+   - `pages/vampires/[id].tsx`
+   - `pages/vampires/[id]/config.tsx`
+   - `components/SheetActionsFooter.tsx`
+   - Remplacer par `me.isAdmin || editors.includes(me.id)`
+
+### Phase 3.5 : Se mettre admin (2 min)
+
+Après le premier login, passer ton user en admin :
+```sql
+UPDATE users SET is_admin = true WHERE email = 'ton@email.com';
+```
 
 ### Phase 4 : Nettoyage (15 min)
 
@@ -1274,7 +1303,7 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 | Point | Détail | Impact |
 |-------|--------|--------|
 | **Functions exportées** | `fetchVampireFromDB()` et `fetchOneVampire()` sont importées dans `getStaticPaths`/`getStaticProps`. Il faut les réécrire avec `db.*` | Faible — même format de retour |
-| **Hardcoded viewer** | `'github\|3338913'` est hardcodé dans `create.ts`. Ce format Auth0 n'existera plus. Décider : garder un viewer par défaut (ton user ID NextAuth) ou supprimer le comportement | Moyen — décision à prendre |
+| **Hardcoded viewer supprimé** | `'github\|3338913'` remplacé par le flag `is_admin` sur la table `users`. L'admin voit et édite tout sans être dans `editors[]`/`viewers[]` | Résolu |
 | **Merge JSONB shallow** | `data \|\| patch` merge au premier niveau seulement | Moyen — vérifier le front (cf. section 9) |
 | **`ConfigAccessSection`** | Le composant d'accès affiche les users par `sub`. Il faudra afficher par `user.id` et adapter le matching | Faible — même logique, juste l'identifiant change |
 | **Callback URL NextAuth** | L'OAuth app GitHub doit avoir le bon callback URL. En dev : `http://localhost:3000/api/auth/callback/github`. En prod : le domaine Vercel | Bloquant si mal configuré |
