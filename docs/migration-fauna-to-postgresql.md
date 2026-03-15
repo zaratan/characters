@@ -28,27 +28,136 @@
 
 ## 2. Choix technique : ORM / query builder
 
-### Option A : Prisma (recommandé)
+### Contexte : qu'est-ce qu'on fait réellement ?
 
-- Schema déclaratif, migrations auto-générées
-- Typage TypeScript natif
-- Très bien intégré à Vercel + Neon
-- `prisma generate` crée un client typé
-- Large communauté, docs solides
+Les 7 routes API font du CRUD trivial :
+- `CREATE` un document
+- `SELECT` par ID ou liste complète
+- `UPDATE` (full replace ou partiel)
+- `DELETE` par ID
 
-### Option B : @vercel/postgres + SQL brut
+Pas de jointures complexes, pas de transactions, pas d'agrégations, pas de requêtes dynamiques. Les seules "relations" sont `editors`/`viewers` (des tableaux de strings dans Fauna, qui deviendraient des tables de jointure en SQL).
 
-- Plus léger, zéro abstraction
-- Parfait si on veut rester minimal
-- Pas de migration tooling intégré (il faudrait un outil tiers ou des scripts SQL manuels)
+C'est important parce que ça veut dire qu'**on n'a pas besoin de la puissance d'un ORM**. La question est : est-ce qu'on en veut quand même pour le confort ?
+
+### Option A : `@vercel/postgres` + SQL brut
+
+Le plus direct. Zéro abstraction entre toi et la DB.
+
+```typescript
+import { sql } from '@vercel/postgres';
+
+// GET one vampire
+const { rows } = await sql`SELECT * FROM vampires WHERE id = ${id}`;
+
+// CREATE
+await sql`INSERT INTO vampires (id, infos, attributes, ...) VALUES (${id}, ${JSON.stringify(infos)}, ...)`;
+
+// UPDATE
+await sql`UPDATE vampires SET infos = ${JSON.stringify(infos)}, ... WHERE id = ${id}`;
+
+// DELETE
+await sql`DELETE FROM vampires WHERE id = ${id}`;
+```
+
+| Pour | Contre |
+|------|--------|
+| Zéro dépendance lourde — juste `@vercel/postgres` (~léger) | SQL à écrire à la main (mais c'est 5 requêtes triviales) |
+| Pas de build step supplémentaire (`prisma generate`) | Pas de typage auto sur les résultats (faut caster soi-même) |
+| Pas de fichier schema séparé à maintenir | Migrations manuelles (un fichier `init.sql` suffit ici) |
+| Cold start plus rapide (pas de Prisma engine) | Pas de tooling pour introspection ou studio |
+| Fonctionne tel quel dans les edge functions | Sérialisation/désérialisation JSON manuelle |
+
+**Pour le schema :** un simple fichier `schema.sql` versionné dans le repo, exécuté une fois au setup.
+
+**Pour le typage :** on a déjà `VampireType` — un type d'interface suffit pour les résultats.
+
+### Option B : Prisma
+
+L'ORM le plus populaire en Next.js. Schema déclaratif, client typé auto-généré, migrations versionnées.
+
+```typescript
+import { prisma } from '../../../lib/prisma';
+
+// GET one vampire
+const vampire = await prisma.vampire.findUnique({ where: { id } });
+
+// CREATE
+await prisma.vampire.create({ data: { ... } });
+
+// UPDATE
+await prisma.vampire.update({ where: { id }, data: { ... } });
+
+// DELETE
+await prisma.vampire.delete({ where: { id } });
+```
+
+| Pour | Contre |
+|------|--------|
+| Client typé : `prisma.vampire.findUnique()` retourne un type exact | **Dépendance lourde** : Prisma engine (binaire Rust ~15 MB), `prisma generate` obligatoire |
+| Migrations auto-générées et versionnées | Build step en plus (`prisma generate` dans `postinstall` ou `build`) |
+| Relations `editors`/`viewers` gérées élégamment (`connectOrCreate`, `include`) | Cold start plus lent sur serverless (chargement de l'engine) |
+| `prisma studio` pour inspecter la DB en dev | Overkill pour 5 requêtes CRUD — comme prendre un camion pour aller chercher le pain |
+| Très bien documenté | Couche d'abstraction en plus à comprendre/débugger |
+| Fonctionne bien avec Vercel + Neon | Nécessite le pattern singleton en dev (hot reload) |
 
 ### Option C : Drizzle ORM
 
-- Léger, TypeScript-first
-- Proche du SQL, moins magique que Prisma
-- Bon compromis entre A et B
+ORM léger, TypeScript-first, proche du SQL. Pas de binaire externe.
 
-**Recommandation** : Prisma — le projet a déjà beaucoup de types, autant les garder synchronisés avec le schema DB automatiquement.
+```typescript
+import { db } from '../../../lib/db';
+import { vampires } from '../../../lib/schema';
+import { eq } from 'drizzle-orm';
+
+// GET one vampire
+const vampire = await db.select().from(vampires).where(eq(vampires.id, id));
+
+// CREATE
+await db.insert(vampires).values({ ... });
+
+// UPDATE
+await db.update(vampires).set({ ... }).where(eq(vampires.id, id));
+
+// DELETE
+await db.delete(vampires).where(eq(vampires.id, id));
+```
+
+| Pour | Contre |
+|------|--------|
+| Léger, pas de binaire externe, pas d'engine | Moins de tooling que Prisma (mais suffisant ici) |
+| TypeScript-first, schema = code TS | API un peu plus verbeuse que Prisma pour les relations |
+| Proche du SQL — tu sais ce qui est généré | Communauté plus petite (mais en croissance rapide) |
+| Migrations via `drizzle-kit` | Un peu moins de docs/exemples |
+| Cold start rapide | Schema TS à maintenir (comme Prisma, mais en TS au lieu de `.prisma`) |
+
+### Matrice de décision
+
+| Critère | `@vercel/postgres` | Prisma | Drizzle |
+|---------|-------------------|--------|---------|
+| Complexité ajoutée | Nulle | Haute | Faible |
+| Typage auto des résultats | Non (cast manuel) | Oui | Oui |
+| Poids des dépendances | ~léger | ~lourd (engine Rust) | ~moyen |
+| Migrations tooling | Non (fichier SQL) | Oui (auto) | Oui (drizzle-kit) |
+| Cold start serverless | Rapide | Plus lent | Rapide |
+| Courbe d'apprentissage | SQL | Prisma DSL | SQL-like TS |
+| Relations editors/viewers | `JOIN` SQL manuels | `include` / `connectOrCreate` | `JOIN` TS typé |
+| Adapté à la complexité du projet | Oui | Surdimensionné | Oui |
+
+### Recommandation
+
+Pour ce projet, **`@vercel/postgres` (SQL brut) ou Drizzle** sont les choix les plus adaptés.
+
+**Pourquoi pas Prisma ?**
+- On a 5 requêtes SQL triviales. Prisma apporte un engine Rust, un build step, un DSL à apprendre, et un cold start rallongé… pour écrire `SELECT * FROM vampires WHERE id = $1`.
+- Le typage auto est un vrai plus, mais on a déjà `VampireType` côté front. Un cast manuel sur 5 requêtes n'est pas un fardeau.
+- Les relations `editors`/`viewers` sont le seul endroit où Prisma simplifie vraiment les choses, mais un `JOIN` SQL classique fait le même travail en 2 lignes.
+
+**`@vercel/postgres`** si tu veux le minimum absolu — pas d'abstraction, pas de magie, juste du SQL dans 7 fichiers.
+
+**Drizzle** si tu veux le typage auto sans le poids de Prisma — bon compromis, schema en TS, migrations incluses.
+
+**Prisma** reste un bon choix si tu prévois que le projet va grossir significativement (nouvelles tables, requêtes complexes, etc.). Mais en l'état, c'est de l'over-engineering.
 
 ---
 
@@ -499,13 +608,13 @@ Les 7 fichiers à réécrire sont tous courts et simples. Aucune logique métier
 | **Functions exportées** | `fetchVampireFromDB()` et `fetchOneVampire()` sont importées dans les pages pour `getStaticPaths`/`getStaticProps`. La signature de retour doit rester identique | Faible — juste s'assurer du même format de retour |
 | **Hardcoded viewer** | `'github|3338913'` est hardcodé comme viewer par défaut dans `create.ts`. Il faut que ce user existe dans la table `User` | Faible — `connectOrCreate` gère ça |
 
-### Comparaison avec d'autres approches
+### Comparaison de l'effort selon l'approche
 
 | Approche | Effort estimé | Commentaire |
 |----------|---------------|-------------|
-| **Prisma + JSONB hybride** (recommandé) | ~4-5h | Schema propre, peu de tables, typage auto |
-| SQL brut (`@vercel/postgres`) | ~5-6h | Même travail + écrire le SQL à la main + pas de migration tooling |
-| Drizzle ORM | ~4-5h | Comparable à Prisma, moins de docs/exemples pour ce use case |
+| **`@vercel/postgres` + SQL brut** | ~3-4h | Le plus rapide : pas de setup ORM, pas de schema à maintenir. 5 requêtes SQL à écrire, un fichier `init.sql` |
+| **Drizzle ORM** | ~4-5h | Schema TS + setup `drizzle-kit`. Typage auto, migrations incluses |
+| **Prisma** | ~4-5h | Schema `.prisma` + `prisma generate` + singleton. Plus de setup, mais client typé |
 | Tout normaliser en tables (full relationnel) | ~8-12h | Tables pour abilities, disciplines, rituals, paths... Disproportionné pour le besoin |
 
 ---
