@@ -1,13 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import faunadb from 'faunadb';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../auth/[...nextauth]';
-import { VampireType } from '../../../../types/VampireType';
-
-// your secret hash
-const secret = process.env.FAUNADB_SECRET_KEY;
-const q = faunadb.query;
-const client = new faunadb.Client({ secret });
+import { db } from '../../../../lib/db';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);
@@ -18,31 +12,14 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   } = req;
 
   try {
-    const vampire: {
-      data: Array<{ data: VampireType; ref: any }>;
-    } = await client.query(
-      q.Map(
-        // iterate each item in result
-        q.Paginate(
-          // make paginatable
-          q.Match(
-            // query index
-            q.Index('one_vampire'),
-            id // specify source
-          )
-        ),
-        (ref) => q.Get(ref) // lookup each result by its reference
-      )
+    const canEdit = await db.vampires.isEditor(
+      String(id),
+      session.user.id,
+      session.user.isAdmin
     );
+    if (!canEdit) return res.status(403).json({ error: 'unauthorized' });
 
-    if (!(vampire.data[0].data.editors || []).includes(session.user.id)) {
-      return res.status(403).json({ error: 'unauthorized' });
-    }
-
-    // ok
-    const vId = vampire.data[0].ref;
-
-    await client.query(q.Delete(vId));
+    await db.vampires.delete(String(id));
 
     // ok
     res.status(200).json({ result: 'ok' });

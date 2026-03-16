@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import faunadb from 'faunadb';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../auth/[...nextauth]';
+import { db } from '../../../lib/db';
 
 import base from '../../../defaultData/base';
 import darkAge from '../../../defaultData/darkAge';
@@ -10,11 +10,6 @@ import vampire from '../../../defaultData/vampire';
 import human from '../../../defaultData/human';
 import ghoul from '../../../defaultData/ghoul';
 import { updateOnSheets } from '../../../helpers/pusherServer';
-
-// your secret hash
-const secret = process.env.FAUNADB_SECRET_KEY;
-const q = faunadb.query;
-const client = new faunadb.Client({ secret });
 
 const TYPE = {
   0: vampire,
@@ -31,7 +26,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
       type = 0,
       name = '',
       era = 0,
-      id = 'aaaaaaaa',
       appId = '',
       privateSheet = false,
     } = {
@@ -41,7 +35,6 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     const data = {
       ...base,
       ...(era === 0 ? darkAge : victorian),
-      id,
       ...TYPE[type],
       editors: [session.user.id],
       viewers: [],
@@ -50,11 +43,11 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     data.infos.name = name;
     data.infos.era = era;
 
-    await client.query(q.Create(q.Collection('vampires'), { data }));
+    const id = await db.vampires.create(data, session.user.id);
 
     // ok
     updateOnSheets(appId);
-    res.status(200).json({ result: 'ok' });
+    res.status(200).json({ id });
   } catch (e) {
     // something went wrong
     res.status(500).json({ error: e.message });

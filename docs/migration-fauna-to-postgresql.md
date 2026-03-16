@@ -1458,3 +1458,14 @@ Les preview deployments utilisent les mêmes env vars par défaut. Le script bui
 - **`nodemailer` ajouté** : peer dependency obligatoire de `next-auth/providers/email`, non mentionnée dans le plan.
 - **Pas de `pages` custom NextAuth** : le plan de migration mentionnait des pages custom (`/auth/signin`, `/auth/verify`). Non implémentées en Phase 1 — on utilise les pages par défaut NextAuth. À ajouter plus tard si besoin.
 - **`pg` déjà en devDependencies** : `pg` était déjà présent en devDependencies (pour `node-pg-migrate`). Déplacé en dependencies.
+
+### Phase 2 (2026-03-16)
+
+- **Pool partagé `lib/pool.ts`** : créé un module pool dédié avec config serverless (`max: 1`, `idleTimeoutMillis: 10_000`, `connectionTimeoutMillis: 5_000`). `lib/auth-adapter.ts` utilise maintenant ce pool partagé au lieu de créer le sien. Évite le double pool (auth + app) qui pouvait épuiser les connexions Neon.
+- **`lib/db.ts` utilise `pg`** (pas `@vercel/postgres`) : conformément à la déviation Phase 1. Toutes les requêtes utilisent `pool.query('...', [params])` avec parameterized queries.
+- **Helper `withTransaction`** : ajouté dans `lib/db.ts` pour éliminer le boilerplate BEGIN/COMMIT/ROLLBACK. Utilisé par `create`, `update`, `updatePartial`.
+- **`updatePartial` toujours transactionnel** : le plan original ne mettait en transaction que si des junction tables étaient touchées. Changé pour toujours utiliser une transaction (cohérence garantie).
+- **Réponse `create` changée** : `{ result: 'ok' }` → `{ id }` pour que `pages/new.tsx` puisse récupérer l'UUID généré par PostgreSQL.
+- **Sécurité `[id].ts`** : ajout du check privateSheet + isEditorOrViewer dans le handler API (faille existante corrigée). `fetchOneVampire` reste sans auth pour fonctionner avec ISR/getStaticProps.
+- **`lodash` conservé** : le plan initial prévoyait de le supprimer, mais il est utilisé dans 3 autres fichiers (`ConfigAccessSection.tsx`, `ModificationsContext.tsx`, `useScroll.ts`). Seul `lodash.pick` a été retiré de `pages/api/users.ts`.
+- **UUID validation** : `db.vampires.findById` catch l'erreur PG `22P02` (invalid UUID format) et retourne `null` au lieu de laisser un 500.

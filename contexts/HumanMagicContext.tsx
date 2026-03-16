@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
-import { v4 as uuid } from 'uuid';
 import { TempElemType } from '../types/TempElemType';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
@@ -83,14 +82,14 @@ const defaultContext: ContextType = {
 const HumanMagicContext = createContext(defaultContext);
 
 const createNewRitual: () => RitualType = () => ({
-  key: uuid(),
+  key: crypto.randomUUID(),
   title: '',
   value: 0,
 });
 
 const createNewPower: () => PowerType = () => ({
   hasRitual: false,
-  key: uuid(),
+  key: crypto.randomUUID(),
   rituals: [],
   title: '',
   value: 0,

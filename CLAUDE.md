@@ -11,8 +11,8 @@
 - **UI**: React 18.2, Styled-Components 5.3, Tailwind CSS 3.1
 - **State Management**: React Context API (21 context files in `contexts/`)
 - **Data Fetching**: SWR 1.3
-- **Database**: FaunaDB (serverless)
-- **Auth**: Auth0 (`@auth0/nextjs-auth0`)
+- **Database**: PostgreSQL (Neon via Vercel Postgres) — `pg` driver, raw SQL
+- **Auth**: NextAuth.js v4 (`next-auth`) — Email magic link (Resend) + GitHub OAuth
 - **Real-time**: Pusher (WebSocket-based live updates)
 - **Package Manager**: Yarn
 
@@ -35,14 +35,19 @@ components/           # React components
   config/             # Configuration UI components
   no-ssr/             # Client-side only components (Pusher listeners)
 contexts/             # React Context providers (21 files, one per domain)
+lib/                  # Database & auth infrastructure
+  pool.ts             # Shared pg Pool (serverless-optimized, max:1)
+  db.ts               # Database access layer (all SQL centralized here)
+  auth-adapter.ts     # Custom NextAuth PostgreSQL adapter
 pages/                # Next.js pages
   api/                # API routes
-    auth/             # Auth0 endpoints
+    auth/             # NextAuth endpoints ([...nextauth].ts)
     data/             # Data endpoints
     vampires/         # Vampire CRUD operations
   vampires/           # Dynamic character sheet pages
-hooks/                # Custom React hooks (useSave, useMe, useScroll, etc.)
+hooks/                # Custom React hooks (useSave, useScroll, etc.)
 helpers/              # Utility functions (fetcher, pex calculations, pusher)
+migrations/           # PostgreSQL schema migrations (node-pg-migrate)
 types/                # TypeScript type definitions (VampireType, MeType, etc.)
 data/                 # Static JSON data (disciplines, combo disciplines)
 defaultData/          # Default character templates (vampire, ghoul, human, darkAge, victorian)
@@ -84,15 +89,18 @@ Copy `.env.sample` to `.env.local` and fill in values:
 
 | Variable | Purpose |
 |----------|---------|
-| `FAUNADB_SECRET_KEY` | FaunaDB database access |
+| `POSTGRES_URL` | PostgreSQL connection string (pooled URL in prod via Neon pgbouncer) |
+| `NEXTAUTH_SECRET` | NextAuth session encryption (generate with `openssl rand -base64 32`) |
+| `NEXTAUTH_URL` | App URL (`http://localhost:3000` in dev) |
+| `GITHUB_CLIENT_ID` | GitHub OAuth app client ID |
+| `GITHUB_CLIENT_SECRET` | GitHub OAuth app client secret |
+| `RESEND_API_KEY` | Resend API key for email magic links |
+| `EMAIL_FROM` | Sender address for magic links (domain must be verified in Resend) |
 | `PUSHER_APP_ID` | Pusher app ID |
 | `NEXT_PUBLIC_PUSHER_KEY` | Pusher public key (exposed to client) |
 | `PUSHER_SECRET` | Pusher secret key |
 | `NEXT_PUBLIC_PUSHER_CLUSTER` | Pusher cluster region |
 | `BASE_URL` | Application base URL |
-| `AUTH0_DOMAIN` | Auth0 domain |
-| `AUTH0_CLIENT_ID` | Auth0 client ID |
-| `AUTH0_CLIENT_SECRET` | Auth0 client secret |
 
 ## Key Architectural Notes
 

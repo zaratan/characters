@@ -1,32 +1,16 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import faunadb from 'faunadb';
-
-// your secret hash
-const secret = process.env.FAUNADB_SECRET_KEY;
-const q = faunadb.query;
-const client = new faunadb.Client({ secret });
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../auth/[...nextauth]';
+import { db } from '../../../lib/db';
 
 export const fetchOneVampire = async (id: string) => {
   try {
-    const dbs: { data: Array<{ data: any }> } = await client.query(
-      q.Map(
-        // iterate each item in result
-        q.Paginate(
-          // make paginatable
-          q.Match(
-            // query index
-            q.Index('one_vampire'),
-            id // specify source
-          )
-        ),
-        (ref) => q.Get(ref) // lookup each result by its reference
-      )
-    );
-    // ok
-    return { data: dbs.data[0].data, failed: false };
+    const vampire = await db.vampires.findById(id);
+    if (!vampire) return { data: null, failed: true };
+    return { data: vampire, failed: false };
   } catch (e) {
     // something went wrong
-    return { error: e.message, failed: true };
+    return { data: null, failed: true };
   }
 };
 
@@ -34,14 +18,29 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const {
     query: { id },
   } = req;
-  const vampire = await fetchOneVampire(String(id));
 
-  if (!vampire.failed) {
-    res.status(200).json(vampire.data);
-  } else {
-    // something went wrong
-    res.status(500).json(vampire);
+  const result = await fetchOneVampire(String(id));
+
+  if (result.failed || !result.data) {
+    return res.status(404).json({ error: 'not found', failed: true });
   }
+
+  const vampire = result.data;
+
+  if (vampire.privateSheet) {
+    const session = await getServerSession(req, res, authOptions);
+    if (!session) return res.status(401).json({ error: 'unauthorized' });
+
+    const canAccess = await db.vampires.isEditorOrViewer(
+      String(id),
+      session.user.id,
+      session.user.isAdmin
+    );
+    if (!canAccess) return res.status(403).json({ error: 'unauthorized' });
+  }
+
+  // ok
+  res.status(200).json(vampire);
 };
 
 export default handler;

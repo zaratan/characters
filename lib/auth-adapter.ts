@@ -1,4 +1,3 @@
-import { Pool } from 'pg';
 import type {
   Adapter,
   AdapterUser,
@@ -6,10 +5,7 @@ import type {
   AdapterSession,
   VerificationToken,
 } from 'next-auth/adapters';
-
-const pool = new Pool({
-  connectionString: process.env.POSTGRES_URL,
-});
+import pool from './pool';
 
 function toAdapterUser(row: any): AdapterUser {
   return {

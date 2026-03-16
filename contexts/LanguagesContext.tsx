@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
-import { v4 as uuid } from 'uuid';
 import { TempElemType } from '../types/TempElemType';
 import useStateWithTracker from '../hooks/useStateWithTracker';
 
@@ -48,7 +47,10 @@ export const LanguagesProvider = ({
       },
     })),
     addNewLanguage: () => {
-      const newValue = [...tmpLanguages, { value: '', key: uuid() }];
+      const newValue = [
+        ...tmpLanguages,
+        { value: '', key: crypto.randomUUID() },
+      ];
       setTmpLanguages(newValue);
     },
     removeLanguage: (key: string) => {

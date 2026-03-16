@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
-import { v4 as uuid } from 'uuid';
 import { TempElemType } from '../types/TempElemType';
 import useStateWithTracker from '../hooks/useStateWithTracker';
 
@@ -95,11 +94,14 @@ export const AdvFlawProvider = ({
     addNewAdvantage: () => {
       setTmpAdvantages([
         ...tmpAdvantages,
-        { key: uuid(), value: 0, title: '' },
+        { key: crypto.randomUUID(), value: 0, title: '' },
       ]);
     },
     addNewFlaw: () => {
-      setTmpFlaws([...tmpFlaws, { key: uuid(), value: 0, title: '' }]);
+      setTmpFlaws([
+        ...tmpFlaws,
+        { key: crypto.randomUUID(), value: 0, title: '' },
+      ]);
     },
     removeAdvantage: (key: string) => {
       setTmpAdvantages(tmpAdvantages.filter((adv) => adv.key !== key));

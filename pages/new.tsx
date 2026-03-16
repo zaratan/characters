@@ -1,7 +1,6 @@
 import React, { useState, FormEvent, useContext } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
-import { v4 as uuid } from 'uuid';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { EmptyLine } from '../styles/Lines';
@@ -110,7 +109,6 @@ const NewCharPage = () => {
   const [privateSheet, setPrivateSheet] = useState(false);
 
   const router = useRouter();
-  const id = uuid();
 
   const { connected } = useContext(MeContext);
   const { appId } = useContext(SystemContext);
@@ -123,11 +121,11 @@ const NewCharPage = () => {
     e.preventDefault();
 
     const url = '/api/vampires/create';
-    await fetcher(url, {
+    const result = await fetcher(url, {
       method: 'POST',
-      body: JSON.stringify({ name, era, type, id, appId, privateSheet }),
+      body: JSON.stringify({ name, era, type, appId, privateSheet }),
     });
-    router.push(`/vampires/${id}`);
+    router.push(`/vampires/${result.id}`);
   };
 
   return (

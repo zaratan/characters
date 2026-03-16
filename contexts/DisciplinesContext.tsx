@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
-import { v4 as uuid } from 'uuid';
 import { TempElemType } from '../types/TempElemType';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
@@ -306,7 +305,10 @@ const convertThaumaturgyToElems: (
         disc.key === tmpDiscipline.key
           ? {
               ...disc,
-              paths: [...disc.paths, { key: uuid(), title: '', value: 0 }],
+              paths: [
+                ...disc.paths,
+                { key: crypto.randomUUID(), title: '', value: 0 },
+              ],
             }
           : disc
       )
@@ -341,7 +343,10 @@ const convertThaumaturgyToElems: (
         disc.key === tmpDiscipline.key
           ? {
               ...disc,
-              rituals: [...disc.rituals, { key: uuid(), title: '', value: 0 }],
+              rituals: [
+                ...disc.rituals,
+                { key: crypto.randomUUID(), title: '', value: 0 },
+              ],
             }
           : disc
       )
@@ -444,7 +449,7 @@ const generateAddNewDiscipline: (
 ) => () => void = (disciplines, setter) => () => {
   setter([
     ...disciplines,
-    { value: 0, title: '', isThaumaturgy: false, key: uuid() },
+    { value: 0, title: '', isThaumaturgy: false, key: crypto.randomUUID() },
   ]);
 };
 
@@ -452,7 +457,7 @@ const generateAddNewCombinedDiscipline: (
   disciplines: Array<CombinedDisciplineType>,
   setter: (value: Array<CombinedDisciplineType>) => void
 ) => () => void = (disciplines, setter) => () => {
-  setter([...disciplines, { value: 0, title: '', key: uuid() }]);
+  setter([...disciplines, { value: 0, title: '', key: crypto.randomUUID() }]);
 };
 
 const generateRemoveDiscipline: (

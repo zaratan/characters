@@ -6,7 +6,6 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import { v4 as uuid } from 'uuid';
 import Pusher from 'pusher-js';
 
 // eslint-disable-next-line global-require
@@ -31,7 +30,7 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
   const pusherClient = useRef<Pusher | null>(null);
   const [pusherState, setPusherState] = useState('');
   const [needPusherFallback, setNeedPusherFallback] = useState(false);
-  const appId = useMemo(uuid, []);
+  const appId = useMemo(() => crypto.randomUUID(), []);
   useEffect(
     // pusher need a window object and doesn't play well with SSR
     () => {

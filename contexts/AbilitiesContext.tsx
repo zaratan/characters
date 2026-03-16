@@ -1,6 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
-import { v4 as uuid } from 'uuid';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
 export type RawAbilitiesListType = Array<{
@@ -68,7 +67,7 @@ export const convertRawAbilitiesToAbilities = (
                   ...a,
                   specialties: [
                     ...(ability.specialties || []),
-                    { key: uuid(), name: '' },
+                    { key: crypto.randomUUID(), name: '' },
                   ],
                 }
               : a
@@ -118,7 +117,7 @@ const generateAddNewCustomAbility: (
   customAbilities: RawAbilitiesListType,
   setter: (value: RawAbilitiesListType) => void
 ) => () => void = (customAbilities, setter) => () => {
-  const key = uuid();
+  const key = crypto.randomUUID();
   setter([...customAbilities, { title: '', key, value: 0 }]);
 };
 
