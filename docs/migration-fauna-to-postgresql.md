@@ -462,6 +462,17 @@ export const db = {
       `;
       return rows.length > 0;
     },
+
+    // Viewer OU editor — pour le check de lecture des fiches privées
+    async isEditorOrViewer(vampireId: string, userId: string, isAdmin = false): Promise<boolean> {
+      if (isAdmin) return true;
+      const { rows } = await sql`
+        SELECT 1 FROM vampire_editors WHERE vampire_id = ${vampireId} AND user_id = ${userId}
+        UNION
+        SELECT 1 FROM vampire_viewers WHERE vampire_id = ${vampireId} AND user_id = ${userId}
+      `;
+      return rows.length > 0;
+    },
   },
 
   users: {
@@ -746,11 +757,11 @@ Les codemods font les changements mécaniquement — pas besoin de le faire à l
 |---------|--------------|-----------------|
 | `pages/api/vampires/create.ts` | `q.Create()` → `db.vampires.create()` | `withApiAuthRequired` + `getSession` → `getServerSession` |
 | `pages/api/vampires.ts` | `q.Map(...)` → `db.vampires.findAll()` | `getSession` → `getServerSession` |
-| `pages/api/vampires/[id].ts` | `q.Map(...)` → `db.vampires.findById()` | (pas d'auth) |
+| `pages/api/vampires/[id].ts` | `q.Map(...)` → `db.vampires.findById()` | **Ajouter** check `privateSheet` + `isEditorOrViewer` (faille existante) |
 | `pages/api/vampires/[id]/update.ts` | `q.Replace()` → `db.vampires.update()` | `withApiAuthRequired` + `getSession` → `getServerSession` |
 | `pages/api/vampires/[id]/update_partial.ts` | `q.Update()` → `db.vampires.updatePartial()` | idem |
 | `pages/api/vampires/[id]/delete.ts` | `q.Delete()` → `db.vampires.delete()` | idem |
-| `pages/api/users.ts` | `q.Map(...)` → `db.users.findAll()` | `withApiAuthRequired` → check session |
+| `pages/api/users.ts` | `q.Map(...)` → `db.users.findAll()` | `withApiAuthRequired` → **admin-only** (`session.user.isAdmin`) |
 
 **Frontend (Auth) :**
 
@@ -822,14 +833,24 @@ Le filtrage privé/public passe côté SQL (dans le `WHERE` + `JOIN`). Plus effi
 ### 6.3 `GET /api/vampires/[id]`
 
 ```typescript
-// AVANT
+// AVANT — aucun check d'accès (faille existante)
 const dbs = await client.query(q.Map(q.Paginate(q.Match(q.Index('one_vampire'), id)), (ref) => q.Get(ref)));
 return dbs.data[0].data;
 
-// APRÈS
+// APRÈS — vérification privateSheet + droits
 const vampire = await db.vampires.findById(String(id));
 if (!vampire) return res.status(404).json({ error: 'not found' });
+
+if (vampire.privateSheet) {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ error: 'unauthorized' });
+  if (!(await db.vampires.isEditorOrViewer(id, session.user.id, session.user.isAdmin))) {
+    return res.status(403).json({ error: 'forbidden' });
+  }
+}
 ```
+
+> **Note :** C'est un fix — le code Fauna actuel ne vérifie pas les droits sur cette route. N'importe qui connaissant l'ID peut lire une fiche privée.
 
 ### 6.4 `PUT /api/vampires/[id]/update`
 
@@ -865,13 +886,18 @@ Le `ON DELETE CASCADE` sur les tables de jointure nettoie `vampire_editors` et `
 ### 6.7 `GET /api/users`
 
 ```typescript
-// AVANT
+// AVANT — tout user authentifié voit tous les emails/noms
 const dbs = await client.query(q.Map(q.Paginate(q.Match(q.Index('all_users'))), (ref) => q.Get(ref)));
 return dbs.data.map((e) => pick(e.data, [...]));
 
-// APRÈS
+// APRÈS — restreint aux admins
+const session = await getServerSession(req, res, authOptions);
+if (!session) return res.status(401).json({ error: 'unauthorized' });
+if (!session.user.isAdmin) return res.status(403).json({ error: 'forbidden' });
 const users = await db.users.findAll();
 ```
+
+> **Note :** Cette route sert à la config des editors/viewers. Seul l'admin devrait lister tous les utilisateurs. Pour le cas normal, on pourra ajouter une route de recherche par email plus restrictive si nécessaire.
 
 ---
 
