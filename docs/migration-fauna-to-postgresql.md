@@ -3,6 +3,7 @@
 > **Contexte** : FaunaDB est mort, le compte Auth0 n'existe plus, Next.js 12 est EOL. Le projet n'a pas été maintenu.
 > On migre tout d'un coup : base de données, authentification, et framework.
 > Pas de migration de données — on repart de zéro.
+> **Stratégie de rollback** : Fauna est mort, pas de retour possible. On fait du "fix forward".
 
 ---
 
@@ -25,14 +26,43 @@
 | Next.js 12.2.3 (EOL) | Next.js 14 (LTS, Pages Router toujours supporté) |
 | `next/image` (ancien comportement) | `next/legacy/image` ou nouveau `next/image` |
 | `<Link><a>...</a></Link>` | `<Link>...</Link>` (sans `<a>` enfant) |
+| `uuid` npm package (client-side UUIDv4) | `gen_random_uuid()` PostgreSQL (ID vampires) + `crypto.randomUUID()` natif (clés React) |
+| `.babelrc` + `babel-plugin-styled-components` | `compiler: { styledComponents: true }` dans `next.config.js` (SWC natif) |
 
 ### Ce qui ne change pas
 
 - **Pages Router** — on reste dessus, pas de migration vers App Router
 - Les API routes (mêmes URLs, mêmes shapes de réponse pour les données)
 - Le front-end (SWR, contexts, hooks) — sauf `MeContext` qui change de source
-- Pusher
+- Pusher (s'assurer de préserver les triggers `updateOnSheets`/`updateOnSheet` dans les routes réécrites)
 - Les types TypeScript (`VampireType`) — sauf `MeType`/`UserType` qui s'adaptent
+
+### Note sur Next.js 14 + Pages Router
+
+On upgrade vers Next 14 sans migrer vers App Router. Le bénéfice principal est de rester sur une version supportée. Points d'attention :
+- **`.babelrc`** : le projet a un `.babelrc` avec `babel-plugin-styled-components` + `next/babel`. **Quand un `.babelrc` existe, Next.js désactive SWC et fallback sur Babel.** Il faut **supprimer `.babelrc`** et utiliser `compiler.styledComponents` dans `next.config.js` à la place.
+- **SWR** : envisager upgrade vers SWR 2.x en même temps (breaking changes minimes)
+- Si Next 13 est encore supporté au moment de la migration, c'est une alternative avec moins de friction
+
+### Note sur la génération des UUIDs
+
+Le package `uuid` est utilisé dans 7 fichiers :
+- `pages/new.tsx` : génère l'ID du vampire côté client avant le POST
+- 6 contexts (`AdvFlawContext`, `DisciplinesContext`, `LanguagesContext`, `HumanMagicContext`, `AbilitiesContext`, `SystemContext`) : génèrent des clés React pour les items de listes (disciplines, langues, etc.)
+
+**Stratégie de remplacement :**
+- **ID vampires** → `gen_random_uuid()` côté PostgreSQL via `INSERT ... RETURNING id`. Le client ne génère plus l'ID.
+- **Clés React** → `crypto.randomUUID()` natif (disponible dans tous les navigateurs modernes et Node.js 14.17+). Zéro dépendance.
+- **Résultat** : suppression du package `uuid` + `@types/uuid`.
+
+**Impact sur le flow de création :**
+- Avant : `new.tsx` génère l'ID → redirige vers `/vampires/${id}` immédiatement → POST en parallèle
+- Après : `new.tsx` POST → attend la réponse `{ id }` → redirige vers `/vampires/${id}`
+- C'est un flow plus propre et plus sûr (pas de race condition entre la redirect et le POST)
+
+### Note sur la phase intermédiaire (Phase 1 seule)
+
+Pendant Phase 1 (auth remplacée, DB encore sur Fauna), les `user.id` NextAuth (UUIDs) ne matcheront jamais les `github|3338913` stockés dans Fauna. L'app sera en **lecture seule** entre la fin de Phase 1 et la fin de Phase 2. C'est attendu — ne pas déployer Phase 1 seule en production.
 
 ---
 
@@ -41,6 +71,10 @@
 **`@vercel/postgres`** (SQL brut) + **`node-pg-migrate`** (migrations versionnées).
 
 Pas d'ORM — le projet fait du CRUD trivial sur 7 routes. Un helper `lib/db.ts` centralise tout le SQL.
+
+> **Note** : `@vercel/postgres` est un wrapper sur `@neondatabase/serverless` (WebSocket). Si on migre un jour hors Vercel, on swap pour `pg` (node-postgres) + un connection pooler. La migration est triviale car tout le SQL est centralisé dans `lib/db.ts`.
+
+> **Important — transactions** : `@vercel/postgres` utilise un pool de connexions. Chaque appel `sql\`...\`` peut aller sur une connexion différente. Pour les transactions (BEGIN/COMMIT), il faut utiliser `db.connect()` pour obtenir un client dédié. Ne PAS faire `await sql\`BEGIN\`` suivi de `await sql\`INSERT...\`` — la transaction serait illusoire.
 
 ---
 
@@ -121,12 +155,19 @@ exports.up = (pgm) => {
     user_id: { type: 'text', notNull: true, references: 'users', onDelete: 'CASCADE' },
   });
   pgm.addConstraint('vampire_editors', 'vampire_editors_pkey', { primaryKey: ['vampire_id', 'user_id'] });
+  pgm.addConstraint('vampire_editors', 'vampire_editors_user_id_check', { check: "user_id <> ''" });
 
   pgm.createTable('vampire_viewers', {
     vampire_id: { type: 'uuid', notNull: true, references: 'vampires', onDelete: 'CASCADE' },
     user_id: { type: 'text', notNull: true, references: 'users', onDelete: 'CASCADE' },
   });
   pgm.addConstraint('vampire_viewers', 'vampire_viewers_pkey', { primaryKey: ['vampire_id', 'user_id'] });
+  pgm.addConstraint('vampire_viewers', 'vampire_viewers_user_id_check', { check: "user_id <> ''" });
+
+  // --- Index pour les requêtes fréquentes ---
+  pgm.createIndex('vampire_editors', 'user_id', { name: 'idx_vampire_editors_user' });
+  pgm.createIndex('vampire_viewers', 'user_id', { name: 'idx_vampire_viewers_user' });
+  pgm.createIndex('vampires', 'private_sheet', { name: 'idx_vampires_private' });
 };
 
 exports.down = (pgm) => {
@@ -138,24 +179,6 @@ exports.down = (pgm) => {
   pgm.dropTable('accounts');
   pgm.dropTable('users');
 };
-```
-
-**Ou en SQL pur** (avec `--migration-file-language sql`) :
-```bash
-npx node-pg-migrate create init-schema --migration-file-language sql
-# => migrations/1710000000000_init-schema.sql
-```
-
-```sql
--- Up Migration
-CREATE TABLE users ( ... );
-CREATE TABLE vampires ( ... );
-
--- Down Migration
-DROP TABLE vampire_viewers;
-DROP TABLE vampire_editors;
-DROP TABLE vampires;
-DROP TABLE users;
 ```
 
 **Commandes :**
@@ -197,7 +220,7 @@ Les migrations doivent tourner **pendant le build**, pas au runtime des serverle
 ```json
 {
   "scripts": {
-    "build": "node-pg-migrate up && next build",
+    "build": "node -e \"if(process.env.VERCEL_ENV!=='preview'){require('child_process').execSync('npx node-pg-migrate up',{stdio:'inherit'})}\" && next build",
     "migrate:up": "node-pg-migrate up",
     "migrate:down": "node-pg-migrate down",
     "migrate:create": "node-pg-migrate create"
@@ -208,6 +231,8 @@ Les migrations doivent tourner **pendant le build**, pas au runtime des serverle
 Vercel exécute `yarn build` à chaque déploiement -> les migrations tournent avant le build Next.js -> la DB est à jour quand l'app démarre.
 
 > **Note** : il faut que `POSTGRES_URL` (ou `DATABASE_URL`) soit accessible au build time. C'est le cas par défaut avec Vercel Postgres.
+
+> **Attention preview deployments** : les preview deployments Vercel utilisent les mêmes env vars par défaut. Le guard `VERCEL_ENV !== 'preview'` empêche d'exécuter les migrations contre la DB de production depuis un preview. Idéalement, configurer une DB séparée pour les previews.
 
 ---
 
@@ -268,23 +293,33 @@ CREATE TABLE verification_tokens (
 CREATE TABLE vampires (
   id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   private_sheet BOOLEAN NOT NULL DEFAULT false,
-  data          JSONB NOT NULL,                              -- LE VampireType entier
+  data          JSONB NOT NULL,                              -- LE VampireType entier (sans id, privateSheet, editors, viewers)
   created_at    TIMESTAMPTZ NOT NULL DEFAULT now(),
   updated_at    TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
 CREATE TABLE vampire_editors (
   vampire_id UUID NOT NULL REFERENCES vampires(id) ON DELETE CASCADE,
-  user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE CHECK (user_id <> ''),
   PRIMARY KEY (vampire_id, user_id)
 );
 
 CREATE TABLE vampire_viewers (
   vampire_id UUID NOT NULL REFERENCES vampires(id) ON DELETE CASCADE,
-  user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_id    TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE CHECK (user_id <> ''),
   PRIMARY KEY (vampire_id, user_id)
 );
+
+-- ============================
+-- Index pour les requêtes fréquentes
+-- ============================
+
+CREATE INDEX idx_vampire_editors_user ON vampire_editors(user_id);
+CREATE INDEX idx_vampire_viewers_user ON vampire_viewers(user_id);
+CREATE INDEX idx_vampires_private ON vampires(private_sheet);
 ```
+
+> **Note colonnes NextAuth** : les tables NextAuth utilisent du camelCase (`"emailVerified"`, `"userId"`, `"sessionToken"`, `"providerAccountId"`) qui nécessite du quoting en SQL brut. Toujours utiliser les double quotes pour ces colonnes.
 
 **Pourquoi ça marche :** on ne requête JAMAIS les champs internes du vampire. On ne fait que :
 - Lister les vampires (filtre sur `private_sheet` + jointure `editors`/`viewers`)
@@ -292,43 +327,18 @@ CREATE TABLE vampire_viewers (
 - Remplacer tout le document
 - Supprimer par `id`
 
-Le contenu du personnage est toujours lu/écrit en bloc. Le seul champ qu'on extrait dans la liste c'est `data->>'name'` pour l'affichage (ou `data->'infos'->>'name'`).
-
-**Les routes deviennent triviales :**
-
-```typescript
-import { sql } from '@vercel/postgres';
-import { VampireType } from '../../types/VampireType';
-
-// CREATE — presque identique à Fauna
-const { editors, viewers, privateSheet, ...charData } = vampireData;
-await sql`
-  INSERT INTO vampires (id, private_sheet, data)
-  VALUES (${id}, ${privateSheet}, ${JSON.stringify(charData)})
-`;
-
-// READ — presque identique à Fauna
-const { rows } = await sql`SELECT * FROM vampires WHERE id = ${id}`;
-const vampire = { ...rows[0].data, id: rows[0].id, privateSheet: rows[0].private_sheet };
-
-// UPDATE (full replace) — presque identique à Fauna
-await sql`
-  UPDATE vampires SET data = ${JSON.stringify(charData)}, updated_at = now()
-  WHERE id = ${id}
-`;
-
-// DELETE — identique
-await sql`DELETE FROM vampires WHERE id = ${id}`;
-```
-
-C'est le même niveau de simplicité que Fauna. Pas de mapping 20 colonnes.
+Le contenu du personnage est toujours lu/écrit en bloc. Le seul champ qu'on extrait dans la liste c'est `data->'infos'->>'name'` pour l'affichage.
 
 ### 4.3 Helper layer : `lib/db.ts`
 
 Un helper fait le pont entre `VampireType` et la DB. Les routes API ne voient jamais de SQL, juste des fonctions typées.
 
+> **Attention** : les transactions doivent utiliser `db.connect()` pour obtenir un client dédié. Les tagged templates `sql\`...\`` utilisent le pool et chaque appel peut aller sur une connexion différente.
+
+> **Attention** : toujours utiliser le cast `::jsonb` quand on passe du `JSON.stringify()` en paramètre d'une colonne JSONB.
+
 ```typescript
-import { sql } from '@vercel/postgres';
+import { db as pgDb, sql } from '@vercel/postgres';
 import { VampireType } from '../types/VampireType';
 
 // ---- Types ----
@@ -353,9 +363,9 @@ function rowToVampire(row: VampireRow, editors: string[], viewers: string[]): Va
   };
 }
 
-function vampireToRow(v: VampireType) {
-  const { id, privateSheet, editors, viewers, ...data } = v;
-  return { id, privateSheet, data: JSON.stringify(data) };
+function vampireToRow(v: Omit<VampireType, 'id'>) {
+  const { privateSheet, editors, viewers, ...data } = v;
+  return { privateSheet, data: JSON.stringify(data) };
 }
 
 // ---- API publique ----
@@ -363,7 +373,7 @@ function vampireToRow(v: VampireType) {
 export const db = {
   vampires: {
     // isAdmin = true → voit tout (plus besoin de hardcoder un sub)
-    async findAll(userId?: string, isAdmin = false): Promise<VampireListItem[]> {
+    async list(userId?: string, isAdmin = false): Promise<VampireListItem[]> {
       if (isAdmin) {
         const { rows } = await sql`
           SELECT id, data->'infos'->>'name' as name FROM vampires
@@ -400,40 +410,101 @@ export const db = {
       );
     },
 
-    async create(vampire: VampireType): Promise<void> {
-      const { id, privateSheet, data } = vampireToRow(vampire);
-      await sql`
-        INSERT INTO vampires (id, private_sheet, data)
-        VALUES (${id}, ${privateSheet}, ${data})
-      `;
-    },
-
-    async addEditor(vampireId: string, userId: string): Promise<void> {
-      await sql`
-        INSERT INTO vampire_editors (vampire_id, user_id) VALUES (${vampireId}, ${userId})
-        ON CONFLICT DO NOTHING
-      `;
-    },
-
-    async addViewer(vampireId: string, userId: string): Promise<void> {
-      await sql`
-        INSERT INTO vampire_viewers (vampire_id, user_id) VALUES (${vampireId}, ${userId})
-        ON CONFLICT DO NOTHING
-      `;
+    // L'ID est généré par PostgreSQL (gen_random_uuid()), pas côté client
+    async create(vampire: Omit<VampireType, 'id'>, creatorUserId: string): Promise<string> {
+      const { privateSheet, data } = vampireToRow(vampire);
+      // Transaction via client dédié (sql`` utilise le pool = connexions différentes)
+      const client = await pgDb.connect();
+      try {
+        await client.sql`BEGIN`;
+        const { rows } = await client.sql`
+          INSERT INTO vampires (private_sheet, data)
+          VALUES (${privateSheet}, ${data}::jsonb)
+          RETURNING id
+        `;
+        const id = rows[0].id;
+        await client.sql`
+          INSERT INTO vampire_editors (vampire_id, user_id)
+          VALUES (${id}, ${creatorUserId})
+        `;
+        await client.sql`COMMIT`;
+        return id;
+      } catch (e) {
+        await client.sql`ROLLBACK`;
+        throw e;
+      } finally {
+        client.release();
+      }
     },
 
     async update(id: string, vampire: VampireType): Promise<void> {
       const { privateSheet, data } = vampireToRow(vampire);
-      await sql`
-        UPDATE vampires
-        SET data = ${data}, private_sheet = ${privateSheet}, updated_at = now()
-        WHERE id = ${id}
-      `;
+      const { editors, viewers } = vampire;
+      // Transaction : update data + sync junction tables
+      const client = await pgDb.connect();
+      try {
+        await client.sql`BEGIN`;
+        await client.sql`
+          UPDATE vampires
+          SET data = ${data}::jsonb, private_sheet = ${privateSheet}, updated_at = now()
+          WHERE id = ${id}
+        `;
+        // Sync editors
+        await client.sql`DELETE FROM vampire_editors WHERE vampire_id = ${id}`;
+        for (const userId of editors) {
+          await client.sql`
+            INSERT INTO vampire_editors (vampire_id, user_id) VALUES (${id}, ${userId})
+          `;
+        }
+        // Sync viewers
+        await client.sql`DELETE FROM vampire_viewers WHERE vampire_id = ${id}`;
+        for (const userId of viewers) {
+          await client.sql`
+            INSERT INTO vampire_viewers (vampire_id, user_id) VALUES (${id}, ${userId})
+          `;
+        }
+        await client.sql`COMMIT`;
+      } catch (e) {
+        await client.sql`ROLLBACK`;
+        throw e;
+      } finally {
+        client.release();
+      }
     },
 
     async updatePartial(id: string, partial: Partial<VampireType>): Promise<void> {
-      const { privateSheet, ...rest } = partial;
-      const { id: _, editors, viewers, ...dataFields } = rest;
+      const { privateSheet, editors, viewers, ...rest } = partial;
+      const { id: _id, ...dataFields } = rest;
+
+      // Si editors ou viewers sont présents, sync les junction tables
+      if (editors || viewers) {
+        const client = await pgDb.connect();
+        try {
+          await client.sql`BEGIN`;
+          if (editors) {
+            await client.sql`DELETE FROM vampire_editors WHERE vampire_id = ${id}`;
+            for (const userId of editors) {
+              await client.sql`
+                INSERT INTO vampire_editors (vampire_id, user_id) VALUES (${id}, ${userId})
+              `;
+            }
+          }
+          if (viewers) {
+            await client.sql`DELETE FROM vampire_viewers WHERE vampire_id = ${id}`;
+            for (const userId of viewers) {
+              await client.sql`
+                INSERT INTO vampire_viewers (vampire_id, user_id) VALUES (${id}, ${userId})
+              `;
+            }
+          }
+          await client.sql`COMMIT`;
+        } catch (e) {
+          await client.sql`ROLLBACK`;
+          throw e;
+        } finally {
+          client.release();
+        }
+      }
 
       if (Object.keys(dataFields).length > 0) {
         await sql`
@@ -444,7 +515,8 @@ export const db = {
       }
       if (privateSheet !== undefined) {
         await sql`
-          UPDATE vampires SET private_sheet = ${privateSheet} WHERE id = ${id}
+          UPDATE vampires SET private_sheet = ${privateSheet}, updated_at = now()
+          WHERE id = ${id}
         `;
       }
     },
@@ -496,7 +568,8 @@ export const db = {
 await client.query(q.Create(q.Collection('vampires'), { data }));
 
 // pages/api/vampires/create.ts — APRÈS
-await db.vampires.create(data);
+const id = await db.vampires.create(data, session.user.id);
+res.status(200).json({ id }); // Le client redirige après avoir reçu l'ID
 
 
 // pages/api/vampires/[id].ts — AVANT
@@ -528,6 +601,36 @@ C'est **plus simple qu'avant**. Le boilerplate Fauna (`q.Map(q.Paginate(q.Match(
 ## 5. Couche authentification : Auth0 → NextAuth
 
 NextAuth : open-source, self-hosted, intégré à Next.js. La DB PostgreSQL sert aussi de backend auth.
+
+> **Choix de version** : NextAuth v4, pas v5 (Auth.js). v5 est conçu pour App Router. Sur Pages Router, v4 est le bon choix. Si on migre vers App Router plus tard, on passera à v5 à ce moment.
+
+> **Décision de sécurité** : `allowDangerousEmailAccountLinking: true` est activé. Le risque : quelqu'un qui contrôle un email peut lier un compte existant. C'est acceptable pour une app de fiches de perso sans données sensibles. À revoir si le périmètre de l'app change.
+
+### 5.1 Module augmentation TypeScript : `types/next-auth.d.ts`
+
+**Obligatoire.** NextAuth expose par défaut `session.user` avec seulement `name`, `email`, `image`. On ajoute `id` et `isAdmin` via le callback session, mais TypeScript ne les connaît pas sans cette augmentation.
+
+```typescript
+// types/next-auth.d.ts
+import 'next-auth';
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      name?: string | null;
+      email?: string | null;
+      image?: string | null;
+      isAdmin: boolean;
+    };
+  }
+  interface User {
+    isAdmin: boolean;
+  }
+}
+```
+
+> **Note** : le custom adapter (`lib/auth-adapter.ts`) DOIT retourner `isAdmin` dans l'objet `User` pour que le callback session le reçoive. L'adapter `@next-auth/pg-adapter` standard ne connaît pas la colonne `is_admin` — l'adapter custom est donc obligatoire, pas optionnel.
 
 ### 5.2 Config NextAuth : `pages/api/auth/[...nextauth].ts`
 
@@ -571,7 +674,7 @@ export const authOptions = {
   callbacks: {
     async session({ session, user }) {
       session.user.id = user.id;
-      session.user.isAdmin = user.isAdmin; // colonne is_admin de la table users
+      session.user.isAdmin = user.isAdmin;
       return session;
     },
   },
@@ -584,9 +687,7 @@ export default NextAuth(authOptions);
 >
 > **Linking de comptes** : si un user se connecte d'abord par magic link puis par GitHub (ou l'inverse), NextAuth lie les deux comptes automatiquement si l'email est identique (`allowDangerousEmailAccountLinking`). Le nom est alarmiste mais c'est safe dans notre cas : GitHub vérifie les emails, et le magic link aussi par définition. Résultat : un seul user dans la table `users`, deux entrées dans `accounts` (une `email`, une `github`).
 >
-> **Resend** : gratuit jusqu'à 100 emails/jour, une seule clé API. Le domaine d'envoi doit être vérifié dans le dashboard Resend.
->
-> **Note adapter** : on peut aussi utiliser `@next-auth/pg-adapter` directement si on veut éviter un adapter custom.
+> **Resend** : gratuit jusqu'à 100 emails/jour, une seule clé API. Le domaine d'envoi doit être vérifié dans le dashboard Resend (DNS SPF/DKIM), sinon les magic links atterrissent en spam.
 
 ### 5.3 Remplacement des patterns Auth0 → NextAuth
 
@@ -599,17 +700,21 @@ export default NextAuth(authOptions);
 | `import { UserProvider } from '@auth0/nextjs-auth0'` | `import { SessionProvider } from 'next-auth/react'` | `_app.tsx` |
 | `import { useUser } from '@auth0/nextjs-auth0'` | `import { useSession } from 'next-auth/react'` | `MeContext.tsx` |
 | `const { user } = useUser()` | `const { data: session } = useSession()` | `MeContext.tsx` |
-| `/api/auth/login` | `signIn()` de `next-auth/react` (redirige vers page avec choix Email / GitHub) | `Nav.tsx` |
+| `me.sub` | `me.id` | `ModeContext.tsx` (4 refs), `ActionsFooter.tsx` (1 ref), `[id].tsx`, `config.tsx` |
+| `me.picture` / `data.picture` | `me.image` | `Nav.tsx` (profil img) |
+| `/api/auth/login?return=...` | `signIn(undefined, { callbackUrl: returnTo })` | `Nav.tsx` |
 | `/api/auth/logout` | `signOut()` de `next-auth/react` | `Nav.tsx` |
+| `import { UserProfile } from '@auth0/nextjs-auth0'` | Supprimer — utiliser `MeType` | `Nav.tsx` |
 
 ### 5.4 `MeContext.tsx` — réécriture
 
 ```typescript
 import { useSession } from 'next-auth/react';
 import { createContext, useContext, useMemo } from 'react';
+import { MeType } from '../types/MeType';
 
 type MeContextType = {
-  me?: { id: string; name: string; email: string; image: string; isAdmin: boolean };
+  me?: MeType;
   connected: boolean;
 };
 
@@ -622,9 +727,9 @@ export const MeProvider = ({ children }) => {
     () => ({
       me: session?.user ? {
         id: session.user.id,
-        name: session.user.name,
-        email: session.user.email,
-        image: session.user.image,
+        name: session.user.name ?? '',
+        email: session.user.email ?? '',
+        image: session.user.image ?? '',
         isAdmin: session.user.isAdmin ?? false,
       } : undefined,
       connected: status === 'authenticated',
@@ -671,11 +776,27 @@ Plus besoin de `sub`, `nickname`, `picture` (renommé `image` par NextAuth), `em
 
 Next 14 : dernière version compatible React 18.2 (déjà en place). Next 13 est EOL, Next 15 exige React 19. Pages Router toujours supporté.
 
+### 5bis.1 Supprimer `.babelrc` + configurer SWC
+
+**Le projet a un `.babelrc`** à la racine avec `babel-plugin-styled-components` + preset `next/babel`. **Quand un `.babelrc` existe, Next.js désactive SWC entièrement.** Le `compiler.styledComponents` dans `next.config.js` serait silencieusement ignoré.
+
+**Étapes :**
+1. Supprimer `.babelrc`
+2. Supprimer `babel-plugin-styled-components` des devDependencies
+3. Créer `next.config.js` (le fichier **n'existe pas** actuellement) :
+
+```javascript
+// next.config.js
+module.exports = {
+  compiler: {
+    styledComponents: true,
+  },
+};
+```
+
 ### 5bis.2 Breaking changes (Pages Router uniquement)
 
-L'impact est **très faible** pour ce projet. Seulement 4 fichiers touchés.
-
-#### `next/link` — supprimer le `<a>` enfant (3 occurrences)
+#### `next/link` — supprimer le `<a>` enfant (~8 occurrences)
 
 ```tsx
 // AVANT (Next 12)
@@ -690,18 +811,14 @@ L'impact est **très faible** pour ce projet. Seulement 4 fichiers touchés.
 | Fichier | Ligne(s) | Détail |
 |---------|----------|--------|
 | `components/Nav.tsx` | ~114-116 | `<Link href={loginUrl}><a>Connection</a></Link>` |
-| `components/ActionsFooter.tsx` | ~145-146, ~214-215 | 2 occurrences dans les actions footer |
+| `components/Nav.tsx` | ~136-138 | `<Link href="..." passHref><MenuDropdownElem as="a">` — **codemod ne gère pas** `passHref` + styled-component |
+| `components/Nav.tsx` | ~205-221 | `<Link href="/" passHref><Title as="a">Personnages</Title></Link>` — même pattern `passHref` |
+| `components/ActionsFooter.tsx` | ~145, ~155, ~214, ~224 | 4 occurrences (2 desktop, 2 mobile) dans les actions footer |
+| `pages/index.tsx` | ~78-86 | `<Link href="..." passHref><HandLargeText as="a">` — même pattern `passHref` |
+
+> **Les cas `passHref` + styled-component `as="a"`** ne seront pas gérés par le codemod `new-link`. Ils doivent être corrigés manuellement. En Next 14, `Link` transmet le `href` automatiquement — `passHref` et `as="a"` ne sont plus nécessaires.
 
 #### `next/image` — comportement changé (1 occurrence)
-
-```tsx
-// Option A : garder l'ancien comportement
-import Image from 'next/legacy/image';
-
-// Option B : adapter au nouveau composant (recommandé)
-// Le nouveau next/image a un layout plus simple (pas de layout="fill" etc.)
-import Image from 'next/image';
-```
 
 **Fichier impacté :**
 
@@ -711,24 +828,18 @@ import Image from 'next/image';
 
 > L'image dans `Sheet.tsx` utilise déjà `width` et `height` explicites, donc elle devrait fonctionner sans changement avec le nouveau `next/image`. À vérifier visuellement.
 
-#### Pas d'impact sur ce projet
-
-- `next export` → pas utilisé
-- `@next/font` → pas utilisé
-- App Router APIs (`cookies()`, `headers()` async) → pas concerné (Pages Router)
-
 ### 5bis.3 Commandes d'upgrade
 
 ```bash
 # Upgrade Next.js + ESLint config
 yarn add next@14 eslint-config-next@14
 
-# Codemods automatiques (optionnel, gère next/link et next/image)
-npx @next/codemod@latest next-image-to-legacy-image .
+# Codemods automatiques (gère next/link et next/image)
 npx @next/codemod@latest new-link .
+npx @next/codemod@latest next-image-to-legacy-image .
 ```
 
-Les codemods font les changements mécaniquement — pas besoin de le faire à la main.
+Les codemods gèrent les cas simples. **Les 4 cas `passHref` + styled-component** (Nav home, Nav logout, index.tsx, éventuels dans ActionsFooter) doivent être corrigés manuellement.
 
 ### 5bis.4 Dépendances à mettre à jour en même temps
 
@@ -739,6 +850,7 @@ Les codemods font les changements mécaniquement — pas besoin de le faire à l
 | `typescript` | 4.7 | 5.x | Next 14 recommande TS 5+ |
 | `@types/react` | 18.0.15 | 18.2.x | Aligner avec React 18.2 |
 | `@types/node` | 18.6.2 | 20.x | Aligner avec Node 20+ |
+| `swr` | 1.3 | 2.x | Rester à jour (breaking changes minimes — `mutate` global toujours dispo) |
 
 ---
 
@@ -749,75 +861,105 @@ Les codemods font les changements mécaniquement — pas besoin de le faire à l
 | Fichier | Raison |
 |---------|--------|
 | `pages/api/auth/[...auth0].ts` | Remplacé par `[...nextauth].ts` |
+| `hooks/useMe.ts` | Dead code — fait un SWR call vers `/api/me` qui n'existe pas. `MeContext` fournit la même chose via `useSession()` |
+| `.babelrc` | Remplacé par `compiler.styledComponents` dans `next.config.js`. Bloque SWC si présent. |
 
-### 6.2 Fichiers à modifier (13 fichiers)
+### 6.2 Fichiers à modifier (~25 fichiers)
 
 **Routes API (DB + Auth) :**
 
 | Fichier | Changement DB | Changement Auth |
 |---------|--------------|-----------------|
-| `pages/api/vampires/create.ts` | `q.Create()` → `db.vampires.create()` | `withApiAuthRequired` + `getSession` → `getServerSession` |
-| `pages/api/vampires.ts` | `q.Map(...)` → `db.vampires.findAll()` | `getSession` → `getServerSession` |
-| `pages/api/vampires/[id].ts` | `q.Map(...)` → `db.vampires.findById()` | **Ajouter** check `privateSheet` + `isEditorOrViewer` (faille existante) |
-| `pages/api/vampires/[id]/update.ts` | `q.Replace()` → `db.vampires.update()` | `withApiAuthRequired` + `getSession` → `getServerSession` |
-| `pages/api/vampires/[id]/update_partial.ts` | `q.Update()` → `db.vampires.updatePartial()` | idem |
+| `pages/api/vampires/create.ts` | `q.Create()` → `db.vampires.create()` — retourne `{ id }` (ID généré par PG) | `withApiAuthRequired` + `getSession` → `getServerSession` |
+| `pages/api/vampires.ts` | `q.Map(...)` → `db.vampires.list()` — wrapper `{ characters, failed }` préservé | `getSession` → `getServerSession` |
+| `pages/api/vampires/[id].ts` | `q.Map(...)` → `db.vampires.findById()` — wrapper `{ data, failed }` préservé | **Ajouter** check `privateSheet` + `isEditorOrViewer` (faille existante) |
+| `pages/api/vampires/[id]/update.ts` | `q.Replace()` → `db.vampires.update()` — sync editors/viewers via junction tables | `withApiAuthRequired` + `getSession` → `getServerSession`. Stripper `appId` du body. |
+| `pages/api/vampires/[id]/update_partial.ts` | `q.Update()` → `db.vampires.updatePartial()` — sync editors/viewers si présents | idem |
 | `pages/api/vampires/[id]/delete.ts` | `q.Delete()` → `db.vampires.delete()` | idem |
-| `pages/api/users.ts` | `q.Map(...)` → `db.users.findAll()` | `withApiAuthRequired` → `getServerSession` (auth requise) |
+| `pages/api/users.ts` | `q.Map(...)` → `db.users.findAllPublic()` | `withApiAuthRequired` → `getServerSession` (auth requise) |
 
-**Frontend (Auth) :**
+**Frontend (Auth — `me.sub` → `me.id`, `me.picture` → `me.image`) :**
 
 | Fichier | Changement |
 |---------|------------|
 | `pages/_app.tsx` | `UserProvider` → `SessionProvider` |
-| `contexts/MeContext.tsx` | `useUser()` → `useSession()` (réécriture, cf. section 5.4) |
+| `contexts/MeContext.tsx` | `useUser()` → `useSession()` (réécriture complète, cf. section 5.4) |
+| `contexts/ModeContext.tsx` | **4 refs à `me.sub`** (lignes 37, 40, 45, 48) → `me.id`. **Manqué dans les versions précédentes du plan — CRITIQUE** |
+| `contexts/AccessesContext.tsx` | Identifiants `sub` → `id` (renommage paramètres) |
 | `types/MeType.ts` | `UserProfile` Auth0 → type simplifié NextAuth |
 | `types/UserType.ts` | Supprimer `sub`, `nickname`, `picture` → `id`, `image` |
-| `hooks/useMe.ts` | Simplifié (plus de fetch `/api/me`) |
-| `components/Nav.tsx` | `/api/auth/login` → `signIn()`, `/api/auth/logout` → `signOut()` |
-| `pages/vampires/[id].tsx` | Supprimer fallback `editors \|\| ['github\|3338913']` → utiliser `me.isAdmin` |
-| `pages/vampires/[id]/config.tsx` | Idem — `me.isAdmin \|\| editors.includes(me.id)` |
+| `components/Nav.tsx` | `/api/auth/login` → `signIn(undefined, { callbackUrl })`, `/api/auth/logout` → `signOut()`, `data.picture` → `me.image`, supprimer import `UserProfile` de `@auth0/nextjs-auth0` |
+| `components/ActionsFooter.tsx` | `me.sub` (ligne 263) → `me.id` pour le check éditeur |
 | `components/SheetActionsFooter.tsx` | `ownerActions` conditionné par `me.isAdmin \|\| editors.includes(me.id)` |
+| `components/config/ConfigAccessSection.tsx` | **8 refs à `user.sub`** → `user.id`. Response shape `/api/users` change : `sub` → `id`, `picture` → `image` |
+| `pages/vampires/[id].tsx` | Supprimer fallback `editors \|\| ['github\|3338913']` → `me.isAdmin`. Adapter `getStaticPaths`/`getStaticProps`. `me.sub` → `me.id` |
+| `pages/vampires/[id]/config.tsx` | Idem — `me.isAdmin \|\| editors.includes(me.id)`. Adapter `getStaticProps`. |
+| `pages/index.tsx` | Importe `fetchVampireFromDB` → adapter pour `db.vampires.list()`. + fix `Link` `passHref` |
+| `pages/new.tsx` | `uuid()` → POST attend `{ id }` de la réponse API → redirect après. |
 
-**Next.js 14 upgrade (codemods) :**
+**Remplacement `uuid` → `crypto.randomUUID()` (6 contexts) :**
 
 | Fichier | Changement |
 |---------|------------|
-| `components/Nav.tsx` | `<Link><a>Connection</a></Link>` → `<Link>Connection</Link>` |
-| `components/ActionsFooter.tsx` | 2× `<Link><a>...</a></Link>` → `<Link>...</Link>` |
-| `components/Sheet.tsx` | Vérifier `next/image` — probablement ok tel quel (utilise déjà `width`/`height`) |
+| `contexts/AdvFlawContext.tsx` | `import { v4 as uuid } from 'uuid'` → supprimer import, `uuid()` → `crypto.randomUUID()` |
+| `contexts/DisciplinesContext.tsx` | idem |
+| `contexts/LanguagesContext.tsx` | idem |
+| `contexts/HumanMagicContext.tsx` | idem |
+| `contexts/AbilitiesContext.tsx` | idem |
+| `contexts/SystemContext.tsx` | idem |
+
+**Next.js 14 upgrade (codemods + manuels) :**
+
+| Fichier | Changement |
+|---------|------------|
+| `components/Nav.tsx` | 3 `Link` dont 2 avec `passHref` (codemod + fix manuel) |
+| `components/ActionsFooter.tsx` | 4 `Link` (codemod) |
+| `pages/index.tsx` | 1 `Link` avec `passHref` (fix manuel) |
+| `components/Sheet.tsx` | Vérifier `next/image` — probablement ok tel quel |
 
 ### 6.3 Fichiers à créer
 
 | Fichier | Contenu |
 |---------|---------|
 | `pages/api/auth/[...nextauth].ts` | Config NextAuth (section 5.2) |
-| `lib/db.ts` | Helper layer DB (section 4.4) |
-| `lib/auth-adapter.ts` | Adapter PostgreSQL pour NextAuth (optionnel, peut utiliser `@next-auth/pg-adapter`) |
-| `migrations/TIMESTAMP_init-schema.js` | Migration initiale — tables NextAuth + tables applicatives (section 4.2) |
+| `lib/db.ts` | Helper layer DB (section 4.3) |
+| `lib/auth-adapter.ts` | Adapter PostgreSQL custom — **obligatoire** (doit retourner `isAdmin` dans l'objet `User`) |
+| `types/next-auth.d.ts` | Module augmentation TypeScript pour `Session` et `User` (section 5.1) |
+| `next.config.js` | Config SWC + styled-components (section 5bis.1) |
+| `migrations/TIMESTAMP_init-schema.js` | Migration initiale — tables NextAuth + tables applicatives + index + constraints (section 3) |
 
 ---
 
-## 6. Détail des réécritures par route
+## 6bis. Détail des réécritures par route
 
-Chaque route remplace le boilerplate Fauna par un appel à `db.*`. Le SQL est encapsulé dans `lib/db.ts` (section 4.4).
+Chaque route remplace le boilerplate Fauna par un appel à `db.*`. Le SQL est encapsulé dans `lib/db.ts` (section 4.3).
 
-### 6.1 `POST /api/vampires/create`
+> **Important** : préserver les appels Pusher (`updateOnSheets`, `updateOnSheet`) dans les routes qui les utilisent. Le `delete.ts` actuel n'a PAS de call Pusher (contrairement aux autres routes) — ne pas en inventer un.
+
+> **Important** : les routes qui reçoivent `appId` dans le body doivent le stripper avant de passer les données à `db.*`. Le code actuel fait `delete data.appId`.
+
+> **Important** : les wrappers `{ characters, failed }` et `{ data, failed }` utilisés par `getStaticPaths`/`getStaticProps` doivent être préservés dans les fonctions exportées (`fetchVampireFromDB`, `fetchOneVampire`), ou ces fonctions doivent être réécrites pour retourner directement depuis `db.*` avec adaptation des 3 fichiers consommateurs.
+
+### 6bis.1 `POST /api/vampires/create`
 
 ```typescript
 // AVANT
 const client = new faunadb.Client({ secret });
-await client.query(q.Create(q.Collection('vampires'), { data }));
+const id = body.id || 'aaaaaaaa'; // ID généré côté client (uuid)
+await client.query(q.Create(q.Collection('vampires'), { data: { ...body, id } }));
 
 // APRÈS
 import { db } from '../../../lib/db';
 
 const session = await getServerSession(req, res, authOptions);
-await db.vampires.create(data);
-await db.vampires.addEditor(data.id, session.user.id);
-// Plus de viewers: ['github|3338913'] hardcodé — l'admin voit tout via isAdmin
+const { appId, ...vampireData } = JSON.parse(req.body);
+// L'ID est généré par PostgreSQL, pas côté client
+const id = await db.vampires.create(vampireData, session.user.id);
+// Pusher : updateOnSheets(appId)
+res.status(200).json({ id });
 ```
 
-### 6.2 `GET /api/vampires` (liste)
+### 6bis.2 `GET /api/vampires` (liste)
 
 ```typescript
 // AVANT — fetch tout + filtre côté app
@@ -826,12 +968,12 @@ const filtered = dbs.data.filter((v) => !v.data.privateSheet || ...);
 
 // APRÈS — filtre côté SQL
 const session = await getServerSession(req, res, authOptions);
-const vampires = await db.vampires.findAll(session?.user?.id, session?.user?.isAdmin);
+const vampires = await db.vampires.list(session?.user?.id, session?.user?.isAdmin);
+// Garder le wrapper pour les consommateurs (getStaticPaths, index.tsx)
+res.status(200).json({ characters: vampires, failed: false });
 ```
 
-Le filtrage privé/public passe côté SQL (dans le `WHERE` + `JOIN`). Plus efficace, plus propre.
-
-### 6.3 `GET /api/vampires/[id]`
+### 6bis.3 `GET /api/vampires/[id]`
 
 ```typescript
 // AVANT — aucun check d'accès (faille existante)
@@ -845,7 +987,7 @@ if (!vampire) return res.status(404).json({ error: 'not found' });
 if (vampire.privateSheet) {
   const session = await getServerSession(req, res, authOptions);
   if (!session) return res.status(401).json({ error: 'unauthorized' });
-  if (!(await db.vampires.isEditorOrViewer(id, session.user.id, session.user.isAdmin))) {
+  if (!(await db.vampires.isEditorOrViewer(String(id), session.user.id, session.user.isAdmin))) {
     return res.status(403).json({ error: 'forbidden' });
   }
 }
@@ -853,7 +995,7 @@ if (vampire.privateSheet) {
 
 > **Note :** C'est un fix — le code Fauna actuel ne vérifie pas les droits sur cette route. N'importe qui connaissant l'ID peut lire une fiche privée.
 
-### 6.4 `PUT /api/vampires/[id]/update`
+### 6bis.4 `PUT /api/vampires/[id]/update`
 
 ```typescript
 // AVANT
@@ -862,29 +1004,34 @@ if (!vampire.data[0].data.editors.includes(user.sub)) return res.status(403)...;
 await client.query(q.Replace(vampire.data[0].ref, { data }));
 
 // APRÈS
+const { appId, ...vampireData } = JSON.parse(req.body); // Stripper appId
 if (!(await db.vampires.isEditor(id, session.user.id, session.user.isAdmin))) return res.status(403)...;
-await db.vampires.update(id, data);
+await db.vampires.update(id, vampireData); // Sync data + editors + viewers dans une transaction
+// Pusher : updateOnSheet(id, appId)
 ```
 
-### 6.5 `PATCH /api/vampires/[id]/update_partial`
+### 6bis.5 `PATCH /api/vampires/[id]/update_partial`
 
 ```typescript
-// APRÈS — merge JSONB natif PostgreSQL, pas besoin de tout renvoyer
+// APRÈS — merge JSONB natif PostgreSQL + sync junction tables si editors/viewers présents
+const { appId, ...partialData } = JSON.parse(req.body); // Stripper appId
 if (!(await db.vampires.isEditor(id, session.user.id, session.user.isAdmin))) return res.status(403)...;
 await db.vampires.updatePartial(id, partialData);
+// Pusher : updateOnSheet(id, appId)
 ```
 
-### 6.6 `DELETE /api/vampires/[id]/delete`
+### 6bis.6 `DELETE /api/vampires/[id]/delete`
 
 ```typescript
 // APRÈS
 if (!(await db.vampires.isEditor(id, session.user.id, session.user.isAdmin))) return res.status(403)...;
 await db.vampires.delete(id);
+// Note : le code actuel n'a PAS de call Pusher sur delete — ne pas en ajouter sauf besoin explicite
 ```
 
 Le `ON DELETE CASCADE` sur les tables de jointure nettoie `vampire_editors` et `vampire_viewers` automatiquement.
 
-### 6.7 `GET /api/users`
+### 6bis.7 `GET /api/users`
 
 ```typescript
 // AVANT
@@ -897,37 +1044,22 @@ if (!session) return res.status(401).json({ error: 'unauthorized' });
 const users = await db.users.findAllPublic();
 ```
 
-> **Note :** Cette route sert au picker editors/viewers dans `ConfigAccessSection`. Elle doit rester accessible à tout utilisateur authentifié. On limite les champs retournés (`id`, `name`, `image`) pour ne pas exposer les emails.
+> **Note :** Cette route sert au picker editors/viewers dans `ConfigAccessSection`. La response shape change : `sub` → `id`, `picture` → `image`. `ConfigAccessSection` doit adapter ses 8 refs à `user.sub`.
 
 ---
 
 ## 7. Étapes de migration
 
-### Phase 0 : Upgrade Next.js 12 → 14 (20 min)
+> **Principe** : chaque phase produit une app testable. On peut vérifier que tout fonctionne avant de passer à la suite.
+>
+> **Exception** : Phase 1 (auth) seule produit une app en lecture seule — les `user.id` NextAuth ne matchent pas les `sub` Fauna. Ne pas déployer Phase 1 seule en prod. Phases 1 + 2 doivent être déployées ensemble.
 
-On commence par l'upgrade Next car ça permet de valider que l'app démarre avant de toucher à la DB et l'auth.
+### Phase 0 : Setup infra + dépendances (30 min)
 
-1. Upgrade les packages :
-   ```bash
-   yarn add next@14 eslint-config-next@14
-   yarn add -D typescript@5 @types/react@18.2 @types/node@20
-   ```
-2. Lancer les codemods automatiques :
-   ```bash
-   npx @next/codemod@latest new-link .           # Fix <Link><a> → <Link>
-   npx @next/codemod@latest next-image-to-legacy-image .  # Fix next/image (si besoin)
-   ```
-3. Vérifier manuellement les 3 fichiers touchés :
-   - `components/Nav.tsx` (1 Link)
-   - `components/ActionsFooter.tsx` (2 Links)
-   - `components/Sheet.tsx` (1 Image — probablement ok sans changement)
-4. `yarn build` — vérifier que ça compile
-5. `yarn dev` — vérifier visuellement que rien n'est cassé
-
-### Phase 1 : Setup infra + dépendances (30 min)
+On commence par le provisioning sans toucher au code.
 
 1. **Provisionner Vercel Postgres** dans le dashboard Vercel (Storage -> Create -> Postgres)
-2. **Créer un compte Resend** + vérifier le domaine d'envoi (pour les magic links email)
+2. **Créer un compte Resend** + vérifier le domaine d'envoi (DNS SPF/DKIM pour les magic links email)
 3. **Créer une app OAuth GitHub** (Settings -> Developer settings -> OAuth Apps)
    - Callback URL : `https://<ton-domaine>/api/auth/callback/github`
    - (ou `http://localhost:3000/api/auth/callback/github` en dev)
@@ -935,12 +1067,12 @@ On commence par l'upgrade Next car ça permet de valider que l'app démarre avan
    ```bash
    yarn add @vercel/postgres next-auth resend
    yarn add -D node-pg-migrate
-   yarn remove faunadb @auth0/nextjs-auth0
+   yarn remove faunadb @auth0/nextjs-auth0 uuid @types/uuid
    ```
 5. Créer la migration initiale + appliquer :
    ```bash
    npx node-pg-migrate create init-schema
-   # écrire le schema (section 4.2) dans le fichier
+   # écrire le schema (section 3) dans le fichier — inclure les index et les CHECK constraints
    npx node-pg-migrate up
    ```
 6. Ajouter les scripts dans `package.json` :
@@ -948,47 +1080,116 @@ On commence par l'upgrade Next car ça permet de valider que l'app démarre avan
    "migrate:up": "node-pg-migrate up",
    "migrate:down": "node-pg-migrate down",
    "migrate:create": "node-pg-migrate create",
-   "build": "node-pg-migrate up && next build"
+   "build": "node -e \"if(process.env.VERCEL_ENV!=='preview'){require('child_process').execSync('npx node-pg-migrate up',{stdio:'inherit'})}\" && next build"
    ```
+7. Préparer `.env.sample` avec les nouvelles variables (cf. section 8)
 
-### Phase 2 : Auth — NextAuth (30 min)
+### Phase 1 : Auth — NextAuth (30 min)
 
-1. Créer `pages/api/auth/[...nextauth].ts` (section 5.2)
-2. Supprimer `pages/api/auth/[...auth0].ts`
-3. Réécrire `pages/_app.tsx` : `UserProvider` → `SessionProvider`
-4. Réécrire `contexts/MeContext.tsx` (section 5.4)
-5. Réécrire `components/Nav.tsx` : URLs login/logout → `signIn()`/`signOut()`
-6. Mettre à jour `types/MeType.ts` et `types/UserType.ts` (section 5.6)
-7. Simplifier `hooks/useMe.ts`
+On remplace Auth0 par NextAuth **sur Next 12**. L'app peut à nouveau se connecter.
 
-### Phase 3 : DB — Helper + API routes (1-2h)
+1. Créer `types/next-auth.d.ts` (section 5.1) — module augmentation obligatoire
+2. Créer `lib/auth-adapter.ts` — adapter custom qui retourne `isAdmin` dans `User`
+3. Créer `pages/api/auth/[...nextauth].ts` (section 5.2)
+4. Supprimer `pages/api/auth/[...auth0].ts`
+5. Réécrire `pages/_app.tsx` : `UserProvider` → `SessionProvider`
+6. Réécrire `contexts/MeContext.tsx` (section 5.4) — exporte `useMe()`
+7. Réécrire `components/Nav.tsx` :
+   - `/api/auth/login?return=...` → `signIn(undefined, { callbackUrl: returnTo })`
+   - `/api/auth/logout` → `signOut()`
+   - `data.picture` → `me.image`
+   - Supprimer l'import `UserProfile` de `@auth0/nextjs-auth0`
+8. Mettre à jour `contexts/ModeContext.tsx` : **4 `me.sub` → `me.id`** (lignes 37, 40, 45, 48)
+9. Mettre à jour `components/ActionsFooter.tsx` : `me.sub` → `me.id` (ligne 263)
+10. Mettre à jour `types/MeType.ts` et `types/UserType.ts` (section 5.6)
+11. Supprimer `hooks/useMe.ts` (dead code — SWR call vers `/api/me` qui n'existe pas)
 
-1. Créer `lib/db.ts` (section 4.4)
-2. Réécrire les 7 routes API (section 6.2). Pour chaque fichier :
+### Phase 2 : DB — Helper + API routes (1-2h)
+
+On remplace FaunaDB par PostgreSQL **sur Next 12**. L'app est entièrement fonctionnelle.
+
+1. Créer `lib/db.ts` (section 4.3)
+2. Réécrire les 7 routes API (section 6bis). Pour chaque fichier :
    - Remplacer `import faunadb` par `import { db } from '../../lib/db'`
    - Remplacer `getSession` / `withApiAuthRequired` par `getServerSession(req, res, authOptions)`
    - Remplacer les appels FQL par des appels `db.*`
    - `user.sub` → `session.user.id`
-   - Passer `session.user.isAdmin` aux helpers `isEditor()` / `findAll()`
-3. Côté front : supprimer tous les fallback `|| ['github|3338913']` dans :
+   - Passer `session.user.isAdmin` aux helpers `isEditor()` / `list()`
+   - **Stripper `appId` du body** avant de passer à `db.*`
+   - **Préserver les appels Pusher** (`updateOnSheets`, `updateOnSheet`) — sauf `delete.ts` qui n'en a pas
+   - **Préserver les wrappers** `{ characters, failed }` / `{ data, failed }` pour `getStaticPaths`/`getStaticProps`
+3. Réécrire `pages/new.tsx` :
+   - Supprimer `import { v4 as uuid } from 'uuid'`
+   - Ne plus générer l'ID côté client
+   - POST → attendre `{ id }` de la réponse → `router.push(`/vampires/${id}`)`
+4. Remplacer `uuid()` → `crypto.randomUUID()` dans les 6 contexts :
+   - `AdvFlawContext.tsx`, `DisciplinesContext.tsx`, `LanguagesContext.tsx`
+   - `HumanMagicContext.tsx`, `AbilitiesContext.tsx`, `SystemContext.tsx`
+5. Côté front : supprimer tous les fallback `|| ['github|3338913']` dans :
    - `pages/vampires/[id].tsx`
    - `pages/vampires/[id]/config.tsx`
    - `components/SheetActionsFooter.tsx`
    - Remplacer par `me.isAdmin || editors.includes(me.id)`
+6. Adapter `contexts/AccessesContext.tsx` : les identifiants passent de `user.sub` à `user.id`
+7. Adapter `components/config/ConfigAccessSection.tsx` : **8 `user.sub` → `user.id`**
+8. Adapter `pages/index.tsx` : importe `fetchVampireFromDB` → utiliser `db.vampires.list()`
+9. Adapter `pages/vampires/[id].tsx` et `pages/vampires/[id]/config.tsx` : `getStaticPaths`/`getStaticProps` utilisent `fetchVampireFromDB`/`fetchOneVampire` → adapter
 
-### Phase 3.5 : Se mettre admin (2 min)
+### Phase 2.5 : Se mettre admin (2 min)
 
 Après le premier login, passer ton user en admin :
 ```sql
 UPDATE users SET is_admin = true WHERE email = 'ton@email.com';
 ```
 
+> Idéalement, scripter ça pour ne pas l'oublier.
+
+### Phase 3 : Upgrade Next.js 12 → 14 (20 min)
+
+L'app fonctionne déjà sur la nouvelle stack. On peut vérifier l'upgrade isolément.
+
+1. Supprimer `.babelrc` + `babel-plugin-styled-components` :
+   ```bash
+   rm .babelrc
+   yarn remove babel-plugin-styled-components
+   ```
+2. Créer `next.config.js` (le fichier n'existe pas actuellement) :
+   ```javascript
+   module.exports = {
+     compiler: {
+       styledComponents: true,
+     },
+   };
+   ```
+3. Upgrade les packages :
+   ```bash
+   yarn add next@14 eslint-config-next@14
+   yarn add -D typescript@5 @types/react@18.2 @types/node@20
+   yarn add swr@2
+   ```
+4. Lancer les codemods automatiques :
+   ```bash
+   npx @next/codemod@latest new-link .           # Fix <Link><a> → <Link>
+   npx @next/codemod@latest next-image-to-legacy-image .  # Fix next/image (si besoin)
+   ```
+5. Corriger manuellement les ~4 cas `passHref` + styled-component `as="a"` :
+   - `components/Nav.tsx` : logout link + home "Personnages" link
+   - `pages/index.tsx` : title link
+   - Supprimer `passHref`, supprimer `as="a"` sur le styled-component
+6. `yarn build` — vérifier que ça compile
+7. `yarn dev` — vérifier visuellement que rien n'est cassé (en particulier styled-components sans `.babelrc`)
+
 ### Phase 4 : Nettoyage (15 min)
 
 1. Supprimer `FAUNADB_SECRET_KEY`, `AUTH0_DOMAIN`, `AUTH0_CLIENT_ID`, `AUTH0_CLIENT_SECRET` des env vars Vercel
 2. Ajouter `NEXTAUTH_SECRET`, `RESEND_API_KEY`, `EMAIL_FROM`, `GITHUB_CLIENT_ID`, `GITHUB_CLIENT_SECRET`
-3. Mettre à jour `.env.sample`
-4. Mettre à jour `CLAUDE.md`
+3. Supprimer les deps mortes :
+   ```bash
+   yarn remove node-fetch unfetch
+   ```
+4. Mettre à jour `.env.sample`
+5. Mettre à jour `CLAUDE.md`
+6. Nettoyer `helpers/fetcher.ts` : la fonction `host()` utilise `process.env.NOW_GITHUB_ORG` (legacy Zeit/Now) — dead code
 
 ---
 
@@ -1000,6 +1201,7 @@ FAUNADB_SECRET_KEY
 AUTH0_DOMAIN
 AUTH0_CLIENT_ID
 AUTH0_CLIENT_SECRET
+BASE_URL                     # À auditer — possiblement dead code (utilisé par Auth0 ?)
 ```
 
 ### À ajouter manuellement
@@ -1028,13 +1230,51 @@ POSTGRES_DATABASE
 
 ### getStaticPaths / getStaticProps
 
-Les fonctions `fetchVampireFromDB()` et `fetchOneVampire()` sont appelées au build time et dans ISR. Elles importent directement le client Fauna. Il faut les réécrire pour utiliser `db.vampires.findAll()` et `db.vampires.findById()`.
+Les fonctions `fetchVampireFromDB()` et `fetchOneVampire()` sont appelées au build time et dans ISR. Elles importent directement le client Fauna. Il faut les réécrire pour utiliser `db.vampires.list()` et `db.vampires.findById()`.
 
 `@vercel/postgres` fonctionne sans problème dans `getStaticProps` / `getServerSideProps`.
+
+**Fichiers impactés** : `pages/vampires/[id].tsx`, `pages/vampires/[id]/config.tsx`, `pages/index.tsx`.
+
+**Return shapes** : les consommateurs (`getStaticPaths`, `getStaticProps`, `pages/index.tsx`) attendent :
+- `fetchVampireFromDB()` → `{ characters: Array<{key, name}>, failed: boolean }`
+- `fetchOneVampire(id)` → `{ data: VampireType, failed: boolean }`
+
+`db.vampires.list()` retourne `VampireListItem[]` et `db.vampires.findById()` retourne `VampireType | null`. Soit wrapper les résultats dans les fonctions exportées, soit adapter les 3 fichiers consommateurs. **La seconde option est plus propre** — supprimer les wrappers `{ failed }` et gérer les erreurs avec try/catch.
 
 ### JSONB et typage
 
 `@vercel/postgres` retourne les colonnes JSONB déjà parsées (pas besoin de `JSON.parse`). Le helper `rowToVampire()` dans `lib/db.ts` centralise le cast vers `VampireType`. Un seul endroit à maintenir.
+
+> **Note** : `VampireRow.data` est typé comme `Omit<VampireType, ...>` mais à runtime c'est un `any` venant de `@vercel/postgres`. Le type est de la documentation, pas de l'enforcement. Acceptable avec `strict: false`.
+
+### SQL injection
+
+Tout le SQL est centralisé dans `lib/db.ts`. S'assurer que chaque valeur passe par les tagged templates `sql\`...\`` et **jamais** par interpolation de string. Revue de code obligatoire sur ce fichier.
+
+### Transactions avec `@vercel/postgres`
+
+**NE PAS** faire :
+```typescript
+await sql`BEGIN`;
+await sql`INSERT ...`;  // Peut aller sur une autre connexion !
+await sql`COMMIT`;
+```
+
+**FAIRE** :
+```typescript
+const client = await pgDb.connect();
+try {
+  await client.sql`BEGIN`;
+  await client.sql`INSERT ...`;
+  await client.sql`COMMIT`;
+} catch (e) {
+  await client.sql`ROLLBACK`;
+  throw e;
+} finally {
+  client.release();
+}
+```
 
 ### Taille des payloads
 
@@ -1048,6 +1288,22 @@ Plusieurs utilisateurs peuvent éditer en même temps. Le pattern actuel est "la
 
 L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_partial` envoie `{ infos: { name: "New" } }`, ça **remplace** tout l'objet `infos`, pas juste le champ `name`. C'est le même comportement que le `q.Update()` de Fauna (merge au premier niveau). Vérifier que le front envoie des sous-objets complets, pas des champs individuels.
 
+### Triggers Pusher dans les routes API
+
+Les routes `create`, `update`, `update_partial` appellent des fonctions Pusher (`updateOnSheets`, `updateOnSheet`). La route `delete` n'a PAS de call Pusher dans le code actuel. Ces side-effects doivent être préservés tels quels lors de la réécriture.
+
+### Links `passHref` avec styled-components
+
+4 `Link` dans le code utilisent `passHref` avec un styled-component `as="a"`. Le codemod `new-link` ne les gère pas. Fichiers : `Nav.tsx` (2), `index.tsx` (1), potentiellement `ActionsFooter.tsx`. Correction manuelle requise.
+
+### Preview deployments Vercel
+
+Les preview deployments utilisent les mêmes env vars par défaut. Le script build inclut un guard (`VERCEL_ENV !== 'preview'`) pour éviter d'exécuter les migrations contre la DB de production. Idéalement, configurer une DB séparée pour les previews dans le dashboard Vercel.
+
+### ISR et cold starts Neon
+
+`getStaticPaths` appelle la DB au build time, et ISR (`revalidate: 1`) revalide chaque seconde. Avec le free tier Neon, attention aux limites de connexions et à la latence de cold start (~200ms). Pas bloquant mais à monitorer.
+
 ---
 
 ## 10. Estimation de l'effort
@@ -1056,16 +1312,14 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 
 | Phase | Effort | Complexité | Risque |
 |-------|--------|------------|--------|
-| Phase | Effort | Complexité | Risque |
-|-------|--------|------------|--------|
-| **Phase 0** — Next.js 12 → 14 (codemods + vérif) | ~20 min | Faible | Faible |
-| **Phase 1** — Setup infra (Vercel Postgres + deps + OAuth app) | ~30 min | Faible | Faible |
-| **Phase 2** — Auth NextAuth (config, contexts, nav, types) | ~30 min | Faible | Faible |
-| **Phase 3** — DB helper + réécriture des 7 API routes | ~1h30 | Faible-Moyenne | Moyen |
-| **Phase 3.5** — Se mettre admin | ~2 min | Faible | Faible |
-| **Phase 4** — Nettoyage (env vars, docs, deps) | ~15 min | Faible | Faible |
+| **Phase 0** — Setup infra (Vercel Postgres + deps + OAuth app) | ~30 min | Faible | Faible |
+| **Phase 1** — Auth NextAuth (config, contexts, nav, types, ModeContext) | ~45 min | Faible-Moyenne | Faible |
+| **Phase 2** — DB helper + réécriture des 7 API routes + front + uuid | ~2h | Moyenne | Moyen |
+| **Phase 2.5** — Se mettre admin | ~2 min | Faible | Faible |
+| **Phase 3** — Next.js 12 → 14 (.babelrc, SWC, codemods, passHref fixes) | ~30 min | Faible | Faible |
+| **Phase 4** — Nettoyage (env vars, docs, dead deps) | ~15 min | Faible | Faible |
 | Tests manuels end-to-end | ~1h | - | - |
-| **Total** | **~4h** | | |
+| **Total** | **~5h** | | |
 
 ### Détail par fichier
 
@@ -1073,43 +1327,66 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 
 | Fichier | Effort | Notes |
 |---------|--------|-------|
-| `lib/db.ts` | 45 min | Le gros du travail. Tout le SQL centralisé ici |
-| `pages/api/auth/[...nextauth].ts` | 15 min | Config NextAuth + provider GitHub |
-| `lib/auth-adapter.ts` | 15 min | Adapter PostgreSQL custom (ou utiliser `@next-auth/pg-adapter`) |
-| `migrations/XXXX_init-schema.js` | 10 min | Schema complet (tables NextAuth + tables app) |
+| `lib/db.ts` | 45 min | Le gros du travail. Transactions avec `db.connect()`. Revue sécurité obligatoire |
+| `pages/api/auth/[...nextauth].ts` | 15 min | Config NextAuth + providers |
+| `lib/auth-adapter.ts` | 20 min | Adapter custom **obligatoire** (doit retourner `isAdmin`) |
+| `types/next-auth.d.ts` | 5 min | Module augmentation `Session` + `User` |
+| `next.config.js` | 2 min | Config SWC styledComponents |
+| `migrations/XXXX_init-schema.js` | 10 min | Schema complet + index + CHECK constraints |
 
 **Routes API (DB + auth) :**
 
 | Fichier | Effort | Notes |
 |---------|--------|-------|
-| `pages/api/vampires/create.ts` | 10 min | `q.Create` → `db.vampires.create` + `getServerSession` |
-| `pages/api/vampires.ts` | 10 min | `q.Map(...)` → `db.vampires.findAll` + `getServerSession` |
-| `pages/api/vampires/[id].ts` | 5 min | Trivial, pas d'auth |
-| `pages/api/vampires/[id]/update.ts` | 10 min | DB + auth |
-| `pages/api/vampires/[id]/update_partial.ts` | 10 min | DB + auth |
-| `pages/api/vampires/[id]/delete.ts` | 5 min | DB + auth, trivial |
-| `pages/api/users.ts` | 5 min | `db.users.findAll()` + session check |
+| `pages/api/vampires/create.ts` | 15 min | Retourne `{ id }` (généré par PG). Garder Pusher. |
+| `pages/api/vampires.ts` | 10 min | `db.vampires.list`. Préserver wrapper `{ characters }`. |
+| `pages/api/vampires/[id].ts` | 10 min | + ajouter check accès fiches privées. Préserver wrapper `{ data }`. |
+| `pages/api/vampires/[id]/update.ts` | 10 min | Sync junction tables via transaction. Stripper `appId`. Garder Pusher. |
+| `pages/api/vampires/[id]/update_partial.ts` | 10 min | Sync junction tables si présents. Stripper `appId`. Garder Pusher. |
+| `pages/api/vampires/[id]/delete.ts` | 5 min | Pas de Pusher (n'existe pas dans le code actuel) |
+| `pages/api/users.ts` | 5 min | `db.users.findAllPublic()` + session check |
 
-**Frontend auth :**
+**Frontend auth + uuid :**
 
 | Fichier | Effort | Notes |
 |---------|--------|-------|
 | `pages/_app.tsx` | 5 min | `UserProvider` → `SessionProvider` |
-| `contexts/MeContext.tsx` | 10 min | Réécriture avec `useSession()` |
-| `components/Nav.tsx` | 5 min | `signIn()` / `signOut()` |
+| `contexts/MeContext.tsx` | 10 min | Réécriture avec `useSession()`, exporte `useMe()` |
+| `contexts/ModeContext.tsx` | 5 min | **4 `me.sub` → `me.id`** — critique, manqué avant |
+| `contexts/AccessesContext.tsx` | 5 min | Renommer paramètres `sub` → `id` |
+| `components/Nav.tsx` | 10 min | `signIn`/`signOut` + `picture`→`image` + supprimer `UserProfile` import |
+| `components/ActionsFooter.tsx` | 5 min | `me.sub` → `me.id` |
+| `components/config/ConfigAccessSection.tsx` | 10 min | **8 `user.sub` → `user.id`** |
 | `types/MeType.ts` | 5 min | Simplification |
-| `types/UserType.ts` | 5 min | Suppression `sub`/`nickname`, ajout `image` |
-| `hooks/useMe.ts` | 5 min | Simplification |
+| `types/UserType.ts` | 5 min | `sub`/`nickname`/`picture` → `id`/`image` |
+| `pages/new.tsx` | 10 min | Changer le flow : POST → attendre `{ id }` → redirect |
+| `pages/index.tsx` | 5 min | Adapter `fetchVampireFromDB` + fix Link `passHref` |
+| 6 contexts (uuid) | 10 min | Search-replace `uuid()` → `crypto.randomUUID()` |
+
+**Fichiers à supprimer :**
+
+| Fichier | Notes |
+|---------|-------|
+| `hooks/useMe.ts` | Dead code (SWR call vers `/api/me` inexistant) |
+| `pages/api/auth/[...auth0].ts` | Remplacé par `[...nextauth].ts` |
+| `.babelrc` | Bloque SWC — remplacé par `next.config.js` `compiler.styledComponents` |
 
 ### Ce qui demande de l'attention
 
 | Point | Détail | Impact |
 |-------|--------|--------|
-| **Functions exportées** | `fetchVampireFromDB()` et `fetchOneVampire()` sont importées dans `getStaticPaths`/`getStaticProps`. Il faut les réécrire avec `db.*` | Faible — même format de retour |
-| **Hardcoded viewer supprimé** | `'github\|3338913'` remplacé par le flag `is_admin` sur la table `users`. L'admin voit et édite tout sans être dans `editors[]`/`viewers[]` | Résolu |
-| **Merge JSONB shallow** | `data \|\| patch` merge au premier niveau seulement | Moyen — vérifier le front (cf. section 9) |
-| **`ConfigAccessSection`** | Le composant d'accès affiche les users par `sub`. Il faudra afficher par `user.id` et adapter le matching | Faible — même logique, juste l'identifiant change |
-| **Callback URL NextAuth** | L'OAuth app GitHub doit avoir le bon callback URL. En dev : `http://localhost:3000/api/auth/callback/github`. En prod : le domaine Vercel | Bloquant si mal configuré |
+| **`ModeContext.tsx`** | 4 refs `me.sub` non listées dans les versions précédentes du plan. Sans fix, tous les sheets sont read-only. | **CRITIQUE** |
+| **Transactions `db.connect()`** | `sql\`BEGIN\`` sur des connexions poolées ne fonctionne pas. `create`, `update`, `updatePartial` doivent utiliser `db.connect()`. | **CRITIQUE** |
+| **Junction tables sync** | `update` et `updatePartial` doivent sync `vampire_editors`/`vampire_viewers`. Sans ça, les changements d'accès sont silencieusement perdus. | **CRITIQUE** |
+| **`.babelrc` bloque SWC** | `compiler.styledComponents` est ignoré si `.babelrc` existe. Supprimer `.babelrc` en Phase 3. | **CRITIQUE** |
+| **`Nav.tsx` `data.picture`** | Doit devenir `me.image`. L'import `UserProfile` de `@auth0` cassera la compilation. | **CRITIQUE** |
+| **`types/next-auth.d.ts`** | Sans module augmentation, `session.user.id` et `isAdmin` sont `undefined` partout. L'adapter custom est obligatoire. | **HAUT** |
+| **Return shapes** | `fetchVampireFromDB` retourne `{ characters, failed }`, `db.vampires.list()` retourne un array. Adapter les consommateurs ou wrapper. | **HAUT** |
+| **`ConfigAccessSection`** | 8 refs `user.sub` → `user.id`. Response `/api/users` change aussi. | **HAUT** |
+| **`appId` dans le body** | Les routes update doivent stripper `appId` avant `db.*`. Le code actuel fait `delete data.appId`. | **MOYEN** |
+| **Merge JSONB shallow** | `data \|\| patch` merge au premier niveau seulement | **MOYEN** |
+| **Links `passHref`** | 4 cas non gérés par le codemod | **FAIBLE** |
+| **Callback URL NextAuth** | L'OAuth app GitHub doit avoir le bon callback URL | Bloquant si mal configuré |
 
 ---
 
@@ -1119,7 +1396,8 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 ```json
 {
   "next": "12.2.3 → 14.x",
-  "eslint-config-next": "12.2.3 → 14.x"
+  "eslint-config-next": "12.2.3 → 14.x",
+  "swr": "1.3 → 2.x"
 }
 ```
 
@@ -1135,7 +1413,7 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 ### À ajouter
 ```json
 {
-  "@vercel/postgres": "^0.10.x",
+  "@vercel/postgres": "latest",
   "next-auth": "^4.x",
   "resend": "^4.x"
 }
@@ -1152,7 +1430,11 @@ L'opérateur `||` de PostgreSQL fait un merge shallow de JSONB. Si `update_parti
 ```json
 {
   "faunadb": "^4.6.0",
-  "@auth0/nextjs-auth0": "^1.9.1"
+  "@auth0/nextjs-auth0": "^1.9.1",
+  "uuid": "^8.3.2",
+  "@types/uuid": "*",
+  "babel-plugin-styled-components": "*",
+  "node-fetch": "^3.2.9",
+  "unfetch": "^4.2.0"
 }
 ```
-
