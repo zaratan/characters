@@ -1469,3 +1469,9 @@ Les preview deployments utilisent les mêmes env vars par défaut. Le script bui
 - **Sécurité `[id].ts`** : ajout du check privateSheet + isEditorOrViewer dans le handler API (faille existante corrigée). `fetchOneVampire` reste sans auth pour fonctionner avec ISR/getStaticProps.
 - **`lodash` conservé** : le plan initial prévoyait de le supprimer, mais il est utilisé dans 3 autres fichiers (`ConfigAccessSection.tsx`, `ModificationsContext.tsx`, `useScroll.ts`). Seul `lodash.pick` a été retiré de `pages/api/users.ts`.
 - **UUID validation** : `db.vampires.findById` catch l'erreur PG `22P02` (invalid UUID format) et retourne `null` au lieu de laisser un 500.
+
+### Phase 3 (2026-03-16)
+
+- **`@types/react` non upgradé à 18.2** : `@types/react@18.2.x` est incompatible avec `@types/styled-components@5.1.25` (erreurs de types `ReactNode`/`ReactPortal`). Conservé `@types/react@18.0.15`. `@types/styled-components@5.1.34` corrige certaines erreurs mais en introduit d'autres (`children` non reconnu sur les styled components). Les types seront à réaligner lors de la migration vers styled-components v6 ou une autre solution CSS-in-JS.
+- **`@types/node` upgradé à 20.x** et **`typescript` upgradé à 5.9** : aucun problème de compatibilité.
+- **SWR 2.x** : migration transparente, aucun changement de code nécessaire.

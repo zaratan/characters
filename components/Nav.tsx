@@ -210,22 +210,19 @@ const Nav = ({
         <Container>
           <LeftContainer>
             <PageTitle>
-              <Link href="/" passHref>
-                <Title
-                  as="a"
-                  // This is the only way to intercept NextJs Link navigation
-                  onClick={(e) => {
-                    if (!confirmNavigation) return;
+              <Link
+                href="/"
+                onClick={(e) => {
+                  if (!confirmNavigation) return;
 
-                    if (
-                      typeof window !== 'undefined' &&
-                      !window.confirm(confirmText)
-                    )
-                      e.preventDefault();
-                  }}
-                >
-                  Personnages
-                </Title>
+                  if (
+                    typeof window !== 'undefined' &&
+                    !window.confirm(confirmText)
+                  )
+                    e.preventDefault();
+                }}
+              >
+                <Title>Personnages</Title>
               </Link>
             </PageTitle>
           </LeftContainer>

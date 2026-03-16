@@ -6,8 +6,8 @@
 
 ## Tech Stack
 
-- **Framework**: Next.js 12.2.3 (Pages Router)
-- **Language**: TypeScript 4.7 (strict mode disabled)
+- **Framework**: Next.js 14.2 (Pages Router)
+- **Language**: TypeScript 5.9 (strict mode disabled)
 - **UI**: React 18.2, Styled-Components 5.3, Tailwind CSS 3.1
 - **State Management**: React Context API (21 context files in `contexts/`)
 - **Data Fetching**: SWR 1.3

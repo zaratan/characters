@@ -75,14 +75,8 @@ const Home = ({
         <HorizontalSection as="ul">
           {characters.map((character) => (
             <TitleContainer key={character.key}>
-              <Link
-                href="/vampires/[id]"
-                passHref
-                as={`/vampires/${character.key}`}
-              >
-                <HandLargeText as="a">
-                  {character.name || 'Pasdnom'}
-                </HandLargeText>
+              <Link href={`/vampires/${character.key}`}>
+                <HandLargeText>{character.name || 'Pasdnom'}</HandLargeText>
               </Link>
             </TitleContainer>
           ))}

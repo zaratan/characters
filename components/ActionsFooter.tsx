@@ -143,18 +143,16 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
         if (action.link) {
           return (
             <Link href={action.link} key={action.name}>
-              <a>
-                <DesktopAction>
-                  <GlyphAction>
-                    {typeof action.glyph === 'string' ? (
-                      action.glyph
-                    ) : (
-                      <action.glyph />
-                    )}
-                  </GlyphAction>
-                  <span className="full-text">{action.name}</span>
-                </DesktopAction>
-              </a>
+              <DesktopAction>
+                <GlyphAction>
+                  {typeof action.glyph === 'string' ? (
+                    action.glyph
+                  ) : (
+                    <action.glyph />
+                  )}
+                </GlyphAction>
+                <span className="full-text">{action.name}</span>
+              </DesktopAction>
             </Link>
           );
         }
@@ -212,9 +210,7 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
           if (action.link) {
             return (
               <Link href={action.link} key={action.name}>
-                <a>
-                  <MobileAction>{action.name}</MobileAction>
-                </a>
+                <MobileAction>{action.name}</MobileAction>
               </Link>
             );
           }
