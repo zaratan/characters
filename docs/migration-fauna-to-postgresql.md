@@ -1475,3 +1475,7 @@ Les preview deployments utilisent les mêmes env vars par défaut. Le script bui
 - **`@types/react` non upgradé à 18.2** : `@types/react@18.2.x` est incompatible avec `@types/styled-components@5.1.25` (erreurs de types `ReactNode`/`ReactPortal`). Conservé `@types/react@18.0.15`. `@types/styled-components@5.1.34` corrige certaines erreurs mais en introduit d'autres (`children` non reconnu sur les styled components). Les types seront à réaligner lors de la migration vers styled-components v6 ou une autre solution CSS-in-JS.
 - **`@types/node` upgradé à 20.x** et **`typescript` upgradé à 5.9** : aucun problème de compatibilité.
 - **SWR 2.x** : migration transparente, aucun changement de code nécessaire.
+
+### Phase 4 (2026-03-16)
+
+- **Aucune déviation** : suppression de `node-fetch`, `unfetch`, et nettoyage de `helpers/fetcher.ts` (`nodeFetcher`, `host()`, import `IncomingMessage`) conformément au plan.

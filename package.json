@@ -24,7 +24,6 @@
     "lodash": "^4.17.21",
     "next": "14",
     "next-auth": "^4.24.13",
-    "node-fetch": "^3.2.9",
     "nodemailer": "^8.0.2",
     "pg": "^8.20.0",
     "pusher": "^5.0.1",
@@ -35,8 +34,7 @@
     "resend": "^6.9.3",
     "slugify": "^1.6.5",
     "styled-components": "^5.3.5",
-    "swr": "2",
-    "unfetch": "^4.2.0"
+    "swr": "2"
   },
   "devDependencies": {
     "@types/keyboardjs": "^2.5.0",
