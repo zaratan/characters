@@ -476,9 +476,10 @@ export const db = {
   },
 
   users: {
-    async findAll() {
+    // Pour le picker editors/viewers — pas d'email exposé
+    async findAllPublic() {
       const { rows } = await sql`
-        SELECT id, email, name, image FROM users
+        SELECT id, name, image FROM users
       `;
       return rows;
     },
@@ -761,7 +762,7 @@ Les codemods font les changements mécaniquement — pas besoin de le faire à l
 | `pages/api/vampires/[id]/update.ts` | `q.Replace()` → `db.vampires.update()` | `withApiAuthRequired` + `getSession` → `getServerSession` |
 | `pages/api/vampires/[id]/update_partial.ts` | `q.Update()` → `db.vampires.updatePartial()` | idem |
 | `pages/api/vampires/[id]/delete.ts` | `q.Delete()` → `db.vampires.delete()` | idem |
-| `pages/api/users.ts` | `q.Map(...)` → `db.users.findAll()` | `withApiAuthRequired` → **admin-only** (`session.user.isAdmin`) |
+| `pages/api/users.ts` | `q.Map(...)` → `db.users.findAll()` | `withApiAuthRequired` → `getServerSession` (auth requise) |
 
 **Frontend (Auth) :**
 
@@ -886,18 +887,17 @@ Le `ON DELETE CASCADE` sur les tables de jointure nettoie `vampire_editors` et `
 ### 6.7 `GET /api/users`
 
 ```typescript
-// AVANT — tout user authentifié voit tous les emails/noms
+// AVANT
 const dbs = await client.query(q.Map(q.Paginate(q.Match(q.Index('all_users'))), (ref) => q.Get(ref)));
 return dbs.data.map((e) => pick(e.data, [...]));
 
-// APRÈS — restreint aux admins
+// APRÈS — ne retourne que id, name, image (pas d'email)
 const session = await getServerSession(req, res, authOptions);
 if (!session) return res.status(401).json({ error: 'unauthorized' });
-if (!session.user.isAdmin) return res.status(403).json({ error: 'forbidden' });
-const users = await db.users.findAll();
+const users = await db.users.findAllPublic();
 ```
 
-> **Note :** Cette route sert à la config des editors/viewers. Seul l'admin devrait lister tous les utilisateurs. Pour le cas normal, on pourra ajouter une route de recherche par email plus restrictive si nécessaire.
+> **Note :** Cette route sert au picker editors/viewers dans `ConfigAccessSection`. Elle doit rester accessible à tout utilisateur authentifié. On limite les champs retournés (`id`, `name`, `image`) pour ne pas exposer les emails.
 
 ---
 
