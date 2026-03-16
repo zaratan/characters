@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import faunadb from 'faunadb';
-import { withApiAuthRequired } from '@auth0/nextjs-auth0';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './auth/[...nextauth]';
 import { pick } from 'lodash';
 
 // your secret hash
@@ -47,18 +48,19 @@ export const fetchUsersFromDB = async () => {
   }
 };
 
-const users = withApiAuthRequired(
-  async (req: NextApiRequest, res: NextApiResponse) => {
-    const result = await fetchUsersFromDB();
+const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const session = await getServerSession(req, res, authOptions);
+  if (!session) return res.status(401).json({ error: 'unauthorized' });
 
-    if (!result.failed) {
-      // ok
-      res.status(200).json(result);
-    } else {
-      // something went wrong
-      res.status(500).json(result);
-    }
+  const result = await fetchUsersFromDB();
+
+  if (!result.failed) {
+    // ok
+    res.status(200).json(result);
+  } else {
+    // something went wrong
+    res.status(500).json(result);
   }
-);
+};
 
-export default users;
+export default handler;

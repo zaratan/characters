@@ -115,14 +115,17 @@ const Home = ({
       theurgy: [],
       staticMagic: [],
     },
-    editors = ['github|3338913'],
-    viewers = ['github|3338913'],
+    editors = [],
+    viewers = [],
     privateSheet = false,
   } = data;
 
   if (
     privateSheet &&
-    !(connected && (editors.includes(me.sub) || viewers.includes(me.sub)))
+    !(
+      connected &&
+      (me.isAdmin || editors.includes(me.id) || viewers.includes(me.id))
+    )
   ) {
     return <ErrorPage />;
   }

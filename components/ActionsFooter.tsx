@@ -260,7 +260,7 @@ const ActionsFooter = ({
   const allActions = [
     ...(actions || []),
     ...(connected && loggedActions ? loggedActions : []),
-    ...(connected && editors.includes(me.sub) && ownerActions
+    ...(connected && editors.includes(me.id) && ownerActions
       ? ownerActions
       : []),
   ];

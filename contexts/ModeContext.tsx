@@ -34,18 +34,18 @@ export const ModeProvider = ({
   const { editors } = useContext(AccessesContext);
 
   const [editMode, setEditMode] = useState(
-    connected && editors.includes(me.sub) ? startEdit : false
+    connected && editors.includes(me.id) ? startEdit : false
   );
   const [playMode, setPlayMode] = useState(
-    connected && editors.includes(me.sub) ? startPlay : false
+    connected && editors.includes(me.id) ? startPlay : false
   );
 
   useEffect(() => {
     setEditMode(false);
-    setPlayMode(connected && editors.includes(me.sub));
-  }, [connected, editors, me?.sub]);
+    setPlayMode(connected && editors.includes(me.id));
+  }, [connected, editors, me?.id]);
   const toggleMode =
-    connected && editors.includes(me.sub)
+    connected && editors.includes(me.id)
       ? () => {
           if (playMode && !editMode) {
             setEditMode(true);

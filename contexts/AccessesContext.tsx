@@ -2,11 +2,11 @@ import React, { createContext, useState, useEffect, ReactNode } from 'react';
 
 type ContextType = {
   editors: Array<string>;
-  addEditor: (sub: string) => void;
-  removeEditor: (sub: string) => void;
+  addEditor: (id: string) => void;
+  removeEditor: (id: string) => void;
   viewers: Array<string>;
-  addViewer: (sub: string) => void;
-  removeViewer: (sub: string) => void;
+  addViewer: (id: string) => void;
+  removeViewer: (id: string) => void;
   privateSheet: boolean;
   togglePrivate: () => void;
 };
@@ -47,20 +47,20 @@ export const AccessesProvider = ({
   const [viewersState, setViewersState] = useState(viewers);
   const [privateState, setPrivateState] = useState(privateSheet);
 
-  const addEditor = (sub: string) => {
-    setEditorsState([...editorsState, sub]);
+  const addEditor = (id: string) => {
+    setEditorsState([...editorsState, id]);
   };
 
-  const removeEditor = (sub: string) => {
-    setEditorsState(editorsState.filter((editor) => editor !== sub));
+  const removeEditor = (id: string) => {
+    setEditorsState(editorsState.filter((editor) => editor !== id));
   };
 
-  const addViewer = (sub: string) => {
-    setViewersState([...viewersState, sub]);
+  const addViewer = (id: string) => {
+    setViewersState([...viewersState, id]);
   };
 
-  const removeViewer = (sub: string) => {
-    setViewersState(viewersState.filter((viewer) => viewer !== sub));
+  const removeViewer = (id: string) => {
+    setViewersState(viewersState.filter((viewer) => viewer !== id));
   };
 
   const togglePrivate = () => setPrivateState(!privateState);

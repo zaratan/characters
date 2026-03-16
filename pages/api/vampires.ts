@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { getSession } from '@auth0/nextjs-auth0';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './auth/[...nextauth]';
 
 // TODO: Phase 2 — rewrite with PostgreSQL queries
 // FaunaDB is dead, returning empty list until PostgreSQL migration is complete
@@ -8,8 +9,8 @@ export const fetchVampireFromDB = async (_userId?: string) => {
 };
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
-  const session = getSession(req, res);
-  const result = await fetchVampireFromDB(session?.user?.sub);
+  const session = await getServerSession(req, res, authOptions);
+  const result = await fetchVampireFromDB(session?.user?.id);
 
   if (!result.failed) {
     // ok

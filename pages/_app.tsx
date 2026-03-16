@@ -5,7 +5,7 @@ import '../styles/globals.css';
 
 import Head from 'next/head';
 import { SWRConfig } from 'swr';
-import { UserProvider } from '@auth0/nextjs-auth0';
+import { SessionProvider } from 'next-auth/react';
 import GlobalStyle from '../styles/GlobalStyle';
 import { fetcher } from '../helpers/fetcher';
 import { SystemProvider } from '../contexts/SystemContext';
@@ -21,7 +21,7 @@ export function reportWebVitals(metric) {
 const MyApp = ({ Component, pageProps }) => (
   <ThemeContextProvider>
     <ThemeProvider>
-      <UserProvider>
+      <SessionProvider session={pageProps.session}>
         <SWRConfig
           value={{
             fetcher,
@@ -40,7 +40,7 @@ const MyApp = ({ Component, pageProps }) => (
             </MeProvider>
           </SystemProvider>
         </SWRConfig>
-      </UserProvider>
+      </SessionProvider>
     </ThemeProvider>
   </ThemeContextProvider>
 );

@@ -101,36 +101,36 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
     );
 
   const editorsWithData = concat(
-    editors.map((e) => users.find((user) => user.sub === e))
+    editors.map((e) => users.find((user) => user.id === e))
   );
 
   const viewersWithData = concat(
-    viewers.map((e) => users.find((user) => user.sub === e))
+    viewers.map((e) => users.find((user) => user.id === e))
   );
 
   const addEditorAction = (user: UserType | string) => {
     if (typeof user === 'string') return;
-    addEditor(user.sub);
+    addEditor(user.id);
     setAccessChanged(true);
   };
 
-  const removeEditorAction = (sub: string) => () => {
+  const removeEditorAction = (id: string) => () => {
     if (editors.length < 2) return;
 
-    removeEditor(sub);
+    removeEditor(id);
     setAccessChanged(true);
   };
 
   const addViewerAction = (user: UserType | string) => {
     if (typeof user === 'string') return;
-    addViewer(user.sub);
+    addViewer(user.id);
     setAccessChanged(true);
   };
 
-  const removeViewerAction = (sub: string) => () => {
+  const removeViewerAction = (id: string) => () => {
     if (viewers.length < 2) return;
 
-    removeViewer(sub);
+    removeViewer(id);
     setAccessChanged(true);
   };
 
@@ -142,12 +142,12 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
           <AccessTitle>Éditeurs</AccessTitle>
           <AccessUsers>
             {editorsWithData.map((user) => (
-              <AccessUser key={user.sub}>
+              <AccessUser key={user.id}>
                 {user.name}
                 {editors.length > 1 ? (
                   <Glyph
                     name={`Remove ${user.name} editor access`}
-                    onClick={removeEditorAction(user.sub)}
+                    onClick={removeEditorAction(user.id)}
                   >
                     ✘
                   </Glyph>
@@ -159,7 +159,7 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
           </AccessUsers>
           <AutoCompleteInput
             autocompleteOptions={users.filter(
-              (user) => !editors.includes(user.sub)
+              (user) => !editors.includes(user.id)
             )}
             display="name"
             onSubmit={addEditorAction}
@@ -171,12 +171,12 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
           <AccessTitle>Viewer</AccessTitle>
           <AccessUsers>
             {viewersWithData.map((user) => (
-              <AccessUser key={user.sub}>
+              <AccessUser key={user.id}>
                 {user.name}
                 {viewers.length > 1 ? (
                   <Glyph
                     name={`Remove ${user.name} viewer access`}
-                    onClick={removeViewerAction(user.sub)}
+                    onClick={removeViewerAction(user.id)}
                   >
                     ✘
                   </Glyph>
@@ -188,7 +188,7 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
           </AccessUsers>
           <AutoCompleteInput
             autocompleteOptions={users.filter(
-              (user) => !viewers.includes(user.sub)
+              (user) => !viewers.includes(user.id)
             )}
             display="name"
             onSubmit={addViewerAction}

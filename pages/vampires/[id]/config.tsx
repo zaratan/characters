@@ -97,7 +97,7 @@ const ConfigWrapper = ({
     return <ErrorPage />;
   }
 
-  if (!(data.editors || ['github|3338913']).includes(me.sub)) {
+  if (!me.isAdmin && !(data.editors || []).includes(me.id)) {
     return (
       <OuterContainer>
         <Nav />
@@ -115,8 +115,8 @@ const ConfigWrapper = ({
       <MainContainer>
         <SectionsProvider sections={data.sections}>
           <AccessesProvider
-            editors={data.editors || ['github|3338913']}
-            viewers={data.viewers || ['github|3338913']}
+            editors={data.editors || []}
+            viewers={data.viewers || []}
             privateSheet={data.privateSheet}
           >
             <Config id={String(id)} name={data.infos.name} />

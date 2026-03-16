@@ -3,7 +3,8 @@ import React, { useState, useRef, ReactNode, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useClickAway } from 'react-use';
-import { UserProfile } from '@auth0/nextjs-auth0';
+import { signIn, signOut } from 'next-auth/react';
+import { MeType } from '../types/MeType';
 import { BlackLine } from '../styles/Lines';
 import {
   generateHandleClick,
@@ -97,7 +98,7 @@ const LogButton = ({
   action,
   returnTo,
 }: {
-  data?: UserProfile;
+  data?: MeType;
   connected?: boolean;
   close: () => void;
   action: () => void;
@@ -111,9 +112,12 @@ const LogButton = ({
   if (!connected) {
     return (
       <MenuContainer className="text-only">
-        <Link href={`/api/auth/login${returnTo ? `?return=${returnTo}` : ''}`}>
-          <a>Connection</a>
-        </Link>
+        <a
+          onClick={() => signIn(undefined, { callbackUrl: returnTo || '/' })}
+          style={{ cursor: 'pointer' }}
+        >
+          Connection
+        </a>
       </MenuContainer>
     );
   }
@@ -129,13 +133,17 @@ const LogButton = ({
         tabIndex={0}
         role="button"
       >
-        <ProfileImg src={data.picture} alt="P" />
+        <ProfileImg src={data.image} alt="P" />
       </MenuButton>
       <MenuDropdown className={menuOpen ? 'open' : ''}>
         <NameContainer>{data.name}</NameContainer>
-        <Link href="/api/auth/logout" prefetch={false} passHref>
-          <MenuDropdownElem as="a">Déconnection</MenuDropdownElem>
-        </Link>
+        <MenuDropdownElem
+          as="a"
+          onClick={() => signOut()}
+          style={{ cursor: 'pointer' }}
+        >
+          Déconnection
+        </MenuDropdownElem>
       </MenuDropdown>
     </MenuContainer>
   );
