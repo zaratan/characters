@@ -70,28 +70,6 @@ NEXT_PUBLIC_PUSHER_CLUSTER='...' # Client-side (public, ex: eu, us3, ap1)
    - Choisis le cluster le plus proche (probablement `eu` pour toi)
    - Mets à jour les env vars dans Vercel
 
-## Options pour la migration
+## Impact migration
 
-### Option A : Garder Pusher (recommandé)
-
-**Pourquoi :**
-- Ça marche, c'est simple, le free tier suffit
-- Zéro changement de code côté Pusher pendant la migration DB/Auth
-- Canaux publics uniquement — pas de Pusher auth endpoint à maintenir
-- Le fallback SWR existe déjà si le compte expire
-
-**À faire :** juste vérifier que les clés sont bonnes.
-
-### Option B : Remplacer par Ably / Soketi / SSE
-
-Pas recommandé pour cette migration. C'est un chantier indépendant qui n'apporte rien de plus. Si un jour Pusher devient payant ou ferme, le fallback SWR polling suffit en attendant.
-
-### Option C : Supprimer Pusher, garder uniquement le polling SWR
-
-Si le compte est mort et que tu ne veux pas en recréer un :
-- Supprimer les 5 fichiers Pusher (helpers + components)
-- Supprimer les env vars
-- Mettre `needPusherFallback: true` en dur dans `SystemContext`
-- L'app fonctionne avec du polling 10s (suffisant pour l'usage)
-
-C'est ~200 lignes à supprimer. Simple mais on perd le temps réel.
+Zéro changement de code côté Pusher pendant la migration DB/Auth. Les canaux sont publics, pas de Pusher auth endpoint à maintenir. Juste vérifier que les clés sont bonnes dans les env vars Vercel.
