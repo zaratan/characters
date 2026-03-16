@@ -1413,8 +1413,9 @@ Les preview deployments utilisent les mêmes env vars par défaut. Le script bui
 ### À ajouter
 ```json
 {
-  "@vercel/postgres": "latest",
+  "pg": "^8.x",
   "next-auth": "^4.x",
+  "nodemailer": "^8.x",
   "resend": "^4.x"
 }
 ```
@@ -1450,3 +1451,10 @@ Les preview deployments utilisent les mêmes env vars par défaut. Le script bui
 - **Scripts migrate** : ajout de `--database-url-var POSTGRES_URL` aux scripts `migrate:up` et `migrate:down` (le doc original ne le mentionnait pas explicitement).
 - **Fix temporaire `/`** : `fetchVampireFromDB` dans `pages/api/vampires.ts` est stubbé pour retourner `{ characters: [], failed: false }` — FaunaDB est mort, la page d'accueil crashait sur `.sort()` d'un `undefined`. Ajout d'un fallback `data?.characters ?? []` dans `pages/index.tsx` par sécurité.
 - **`node-pg-migrate` v8** : installé en v8.0.4 (le doc mentionnait v7.x).
+
+### Phase 1 (2026-03-16)
+
+- **`@vercel/postgres` remplacé par `pg`** : `@vercel/postgres` utilise le driver Neon (WebSocket) qui ne peut pas se connecter à un PostgreSQL local. Remplacé par `pg` (node-postgres) qui fonctionne partout (local, Vercel/Neon, n'importe quel hébergeur). `@vercel/postgres` a été désinstallé. Impact : `lib/auth-adapter.ts` utilise `Pool` de `pg` avec des parameterized queries (`$1`, `$2`, ...) au lieu des tagged templates `` sql`...` ``. Le `lib/db.ts` prévu en Phase 2 devra aussi utiliser `pg`.
+- **`nodemailer` ajouté** : peer dependency obligatoire de `next-auth/providers/email`, non mentionnée dans le plan.
+- **Pas de `pages` custom NextAuth** : le plan de migration mentionnait des pages custom (`/auth/signin`, `/auth/verify`). Non implémentées en Phase 1 — on utilise les pages par défaut NextAuth. À ajouter plus tard si besoin.
+- **`pg` déjà en devDependencies** : `pg` était déjà présent en devDependencies (pour `node-pg-migrate`). Déplacé en dependencies.

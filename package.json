@@ -16,7 +16,6 @@
     "postinstall": "husky install"
   },
   "dependencies": {
-    "@auth0/nextjs-auth0": "^1.9.1",
     "faunadb": "^4.6.0",
     "fuse.js": "^6.6.2",
     "immer": "^9.0.15",
@@ -26,6 +25,7 @@
     "next-auth": "^4.24.13",
     "node-fetch": "^3.2.9",
     "nodemailer": "^8.0.2",
+    "pg": "^8.20.0",
     "pusher": "^5.0.1",
     "pusher-js": "^7.3.0",
     "react": "18.2.0",
@@ -58,7 +58,6 @@
     "husky": ">=8.0.1",
     "lint-staged": ">=13.0.3",
     "node-pg-migrate": "^8.0.4",
-    "pg": "^8.20.0",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
     "tailwindcss": "^3.1.6",

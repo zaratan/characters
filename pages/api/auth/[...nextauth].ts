@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { NextAuthOptions } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';
 import { Resend } from 'resend';
@@ -7,7 +7,7 @@ import { customPgAdapter } from '../../../lib/auth-adapter';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export const authOptions = {
+export const authOptions: NextAuthOptions = {
   adapter: customPgAdapter(),
   providers: [
     EmailProvider({
@@ -30,7 +30,7 @@ export const authOptions = {
   callbacks: {
     async session({ session, user }) {
       session.user.id = user.id;
-      session.user.isAdmin = user.isAdmin;
+      session.user.isAdmin = user.isAdmin ?? false;
       return session;
     },
   },

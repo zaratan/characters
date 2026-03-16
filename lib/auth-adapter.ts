@@ -11,6 +11,17 @@ const pool = new Pool({
   connectionString: process.env.POSTGRES_URL,
 });
 
+function toAdapterUser(row: any): AdapterUser {
+  return {
+    id: row.id,
+    name: row.name,
+    email: row.email,
+    emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
+    image: row.image,
+    isAdmin: row.is_admin,
+  } as AdapterUser;
+}
+
 export function customPgAdapter(): Adapter {
   return {
     async createUser(user) {
@@ -25,15 +36,7 @@ export function customPgAdapter(): Adapter {
           user.image ?? null,
         ]
       );
-      const row = rows[0];
-      return {
-        id: row.id,
-        name: row.name,
-        email: row.email,
-        emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
-        image: row.image,
-        isAdmin: row.is_admin,
-      } as AdapterUser;
+      return toAdapterUser(rows[0]);
     },
 
     async getUser(id) {
@@ -43,15 +46,7 @@ export function customPgAdapter(): Adapter {
         [id]
       );
       if (!rows[0]) return null;
-      const row = rows[0];
-      return {
-        id: row.id,
-        name: row.name,
-        email: row.email,
-        emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
-        image: row.image,
-        isAdmin: row.is_admin,
-      } as AdapterUser;
+      return toAdapterUser(rows[0]);
     },
 
     async getUserByEmail(email) {
@@ -61,15 +56,7 @@ export function customPgAdapter(): Adapter {
         [email]
       );
       if (!rows[0]) return null;
-      const row = rows[0];
-      return {
-        id: row.id,
-        name: row.name,
-        email: row.email,
-        emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
-        image: row.image,
-        isAdmin: row.is_admin,
-      } as AdapterUser;
+      return toAdapterUser(rows[0]);
     },
 
     async getUserByAccount({ provider, providerAccountId }) {
@@ -81,15 +68,7 @@ export function customPgAdapter(): Adapter {
         [provider, providerAccountId]
       );
       if (!rows[0]) return null;
-      const row = rows[0];
-      return {
-        id: row.id,
-        name: row.name,
-        email: row.email,
-        emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
-        image: row.image,
-        isAdmin: row.is_admin,
-      } as AdapterUser;
+      return toAdapterUser(rows[0]);
     },
 
     async updateUser(user) {
@@ -110,15 +89,7 @@ export function customPgAdapter(): Adapter {
           user.id,
         ]
       );
-      const row = rows[0];
-      return {
-        id: row.id,
-        name: row.name,
-        email: row.email,
-        emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
-        image: row.image,
-        isAdmin: row.is_admin,
-      } as AdapterUser;
+      return toAdapterUser(rows[0]);
     },
 
     async linkAccount(account) {
@@ -180,14 +151,7 @@ export function customPgAdapter(): Adapter {
           userId: row.userId,
           expires: new Date(row.expires),
         } as AdapterSession,
-        user: {
-          id: row.id,
-          name: row.name,
-          email: row.email,
-          emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
-          image: row.image,
-          isAdmin: row.is_admin,
-        } as AdapterUser,
+        user: toAdapterUser(row),
       };
     },
 

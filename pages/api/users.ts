@@ -9,6 +9,10 @@ const secret = process.env.FAUNADB_SECRET_KEY;
 const q = faunadb.query;
 const client = new faunadb.Client({ secret });
 
+// TODO: Phase 2 — rewrite with PostgreSQL queries
+// FaunaDB is dead. This returns Auth0-shaped data (sub, nickname, picture)
+// but consumers (ConfigAccessSection) expect NextAuth-shaped data (id, name, image).
+// The editors/viewers UI will be broken until Phase 2 rewrites this.
 export const fetchUsersFromDB = async () => {
   try {
     const dbs: {
