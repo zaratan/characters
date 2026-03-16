@@ -1438,3 +1438,15 @@ Les preview deployments utilisent les mêmes env vars par défaut. Le script bui
   "unfetch": "^4.2.0"
 }
 ```
+
+---
+
+## Journal des déviations
+
+### Phase 0 (2026-03-16)
+
+- **Deps déjà installées** : `@vercel/postgres`, `next-auth`, `resend` étaient déjà dans `package.json` — pas de `yarn add` nécessaire.
+- **Suppression des anciennes deps différée** : `faunadb`, `@auth0/nextjs-auth0`, `uuid`, `@types/uuid` restent installées car 19+ fichiers les importent encore. Suppression prévue fin Phase 2.
+- **Scripts migrate** : ajout de `--database-url-var POSTGRES_URL` aux scripts `migrate:up` et `migrate:down` (le doc original ne le mentionnait pas explicitement).
+- **Fix temporaire `/`** : `fetchVampireFromDB` dans `pages/api/vampires.ts` est stubbé pour retourner `{ characters: [], failed: false }` — FaunaDB est mort, la page d'accueil crashait sur `.sort()` d'un `undefined`. Ajout d'un fallback `data?.characters ?? []` dans `pages/index.tsx` par sécurité.
+- **`node-pg-migrate` v8** : installé en v8.0.4 (le doc mentionnait v7.x).

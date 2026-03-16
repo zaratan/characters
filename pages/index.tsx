@@ -59,7 +59,7 @@ const Home = ({
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
     revalidateOnMount: true,
   });
-  const { characters } = data;
+  const characters = data?.characters ?? [];
   characters.sort((a, b) => (a.name < b.name ? -1 : 1));
   return (
     <MainContainer>
