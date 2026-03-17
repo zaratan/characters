@@ -77,8 +77,8 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
     async () => {
       if (!accessChanged) return;
 
-      await fetcher(`/api/vampires/${id}/update_partial`, {
-        method: 'POST',
+      await fetcher(`/api/vampires/${id}`, {
+        method: 'PATCH',
         body: JSON.stringify({
           editors,
           viewers,

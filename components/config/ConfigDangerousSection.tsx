@@ -59,8 +59,8 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
     )
       return;
 
-    await fetcher(`/api/vampires/${id}/delete`, {
-      method: 'POST',
+    await fetcher(`/api/vampires/${id}`, {
+      method: 'DELETE',
     });
     router.push('/');
   };
@@ -71,8 +71,8 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
     async () => {
       if (!visibilityChanged) return;
 
-      await fetcher(`/api/vampires/${id}/update_partial`, {
-        method: 'POST',
+      await fetcher(`/api/vampires/${id}`, {
+        method: 'PATCH',
         body: JSON.stringify({
           privateSheet,
           appId,

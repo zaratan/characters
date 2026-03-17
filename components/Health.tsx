@@ -29,8 +29,8 @@ const Health = () => {
       if (JSON.stringify(health.value) === JSON.stringify(health.baseValue))
         return;
 
-      await fetcher(`/api/vampires/${id}/update_partial`, {
-        method: 'POST',
+      await fetcher(`/api/vampires/${id}`, {
+        method: 'PATCH',
         body: JSON.stringify({ mind: { health: health.value }, appId }),
       });
       mutate(`/api/vampires/${id}`);

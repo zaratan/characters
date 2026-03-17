@@ -45,8 +45,8 @@ const Mind = () => {
   useDebounce(
     async () => {
       if (tempWillpower.value === tempWillpower.baseValue) return;
-      await fetcher(`/api/vampires/${id}/update_partial`, {
-        method: 'POST',
+      await fetcher(`/api/vampires/${id}`, {
+        method: 'PATCH',
         body: JSON.stringify({
           mind: { tempWillpower: tempWillpower.value },
           appId,
@@ -60,8 +60,8 @@ const Mind = () => {
   useDebounce(
     async () => {
       if (bloodSpent.value === bloodSpent.baseValue) return;
-      await fetcher(`/api/vampires/${id}/update_partial`, {
-        method: 'POST',
+      await fetcher(`/api/vampires/${id}`, {
+        method: 'PATCH',
         body: JSON.stringify({ mind: { bloodSpent: bloodSpent.value }, appId }),
       });
       mutate(`/api/vampires/${id}`);

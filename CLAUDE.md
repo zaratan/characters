@@ -6,7 +6,7 @@
 
 ## Tech Stack
 
-- **Framework**: Next.js 14.2 (Pages Router)
+- **Framework**: Next.js 14.2 (App Router migration in progress — API routes migrated, pages still in Pages Router)
 - **Language**: TypeScript 5.9 (strict mode disabled)
 - **UI**: React 18.2, Styled-Components 5.3, Tailwind CSS 3.1
 - **State Management**: React Context API (21 context files in `contexts/`)
@@ -38,12 +38,16 @@ contexts/             # React Context providers (21 files, one per domain)
 lib/                  # Database & auth infrastructure
   pool.ts             # Shared pg Pool (serverless-optimized, max:1)
   db.ts               # Database access layer (all SQL centralized here)
+  auth.ts             # NextAuth authOptions + getSession() helper
   auth-adapter.ts     # Custom NextAuth PostgreSQL adapter
-pages/                # Next.js pages
-  api/                # API routes
-    auth/             # NextAuth endpoints ([...nextauth].ts)
-    data/             # Data endpoints
-    vampires/         # Vampire CRUD operations
+  queries.ts          # DB query wrappers (vampires list, users list, etc.)
+app/                  # App Router (Next.js 14)
+  api/                # Route Handlers (migrated from pages/api/)
+    auth/             # NextAuth endpoints
+    data/             # Data endpoints (disciplines)
+    vampires/         # Vampire CRUD: list, create, [id] (GET/PUT/PATCH/DELETE)
+    users/            # Users list
+pages/                # Pages Router (migration in progress)
   vampires/           # Dynamic character sheet pages
 hooks/                # Custom React hooks (useSave, useScroll, etc.)
 helpers/              # Utility functions (fetcher, pex calculations, pusher)
@@ -70,7 +74,7 @@ public/               # Static assets (fonts, images)
 - SWR for all server data fetching with automatic caching
 - Dynamic imports with `next/dynamic` for client-only components (no-ssr pattern)
 - Styled-components with a theme provider for theming; Tailwind for utility classes
-- API routes are RESTful under `pages/api/`
+- API routes are RESTful Route Handlers under `app/api/` (GET/PUT/PATCH/DELETE)
 
 ### Formatting & Linting
 - **ESLint** extends: `next/core-web-vitals`, `prettier`, `plugin:prettier/recommended`
@@ -114,6 +118,6 @@ Copy `.env.sample` to `.env.local` and fill in values:
 
 This app relies on **[wod.zaratan.fr](https://wod.zaratan.fr)**, a companion World of Darkness reference site (also by zaratan), for two things:
 
-1. **Discipline reference links** — Every discipline in `data/disciplines.json` has a `url` field pointing to `https://wod.zaratan.fr/powers/<discipline-name>`. These links are displayed in the character sheet UI so players can look up discipline details. Combo disciplines are linked to `https://wod.zaratan.fr/powers/combo#power-<slug>` (built dynamically in `pages/api/data/disciplines.ts`).
+1. **Discipline reference links** — Every discipline in `data/disciplines.json` has a `url` field pointing to `https://wod.zaratan.fr/powers/<discipline-name>`. These links are displayed in the character sheet UI so players can look up discipline details. Combo disciplines are linked to `https://wod.zaratan.fr/powers/combo#power-<slug>` (built dynamically in `app/api/data/disciplines/route.ts`).
 
 2. **Advantages & Flaws API** — `DataContext.tsx` fetches advantage/flaw data directly from `https://wod.zaratan.fr/api/characters/adv_flaws` via SWR. This is a live external API call, not a local data file. The response provides names, URLs, and level arrays used to populate the character sheet's advantages and flaws sections.

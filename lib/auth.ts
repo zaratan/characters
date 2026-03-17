@@ -1,9 +1,10 @@
-import NextAuth, { NextAuthOptions } from 'next-auth';
+import { NextAuthOptions } from 'next-auth';
+import { getServerSession } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';
 import { Resend } from 'resend';
 
-import { customPgAdapter } from '../../../lib/auth-adapter';
+import { customPgAdapter } from './auth-adapter';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -36,4 +37,4 @@ export const authOptions: NextAuthOptions = {
   },
 };
 
-export default NextAuth(authOptions);
+export const getSession = () => getServerSession(authOptions);

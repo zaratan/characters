@@ -1,9 +1,9 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextResponse } from 'next/server';
 import fs from 'fs';
 import path from 'path';
 import slugify from 'slugify';
 
-const handler = async (req: NextApiRequest, res: NextApiResponse) => {
+export async function GET() {
   const dataDirectory = path.join(process.cwd(), 'data');
   const disciplinePath = path.join(dataDirectory, 'disciplines.json');
   const disciplinesJson = fs.readFileSync(disciplinePath, 'utf8');
@@ -20,7 +20,5 @@ const handler = async (req: NextApiRequest, res: NextApiResponse) => {
     ).toLowerCase()}-${disc.source.length}`,
   }));
 
-  res.status(200).json({ disciplines, disciplinesCombi: treatedDiscCombi });
-};
-
-export default handler;
+  return NextResponse.json({ disciplines, disciplinesCombi: treatedDiscCombi });
+}

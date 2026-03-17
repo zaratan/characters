@@ -277,9 +277,9 @@ export const useSave = () => {
       viewers,
       privateSheet,
     };
-    const url = `/api/vampires/${id}/update`;
+    const url = `/api/vampires/${id}`;
     await fetcher(url, {
-      method: 'POST',
+      method: 'PUT',
       body: JSON.stringify({ ...data, appId }),
     });
     resetSave();

@@ -99,8 +99,8 @@ const ConfigPreferencesSection = ({ id }: { id: string }) => {
         vampireInfos: useVampireInfos,
       };
 
-      await fetcher(`/api/vampires/${id}/update_partial`, {
-        method: 'POST',
+      await fetcher(`/api/vampires/${id}`, {
+        method: 'PATCH',
         body: JSON.stringify({
           sections: newSections,
           appId,

@@ -12,6 +12,15 @@ export const fetchVampireFromDB = async (
   }
 };
 
+export const fetchUsersFromDB = async () => {
+  try {
+    const users = await db.users.findAllPublic();
+    return { users, failed: false };
+  } catch (e) {
+    return { users: [], failed: true };
+  }
+};
+
 export const fetchOneVampire = async (id: string) => {
   try {
     const vampire = await db.vampires.findById(id);
