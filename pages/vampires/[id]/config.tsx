@@ -6,11 +6,11 @@ import useSWR from 'swr';
 import Footer from '../../../components/Footer';
 import Nav from '../../../components/Nav';
 import { SectionsProvider } from '../../../contexts/SectionsContext';
-import { fetchOneVampire } from '../../api/vampires/[id]';
+import { fetchOneVampire } from '../../../lib/queries';
 import { VampireType } from '../../../types/VampireType';
-import { fetchVampireFromDB } from '../../api/vampires';
+import { fetchVampireFromDB } from '../../../lib/queries';
 import SystemContext from '../../../contexts/SystemContext';
-import { TextFallback } from '../../new';
+import TextFallback from '../../../styles/TextFallback';
 import MeContext from '../../../contexts/MeContext';
 import { AccessesProvider } from '../../../contexts/AccessesContext';
 import Config from '../../../components/config/Config';
@@ -46,7 +46,7 @@ export async function getStaticPaths() {
 }
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const fetchedData = await fetchOneVampire(String(params.id));
+  const fetchedData = await fetchOneVampire(String(params!.id));
   if (fetchedData.failed) {
     return {
       props: {
@@ -55,7 +55,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 1,
     };
   }
-  const initialData: VampireType & { id: string } = fetchedData.data;
+  const initialData: VampireType & { id: string } = fetchedData.data!;
 
   return {
     props: {
@@ -97,7 +97,7 @@ const ConfigWrapper = ({
     return <ErrorPage />;
   }
 
-  if (!me.isAdmin && !(data.editors || []).includes(me.id)) {
+  if (!me!.isAdmin && !(data!.editors || []).includes(me!.id)) {
     return (
       <OuterContainer>
         <Nav />
@@ -113,13 +113,13 @@ const ConfigWrapper = ({
     <OuterContainer>
       <Nav returnTo={`/vampires/${id}/config`} />
       <MainContainer>
-        <SectionsProvider sections={data.sections}>
+        <SectionsProvider sections={data!.sections}>
           <AccessesProvider
-            editors={data.editors || []}
-            viewers={data.viewers || []}
-            privateSheet={data.privateSheet}
+            editors={data!.editors || []}
+            viewers={data!.viewers || []}
+            privateSheet={data!.privateSheet}
           >
-            <Config id={String(id)} name={data.infos.name} />
+            <Config id={String(id)} name={data!.infos.name} />
           </AccessesProvider>
         </SectionsProvider>
       </MainContainer>

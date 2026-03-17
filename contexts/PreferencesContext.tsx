@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useState, ReactNode, useEffect } from 'react';
 
 type ContextType = {
@@ -24,7 +26,7 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const lsShowPex = JSON.parse(
-      localStorage.getItem('PreferencesContext:showPex')
+      localStorage.getItem('PreferencesContext:showPex') ?? 'null'
     );
     if (lsShowPex) {
       setShowPex(lsShowPex);

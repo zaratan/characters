@@ -5,8 +5,8 @@ import { useEffect, useContext } from 'react';
 import dynamic from 'next/dynamic';
 import Sheet from '../../components/Sheet';
 import { VampireType } from '../../types/VampireType';
-import { fetchVampireFromDB } from '../api/vampires';
-import { fetchOneVampire } from '../api/vampires/[id]';
+import { fetchVampireFromDB } from '../../lib/queries';
+import { fetchOneVampire } from '../../lib/queries';
 import SystemContext from '../../contexts/SystemContext';
 import MeContext from '../../contexts/MeContext';
 import { DataProvider } from '../../contexts/DataContext';
@@ -32,7 +32,7 @@ const PusherSheetListener = dynamic(
 );
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const fetchedData = await fetchOneVampire(String(params.id));
+  const fetchedData = await fetchOneVampire(String(params!.id));
   if (fetchedData.failed) {
     return {
       props: {
@@ -41,7 +41,7 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       revalidate: 1,
     };
   }
-  const initialData: VampireType & { id: string } = fetchedData.data;
+  const initialData: VampireType & { id: string } = fetchedData.data!;
 
   return {
     props: {
@@ -118,13 +118,13 @@ const Home = ({
     editors = [],
     viewers = [],
     privateSheet = false,
-  } = data;
+  } = data!;
 
   if (
     privateSheet &&
     !(
       connected &&
-      (me.isAdmin || editors.includes(me.id) || viewers.includes(me.id))
+      (me!.isAdmin || editors.includes(me!.id) || viewers.includes(me!.id))
     )
   ) {
     return <ErrorPage />;

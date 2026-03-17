@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
@@ -38,7 +40,8 @@ export const LanguagesProvider = ({
   } = {
     languages: tmpLanguages.map((language) => ({
       ...language,
-      baseValue: languages.find((lang) => lang.key === language.key)?.value,
+      baseValue:
+        languages.find((lang) => lang.key === language.key)?.value ?? '',
       set: (newTitle: string) => {
         const newValue = tmpLanguages.map((lang) =>
           lang.key === language.key ? { ...lang, value: newTitle } : lang

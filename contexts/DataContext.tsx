@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, ReactNode } from 'react';
 import useSWR from 'swr';
 
@@ -73,8 +75,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const context: ContextType = {
     disciplines: discData?.disciplines || [],
     disciplinesCombi: discData?.disciplinesCombi || [],
-    advantages,
-    flaws,
+    advantages: advantages ?? [],
+    flaws: flaws ?? [],
   };
 
   return (

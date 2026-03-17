@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
@@ -306,7 +308,7 @@ const convertThaumaturgyToElems: (
           ? {
               ...disc,
               paths: [
-                ...disc.paths,
+                ...(disc.paths ?? []),
                 { key: crypto.randomUUID(), title: '', value: 0 },
               ],
             }
@@ -319,7 +321,7 @@ const convertThaumaturgyToElems: (
         disc.key === tmpDiscipline.key
           ? {
               ...disc,
-              paths: disc.paths.filter((path) => path.key !== pathKey),
+              paths: (disc.paths ?? []).filter((path) => path.key !== pathKey),
             }
           : disc
       )
@@ -330,7 +332,7 @@ const convertThaumaturgyToElems: (
         disc.key === tmpDiscipline.key
           ? {
               ...disc,
-              rituals: disc.rituals.filter(
+              rituals: (disc.rituals ?? []).filter(
                 (ritual) => ritual.key !== ritualKey
               ),
             }
@@ -344,7 +346,7 @@ const convertThaumaturgyToElems: (
           ? {
               ...disc,
               rituals: [
-                ...disc.rituals,
+                ...(disc.rituals ?? []),
                 { key: crypto.randomUUID(), title: '', value: 0 },
               ],
             }

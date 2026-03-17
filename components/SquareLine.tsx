@@ -81,7 +81,7 @@ const SquareLine = ({
       <EmptyGlyph
         type={type}
         onClick={() => numberChecked.set(0)}
-        inactive={numberChecked.value === 0 || inactive}
+        inactive={numberChecked.value === 0 || !!inactive}
       />
       {Array.from(Array(number)).map((_, i) => [
         <Square
@@ -90,7 +90,7 @@ const SquareLine = ({
             numberChecked.set(i + 1);
           }}
           name={`${type} ${i}`}
-          inactive={i + 1 === numberChecked.value || inactive}
+          inactive={i + 1 === numberChecked.value || !!inactive}
           key={`${type} ${i}`}
         />,
         i % 5 === 4 && i !== number - 1 ? (

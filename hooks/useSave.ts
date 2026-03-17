@@ -100,12 +100,12 @@ export const useSave = () => {
       title: disc.title,
       isThaumaturgy: disc.isThaumaturgy,
       mainPathName: disc.mainPathName,
-      paths: disc.paths.map((tpath) => ({
+      paths: (disc.paths ?? []).map((tpath) => ({
         title: tpath.title,
         value: tpath.value,
         key: tpath.key,
       })),
-      rituals: disc.rituals.map((ritual) => ({
+      rituals: (disc.rituals ?? []).map((ritual) => ({
         title: ritual.title,
         key: ritual.key,
         value: ritual.value,
@@ -118,12 +118,12 @@ export const useSave = () => {
       title: disc.title,
       isThaumaturgy: disc.isThaumaturgy,
       mainPathName: disc.mainPathName,
-      paths: disc.paths.map((tpath) => ({
+      paths: (disc.paths ?? []).map((tpath) => ({
         title: tpath.title,
         value: tpath.value,
         key: tpath.key,
       })),
-      rituals: disc.rituals.map((ritual) => ({
+      rituals: (disc.rituals ?? []).map((ritual) => ({
         title: ritual.title,
         key: ritual.key,
         value: ritual.value,

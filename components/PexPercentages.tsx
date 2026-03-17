@@ -80,17 +80,25 @@ const PexPercentage = ({
   const currentPex = totalPex.current;
   const nextPex = totalPex.current + totalPex.diff;
   const attributesPercent = computePercentPex(
-    pexElemsAttributes,
+    pexElemsAttributes ?? [],
     currentPex,
     nextPex
   );
   const abilitiesPercent = computePercentPex(
-    pexElemsAbilities,
+    pexElemsAbilities ?? [],
     currentPex,
     nextPex
   );
-  const powersPercent = computePercentPex(pexElemsPowers, currentPex, nextPex);
-  const miscPercent = computePercentPex(pexElemsMisc, currentPex, nextPex);
+  const powersPercent = computePercentPex(
+    pexElemsPowers ?? [],
+    currentPex,
+    nextPex
+  );
+  const miscPercent = computePercentPex(
+    pexElemsMisc ?? [],
+    currentPex,
+    nextPex
+  );
   return (
     <HandText>
       <Ul>

@@ -188,17 +188,17 @@ const PexSection = () => {
             pexCalc: (value) => value,
           },
           {
-            elemArray: [...clanDisciplines, ...outClanDisciplines].flatMap(
-              (disc) => disc.paths
-            ),
+            elemArray: [...clanDisciplines, ...outClanDisciplines]
+              .flatMap((disc) => disc.paths)
+              .filter((p): p is NonNullable<typeof p> => p !== undefined),
             pexCalc: calcPexThaumaturgyPath,
           },
           ...[...clanDisciplines, ...outClanDisciplines]
             .filter((disc) => disc.isThaumaturgy)
             .flatMap((disc) => ({
-              elemArray: disc.rituals,
+              elemArray: disc.rituals ?? [],
               pexCalc: (value: number) =>
-                calcPexThaumaturgyRitual(value, disc.ritualMulti),
+                calcPexThaumaturgyRitual(value, disc.ritualMulti ?? 1),
             })),
         ]
       : []),

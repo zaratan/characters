@@ -2,9 +2,11 @@ import { useState, useEffect } from 'react';
 
 const useKeyboardShortcut = (
   combination: string,
-  action = (_keyboardEvent: KeyboardEvent) => {}
+  action = (_keyboardEvent?: KeyboardEvent) => {}
 ) => {
-  const [keyboardJS, setKeyboardJS] = useState(null);
+  const [keyboardJS, setKeyboardJS] = useState<
+    typeof import('keyboardjs') | null
+  >(null);
 
   useEffect(() => {
     import('keyboardjs').then((k) => setKeyboardJS(k.default || k));

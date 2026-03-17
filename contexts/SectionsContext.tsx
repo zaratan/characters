@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 import produce from 'immer';
 
@@ -53,7 +55,7 @@ export const SectionsProvider = ({
   const toggleSection = (sectionName: string) => () => {
     setSectionsState(
       produce(sectionsState, (nextState) => {
-        nextState[sectionName] = !nextState[sectionName];
+        nextState![sectionName] = !nextState![sectionName];
       })
     );
   };
@@ -64,13 +66,13 @@ export const SectionsProvider = ({
   }, [JSON.stringify(sections)]);
 
   const context: ContextType = {
-    useBlood: sectionsState.blood,
-    useDisciplines: sectionsState.disciplines,
-    usePath: sectionsState.path,
-    useGeneration: sectionsState.generation,
-    useVampireInfos: sectionsState.vampireInfos,
-    useTrueFaith: sectionsState.trueFaith,
-    useHumanMagic: sectionsState.humanMagic,
+    useBlood: sectionsState?.blood ?? false,
+    useDisciplines: sectionsState?.disciplines ?? false,
+    usePath: sectionsState?.path ?? false,
+    useGeneration: sectionsState?.generation ?? false,
+    useVampireInfos: sectionsState?.vampireInfos ?? false,
+    useTrueFaith: sectionsState?.trueFaith ?? false,
+    useHumanMagic: sectionsState?.humanMagic ?? false,
     toggleSection,
   };
   return (

@@ -11,10 +11,10 @@ export const authOptions: NextAuthOptions = {
   adapter: customPgAdapter(),
   providers: [
     EmailProvider({
-      from: process.env.EMAIL_FROM,
+      from: process.env.EMAIL_FROM!,
       sendVerificationRequest: async ({ identifier: email, url }) => {
         await resend.emails.send({
-          from: process.env.EMAIL_FROM,
+          from: process.env.EMAIL_FROM!,
           to: email,
           subject: 'Connexion à Vampire Char',
           html: `<p>Clique sur ce lien pour te connecter :</p><p><a href="${url}">Se connecter</a></p>`,
@@ -22,8 +22,8 @@ export const authOptions: NextAuthOptions = {
       },
     }),
     GitHubProvider({
-      clientId: process.env.GITHUB_CLIENT_ID,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET,
+      clientId: process.env.GITHUB_CLIENT_ID!,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
       allowDangerousEmailAccountLinking: true,
     }),
   ],

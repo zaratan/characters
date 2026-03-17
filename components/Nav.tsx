@@ -105,7 +105,7 @@ const LogButton = ({
   menuOpen: boolean;
   returnTo?: string;
 }) => {
-  const wrapperRef = useRef();
+  const wrapperRef = useRef<HTMLDivElement>(null);
   useClickAway(wrapperRef, () => {
     close();
   });
@@ -133,10 +133,10 @@ const LogButton = ({
         tabIndex={0}
         role="button"
       >
-        <ProfileImg src={data.image} alt="P" />
+        <ProfileImg src={data?.image} alt="P" />
       </MenuButton>
       <MenuDropdown className={menuOpen ? 'open' : ''}>
-        <NameContainer>{data.name}</NameContainer>
+        <NameContainer>{data?.name}</NameContainer>
         <MenuDropdownElem
           as="a"
           onClick={() => signOut()}

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, ReactNode, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
 import { MeType } from '../types/MeType';

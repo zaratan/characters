@@ -60,11 +60,12 @@ const AbilityLine = ({
     remove={remove}
     lineAction={lineAction}
     endNumber={
-      ((specialties && specialties.length) || 0) !== baseSpecialtyCount &&
-      calcPexDiffSpecialty(
-        baseSpecialtyCount,
-        (specialties && specialties.length) || 0
-      )
+      ((specialties && specialties.length) || 0) !== baseSpecialtyCount
+        ? calcPexDiffSpecialty(
+            baseSpecialtyCount,
+            (specialties && specialties.length) || 0
+          )
+        : undefined
     }
     inactive={inactive}
   >
@@ -80,7 +81,7 @@ const AbilityLine = ({
                   className="low"
                   value={specialty.name}
                   onChange={(e) => {
-                    changeSpecialtyTitle(specialty.key, e.currentTarget.value);
+                    changeSpecialtyTitle!(specialty.key, e.currentTarget.value);
                   }}
                 />
               )}
@@ -88,7 +89,7 @@ const AbilityLine = ({
                 <ButtonGlyphContainer className="remove-spec-button no-reposition">
                   <Glyph
                     name={`remove-${specialty.name}`}
-                    onClick={() => removeSpecialty(specialty.key)}
+                    onClick={() => removeSpecialty!(specialty.key)}
                   >
                     ✘
                   </Glyph>

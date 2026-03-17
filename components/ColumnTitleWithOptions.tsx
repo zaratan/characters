@@ -101,7 +101,7 @@ const ColumnTitleWithOptions = ({
             {button ? (
               <ColumnButton
                 glyph={button.glyph}
-                title={title}
+                title={title ?? ''}
                 value={button.value}
                 hidden={button.hidden}
               />

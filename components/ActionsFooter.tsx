@@ -175,8 +175,8 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
             </action.component>
           );
         }
-        const handleClick = generateHandleClick(action.act);
-        const handleKeypress = generateHandleKeypress(action.act);
+        const handleClick = generateHandleClick(action.act!);
+        const handleKeypress = generateHandleKeypress(action.act!);
         return (
           <DesktopAction
             key={action.name}
@@ -223,8 +223,8 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
               </action.component>
             );
           }
-          const handleClick = generateHandleClick(action.act);
-          const handleKeypress = generateHandleKeypress(action.act);
+          const handleClick = generateHandleClick(action.act!);
+          const handleKeypress = generateHandleKeypress(action.act!);
           return (
             <MobileAction
               key={action.name}
@@ -256,7 +256,7 @@ const ActionsFooter = ({
   const allActions = [
     ...(actions || []),
     ...(connected && loggedActions ? loggedActions : []),
-    ...(connected && editors.includes(me.id) && ownerActions
+    ...(connected && me && editors.includes(me.id) && ownerActions
       ? ownerActions
       : []),
   ];

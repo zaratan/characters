@@ -93,7 +93,7 @@ const AbilitiesColumn = ({
           ((ability.specialties && ability.specialties.length) || 0) <
           ability.value - 3
             ? { glyph: '+', value: ability.addNewSpecialty }
-            : null
+            : undefined
         }
         baseSpecialtyCount={ability.baseSpecialtiesCount}
         specialties={ability.specialties}
@@ -109,13 +109,13 @@ const AbilitiesColumn = ({
         maxLevel={maxLevel}
         key={ability.key}
         custom
-        changeTitle={changeCustomAbilityTitle(ability.key)}
-        remove={removeCustomAbility(ability.key)}
+        changeTitle={changeCustomAbilityTitle(ability.key!)}
+        remove={removeCustomAbility(ability.key!)}
         lineAction={
           ((ability.specialties && ability.specialties.length) || 0) <
           ability.value - 3
             ? { glyph: '+', value: ability.addNewSpecialty }
-            : null
+            : undefined
         }
         baseSpecialtyCount={ability.baseSpecialtiesCount}
         specialties={ability.specialties}

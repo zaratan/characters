@@ -1,3 +1,5 @@
+'use client';
+
 import React, {
   createContext,
   useState,
@@ -36,7 +38,7 @@ const defaultContext: ContextType = {
 const ModificationsContext = createContext(defaultContext);
 
 const anyChanges = (changesArray: Array<ChangeType>) => {
-  const ignoreList = [];
+  const ignoreList: string[] = [];
   return some(changesArray, (change) => {
     if (ignoreList.find((e) => e === change.key)) return false;
     if (change.value.changed) {

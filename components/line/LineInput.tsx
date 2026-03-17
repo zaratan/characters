@@ -17,7 +17,7 @@ const LineInput = <T extends { name: string }>({
 }: InputProps<T>) => {
   if (autocomplete && autocomplete.length > 0) {
     const onSubmit = (e: string | T) => {
-      changeName(typeof e === 'string' ? e : e.name);
+      changeName!(typeof e === 'string' ? e : e.name);
     };
     return (
       <AutoCompleteInput
@@ -35,7 +35,7 @@ const LineInput = <T extends { name: string }>({
   return (
     <HandEditableText
       value={title}
-      onChange={(e) => changeName(e.currentTarget.value)}
+      onChange={(e) => changeName!(e.currentTarget.value)}
       placeholder={placeholder || 'Nouveau Nom…'}
     />
   );

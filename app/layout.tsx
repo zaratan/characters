@@ -1,0 +1,36 @@
+/* eslint-disable @next/next/no-page-custom-font */
+import { ReactNode } from 'react';
+import StyledComponentsRegistry from './lib/registry';
+import Providers from './providers';
+import '../styles/globals.css';
+
+export const metadata = {
+  title: 'Char - Feuilles de perso',
+  icons: {
+    icon: '/favicon.ico',
+  },
+};
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  shrinkToFit: false,
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
+  return (
+    <html lang="fr">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        <StyledComponentsRegistry>
+          <Providers>{children}</Providers>
+        </StyledComponentsRegistry>
+      </body>
+    </html>
+  );
+}

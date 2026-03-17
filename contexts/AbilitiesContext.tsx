@@ -1,3 +1,5 @@
+'use client';
+
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';

@@ -9,7 +9,7 @@ import SheetContainer from '../styles/SheetContainer';
 import { HorizontalSection } from '../styles/Sections';
 import { HandLargeText } from '../styles/Texts';
 import Nav from '../components/Nav';
-import { fetchVampireFromDB } from './api/vampires';
+import { fetchVampireFromDB } from '../lib/queries';
 import SystemContext from '../contexts/SystemContext';
 import Footer from '../components/Footer';
 import ActionsFooter from '../components/ActionsFooter';

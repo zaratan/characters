@@ -69,11 +69,11 @@ const Sheet = ({ infos, returnTo }: { infos: InfosType; returnTo: string }) => {
 
   const saveAction = useSave();
   useKeyboardShortcut('mod + z', (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     rollback();
   });
   useKeyboardShortcut('mod + s', (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     saveAction();
   });
   useBeforeUnload(unsavedChanges, UnsavedChangeCloseText);

@@ -1,3 +1,5 @@
+'use client';
+
 import React, { createContext, useState, useEffect, ReactNode } from 'react';
 
 type ContextType = {
@@ -17,7 +19,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const lsDarkMode = JSON.parse(
-      localStorage.getItem('ThemeContext:darkMode')
+      localStorage.getItem('ThemeContext:darkMode') ?? 'null'
     );
     if (lsDarkMode !== undefined && lsDarkMode !== null) {
       setDarkMode(lsDarkMode);

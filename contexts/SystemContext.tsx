@@ -1,3 +1,5 @@
+'use client';
+
 import React, {
   createContext,
   ReactNode,
@@ -20,8 +22,8 @@ type ContextType = {
 
 const defaultContext: ContextType = {
   appId: '',
-  pusherClient: null,
-  pusherState: null,
+  pusherClient: undefined,
+  pusherState: undefined,
   needPusherFallback: false,
 };
 const SystemContext = createContext(defaultContext);
@@ -55,7 +57,7 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
   const context: ContextType = useMemo(
     () => ({
       appId,
-      pusherClient: pusherClient.current,
+      pusherClient: pusherClient.current ?? undefined,
       pusherState,
       needPusherFallback,
     }),

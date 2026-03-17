@@ -1,6 +1,7 @@
 import React, { useState, FormEvent, useContext } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/router';
+import TextFallback from '../styles/TextFallback';
 import Nav from '../components/Nav';
 import Footer from '../components/Footer';
 import { EmptyLine } from '../styles/Lines';
@@ -71,19 +72,6 @@ const TextInput = styled.input`
   &:focus {
     outline: none;
     border-bottom: 1px solid ${(props) => props.theme.focusBorderColor};
-  }
-`;
-
-export const TextFallback = styled.strong`
-  height: 100%;
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  a {
-    margin-left: 0.25rem;
-    text-decoration: underline;
   }
 `;
 

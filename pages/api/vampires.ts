@@ -1,20 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './auth/[...nextauth]';
-import { db } from '../../lib/db';
-
-export const fetchVampireFromDB = async (
-  userId?: string,
-  isAdmin?: boolean
-) => {
-  try {
-    const characters = await db.vampires.list(userId, isAdmin);
-    return { characters, failed: false };
-  } catch (e) {
-    // something went wrong
-    return { characters: [], failed: true };
-  }
-};
+import { fetchVampireFromDB } from '../../lib/queries';
 
 const handler = async (req: NextApiRequest, res: NextApiResponse) => {
   const session = await getServerSession(req, res, authOptions);

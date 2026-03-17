@@ -6,7 +6,7 @@ import useSWR from 'swr';
 import AccessesContext from '../../contexts/AccessesContext';
 import SystemContext from '../../contexts/SystemContext';
 import { fetcher } from '../../helpers/fetcher';
-import { TextFallback } from '../../pages/new';
+import TextFallback from '../../styles/TextFallback';
 import { EmptyLine } from '../../styles/Lines';
 import { UserType } from '../../types/UserType';
 import AutoCompleteInput from '../AutoCompleteInput';
@@ -102,11 +102,11 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
 
   const editorsWithData = concat(
     editors.map((e) => users.find((user) => user.id === e))
-  );
+  ).filter((u): u is UserType => u !== undefined);
 
   const viewersWithData = concat(
     viewers.map((e) => users.find((user) => user.id === e))
-  );
+  ).filter((u): u is UserType => u !== undefined);
 
   const addEditorAction = (user: UserType | string) => {
     if (typeof user === 'string') return;

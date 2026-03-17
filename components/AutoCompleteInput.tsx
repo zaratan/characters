@@ -66,7 +66,7 @@ const Suggestion = styled.li`
 `;
 
 const generateHandleKeypressInput =
-  (listRef: React.MutableRefObject<HTMLUListElement>, close: () => void) =>
+  (listRef: React.RefObject<HTMLUListElement>, close: () => void) =>
   (e: KeyboardEvent) => {
     console.log(e.key);
     if (e.key !== 'ArrowDown' && e.key !== 'Escape' && e.key !== 'Tab') {
@@ -82,7 +82,8 @@ const generateHandleKeypressInput =
     if (e.key === 'Escape') {
       return close();
     }
-    const span: HTMLSpanElement = listRef.current.querySelector('li span');
+    const span: HTMLSpanElement | null =
+      listRef.current!.querySelector('li span');
 
     return span && span.focus();
   };
@@ -90,8 +91,8 @@ const generateHandleKeypressInput =
 const generateHandleKeypressSpan =
   (
     changeFunc: (e: KeyboardEvent) => void,
-    listRef: React.MutableRefObject<HTMLUListElement>,
-    inputRef: React.MutableRefObject<HTMLInputElement>,
+    listRef: React.RefObject<HTMLUListElement>,
+    inputRef: React.RefObject<HTMLInputElement>,
     close: () => void
   ) =>
   (e: KeyboardEvent) => {
@@ -107,27 +108,27 @@ const generateHandleKeypressSpan =
     e.preventDefault();
 
     if (e.key === 'Escape') {
-      inputRef.current.focus();
+      inputRef.current!.focus();
       return close();
     }
 
     if (e.key === 'Enter' || e.key === ' ') {
       changeFunc(e);
     } else {
-      const focusedSpan: HTMLSpanElement =
-        listRef.current.querySelector('li span:focus');
+      const focusedSpan: HTMLSpanElement | null =
+        listRef.current!.querySelector('li span:focus');
       const spans: Array<HTMLSpanElement> = Array.from(
-        listRef.current.querySelectorAll('li span')
+        listRef.current!.querySelectorAll('li span')
       );
-      const currentIndex = spans.indexOf(focusedSpan);
+      const currentIndex = spans.indexOf(focusedSpan!);
       if (e.key === 'ArrowDown') {
         if (spans.length > currentIndex + 1) {
-          spans[currentIndex + 1].focus();
+          spans[currentIndex + 1]!.focus();
         }
       } else if (currentIndex > 0) {
-        spans[currentIndex - 1].focus();
+        spans[currentIndex - 1]!.focus();
       } else {
-        inputRef.current.focus();
+        inputRef.current!.focus();
       }
     }
   };
@@ -187,8 +188,8 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
     onSubmit(value);
   };
 
-  const suggestionListRef = useRef(null);
-  const inputRef = useRef(null);
+  const suggestionListRef = useRef<HTMLUListElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
   const clickHandler = (value: T) =>
     generateHandleClick(() => submitAction(value));
   const keyHandler = (value: T) =>
