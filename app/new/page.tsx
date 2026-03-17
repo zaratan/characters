@@ -1,21 +1,21 @@
+'use client';
 import React, { useState, FormEvent, useContext } from 'react';
 import styled from 'styled-components';
-import { useRouter } from 'next/router';
-import TextFallback from '../styles/TextFallback';
-import Nav from '../components/Nav';
-import Footer from '../components/Footer';
-import { EmptyLine } from '../styles/Lines';
-import MeContext from '../contexts/MeContext';
-import { fetcher } from '../helpers/fetcher';
-import SystemContext from '../contexts/SystemContext';
-import ErrorPage from '../components/ErrorPage';
+import { useRouter } from 'next/navigation';
+import Nav from '../../components/Nav';
+import Footer from '../../components/Footer';
+import { EmptyLine } from '../../styles/Lines';
+import MeContext from '../../contexts/MeContext';
+import { fetcher } from '../../helpers/fetcher';
+import SystemContext from '../../contexts/SystemContext';
+import ErrorPage from '../../components/ErrorPage';
 
-export const ERAS = {
+const ERAS = {
   0: 'Age des ténèbres',
   1: 'Victorienne',
 };
 
-export const TYPES = {
+const TYPES = {
   0: 'Vampire',
   1: 'Humain',
   2: 'Goule',

@@ -1,4 +1,4 @@
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react';
 import { useDebounce } from 'react-use';
 import styled from 'styled-components';

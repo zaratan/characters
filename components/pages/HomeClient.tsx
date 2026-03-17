@@ -1,26 +1,25 @@
-import Head from 'next/head';
+'use client';
+
 import useSWR from 'swr';
 import Link from 'next/link';
-import { GetStaticProps } from 'next';
 import styled from 'styled-components';
 import { useContext } from 'react';
 import dynamic from 'next/dynamic';
-import SheetContainer from '../styles/SheetContainer';
-import { HorizontalSection } from '../styles/Sections';
-import { HandLargeText } from '../styles/Texts';
-import Nav from '../components/Nav';
-import { fetchVampireFromDB } from '../lib/queries';
-import SystemContext from '../contexts/SystemContext';
-import Footer from '../components/Footer';
-import ActionsFooter from '../components/ActionsFooter';
-import { EmptyLine } from '../styles/Lines';
-import MoonIcon from '../components/icons/MoonIcon';
-import SunIcon from '../components/icons/SunIcon';
-import ThemeContext from '../contexts/ThemeContext';
-import PlusIcon from '../components/icons/PlusIcon';
+import SheetContainer from '../../styles/SheetContainer';
+import { HorizontalSection } from '../../styles/Sections';
+import { HandLargeText } from '../../styles/Texts';
+import Nav from '../Nav';
+import SystemContext from '../../contexts/SystemContext';
+import Footer from '../Footer';
+import ActionsFooter from '../ActionsFooter';
+import { EmptyLine } from '../../styles/Lines';
+import MoonIcon from '../icons/MoonIcon';
+import SunIcon from '../icons/SunIcon';
+import ThemeContext from '../../contexts/ThemeContext';
+import PlusIcon from '../icons/PlusIcon';
 
 const PusherSheetsListener = dynamic(
-  () => import('../components/no-ssr/PusherSheetsListener'),
+  () => import('../no-ssr/PusherSheetsListener'),
   { ssr: false }
 );
 
@@ -36,22 +35,14 @@ const MainContainer = styled.div`
   height: 100%;
 `;
 
-export const getStaticProps: GetStaticProps = async () => {
-  const initialData = await fetchVampireFromDB();
-
-  return {
-    props: {
-      initialData,
-    },
-    revalidate: 60 * 10,
+type HomeClientProps = {
+  initialData: {
+    characters: Array<{ name: string; key: string }>;
+    failed: boolean;
   };
 };
 
-const Home = ({
-  initialData,
-}: {
-  initialData: { characters: Array<{ name: string; key: string }> };
-}) => {
+const HomeClient = ({ initialData }: HomeClientProps) => {
   const { needPusherFallback } = useContext(SystemContext);
   const { darkMode, toggleDarkMode } = useContext(ThemeContext);
   const { data, mutate } = useSWR(`/api/vampires`, {
@@ -64,10 +55,6 @@ const Home = ({
   return (
     <MainContainer>
       <PusherSheetsListener callback={() => mutate()} />
-      <Head>
-        <title>Char - Feuilles de perso</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
       <Nav />
       <EmptyLine />
       <EmptyLine />
@@ -99,4 +86,4 @@ const Home = ({
   );
 };
 
-export default Home;
+export default HomeClient;

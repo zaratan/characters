@@ -6,7 +6,7 @@
 
 ## Tech Stack
 
-- **Framework**: Next.js 14.2 (App Router migration in progress — API routes migrated, pages still in Pages Router)
+- **Framework**: Next.js 14.2 (App Router — fully migrated)
 - **Language**: TypeScript 5.9 (strict mode disabled)
 - **UI**: React 18.2, Styled-Components 5.3, Tailwind CSS 3.1
 - **State Management**: React Context API (21 context files in `contexts/`)
@@ -41,14 +41,19 @@ lib/                  # Database & auth infrastructure
   auth.ts             # NextAuth authOptions + getSession() helper
   auth-adapter.ts     # Custom NextAuth PostgreSQL adapter
   queries.ts          # DB query wrappers (vampires list, users list, etc.)
-app/                  # App Router (Next.js 14)
-  api/                # Route Handlers (migrated from pages/api/)
+  providers.tsx       # Client-side context providers (Session, SWR, Theme, etc.)
+  registry.tsx        # Styled-components SSR support
+app/                  # App Router (Next.js 14) — routing only
+  layout.tsx          # Root layout (metadata, providers, styled-components)
+  page.tsx            # Home page (server component → HomeClient)
+  new/                # Create character page
+  vampires/[id]/      # Character sheet + config pages
+  api/                # Route Handlers
     auth/             # NextAuth endpoints
     data/             # Data endpoints (disciplines)
     vampires/         # Vampire CRUD: list, create, [id] (GET/PUT/PATCH/DELETE)
     users/            # Users list
-pages/                # Pages Router (migration in progress)
-  vampires/           # Dynamic character sheet pages
+components/pages/     # Client components for App Router pages (HomeClient, SheetClient, ConfigClient)
 hooks/                # Custom React hooks (useSave, useScroll, etc.)
 helpers/              # Utility functions (fetcher, pex calculations, pusher)
 migrations/           # PostgreSQL schema migrations (node-pg-migrate)
@@ -75,6 +80,8 @@ public/               # Static assets (fonts, images)
 - Dynamic imports with `next/dynamic` for client-only components (no-ssr pattern)
 - Styled-components with a theme provider for theming; Tailwind for utility classes
 - API routes are RESTful Route Handlers under `app/api/` (GET/PUT/PATCH/DELETE)
+- Server/client component split: server component pages fetch data + pass to `'use client'` components with SWR `fallbackData`
+- `app/` directory contains **only routing files** (pages, layouts, route handlers, loading). All other code lives at root level.
 
 ### Formatting & Linting
 - **ESLint** extends: `next/core-web-vitals`, `prettier`, `plugin:prettier/recommended`

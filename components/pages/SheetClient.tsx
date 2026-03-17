@@ -1,71 +1,26 @@
+'use client';
+
 import useSWR from 'swr';
-import { useRouter } from 'next/router';
-import { GetStaticProps } from 'next';
-import { useEffect, useContext } from 'react';
+import { useContext } from 'react';
 import dynamic from 'next/dynamic';
-import Sheet from '../../components/Sheet';
+import Sheet from '../Sheet';
 import { VampireType } from '../../types/VampireType';
-import { fetchVampireFromDB } from '../../lib/queries';
-import { fetchOneVampire } from '../../lib/queries';
 import SystemContext from '../../contexts/SystemContext';
 import MeContext from '../../contexts/MeContext';
 import { DataProvider } from '../../contexts/DataContext';
-import ErrorPage from '../../components/ErrorPage';
-
-export async function getStaticPaths() {
-  const vampires = await fetchVampireFromDB();
-  if (vampires.failed) {
-    return { paths: [], fallback: true };
-  }
-
-  return {
-    paths: vampires.characters.map((vampire) => ({
-      params: { id: vampire.key },
-    })),
-    fallback: true,
-  };
-}
+import ErrorPage from '../ErrorPage';
 
 const PusherSheetListener = dynamic(
-  () => import('../../components/no-ssr/PusherSheetListener'),
+  () => import('../no-ssr/PusherSheetListener'),
   { ssr: false }
 );
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const fetchedData = await fetchOneVampire(String(params!.id));
-  if (fetchedData.failed) {
-    return {
-      props: {
-        notFound: true,
-      },
-      revalidate: 1,
-    };
-  }
-  const initialData: VampireType & { id: string } = fetchedData.data!;
-
-  return {
-    props: {
-      initialData,
-      notFound: false,
-    },
-    revalidate: 1,
-  };
+type Props = {
+  initialData: VampireType & { id: string };
+  id: string;
 };
 
-const Home = ({
-  initialData,
-  notFound,
-}:
-  | {
-      initialData: VampireType;
-      notFound: false;
-    }
-  | {
-      notFound: true;
-      initialData: undefined;
-    }) => {
-  const router = useRouter();
-  const { id } = router.query;
+const SheetClient = ({ initialData, id }: Props) => {
   const { needPusherFallback } = useContext(SystemContext);
   const { connected, me } = useContext(MeContext);
   const { data, mutate } = useSWR<VampireType>(`/api/vampires/${id}`, {
@@ -73,14 +28,6 @@ const Home = ({
     refreshInterval: needPusherFallback ? 10 * 1000 : 0,
     revalidateOnMount: true,
   });
-  useEffect(() => {
-    if (!router.isFallback && notFound) {
-      router.push('/new');
-    }
-  });
-  if (router.isFallback || notFound) {
-    return <div>Loading...</div>;
-  }
 
   const {
     generation,
@@ -134,11 +81,12 @@ const Home = ({
   if (infos.era === undefined) {
     infos.era = 0;
   }
+
   return (
     <DataProvider>
-      <PusherSheetListener id={String(id)} callback={mutate} />
+      <PusherSheetListener id={id} callback={mutate} />
       <Sheet
-        id={String(id)}
+        id={id}
         generation={generation}
         infos={infos}
         attributes={attributes}
@@ -162,10 +110,9 @@ const Home = ({
         editors={editors}
         viewers={viewers}
         privateSheet={privateSheet}
-        returnTo={`/vampires/${id}`}
       />
     </DataProvider>
   );
 };
 
-export default Home;
+export default SheetClient;

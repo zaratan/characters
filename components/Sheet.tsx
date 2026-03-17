@@ -1,9 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
-import Head from 'next/head';
 import Image from 'next/image';
 import useBeforeUnload from 'react-use/lib/useBeforeUnload';
-import { useRouter } from 'next/router';
 import { AttributesProvider } from '../contexts/AttributesContext';
 import { AbilitiesProvider } from '../contexts/AbilitiesContext';
 import { InfosProvider, InfosType } from '../contexts/InfosContext';
@@ -50,22 +48,15 @@ const PageTitle = styled.div`
 const UnsavedChangeCloseText =
   'Il y a des changements sur la page, êtes vous sur de vouloir la quitter sans sauvegarder ?';
 
-const Sheet = ({ infos, returnTo }: { infos: InfosType; returnTo: string }) => {
-  const router = useRouter();
+const Sheet = ({ infos }: { infos: InfosType }) => {
   const { unsavedChanges, rollback } = useContext(ModificationsContext);
   const { darkMode } = useContext(ThemeContext);
 
   useEffect(() => {
-    router.beforePopState(() => {
-      debugger;
-      if (unsavedChanges) {
-        return window.confirm(UnsavedChangeCloseText);
-      }
-
-      return true;
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, unsavedChanges]);
+    document.title = infos.name
+      ? `${infos.name} - Feuille de Personnage`
+      : 'Feuille de Personnage';
+  }, [infos.name]);
 
   const saveAction = useSave();
   useKeyboardShortcut('mod + z', (e) => {
@@ -84,14 +75,6 @@ const Sheet = ({ infos, returnTo }: { infos: InfosType; returnTo: string }) => {
         confirmText={UnsavedChangeCloseText}
       />
       <SheetContainer>
-        <Head>
-          <title>
-            {infos.name ? `${infos.name} - ` : null}
-            Feuille de Personnage
-          </title>
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-
         <PageTitle>
           {infos.era === 0 ? (
             <Image
@@ -160,12 +143,10 @@ const SheetWrapper = ({
   editors,
   viewers,
   privateSheet,
-  returnTo,
 }: VampireType & {
   id: string;
   startEdit?: boolean;
   startPlay?: boolean;
-  returnTo: string;
 }) => (
   <ModificationsProvider>
     <PreferencesProvider>
@@ -206,7 +187,7 @@ const SheetWrapper = ({
                               >
                                 <LanguagesProvider languages={languages}>
                                   <PexProvider leftOverPex={leftOverPex}>
-                                    <Sheet infos={infos} returnTo={returnTo} />
+                                    <Sheet infos={infos} />
                                   </PexProvider>
                                 </LanguagesProvider>
                               </AdvFlawProvider>
