@@ -138,15 +138,11 @@ const SheetWrapper = ({
     staticMagic: [],
     theurgy: [],
   },
-  startEdit,
-  startPlay,
   editors,
   viewers,
   privateSheet,
 }: VampireType & {
   id: string;
-  startEdit?: boolean;
-  startPlay?: boolean;
 }) => (
   <ModificationsProvider>
     <PreferencesProvider>
@@ -156,7 +152,7 @@ const SheetWrapper = ({
         privateSheet={privateSheet}
       >
         <SectionsProvider sections={sections}>
-          <ModeProvider startEdit={startEdit} startPlay={startPlay}>
+          <ModeProvider>
             <IdProvider id={id}>
               <GenerationProvider generation={generation}>
                 <InfosProvider infos={infos}>
