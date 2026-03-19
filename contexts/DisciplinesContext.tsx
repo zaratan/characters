@@ -1,6 +1,5 @@
 'use client';
 
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, { createContext, ReactNode } from 'react';
 import { TempElemType } from '../types/TempElemType';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';

@@ -1,4 +1,3 @@
-/* eslint-disable no-nested-ternary */
 import React, { useState, useRef, ReactNode, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
@@ -73,11 +72,14 @@ const MenuDropdown = styled.ul`
   flex-direction: column;
   justify-content: space-around;
   border-radius: 5px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   max-height: 0;
 
-  transition: max-height 0.3s ease-in-out, padding 0.2s ease-in-out;
+  transition:
+    max-height 0.3s ease-in-out,
+    padding 0.2s ease-in-out;
 
   &.open {
     border: 1px solid ${(props) => props.theme.borderColor};

@@ -10,18 +10,18 @@
 
 ### Ce qui change
 
-| Avant | Après |
-|-------|-------|
-| `pages/` directory | `app/` directory |
-| `_app.tsx` + `_document.js` | `app/layout.tsx` (Server Component) + `app/providers.tsx` (`'use client'`) |
-| `getStaticProps` / `getStaticPaths` | `generateStaticParams` + Server Components async + `export const revalidate` |
-| `next/head` | `export const metadata` / `generateMetadata()` |
-| `router.isFallback` | `loading.tsx` (Suspense boundary) |
-| `NextApiRequest` / `NextApiResponse` | `Request` / `NextResponse` (Route Handlers) |
-| `useRouter` from `next/router` | `useRouter` from `next/navigation` + `useParams()` |
-| `getServerSession(req, res, authOptions)` | `getServerSession(authOptions)` (sans req/res dans Route Handlers) |
-| styled-components SSR via `_document.js` `ServerStyleSheet` | styled-components registry (`useServerInsertedHTML`) |
-| `_document.js` : `<Html lang="fr">`, Google Fonts link | `app/layout.tsx` : `<html lang="fr">`, Google Fonts link (ou `next/font`) |
+| Avant                                                       | Après                                                                        |
+| ----------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `pages/` directory                                          | `app/` directory                                                             |
+| `_app.tsx` + `_document.js`                                 | `app/layout.tsx` (Server Component) + `app/providers.tsx` (`'use client'`)   |
+| `getStaticProps` / `getStaticPaths`                         | `generateStaticParams` + Server Components async + `export const revalidate` |
+| `next/head`                                                 | `export const metadata` / `generateMetadata()`                               |
+| `router.isFallback`                                         | `loading.tsx` (Suspense boundary)                                            |
+| `NextApiRequest` / `NextApiResponse`                        | `Request` / `NextResponse` (Route Handlers)                                  |
+| `useRouter` from `next/router`                              | `useRouter` from `next/navigation` + `useParams()`                           |
+| `getServerSession(req, res, authOptions)`                   | `getServerSession(authOptions)` (sans req/res dans Route Handlers)           |
+| styled-components SSR via `_document.js` `ServerStyleSheet` | styled-components registry (`useServerInsertedHTML`)                         |
+| `_document.js` : `<Html lang="fr">`, Google Fonts link      | `app/layout.tsx` : `<html lang="fr">`, Google Fonts link (ou `next/font`)    |
 
 ### Ce qui ne change pas
 
@@ -55,6 +55,7 @@ Pendant la migration, les deux coexistent. Les routes dans `pages/` utilisent `_
 **Objectif** : poser les fondations App Router sans migrer aucune page. L'app continue de tourner depuis `pages/`.
 
 > **Retour d'expérience** :
+>
 > - Next.js 14 force `strictNullChecks: true` dans `tsconfig.json` dès que le répertoire `app/` existe. Cela a exposé ~8 erreurs TS préexistantes qu'il a fallu corriger (`ActionsFooter.tsx`, `AutoCompleteInput.tsx`, `Nav.tsx`, pages dynamiques).
 > - Le sélecteur `#__next` dans `GlobalStyle.ts` doit rester tant que `pages/` est actif — le retirer casse le `height: 100%` du layout. Le supprimer seulement en Phase 4 (cleanup).
 > - styled-components v5 supporte bien le pattern registry (`ServerStyleSheet` + `useServerInsertedHTML`), mais `clearTag()` n'est pas dans les types — nécessite un `as any`.
@@ -85,6 +86,7 @@ Pendant la migration, les deux coexistent. Les routes dans `pages/` utilisent `_
 **Risque** : Faible. Aucune page ne tourne depuis `app/` à ce stade. L'ajout de `'use client'` aux contextes est rétrocompatible avec Pages Router. L'extraction de `TextFallback` et des helpers est un refactoring interne sans changement de comportement.
 
 **Validation** :
+
 - `yarn dev` + `yarn build` — l'app fonctionne identiquement depuis `pages/`
 - Vérifier que `TextFallback` s'affiche correctement dans `/vampires/[id]/config` et `ConfigAccessSection`
 - Vérifier qu'il n'y a pas de FOUC en hard refresh (tester la registry styled-components sur une route `app/` de test si besoin)
@@ -96,6 +98,7 @@ Pendant la migration, les deux coexistent. Les routes dans `pages/` utilisent `_
 **Objectif** : convertir les 9 routes de `pages/api/` vers `app/api/` (Route Handlers).
 
 **Scope** (pour chaque route) :
+
 - `NextApiRequest`/`NextApiResponse` → `Request`/`NextResponse`
 - `req.query.id` → paramètre de segment dynamique `params.id`
 - `req.body` → `await request.json()`
@@ -105,17 +108,17 @@ Pendant la migration, les deux coexistent. Les routes dans `pages/` utilisent `_
 
 **Routes à migrer** (9) :
 
-| Source | Destination | Méthodes |
-|--------|-------------|----------|
-| `pages/api/auth/[...nextauth].ts` | `app/api/auth/[...nextauth]/route.ts` | GET, POST |
-| `pages/api/vampires.ts` | `app/api/vampires/route.ts` | GET |
-| `pages/api/vampires/create.ts` | `app/api/vampires/create/route.ts` | POST |
-| `pages/api/vampires/[id].ts` | `app/api/vampires/[id]/route.ts` | GET |
-| `pages/api/vampires/[id]/update.ts` | `app/api/vampires/[id]/update/route.ts` | PATCH |
-| `pages/api/vampires/[id]/update_partial.ts` | `app/api/vampires/[id]/update_partial/route.ts` | PATCH |
-| `pages/api/vampires/[id]/delete.ts` | `app/api/vampires/[id]/delete/route.ts` | DELETE |
-| `pages/api/data/disciplines.ts` | `app/api/data/disciplines/route.ts` | GET |
-| `pages/api/users.ts` | `app/api/users/route.ts` | GET |
+| Source                                      | Destination                                     | Méthodes  |
+| ------------------------------------------- | ----------------------------------------------- | --------- |
+| `pages/api/auth/[...nextauth].ts`           | `app/api/auth/[...nextauth]/route.ts`           | GET, POST |
+| `pages/api/vampires.ts`                     | `app/api/vampires/route.ts`                     | GET       |
+| `pages/api/vampires/create.ts`              | `app/api/vampires/create/route.ts`              | POST      |
+| `pages/api/vampires/[id].ts`                | `app/api/vampires/[id]/route.ts`                | GET       |
+| `pages/api/vampires/[id]/update.ts`         | `app/api/vampires/[id]/update/route.ts`         | PATCH     |
+| `pages/api/vampires/[id]/update_partial.ts` | `app/api/vampires/[id]/update_partial/route.ts` | PATCH     |
+| `pages/api/vampires/[id]/delete.ts`         | `app/api/vampires/[id]/delete/route.ts`         | DELETE    |
+| `pages/api/data/disciplines.ts`             | `app/api/data/disciplines/route.ts`             | GET       |
+| `pages/api/users.ts`                        | `app/api/users/route.ts`                        | GET       |
 
 > **Opportunité** : on pourrait consolider `update`, `update_partial` et `delete` dans un seul `app/api/vampires/[id]/route.ts` avec `PATCH` et `DELETE` comme exports séparés. Ça simplifierait l'arborescence API. À décider au moment de l'exécution.
 
@@ -124,6 +127,7 @@ Pendant la migration, les deux coexistent. Les routes dans `pages/` utilisent `_
 **Risque** : Faible. Transformation mécanique, le code métier (`db.*`) ne change pas.
 
 **Validation** :
+
 - Tester chaque endpoint via l'UI : list, get, create, update, update_partial, delete, disciplines, users
 - Tester les triggers Pusher après mutations (create/update/delete envoient des events Pusher)
 - Tester l'auth : accès non-authentifié retourne 401, `isAdmin` fonctionne
@@ -180,6 +184,7 @@ Même pattern que 3c mais plus simple (moins de contexts). Même split Server/Cl
 - `app/error.tsx` — page d'erreur globale (`'use client'`, wraps le composant d'erreur existant si présent)
 
 **Validation globale Phase 3** :
+
 - Navigation complète : home → créer un perso → voir la fiche → configurer → supprimer
 - Temps réel Pusher (édition simultanée sur deux onglets)
 - Hard refresh sur chaque page (pas de FOUC, données correctes)
@@ -194,6 +199,7 @@ Même pattern que 3c mais plus simple (moins de contexts). Même split Server/Cl
 **Objectif** : supprimer `pages/`, nettoyer.
 
 **Scope** :
+
 - Supprimer tout le répertoire `pages/` (4 pages + `_app.tsx` + `_document.js` + 9 API routes)
 - Supprimer `reportWebVitals` (actuellement juste un `console.log` — si besoin, remplacer par `useReportWebVitals` dans un Client Component)
 - Supprimer `lib/queries.ts` si les Server Components appellent `db.*` directement (les helpers extraits en Phase 1 ne servent plus)
@@ -227,6 +233,7 @@ L'objectif n'est **pas** de transformer les composants existants en Server Compo
 ### `useRouter` — deux modules différents
 
 `next/router` (Pages Router) et `next/navigation` (App Router) exportent tous les deux `useRouter`, mais avec des APIs différentes. En App Router :
+
 - `router.push()` / `router.replace()` — même API
 - `router.query` — **n'existe plus**, utiliser `useParams()` pour les segments dynamiques (`id`)
 - `router.isFallback` — **n'existe plus**, utiliser `loading.tsx`
@@ -245,14 +252,14 @@ Pendant la coexistence, `pages/_app.tsx` et `app/providers.tsx` fournissent la m
 
 ## 4. Estimation de l'effort
 
-| Phase | Effort | Complexité | Risque |
-|-------|--------|------------|--------|
-| Phase 1 — Infrastructure + extractions | ~1h30 | Faible | Faible |
-| Phase 2 — API Routes | ~1h | Faible | Faible |
-| Phase 3 — Pages (4 routes) | ~2h | Moyenne | Moyen |
-| Phase 4 — Cleanup | ~30 min | Faible | Faible |
-| Tests manuels end-to-end | ~30 min | — | — |
-| **Total** | **~5h30** | | |
+| Phase                                  | Effort    | Complexité | Risque |
+| -------------------------------------- | --------- | ---------- | ------ |
+| Phase 1 — Infrastructure + extractions | ~1h30     | Faible     | Faible |
+| Phase 2 — API Routes                   | ~1h       | Faible     | Faible |
+| Phase 3 — Pages (4 routes)             | ~2h       | Moyenne    | Moyen  |
+| Phase 4 — Cleanup                      | ~30 min   | Faible     | Faible |
+| Tests manuels end-to-end               | ~30 min   | —          | —      |
+| **Total**                              | **~5h30** |            |        |
 
 ---
 
@@ -260,47 +267,47 @@ Pendant la coexistence, `pages/_app.tsx` et `app/providers.tsx` fournissent la m
 
 ### À créer
 
-| Fichier | Rôle | Phase |
-|---------|------|-------|
-| `styles/TextFallback.ts` | Composant styled extrait de `pages/new.tsx` | 1 |
-| `lib/queries.ts` | Helpers data-fetching extraits des API routes | 1 |
-| `app/layout.tsx` | Layout racine (Server Component, metadata, html/body, registry, providers) | 1 |
-| `app/providers.tsx` | Wrapper providers (`'use client'`) | 1 |
-| `app/lib/registry.tsx` | Styled-components SSR registry | 1 |
-| `app/api/auth/[...nextauth]/route.ts` | NextAuth v4 Route Handler | 2 |
-| `app/api/vampires/route.ts` | List vampires | 2 |
-| `app/api/vampires/[id]/route.ts` | Get vampire | 2 |
-| `app/api/vampires/create/route.ts` | Create vampire | 2 |
-| `app/api/vampires/[id]/update/route.ts` | Update vampire | 2 |
-| `app/api/vampires/[id]/update_partial/route.ts` | Partial update | 2 |
-| `app/api/vampires/[id]/delete/route.ts` | Delete vampire | 2 |
-| `app/api/data/disciplines/route.ts` | Disciplines data | 2 |
-| `app/api/users/route.ts` | Users list | 2 |
-| `app/page.tsx` | Home (Server Component) | 3 |
-| `app/new/page.tsx` | Formulaire création | 3 |
-| `app/vampires/[id]/page.tsx` | Fiche personnage (Server Component) | 3 |
-| `app/vampires/[id]/loading.tsx` | Fallback ISR | 3 |
-| `app/vampires/[id]/config/page.tsx` | Config personnage (Server Component) | 3 |
-| `app/vampires/[id]/config/loading.tsx` | Fallback ISR | 3 |
-| `app/not-found.tsx` | Page 404 globale | 3 |
-| `app/error.tsx` | Page d'erreur globale | 3 |
+| Fichier                                         | Rôle                                                                       | Phase |
+| ----------------------------------------------- | -------------------------------------------------------------------------- | ----- |
+| `styles/TextFallback.ts`                        | Composant styled extrait de `pages/new.tsx`                                | 1     |
+| `lib/queries.ts`                                | Helpers data-fetching extraits des API routes                              | 1     |
+| `app/layout.tsx`                                | Layout racine (Server Component, metadata, html/body, registry, providers) | 1     |
+| `app/providers.tsx`                             | Wrapper providers (`'use client'`)                                         | 1     |
+| `app/lib/registry.tsx`                          | Styled-components SSR registry                                             | 1     |
+| `app/api/auth/[...nextauth]/route.ts`           | NextAuth v4 Route Handler                                                  | 2     |
+| `app/api/vampires/route.ts`                     | List vampires                                                              | 2     |
+| `app/api/vampires/[id]/route.ts`                | Get vampire                                                                | 2     |
+| `app/api/vampires/create/route.ts`              | Create vampire                                                             | 2     |
+| `app/api/vampires/[id]/update/route.ts`         | Update vampire                                                             | 2     |
+| `app/api/vampires/[id]/update_partial/route.ts` | Partial update                                                             | 2     |
+| `app/api/vampires/[id]/delete/route.ts`         | Delete vampire                                                             | 2     |
+| `app/api/data/disciplines/route.ts`             | Disciplines data                                                           | 2     |
+| `app/api/users/route.ts`                        | Users list                                                                 | 2     |
+| `app/page.tsx`                                  | Home (Server Component)                                                    | 3     |
+| `app/new/page.tsx`                              | Formulaire création                                                        | 3     |
+| `app/vampires/[id]/page.tsx`                    | Fiche personnage (Server Component)                                        | 3     |
+| `app/vampires/[id]/loading.tsx`                 | Fallback ISR                                                               | 3     |
+| `app/vampires/[id]/config/page.tsx`             | Config personnage (Server Component)                                       | 3     |
+| `app/vampires/[id]/config/loading.tsx`          | Fallback ISR                                                               | 3     |
+| `app/not-found.tsx`                             | Page 404 globale                                                           | 3     |
+| `app/error.tsx`                                 | Page d'erreur globale                                                      | 3     |
 
 ### À modifier
 
-| Fichier | Modification | Phase |
-|---------|-------------|-------|
-| 21 contexts | Ajouter `'use client'` | 1 |
-| `styles/GlobalStyle.ts` | `#__next` → `body` | 1 |
-| `styles/Theme.tsx` | Ajouter `'use client'` | 1 |
-| `pages/new.tsx` | Retirer `TextFallback`, importer depuis `styles/` | 1 |
-| `pages/vampires/[id]/config.tsx` | Importer `TextFallback` depuis `styles/` | 1 |
-| `components/config/ConfigAccessSection.tsx` | Importer `TextFallback` depuis `styles/` | 1 |
-| `pages/index.tsx` | Importer helpers depuis `lib/queries.ts` | 1 |
-| `pages/vampires/[id].tsx` | Importer helpers depuis `lib/queries.ts` | 1 |
-| `components/Sheet.tsx` | `next/head` → `document.title`, `useRouter` → `next/navigation` | 3 |
-| `components/config/ConfigDangerousSection.tsx` | `useRouter` → `next/navigation` | 3 |
-| `package.json` | Rien pour cette migration (on reste sur Next 14 + React 18 + NextAuth v4) | — |
-| `CLAUDE.md` | Refléter la nouvelle structure `app/` | 4 |
+| Fichier                                        | Modification                                                              | Phase |
+| ---------------------------------------------- | ------------------------------------------------------------------------- | ----- |
+| 21 contexts                                    | Ajouter `'use client'`                                                    | 1     |
+| `styles/GlobalStyle.ts`                        | `#__next` → `body`                                                        | 1     |
+| `styles/Theme.tsx`                             | Ajouter `'use client'`                                                    | 1     |
+| `pages/new.tsx`                                | Retirer `TextFallback`, importer depuis `styles/`                         | 1     |
+| `pages/vampires/[id]/config.tsx`               | Importer `TextFallback` depuis `styles/`                                  | 1     |
+| `components/config/ConfigAccessSection.tsx`    | Importer `TextFallback` depuis `styles/`                                  | 1     |
+| `pages/index.tsx`                              | Importer helpers depuis `lib/queries.ts`                                  | 1     |
+| `pages/vampires/[id].tsx`                      | Importer helpers depuis `lib/queries.ts`                                  | 1     |
+| `components/Sheet.tsx`                         | `next/head` → `document.title`, `useRouter` → `next/navigation`           | 3     |
+| `components/config/ConfigDangerousSection.tsx` | `useRouter` → `next/navigation`                                           | 3     |
+| `package.json`                                 | Rien pour cette migration (on reste sur Next 14 + React 18 + NextAuth v4) | —     |
+| `CLAUDE.md`                                    | Refléter la nouvelle structure `app/`                                     | 4     |
 
 ### À supprimer (Phase 4)
 
@@ -319,9 +326,9 @@ Pendant la coexistence, `pages/_app.tsx` et `app/providers.tsx` fournissent la m
 
 Ces migrations sont orthogonales et peuvent être faites indépendamment après celle-ci :
 
-| Migration | Effort estimé | Dépendances |
-|-----------|--------------|-------------|
-| NextAuth v4 → v5 (Auth.js) | ~2-3h | Adapter le custom adapter PostgreSQL, tester magic link + GitHub |
-| Next.js 14 → 15 + React 18 → 19 | ~1-2h | styled-components v5 → v6, vérifier `react-use` compat, SWR compat |
-| Google Fonts link → `next/font/google` | ~15 min | Aucune |
-| `next/dynamic` Pusher → `React.lazy` + Suspense | ~15 min | Aucune |
+| Migration                                       | Effort estimé | Dépendances                                                        |
+| ----------------------------------------------- | ------------- | ------------------------------------------------------------------ |
+| NextAuth v4 → v5 (Auth.js)                      | ~2-3h         | Adapter le custom adapter PostgreSQL, tester magic link + GitHub   |
+| Next.js 14 → 15 + React 18 → 19                 | ~1-2h         | styled-components v5 → v6, vérifier `react-use` compat, SWR compat |
+| Google Fonts link → `next/font/google`          | ~15 min       | Aucune                                                             |
+| `next/dynamic` Pusher → `React.lazy` + Suspense | ~15 min       | Aucune                                                             |

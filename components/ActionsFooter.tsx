@@ -66,7 +66,9 @@ const DesktopAction = styled.li`
   .full-text {
     overflow-x: hidden;
     max-width: 0;
-    transition: max-width 0.3s ease-in-out, padding-left 0.3s ease-in-out;
+    transition:
+      max-width 0.3s ease-in-out,
+      padding-left 0.3s ease-in-out;
     white-space: nowrap;
     padding-left: 0rem;
   }
@@ -160,7 +162,6 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
           if (action.component === null) return null;
 
           return (
-            // eslint-disable-next-line react/jsx-props-no-spreading
             <action.component {...action.componentProps} key={action.name}>
               <DesktopAction>
                 <GlyphAction>
@@ -217,7 +218,6 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
           if (action.component !== undefined) {
             if (action.component === null) return null;
             return (
-              // eslint-disable-next-line react/jsx-props-no-spreading
               <action.component {...action.componentProps} key={action.name}>
                 <MobileAction>{action.name}</MobileAction>
               </action.component>

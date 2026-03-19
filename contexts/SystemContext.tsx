@@ -10,7 +10,6 @@ import React, {
 } from 'react';
 import Pusher from 'pusher-js';
 
-// eslint-disable-next-line global-require
 const pusher = () => require('../helpers/pusherClient');
 
 type ContextType = {

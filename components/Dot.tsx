@@ -198,7 +198,7 @@ const Dot = ({
     ${hidden ? 'hidden' : ''}
   `;
 
-  const clickAction = !inactive ? onClick ?? (() => {}) : () => {};
+  const clickAction = !inactive ? (onClick ?? (() => {})) : () => {};
 
   const handleClick = generateHandleClick(clickAction);
 

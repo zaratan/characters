@@ -1,0 +1,4 @@
+yarn.lock
+.next/
+node_modules/
+.claude/settings.local.json

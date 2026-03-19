@@ -67,6 +67,7 @@ public/               # Static assets (fonts, images)
 ## Code Conventions
 
 ### Naming
+
 - **Components**: PascalCase (`Sheet.tsx`, `ActionsFooter.tsx`)
 - **Context files**: PascalCase with `Context` suffix (`DisciplinesContext.tsx`)
 - **Hooks**: camelCase with `use` prefix (`useSave.ts`)
@@ -74,6 +75,7 @@ public/               # Static assets (fonts, images)
 - **Helpers**: camelCase (`fetcher.ts`, `pusherClient.ts`)
 
 ### Patterns
+
 - State management via React Context (not Redux/Zustand) — each domain has its own context
 - Immer for immutable state updates inside contexts
 - SWR for all server data fetching with automatic caching
@@ -84,12 +86,14 @@ public/               # Static assets (fonts, images)
 - `app/` directory contains **only routing files** (pages, layouts, route handlers, loading). All other code lives at root level.
 
 ### Formatting & Linting
+
 - **ESLint** extends: `next/core-web-vitals`, `prettier`, `plugin:prettier/recommended`
 - **Prettier** rules: single quotes, trailing commas (es5), 80 char print width, semicolons
 - **Pre-commit hook** (Husky + lint-staged): auto-fixes lint issues on staged `.js/.jsx/.ts/.tsx` files
 - **Pre-push hook**: runs full `yarn lint`
 
 ### TypeScript
+
 - Strict mode is **disabled** — the codebase uses loose typing
 - Target: ES5, Module: ESNext
 - Incremental compilation enabled
@@ -98,20 +102,20 @@ public/               # Static assets (fonts, images)
 
 Copy `.env.sample` to `.env.local` and fill in values:
 
-| Variable | Purpose |
-|----------|---------|
-| `POSTGRES_URL` | PostgreSQL connection string (pooled URL in prod via Neon pgbouncer) |
-| `NEXTAUTH_SECRET` | NextAuth session encryption (generate with `openssl rand -base64 32`) |
-| `NEXTAUTH_URL` | App URL (`http://localhost:3000` in dev) |
-| `GITHUB_CLIENT_ID` | GitHub OAuth app client ID |
-| `GITHUB_CLIENT_SECRET` | GitHub OAuth app client secret |
-| `RESEND_API_KEY` | Resend API key for email magic links |
-| `EMAIL_FROM` | Sender address for magic links (domain must be verified in Resend) |
-| `PUSHER_APP_ID` | Pusher app ID |
-| `NEXT_PUBLIC_PUSHER_KEY` | Pusher public key (exposed to client) |
-| `PUSHER_SECRET` | Pusher secret key |
-| `NEXT_PUBLIC_PUSHER_CLUSTER` | Pusher cluster region |
-| `BASE_URL` | Application base URL |
+| Variable                     | Purpose                                                               |
+| ---------------------------- | --------------------------------------------------------------------- |
+| `POSTGRES_URL`               | PostgreSQL connection string (pooled URL in prod via Neon pgbouncer)  |
+| `NEXTAUTH_SECRET`            | NextAuth session encryption (generate with `openssl rand -base64 32`) |
+| `NEXTAUTH_URL`               | App URL (`http://localhost:3000` in dev)                              |
+| `GITHUB_CLIENT_ID`           | GitHub OAuth app client ID                                            |
+| `GITHUB_CLIENT_SECRET`       | GitHub OAuth app client secret                                        |
+| `RESEND_API_KEY`             | Resend API key for email magic links                                  |
+| `EMAIL_FROM`                 | Sender address for magic links (domain must be verified in Resend)    |
+| `PUSHER_APP_ID`              | Pusher app ID                                                         |
+| `NEXT_PUBLIC_PUSHER_KEY`     | Pusher public key (exposed to client)                                 |
+| `PUSHER_SECRET`              | Pusher secret key                                                     |
+| `NEXT_PUBLIC_PUSHER_CLUSTER` | Pusher cluster region                                                 |
+| `BASE_URL`                   | Application base URL                                                  |
 
 ## Key Architectural Notes
 

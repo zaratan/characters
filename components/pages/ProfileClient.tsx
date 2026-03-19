@@ -192,12 +192,12 @@ const ProfileClient = () => {
             {error && <ErrorMessage>{error}</ErrorMessage>}
           </FieldGroup>
           <SaveButton onClick={handleSave} disabled={!canSave}>
-            {/* eslint-disable-next-line no-nested-ternary */}
+            {}
             {saving
               ? 'Sauvegarde...'
               : isOnboarding
-              ? 'Continuer'
-              : 'Enregistrer'}
+                ? 'Continuer'
+                : 'Enregistrer'}
           </SaveButton>
         </FormContainer>
       </div>

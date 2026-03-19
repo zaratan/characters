@@ -15,7 +15,11 @@
     "db:reset": "yarn db:drop && yarn db:create && yarn migrate:up",
     "test": "vitest run",
     "test:watch": "vitest",
-    "postinstall": "husky install"
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "yarn build && yarn lint && yarn typecheck && yarn format:check && yarn test",
+    "prepare": "husky"
   },
   "dependencies": {
     "fuse.js": "^6.6.2",
@@ -44,31 +48,22 @@
     "@types/pusher-js": "^5.1.0",
     "@types/react": "18.0.15",
     "@types/styled-components": "5.1.25",
-    "@typescript-eslint/eslint-plugin": "^5.31.0",
-    "@typescript-eslint/parser": "^5.31.0",
     "autoprefixer": "^10.4.7",
-    "eslint": "8.20.0",
-    "eslint-config-next": "14",
-    "eslint-config-prettier": "^8.5.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "husky": ">=8.0.1",
-    "lint-staged": ">=13.0.3",
+    "eslint": "^9.39.3",
+    "eslint-config-next": "16",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "node-pg-migrate": "^8.0.4",
     "postcss": "^8.4.14",
-    "prettier": "^2.7.1",
+    "prettier": "^3.8.1",
     "tailwindcss": "^3.1.6",
     "typescript": "5",
     "vitest": "^4.1.0"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged"
-    }
-  },
   "lint-staged": {
-    "*.js": "eslint --cache --fix",
-    "*.jsx": "eslint --cache --fix",
-    "*.ts": "eslint --cache --fix",
-    "*.tsx": "eslint --cache --fix"
+    "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
+    "*.{json,md}": "prettier --write"
   }
 }
