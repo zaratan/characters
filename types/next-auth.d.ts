@@ -8,9 +8,11 @@ declare module 'next-auth' {
       email?: string | null;
       image?: string | null;
       isAdmin: boolean;
+      hasOnboarded: boolean;
     };
   }
   interface User {
     isAdmin: boolean;
+    hasOnboarded: boolean;
   }
 }

@@ -9,6 +9,7 @@ import GlobalStyle from '../styles/GlobalStyle';
 import { fetcher } from '../helpers/fetcher';
 import { SystemProvider } from '../contexts/SystemContext';
 import { MeProvider } from '../contexts/MeContext';
+import OnboardingGate from '../components/OnboardingGate';
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
@@ -22,7 +23,9 @@ export default function Providers({ children }: { children: ReactNode }) {
           >
             <GlobalStyle />
             <SystemProvider>
-              <MeProvider>{children}</MeProvider>
+              <MeProvider>
+                <OnboardingGate>{children}</OnboardingGate>
+              </MeProvider>
             </SystemProvider>
           </SWRConfig>
         </SessionProvider>

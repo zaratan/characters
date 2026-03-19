@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
+import { signIn } from 'next-auth/react';
 import Footer from './Footer';
 import Nav from './Nav';
 
@@ -35,7 +36,10 @@ const ErrorPage = () => {
       <Nav returnTo={returnUrl} />
       <ErrorMessage>
         Vous n&apos;êtes pas autorisé à voir cette page.
-        <a href={`/api/auth/login?return=${returnUrl}`}>
+        <a
+          onClick={() => signIn(undefined, { callbackUrl: returnUrl })}
+          style={{ cursor: 'pointer' }}
+        >
           Connectez-vous s&apos;il vous plaît.
         </a>
       </ErrorMessage>

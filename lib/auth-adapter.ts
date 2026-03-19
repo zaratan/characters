@@ -6,6 +6,7 @@ import type {
   VerificationToken,
 } from 'next-auth/adapters';
 import pool from './pool';
+import { generateRandomName } from '../helpers/randomName';
 
 function toAdapterUser(row: any): AdapterUser {
   return {
@@ -15,29 +16,47 @@ function toAdapterUser(row: any): AdapterUser {
     emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
     image: row.image,
     isAdmin: row.is_admin,
+    hasOnboarded: row.has_onboarded ?? false,
   } as AdapterUser;
 }
 
 export function customPgAdapter(): Adapter {
   return {
     async createUser(user) {
-      const { rows } = await pool.query(
-        `INSERT INTO users (name, email, "emailVerified", image)
-         VALUES ($1, $2, $3, $4)
-         RETURNING id, name, email, "emailVerified", image, is_admin`,
-        [
-          user.name ?? null,
-          user.email,
-          user.emailVerified?.toISOString() ?? null,
-          user.image ?? null,
-        ]
-      );
-      return toAdapterUser(rows[0]);
+      const hasName = !!user.name;
+      const userName = user.name || generateRandomName();
+      const hasOnboarded = hasName;
+
+      const MAX_RETRIES = 5;
+      for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
+        try {
+          const name = attempt === 0 ? userName : generateRandomName();
+          const { rows } = await pool.query(
+            `INSERT INTO users (name, email, "emailVerified", image, has_onboarded)
+             VALUES ($1, $2, $3, $4, $5)
+             RETURNING id, name, email, "emailVerified", image, is_admin, has_onboarded`,
+            [
+              name,
+              user.email,
+              user.emailVerified?.toISOString() ?? null,
+              user.image ?? null,
+              hasOnboarded,
+            ]
+          );
+          return toAdapterUser(rows[0]);
+        } catch (err: any) {
+          if (err?.code === '23505' && !hasName && attempt < MAX_RETRIES - 1) {
+            continue;
+          }
+          throw err;
+        }
+      }
+      throw new Error('Failed to generate a unique name after retries');
     },
 
     async getUser(id) {
       const { rows } = await pool.query(
-        `SELECT id, name, email, "emailVerified", image, is_admin
+        `SELECT id, name, email, "emailVerified", image, is_admin, has_onboarded
          FROM users WHERE id = $1`,
         [id]
       );
@@ -47,7 +66,7 @@ export function customPgAdapter(): Adapter {
 
     async getUserByEmail(email) {
       const { rows } = await pool.query(
-        `SELECT id, name, email, "emailVerified", image, is_admin
+        `SELECT id, name, email, "emailVerified", image, is_admin, has_onboarded
          FROM users WHERE email = $1`,
         [email]
       );
@@ -57,7 +76,7 @@ export function customPgAdapter(): Adapter {
 
     async getUserByAccount({ provider, providerAccountId }) {
       const { rows } = await pool.query(
-        `SELECT u.id, u.name, u.email, u."emailVerified", u.image, u.is_admin
+        `SELECT u.id, u.name, u.email, u."emailVerified", u.image, u.is_admin, u.has_onboarded
          FROM users u
          JOIN accounts a ON a."userId" = u.id
          WHERE a.provider = $1 AND a."providerAccountId" = $2`,
@@ -76,7 +95,7 @@ export function customPgAdapter(): Adapter {
              image = COALESCE($4, image),
              updated_at = now()
          WHERE id = $5
-         RETURNING id, name, email, "emailVerified", image, is_admin`,
+         RETURNING id, name, email, "emailVerified", image, is_admin, has_onboarded`,
         [
           user.name ?? null,
           user.email ?? null,
@@ -132,7 +151,7 @@ export function customPgAdapter(): Adapter {
       const { rows } = await pool.query(
         `SELECT
            s."sessionToken", s."userId", s.expires,
-           u.id, u.name, u.email, u."emailVerified", u.image, u.is_admin
+           u.id, u.name, u.email, u."emailVerified", u.image, u.is_admin, u.has_onboarded
          FROM sessions s
          JOIN users u ON u.id = s."userId"
          WHERE s."sessionToken" = $1

@@ -12,11 +12,9 @@ import {
 } from '../helpers/handlers';
 import { Title } from '../styles/Titles';
 import MeContext from '../contexts/MeContext';
+import UserAvatar from './UserAvatar';
 
-const ProfileImg = styled.img`
-  height: 30px;
-  border-radius: 50%;
-`;
+// ProfileImg replaced by UserAvatar component
 
 const MenuContainer = styled.div`
   position: relative;
@@ -38,7 +36,7 @@ const MenuButton = styled.div`
 `;
 
 const NameContainer = styled.li`
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid ${(props) => props.theme.borderColor};
   padding: 0.5rem;
   white-space: nowrap;
   z-index: 3;
@@ -53,7 +51,7 @@ const MenuDropdownElem = styled.li`
     outline: none;
   }
   a {
-    color: black;
+    color: ${(props) => props.theme.color};
   }
   white-space: nowrap;
   padding: 0.3rem 0.5rem;
@@ -61,7 +59,7 @@ const MenuDropdownElem = styled.li`
   outline: none;
 
   &.action {
-    color: blue;
+    color: ${(props) => props.theme.blue};
   }
 `;
 
@@ -83,7 +81,7 @@ const MenuDropdown = styled.ul`
 
   &.open {
     border: 1px solid ${(props) => props.theme.borderColor};
-    max-height: 8rem;
+    max-height: 12rem;
     padding: 0.5rem 0rem;
   }
   z-index: 3;
@@ -133,10 +131,18 @@ const LogButton = ({
         tabIndex={0}
         role="button"
       >
-        <ProfileImg src={data?.image} alt="P" />
+        <UserAvatar
+          name={data?.name ?? null}
+          image={data?.image ?? null}
+          userId={data?.id}
+          size={30}
+        />
       </MenuButton>
       <MenuDropdown className={menuOpen ? 'open' : ''}>
-        <NameContainer>{data?.name}</NameContainer>
+        <NameContainer>{data?.name || data?.email}</NameContainer>
+        <MenuDropdownElem>
+          <Link href="/profile">Profil</Link>
+        </MenuDropdownElem>
         <MenuDropdownElem
           as="a"
           onClick={() => signOut()}

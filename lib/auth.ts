@@ -32,6 +32,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       session.user.id = user.id;
       session.user.isAdmin = user.isAdmin ?? false;
+      session.user.hasOnboarded = user.hasOnboarded ?? false;
       return session;
     },
   },
