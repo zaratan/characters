@@ -1,7 +1,14 @@
 'use client';
 
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+} from 'react';
 import produce from 'immer';
+import isEqual from 'lodash/isEqual';
 
 export type SectionsType = {
   blood: boolean;
@@ -60,10 +67,13 @@ export const SectionsProvider = ({
     );
   };
 
+  const prevSections = useRef(sections);
   useEffect(() => {
-    setSectionsState(sections);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(sections)]);
+    if (!isEqual(prevSections.current, sections)) {
+      prevSections.current = sections;
+      setSectionsState(sections);
+    }
+  }, [sections]);
 
   const context: ContextType = {
     useBlood: sectionsState?.blood ?? false,

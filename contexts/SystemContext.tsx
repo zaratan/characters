@@ -40,16 +40,21 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
         const client: Pusher = pusher().pusherClient();
         setPusherState(client?.connection?.state);
         setNeedPusherFallback(!client);
-        client.connection.bind(
-          'state_change',
-          (states: { previous: string; current: string }) => {
-            setPusherState(states.current);
-            setNeedPusherFallback(
-              states.current !== 'connected' && states.current !== 'connecting'
-            );
-          }
-        );
+
+        const handler = (states: { previous: string; current: string }) => {
+          setPusherState(states.current);
+          setNeedPusherFallback(
+            states.current !== 'connected' && states.current !== 'connecting'
+          );
+        };
+
+        client.connection.bind('state_change', handler);
         pusherClient.current = client;
+
+        return () => {
+          client.connection.unbind('state_change', handler);
+          client.disconnect();
+        };
       }
     },
     []

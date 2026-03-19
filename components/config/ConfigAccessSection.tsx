@@ -1,5 +1,5 @@
-import { concat } from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
+import { concat, isEqual } from 'lodash';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import useDebounce from 'react-use/lib/useDebounce';
 import styled from 'styled-components';
 import useSWR from 'swr';
@@ -68,24 +68,32 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
   const [users, setUsers] = useState<Array<UserType>>([]);
   const [accessChanged, setAccessChanged] = useState(false);
 
+  const prevUsers = useRef(usersData?.users);
   useEffect(() => {
-    setUsers(usersData?.users || []);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(usersData?.users)]);
+    if (!isEqual(prevUsers.current, usersData?.users)) {
+      prevUsers.current = usersData?.users;
+      setUsers(usersData?.users || []);
+    }
+  }, [usersData?.users]);
 
   useDebounce(
     async () => {
       if (!accessChanged) return;
 
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          editors,
-          viewers,
-          appId,
-        }),
-      });
-      setAccessChanged(false);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            editors,
+            viewers,
+            appId,
+          }),
+        });
+        setAccessChanged(false);
+      } catch (err) {
+        console.error('Failed to save access changes:', err);
+        setAccessChanged(false);
+      }
     },
     300,
     [editors, accessChanged, viewers]

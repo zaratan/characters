@@ -1,6 +1,13 @@
 'use client';
 
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useState,
+  useEffect,
+  useRef,
+  ReactNode,
+} from 'react';
+import isEqual from 'lodash/isEqual';
 
 type ContextType = {
   editors: Array<string>;
@@ -67,15 +74,21 @@ export const AccessesProvider = ({
 
   const togglePrivate = () => setPrivateState(!privateState);
 
+  const prevEditors = useRef(editors);
   useEffect(() => {
-    setEditorsState(editors);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(editors)]);
+    if (!isEqual(prevEditors.current, editors)) {
+      prevEditors.current = editors;
+      setEditorsState(editors);
+    }
+  }, [editors]);
 
+  const prevViewers = useRef(viewers);
   useEffect(() => {
-    setViewersState(viewers);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(viewers)]);
+    if (!isEqual(prevViewers.current, viewers)) {
+      prevViewers.current = viewers;
+      setViewersState(viewers);
+    }
+  }, [viewers]);
 
   useEffect(() => {
     setPrivateState(privateSheet);

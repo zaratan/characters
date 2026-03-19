@@ -278,12 +278,16 @@ export const useSave = () => {
       privateSheet,
     };
     const url = `/api/vampires/${id}`;
-    await fetcher(url, {
-      method: 'PUT',
-      body: JSON.stringify({ ...data, appId }),
-    });
-    resetSave();
-    mutate(`/api/vampires/${id}`, data);
+    try {
+      await fetcher(url, {
+        method: 'PUT',
+        body: JSON.stringify({ ...data, appId }),
+      });
+      resetSave();
+      mutate(`/api/vampires/${id}`, data);
+    } catch (err) {
+      console.error('Save failed:', err);
+    }
   };
   return action;
 };

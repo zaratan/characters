@@ -15,11 +15,17 @@ const MainContainer = styled.main`
 
 const ErrorMessage = styled.div`
   text-align: center;
+`;
 
-  a {
-    margin-left: 0.25rem;
-    text-decoration: underline;
-  }
+const LinkButton = styled.button`
+  margin-left: 0.25rem;
+  text-decoration: underline;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  font: inherit;
+  padding: 0;
 `;
 
 export const LoginRedirectLSKey = 'Characters:PostLogin:Redirect';
@@ -36,12 +42,11 @@ const ErrorPage = () => {
       <Nav returnTo={returnUrl} />
       <ErrorMessage>
         Vous n&apos;êtes pas autorisé à voir cette page.
-        <a
+        <LinkButton
           onClick={() => signIn(undefined, { callbackUrl: returnUrl })}
-          style={{ cursor: 'pointer' }}
         >
           Connectez-vous s&apos;il vous plaît.
-        </a>
+        </LinkButton>
       </ErrorMessage>
       <Footer withoutEmptyLines />
     </MainContainer>

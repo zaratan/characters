@@ -84,6 +84,16 @@ const Select = styled.select`
 
 const Button = styled.input`
   padding: 0.5rem;
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: ${(props) => props.theme.red};
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
 `;
 
 const CheckBox = styled.input`
@@ -95,6 +105,8 @@ const NewCharPage = () => {
   const [era, setEra] = useState(0);
   const [type, setType] = useState(0);
   const [privateSheet, setPrivateSheet] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   const router = useRouter();
 
@@ -107,13 +119,22 @@ const NewCharPage = () => {
 
   const onSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    if (saving) return;
 
-    const url = '/api/vampires/create';
-    const result = await fetcher(url, {
-      method: 'POST',
-      body: JSON.stringify({ name, era, type, appId, privateSheet }),
-    });
-    router.push(`/vampires/${result.id}`);
+    setSaving(true);
+    setError('');
+
+    try {
+      const url = '/api/vampires/create';
+      const result = await fetcher(url, {
+        method: 'POST',
+        body: JSON.stringify({ name, era, type, appId, privateSheet }),
+      });
+      router.push(`/vampires/${result.id}`);
+    } catch {
+      setError('Une erreur est survenue lors de la création.');
+      setSaving(false);
+    }
   };
 
   return (
@@ -175,7 +196,12 @@ const NewCharPage = () => {
             />
           </Field>
           <EmptyLine />
-          <Button type="submit" value="Créer" />
+          {error && <ErrorMessage>{error}</ErrorMessage>}
+          <Button
+            type="submit"
+            value={saving ? 'Création...' : 'Créer'}
+            disabled={saving || !name.trim()}
+          />
         </Form>
       </FormContainer>
       <Footer />

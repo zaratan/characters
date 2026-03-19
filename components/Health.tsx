@@ -29,11 +29,15 @@ const Health = () => {
       if (JSON.stringify(health.value) === JSON.stringify(health.baseValue))
         return;
 
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ mind: { health: health.value }, appId }),
-      });
-      mutate(`/api/vampires/${id}`);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ mind: { health: health.value }, appId }),
+        });
+        mutate(`/api/vampires/${id}`);
+      } catch (err) {
+        console.error('Failed to save health:', err);
+      }
     },
     2000,
     [JSON.stringify(health.value)]

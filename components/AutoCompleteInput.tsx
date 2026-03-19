@@ -68,7 +68,6 @@ const Suggestion = styled.li`
 const generateHandleKeypressInput =
   (listRef: React.RefObject<HTMLUListElement>, close: () => void) =>
   (e: KeyboardEvent) => {
-    console.log(e.key);
     if (e.key !== 'ArrowDown' && e.key !== 'Escape' && e.key !== 'Tab') {
       return;
     }
@@ -252,7 +251,6 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
                   onClick={clickHandler(match)}
                   onKeyDown={keyHandler(match)}
                   onBlur={() => {
-                    console.log(i);
                     if (
                       i >=
                       Math.min(

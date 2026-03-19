@@ -110,12 +110,19 @@ const LogButton = ({
   if (!connected) {
     return (
       <MenuContainer className="text-only">
-        <a
+        <button
           onClick={() => signIn(undefined, { callbackUrl: returnTo || '/' })}
-          style={{ cursor: 'pointer' }}
+          style={{
+            cursor: 'pointer',
+            background: 'none',
+            border: 'none',
+            color: 'inherit',
+            font: 'inherit',
+            padding: 0,
+          }}
         >
           Connection
-        </a>
+        </button>
       </MenuContainer>
     );
   }
@@ -144,9 +151,17 @@ const LogButton = ({
           <Link href="/profile">Profil</Link>
         </MenuDropdownElem>
         <MenuDropdownElem
-          as="a"
+          as="button"
           onClick={() => signOut()}
-          style={{ cursor: 'pointer' }}
+          style={{
+            cursor: 'pointer',
+            background: 'none',
+            border: 'none',
+            color: 'inherit',
+            font: 'inherit',
+            width: '100%',
+            textAlign: 'left',
+          }}
         >
           Déconnection
         </MenuDropdownElem>

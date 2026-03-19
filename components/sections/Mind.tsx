@@ -45,14 +45,18 @@ const Mind = () => {
   useDebounce(
     async () => {
       if (tempWillpower.value === tempWillpower.baseValue) return;
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          mind: { tempWillpower: tempWillpower.value },
-          appId,
-        }),
-      });
-      mutate(`/api/vampires/${id}`);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            mind: { tempWillpower: tempWillpower.value },
+            appId,
+          }),
+        });
+        mutate(`/api/vampires/${id}`);
+      } catch (err) {
+        console.error('Failed to save temp willpower:', err);
+      }
     },
     2000,
     [tempWillpower.value]
@@ -60,11 +64,18 @@ const Mind = () => {
   useDebounce(
     async () => {
       if (bloodSpent.value === bloodSpent.baseValue) return;
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ mind: { bloodSpent: bloodSpent.value }, appId }),
-      });
-      mutate(`/api/vampires/${id}`);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            mind: { bloodSpent: bloodSpent.value },
+            appId,
+          }),
+        });
+        mutate(`/api/vampires/${id}`);
+      } catch (err) {
+        console.error('Failed to save blood spent:', err);
+      }
     },
     2000,
     [bloodSpent.value]

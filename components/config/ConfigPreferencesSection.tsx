@@ -99,13 +99,17 @@ const ConfigPreferencesSection = ({ id }: { id: string }) => {
         vampireInfos: useVampireInfos,
       };
 
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          sections: newSections,
-          appId,
-        }),
-      });
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            sections: newSections,
+            appId,
+          }),
+        });
+      } catch (err) {
+        console.error('Failed to save section preferences:', err);
+      }
     },
     300,
     [

@@ -59,10 +59,14 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
     )
       return;
 
-    await fetcher(`/api/vampires/${id}`, {
-      method: 'DELETE',
-    });
-    router.push('/');
+    try {
+      await fetcher(`/api/vampires/${id}`, {
+        method: 'DELETE',
+      });
+      router.push('/');
+    } catch {
+      window.alert('Erreur lors de la suppression du personnage.');
+    }
   };
 
   const [visibilityChanged, setVisibilityChanged] = useState(false);
@@ -71,14 +75,19 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
     async () => {
       if (!visibilityChanged) return;
 
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          privateSheet,
-          appId,
-        }),
-      });
-      setVisibilityChanged(false);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            privateSheet,
+            appId,
+          }),
+        });
+        setVisibilityChanged(false);
+      } catch {
+        togglePrivate();
+        setVisibilityChanged(false);
+      }
     },
     300,
     [visibilityChanged, privateSheet]
