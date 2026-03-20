@@ -47,7 +47,14 @@ export function vampireToRow(vampire: any): {
   viewers: string[];
   data: string;
 } {
-  const { privateSheet, editors, viewers, id, appId, ...rest } = vampire;
+  const {
+    privateSheet,
+    editors,
+    viewers,
+    id: _id,
+    appId: _appId,
+    ...rest
+  } = vampire;
   return {
     privateSheet: privateSheet ?? false,
     editors: editors ?? [],

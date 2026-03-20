@@ -24,7 +24,7 @@ async function withTransaction<T>(
   } catch (err) {
     try {
       await client.query('ROLLBACK');
-    } catch (_) {
+    } catch {
       /* swallow rollback error to preserve original */
     }
     throw err;
@@ -181,7 +181,7 @@ const vampires = {
         editors,
         viewers,
         privateSheet,
-        appId,
+        appId: _appId,
         id: _id,
         ...rest
       } = partial;
