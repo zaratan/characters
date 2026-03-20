@@ -27,17 +27,11 @@ const MenuButton = styled.button`
   height: 100%;
   cursor: pointer;
   outline: none;
-  opacity: 0.8;
   background: none;
   border: none;
   color: inherit;
   font: inherit;
   padding: 0;
-  transition: opacity 0.2s ease-in-out;
-  :hover,
-  :focus {
-    opacity: 1;
-  }
 `;
 
 const NameContainer = styled.li`

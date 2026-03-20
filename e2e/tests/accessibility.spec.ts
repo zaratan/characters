@@ -6,10 +6,7 @@ import { mockExternalApis } from '../helpers/mocks';
 
 // Known a11y issues to fix later — excluded so the test suite stays green.
 // TODO: fix these and remove from the exclusion list (see Phase 5b in TODO.md).
-// color-contrast: palette colors are WCAG AA compliant (≥5:1 with white),
-// but dev server hot-reload may serve stale styled-components values.
-// This rule passes with a production build (yarn build && yarn start).
-const EXCLUDED_RULES = ['color-contrast'];
+const EXCLUDED_RULES: string[] = [];
 
 async function runAxeAudit(page: Page) {
   const fullResults = await new AxeBuilder({ page }).analyze();
