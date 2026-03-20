@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import React, { useState, useRef, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useClickAway } from 'react-use';
+import useClickAway from '../hooks/useClickAway';
 import { signIn, signOut } from 'next-auth/react';
 import type { MeType } from '../types/MeType';
 import { BlackLine } from '../styles/Lines';

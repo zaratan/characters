@@ -2,7 +2,6 @@
 
 import type { ReactNode } from 'react';
 import React, { createContext, useState, useEffect, useRef } from 'react';
-import produce from 'immer';
 import isEqual from 'lodash/isEqual';
 
 export type SectionsType = {
@@ -55,11 +54,10 @@ export const SectionsProvider = ({
   const [sectionsState, setSectionsState] = useState(sections);
 
   const toggleSection = (sectionName: string) => () => {
-    setSectionsState(
-      produce(sectionsState, (nextState) => {
-        nextState![sectionName] = !nextState![sectionName];
-      })
-    );
+    setSectionsState((prev) => ({
+      ...prev,
+      [sectionName]: !prev?.[sectionName as keyof typeof prev],
+    }));
   };
 
   const prevSections = useRef(sections);

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { useDebounce } from 'react-use';
+import useDebounce from '../../hooks/useDebounce';
 import styled from 'styled-components';
 import type { SectionsType } from '../../contexts/SectionsContext';
 import SectionsContext from '../../contexts/SectionsContext';

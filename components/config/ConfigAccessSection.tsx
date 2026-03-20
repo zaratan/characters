@@ -1,6 +1,6 @@
 import { concat, isEqual } from 'lodash';
 import React, { useContext, useEffect, useRef, useState } from 'react';
-import useDebounce from 'react-use/lib/useDebounce';
+import useDebounce from '../../hooks/useDebounce';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import AccessesContext from '../../contexts/AccessesContext';

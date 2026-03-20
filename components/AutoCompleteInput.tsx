@@ -5,7 +5,8 @@ import type {
   DetailedHTMLProps,
 } from 'react';
 import React, { useState, useMemo, useRef, useEffect } from 'react';
-import { useDebounce, useClickAway } from 'react-use';
+import useDebounce from '../hooks/useDebounce';
+import useClickAway from '../hooks/useClickAway';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';
 import { generateHandleClick } from '../helpers/handlers';

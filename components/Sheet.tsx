@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import useBeforeUnload from 'react-use/lib/useBeforeUnload';
+import useBeforeUnload from '../hooks/useBeforeUnload';
 import { AttributesProvider } from '../contexts/AttributesContext';
 import { AbilitiesProvider } from '../contexts/AbilitiesContext';
 import type { InfosType } from '../contexts/InfosContext';

@@ -96,8 +96,7 @@
 - [x] `link-in-text-block` — Résolu par les fixes list/listitem
 - [x] `heading-order` — ConfigAccessSection: `<h3>` → `<h2>`
 - [x] `region` — DesktopActionsContainer + MobileActionsContainer → `<aside>`
-- [x] `color-contrast` — Palette avatar assombrie (≥5:1), RedButton + titleColor ajustés
-  - Reste en exclusion dans les tests E2E (hot-reload styled-components ne recompile pas les constantes de palette en dev, passe en CI avec build prod)
+- [x] `color-contrast` — Palette avatar assombrie (≥5:1), RedButton + titleColor ajustés, `opacity: 0.8` supprimé du MenuButton (causait blend avec le fond nav)
 
 ## Phase 6 — Upgrades majeures
 

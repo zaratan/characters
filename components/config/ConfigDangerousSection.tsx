@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
 import React, { useContext, useState } from 'react';
-import { useDebounce } from 'react-use';
+import useDebounce from '../../hooks/useDebounce';
 import styled from 'styled-components';
 import AccessesContext from '../../contexts/AccessesContext';
 import SystemContext from '../../contexts/SystemContext';
