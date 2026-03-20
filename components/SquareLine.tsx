@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import Square, { EmptyGlyph } from './Square';
 import type { TempElemType } from '../types/TempElemType';

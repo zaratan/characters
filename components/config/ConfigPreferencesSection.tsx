@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import { useContext, useState } from 'react';
 import useDebounce from '../../hooks/useDebounce';
 import styled from 'styled-components';
 import type { SectionsType } from '../../contexts/SectionsContext';

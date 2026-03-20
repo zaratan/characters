@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import React, { createContext, useState, useMemo, useRef } from 'react';
+import { createContext, useState, useMemo, useRef } from 'react';
 import some from 'lodash/some';
 
 type ContextType = {

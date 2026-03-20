@@ -1,5 +1,5 @@
 'use client';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import Footer from '../Footer';

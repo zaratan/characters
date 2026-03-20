@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import type { pexElemsType } from './PexElem';
 import PexElem, { PexSpan, computePexElems } from './PexElem';

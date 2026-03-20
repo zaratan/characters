@@ -15,9 +15,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const fetchedData = await fetchOneVampire(params.id);
+  const { id } = await params;
+  const fetchedData = await fetchOneVampire(id);
   const name = fetchedData.data?.infos?.name;
   const title = name
     ? `${name} - Feuille de Personnage`
@@ -28,9 +29,10 @@ export async function generateMetadata({
 export default async function VampirePage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const fetchedData = await fetchOneVampire(params.id);
+  const { id } = await params;
+  const fetchedData = await fetchOneVampire(id);
   if (fetchedData.failed) redirect('/new');
-  return <SheetClient initialData={fetchedData.data!} id={params.id} />;
+  return <SheetClient initialData={fetchedData.data!} id={id} />;
 }

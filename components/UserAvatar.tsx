@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 
 // Colors chosen to guarantee WCAG AA contrast ratio (≥4.5:1) with white text.

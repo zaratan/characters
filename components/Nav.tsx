@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import React, { useState, useRef, useContext } from 'react';
+import { useState, useRef, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import useClickAway from '../hooks/useClickAway';

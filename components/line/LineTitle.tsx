@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { HandText } from '../../styles/Texts';
 import { SubTitle } from '../../styles/Titles';

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import SectionsContext from '../../contexts/SectionsContext';
 import SectionTitle from '../SectionTitle';
 import { HorizontalSection } from '../../styles/Sections';

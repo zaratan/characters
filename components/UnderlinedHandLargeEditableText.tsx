@@ -1,5 +1,4 @@
 import type { FormEvent } from 'react';
-import React from 'react';
 import { HandLargeEditableText, HandLargeText } from '../styles/Texts';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 import type { TempElemType } from '../types/TempElemType';

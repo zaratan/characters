@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import PreferencesContext from '../../contexts/PreferencesContext';
 import { HandText, HandEditableText } from '../../styles/Texts';

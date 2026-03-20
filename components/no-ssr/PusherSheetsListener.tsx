@@ -1,4 +1,4 @@
-import React, { useEffect, useContext } from 'react';
+import { useEffect, useContext } from 'react';
 import { subscribeToSheets } from '../../helpers/pusherClient';
 import { sheetsChannel } from '../../helpers/pusherConst';
 import SystemContext from '../../contexts/SystemContext';

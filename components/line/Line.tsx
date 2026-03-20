@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from '../Dot';

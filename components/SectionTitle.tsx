@@ -1,5 +1,3 @@
-import React from 'react';
-
 import styled from 'styled-components';
 import type { TempElemType } from '../types/TempElemType';
 import { Title } from '../styles/Titles';

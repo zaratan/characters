@@ -1,4 +1,3 @@
-import React from 'react';
 import { calcPexDiffAttribute } from '../../helpers/pex';
 import type { TempElemType } from '../../types/TempElemType';
 import Line from './Line';

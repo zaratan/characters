@@ -49,7 +49,7 @@ import {
 // ---------------------------------------------------------------------------
 
 const VAMPIRE_ID = 'vamp-123';
-const routeContext = { params: { id: VAMPIRE_ID } };
+const routeContext = { params: Promise.resolve({ id: VAMPIRE_ID }) };
 
 const publicVampire = {
   id: VAMPIRE_ID,

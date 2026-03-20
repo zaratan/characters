@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
 import useBeforeUnload from '../hooks/useBeforeUnload';
@@ -83,6 +83,7 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
               alt="Vampire Dark Age"
               width={516}
               height={160}
+              priority
             />
           ) : (
             <Title className="victorian-queen">Vampire Ère Victorienne</Title>

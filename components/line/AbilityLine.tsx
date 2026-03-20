@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { calcPexDiffAbility, calcPexDiffSpecialty } from '../../helpers/pex';
 import { HandEditableText, HandText } from '../../styles/Texts';

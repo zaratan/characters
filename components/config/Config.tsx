@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import ThemeContext from '../../contexts/ThemeContext';
 import { EmptyLine } from '../../styles/Lines';
 import { Title } from '../../styles/Titles';

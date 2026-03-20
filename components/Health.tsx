@@ -1,4 +1,4 @@
-import React, { useContext, useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import { mutate } from 'swr';
 import NamedSquare from './NamedSquare';

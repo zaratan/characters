@@ -1,5 +1,4 @@
 import type { ReactNode } from 'react';
-import React from 'react';
 import { StyledColumnTitle } from '../styles/Titles';
 import type { TempElemType } from '../types/TempElemType';
 import PexElem from './PexElem';

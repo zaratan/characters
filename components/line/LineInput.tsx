@@ -1,4 +1,3 @@
-import React from 'react';
 import { HandEditableText } from '../../styles/Texts';
 import AutoCompleteInput from '../AutoCompleteInput';
 

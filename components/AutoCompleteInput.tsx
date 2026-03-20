@@ -3,8 +3,9 @@ import type {
   ComponentType,
   InputHTMLAttributes,
   DetailedHTMLProps,
+  RefObject,
 } from 'react';
-import React, { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useClickAway from '../hooks/useClickAway';
 import Fuse from 'fuse.js';
@@ -64,7 +65,7 @@ const Suggestion = styled.li`
 `;
 
 const generateHandleKeypressInput =
-  (listRef: React.RefObject<HTMLUListElement>, close: () => void) =>
+  (listRef: RefObject<HTMLUListElement | null>, close: () => void) =>
   (e: KeyboardEvent) => {
     if (e.key !== 'ArrowDown' && e.key !== 'Escape' && e.key !== 'Tab') {
       return;
@@ -88,8 +89,8 @@ const generateHandleKeypressInput =
 const generateHandleKeypressSpan =
   (
     changeFunc: (e: KeyboardEvent) => void,
-    listRef: React.RefObject<HTMLUListElement>,
-    inputRef: React.RefObject<HTMLInputElement>,
+    listRef: RefObject<HTMLUListElement | null>,
+    inputRef: RefObject<HTMLInputElement | null>,
     close: () => void
   ) =>
   (e: KeyboardEvent) => {

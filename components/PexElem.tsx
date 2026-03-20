@@ -1,6 +1,6 @@
 // TODO THIS IS A BUG IN ESLINT
 
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import PreferencesContext from '../contexts/PreferencesContext';
 import type { TempElemType } from '../types/TempElemType';

@@ -1,5 +1,5 @@
-import type { ComponentType } from 'react';
-import React, { useContext } from 'react';
+import type { ComponentType, ReactElement } from 'react';
+import { useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { BlackLine, EmptyLine } from '../styles/Lines';
@@ -29,7 +29,7 @@ type ActionType = {
       componentProps?: null;
     }
   | {
-      component: (any) => JSX.Element;
+      component: (any: any) => ReactElement;
       componentProps?: any;
       active?: null;
       act?: null;

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import SectionTitle from '../SectionTitle';
 import FaithContext from '../../contexts/FaithContext';
 import { calcPexTrueFaith, calcPexDiffTrueFaith } from '../../helpers/pex';

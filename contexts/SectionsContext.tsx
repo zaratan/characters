@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import React, { createContext, useState, useEffect, useRef } from 'react';
+import { createContext, useState, useEffect, useRef } from 'react';
 import isEqual from 'lodash/isEqual';
 
 export type SectionsType = {

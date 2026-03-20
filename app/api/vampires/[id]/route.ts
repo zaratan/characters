@@ -5,7 +5,7 @@ import { db } from '../../../../lib/db';
 import { fetchOneVampire } from '../../../../lib/queries';
 import { updateOnSheet } from '../../../../helpers/pusherServer';
 
-type RouteContext = { params: { id: string } };
+type RouteContext = { params: Promise<{ id: string }> };
 
 async function checkEditor(id: string, session) {
   const canEdit = await db.vampires.isEditor(
@@ -17,7 +17,7 @@ async function checkEditor(id: string, session) {
 }
 
 export async function GET(_request: NextRequest, { params }: RouteContext) {
-  const { id } = params;
+  const { id } = await params;
   const result = await fetchOneVampire(id);
 
   if (result.failed || !result.data) {
@@ -54,7 +54,7 @@ export async function PUT(request: NextRequest, { params }: RouteContext) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
     if (!(await checkEditor(id, session))) {
@@ -80,7 +80,7 @@ export async function PATCH(request: NextRequest, { params }: RouteContext) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
     if (!(await checkEditor(id, session))) {
@@ -106,7 +106,7 @@ export async function DELETE(_request: NextRequest, { params }: RouteContext) {
     return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
   }
 
-  const { id } = params;
+  const { id } = await params;
 
   try {
     if (!(await checkEditor(id, session))) {

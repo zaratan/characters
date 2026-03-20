@@ -100,14 +100,38 @@
 
 ## Phase 6 — Upgrades majeures
 
-- [ ] **Next.js 15 => 16** — Migrer depuis 14.2 (vérifier les breaking changes App Router)
-- [ ] **React 19** — Migrer depuis 18.2 (nouveau modèle de refs, use(), etc.)
+### Phase 6a — Quick wins
+
+- [x] **Supprimer immer** — `produce()` remplacé par spread dans `SectionsContext.tsx`
+- [x] **pusher-js 7→8** — Upgradé, `@types/pusher-js` supprimé (types bundlés), pusher server 5.3.3
+- [x] **Remplacer react-use** — Hooks custom `useDebounce`, `useClickAway`, `useBeforeUnload` (8 fichiers migrés)
+- [x] **nodemailer** — Gardé (peer dep de next-auth v4), sera supprimable en Phase 6d
+
+### Phase 6b — Next.js 16 + React 19
+
+- [x] **Next.js 14→16** — `next.config.js` → `next.config.ts`, suppression `ignoreDuringBuilds`
+- [x] **React 18.2→19** — `react`, `react-dom`, `@types/react` v19
+- [x] **Async params** — `params` → `Promise<{ id: string }>` dans pages + API route handlers
+- [x] **SWR** — Upgradé vers 2.4.1
+- [x] **`@types/styled-components` supprimé** — Incompatible React 19, sera remplacé par types bundlés SC v6
+- [x] **`resolutions`** — `@types/react: ^19` pour forcer la cohérence des types
+- [x] **RefObject** — `RefObject<T>` → `RefObject<T | null>` (React 19 breaking change)
+- [x] **Tests mis à jour** — `routeContext.params` → `Promise.resolve({ id })`
+
+### Phase 6c — styled-components 6
+
+- [ ] **styled-components 5→6** — Réécrire `lib/registry.tsx`, vérifier `compiler.styledComponents`
+- [ ] **Types** — Types bundlés en v6, retirer `resolutions` si possible
+
+### Phase 6d — Auth.js v5
+
 - [ ] **Auth.js v5** (next-auth 5) — Réécrire `lib/auth.ts` et `lib/auth-adapter.ts` (API très différente)
-- [ ] **styled-components 6** — Migrer (changements SSR, suppression de `@types/styled-components`)
-- [ ] **Tailwind CSS 4** — Migrer depuis 3.1 (nouvelle config, CSS-first)
-- [ ] **immer 10** — Vérifier la compatibilité avec les contextes existants
-- [ ] **pusher-js 8** — Vérifier les breaking changes
-- [ ] **Yarn → pnpm** (optionnel) — Aligner avec arkham-proba pour la cohérence
+
+### ~~Phase 6e — Tailwind CSS 4~~ — SKIP
+
+### Phase 6e — Yarn → pnpm (optionnel)
+
+- [ ] **Yarn → pnpm** — Aligner avec arkham-proba pour la cohérence
 
 ## Référence : configs arkham-proba à réutiliser
 

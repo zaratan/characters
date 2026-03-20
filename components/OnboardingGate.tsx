@@ -1,12 +1,13 @@
 'use client';
 
 import { useContext, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import MeContext from '../contexts/MeContext';
 
 const EXEMPT_PATHS = ['/profile'];
 
-const OnboardingGate = ({ children }: { children: React.ReactNode }) => {
+const OnboardingGate = ({ children }: { children: ReactNode }) => {
   const { me, connected, loading } = useContext(MeContext);
   const router = useRouter();
   const pathname = usePathname();

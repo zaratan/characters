@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import React, { createContext } from 'react';
+import { createContext } from 'react';
 import useSWR from 'swr';
 
 export type DisciplineDataType = {
