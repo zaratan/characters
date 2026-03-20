@@ -145,6 +145,70 @@ describe('NewCharPage', () => {
     );
   });
 
+  it('calls fetcher with era:1 when Victorien era is selected', async () => {
+    const user = userEvent.setup();
+    mockFetcher.mockResolvedValueOnce({ id: 'vampire-era' });
+
+    renderWithProviders(<NewCharPage />, {
+      me: { connected: true },
+      system: { appId: 'test-app-id' },
+    });
+
+    const nameInput = screen.getByPlaceholderText(/nom du personnage/i);
+    await user.type(nameInput, 'AncientOne');
+
+    const eraSelect = screen.getByRole('combobox', { name: /époque/i });
+    await user.selectOptions(eraSelect, '1');
+
+    const button = screen.getByRole('button', { name: /créer/i });
+    await user.click(button);
+
+    await waitFor(() => expect(mockFetcher).toHaveBeenCalled());
+
+    expect(mockFetcher).toHaveBeenCalledWith('/api/vampires/create', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'AncientOne',
+        era: 1,
+        type: 0,
+        appId: 'test-app-id',
+        privateSheet: false,
+      }),
+    });
+  });
+
+  it('calls fetcher with type:1 when Humain type is selected', async () => {
+    const user = userEvent.setup();
+    mockFetcher.mockResolvedValueOnce({ id: 'vampire-type' });
+
+    renderWithProviders(<NewCharPage />, {
+      me: { connected: true },
+      system: { appId: 'test-app-id' },
+    });
+
+    const nameInput = screen.getByPlaceholderText(/nom du personnage/i);
+    await user.type(nameInput, 'MortalOne');
+
+    const typeSelect = screen.getByRole('combobox', { name: /type/i });
+    await user.selectOptions(typeSelect, '1');
+
+    const button = screen.getByRole('button', { name: /créer/i });
+    await user.click(button);
+
+    await waitFor(() => expect(mockFetcher).toHaveBeenCalled());
+
+    expect(mockFetcher).toHaveBeenCalledWith('/api/vampires/create', {
+      method: 'POST',
+      body: JSON.stringify({
+        name: 'MortalOne',
+        era: 0,
+        type: 1,
+        appId: 'test-app-id',
+        privateSheet: false,
+      }),
+    });
+  });
+
   it('disables submit button during save (showing Création... label)', async () => {
     const user = userEvent.setup();
     // Never resolves — keeps the component in saving state

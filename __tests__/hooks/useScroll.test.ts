@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
-import throttle from 'lodash/throttle';
 import { useScroll } from '../../hooks/useScroll';
 
 beforeEach(() => {
@@ -124,33 +123,34 @@ describe('useScroll', () => {
     );
   });
 
-  it('calls throttle.cancel() on unmount', () => {
-    let capturedCancel: (() => void) | undefined;
+  it('calls scrollWatcher.cancel() on unmount', () => {
+    // Capture the throttled function registered as the scroll listener so we
+    // can assert that its .cancel() method is called during cleanup.
+    let capturedListener:
+      | (EventListenerOrEventListenerObject & { cancel?: () => void })
+      | undefined;
 
-    const throttleSpy = vi
-      .spyOn({ throttle }, 'throttle')
-      .mockImplementation((...args: Parameters<typeof throttle>) => {
-        const throttled = throttle(...args);
-        capturedCancel = throttled.cancel.bind(throttled);
-        vi.spyOn(throttled, 'cancel');
-        capturedCancel = throttled.cancel as () => void;
-        return throttled;
-      });
-
-    // Re-import after spy is in place — use the real lodash throttle spy
-    const cancelSpy = vi.fn();
-    const originalThrottle = throttle;
-    vi.spyOn(require('lodash/throttle'), 'default').mockImplementationOnce(
-      (...args: Parameters<typeof throttle>) => {
-        const throttled = originalThrottle(...args);
-        throttled.cancel = cancelSpy;
-        return throttled;
+    const realAddEventListener = window.addEventListener.bind(window);
+    vi.spyOn(window, 'addEventListener').mockImplementation(
+      (type, listener, options) => {
+        if (type === 'scroll') {
+          capturedListener = listener as typeof capturedListener;
+        }
+        return realAddEventListener(type, listener, options);
       }
     );
 
-    throttleSpy.mockRestore();
-
     const { unmount } = renderHook(() => useScroll());
+
+    // The lodash throttle function decorates the listener with .cancel()
+    expect(capturedListener).toBeDefined();
+    expect(typeof capturedListener!.cancel).toBe('function');
+
+    const cancelSpy = vi.spyOn(
+      capturedListener as { cancel: () => void },
+      'cancel'
+    );
+
     unmount();
 
     expect(cancelSpy).toHaveBeenCalled();
