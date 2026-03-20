@@ -6,14 +6,13 @@ import { Resend } from 'resend';
 
 import { customPgAdapter } from './auth-adapter';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export const authOptions: NextAuthOptions = {
   adapter: customPgAdapter(),
   providers: [
     EmailProvider({
       from: process.env.EMAIL_FROM!,
       sendVerificationRequest: async ({ identifier: email, url }) => {
+        const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
           from: process.env.EMAIL_FROM!,
           to: email,

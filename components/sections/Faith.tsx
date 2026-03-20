@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import SectionTitle from '../SectionTitle';
 import FaithContext from '../../contexts/FaithContext';
-import { calcPexTrueFaith, clacPexDiffTrueFaith } from '../../helpers/pex';
+import { calcPexTrueFaith, calcPexDiffTrueFaith } from '../../helpers/pex';
 import { Container } from '../../styles/Container';
 import ColumnTitle from '../ColumnTitle';
 import Line from '../line/Line';
@@ -30,7 +30,7 @@ const Faith = () => {
           <Line
             elem={trueFaith}
             maxLevel={10}
-            diffPexCalc={clacPexDiffTrueFaith}
+            diffPexCalc={calcPexDiffTrueFaith}
             name="Vraie Foi"
             inactive={!editMode}
           />

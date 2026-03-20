@@ -106,5 +106,5 @@ export const calcPexDiffSpecialty = (from: number, to: number) =>
 export const calcPexDiffAdvFlaw = (from: number, to: number, neg: boolean) =>
   calcPexAdvFlaw(to, neg) - calcPexAdvFlaw(from, neg);
 
-export const clacPexDiffTrueFaith = (from: number, to: number) =>
+export const calcPexDiffTrueFaith = (from: number, to: number) =>
   calcPexTrueFaith(to) - calcPexTrueFaith(from);

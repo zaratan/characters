@@ -45,26 +45,27 @@
 
 ## Phase 4 — Tests unitaires (Vitest + RTL)
 
-- [ ] **Config Vitest** — Ajouter `jsdom` environment, setup file avec `@testing-library/jest-dom`
-- [ ] **Dépendances** — Ajouter `@testing-library/react`, `@testing-library/jest-dom`, `jsdom`
-- [ ] **Tests helpers** :
-  - [ ] `helpers/fetcher.ts` (le nouveau avec gestion d'erreur)
-  - [ ] `helpers/pex.ts` (calculs d'XP)
-  - [ ] `helpers/pusherClient.ts`
-- [ ] **Tests hooks** :
-  - [ ] `hooks/useSave.ts`
-  - [ ] `hooks/useScroll.ts`
-  - [ ] `hooks/useKeyboardShortcut.ts`
-- [ ] **Tests composants critiques** :
-  - [ ] Formulaire de création de personnage (`app/new/`)
-  - [ ] Sections de la fiche (Attributes, Abilities, Disciplines)
-  - [ ] Config sections (Access, Dangerous, Preferences)
-  - [ ] Nav, ErrorPage
-- [ ] **Tests contextes** :
-  - [ ] Logique de merge/update dans les principaux contextes
-- [ ] **Tests API routes** :
-  - [ ] CRUD vampires (`app/api/vampires/`)
-  - [ ] Route disciplines (`app/api/data/disciplines/`)
+- [x] **Config Vitest** — jsdom via directive per-file, setup file, `@vitejs/plugin-react`
+- [x] **Dépendances** — `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `@testing-library/dom`, `jsdom`, `@vitejs/plugin-react`
+- [x] **Tests helpers** (72 + 8 + 8 + 4 = 92 tests) :
+  - [x] `helpers/pex.ts` (72 tests — toutes les fonctions + edge cases)
+  - [x] `helpers/fetcher.ts` (8 tests — FetchError, success, erreurs, double failure)
+  - [x] `helpers/pusherClient.ts` (8 tests)
+  - [x] `helpers/pusherServer.ts` (4 tests)
+- [x] **Tests hooks** (10 tests) :
+  - [x] `hooks/useKeyboardShortcut.ts` (4 tests — async import, bind/unbind)
+  - [x] `hooks/useScroll.ts` (6 tests — fake timers, scroll events)
+  - ~~`hooks/useSave.ts`~~ — skippé (16 context mocks, aucune logique de branchement)
+- [x] **Tests composants critiques** (10 tests) :
+  - [x] Formulaire de création de personnage `app/new/` (7 tests)
+  - [x] `ErrorPage` (3 tests)
+  - ~~Sections, Config, Nav~~ — trop couplés aux contextes, couvert par E2E Phase 5
+- ~~**Tests contextes**~~ — conteneurs d'état sans logique métier isolable
+- [x] **Tests API routes** (28 tests) :
+  - [x] CRUD vampires `app/api/vampires/[id]` (16 tests — GET/PUT/PATCH/DELETE + auth/permissions)
+  - [x] Création `app/api/vampires/create` (8 tests — templates, types, edge cases)
+  - [x] Route disciplines `app/api/data/disciplines` (4 tests — intégration légère)
+- [x] **Fix typo** `clacPexDiffTrueFaith` → `calcPexDiffTrueFaith` (pex.ts + Faith.tsx)
 
 ## Phase 5 — Tests E2E (Playwright)
 
