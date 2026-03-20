@@ -107,7 +107,7 @@ jobs:
         run: |
           git checkout origin/main -- migrations/
           npx node-pg-migrate up --database-url-var POSTGRES_URL
-          git checkout - -- migrations/
+          git checkout HEAD -- migrations/
 
       - name: Apply PR migrations on top
         run: npx node-pg-migrate up --database-url-var POSTGRES_URL

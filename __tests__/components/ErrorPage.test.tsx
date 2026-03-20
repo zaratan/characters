@@ -46,7 +46,7 @@ describe('ErrorPage', () => {
     });
     await user.click(loginButton);
 
-    expect(mockSignIn).toHaveBeenCalledOnce();
+    expect(mockSignIn).toHaveBeenCalledWith(undefined, { callbackUrl: '/' });
   });
 
   it('renders Nav and Footer stubs', () => {

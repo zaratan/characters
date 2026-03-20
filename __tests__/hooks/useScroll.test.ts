@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
+import throttle from 'lodash/throttle';
 import { useScroll } from '../../hooks/useScroll';
 
 beforeEach(() => {
@@ -121,5 +122,37 @@ describe('useScroll', () => {
       'scroll',
       expect.any(Function)
     );
+  });
+
+  it('calls throttle.cancel() on unmount', () => {
+    let capturedCancel: (() => void) | undefined;
+
+    const throttleSpy = vi
+      .spyOn({ throttle }, 'throttle')
+      .mockImplementation((...args: Parameters<typeof throttle>) => {
+        const throttled = throttle(...args);
+        capturedCancel = throttled.cancel.bind(throttled);
+        vi.spyOn(throttled, 'cancel');
+        capturedCancel = throttled.cancel as () => void;
+        return throttled;
+      });
+
+    // Re-import after spy is in place — use the real lodash throttle spy
+    const cancelSpy = vi.fn();
+    const originalThrottle = throttle;
+    vi.spyOn(require('lodash/throttle'), 'default').mockImplementationOnce(
+      (...args: Parameters<typeof throttle>) => {
+        const throttled = originalThrottle(...args);
+        throttled.cancel = cancelSpy;
+        return throttled;
+      }
+    );
+
+    throttleSpy.mockRestore();
+
+    const { unmount } = renderHook(() => useScroll());
+    unmount();
+
+    expect(cancelSpy).toHaveBeenCalled();
   });
 });

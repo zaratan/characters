@@ -39,7 +39,10 @@ import {
 import { getSession } from '../../../../lib/auth';
 import { fetchOneVampire } from '../../../../lib/queries';
 import { db } from '../../../../lib/db';
-import { updateOnSheet } from '../../../../helpers/pusherServer';
+import {
+  updateOnSheet,
+  updateOnSheets,
+} from '../../../../helpers/pusherServer';
 
 // ---------------------------------------------------------------------------
 // Helpers
@@ -208,6 +211,7 @@ describe('PUT /api/vampires/[id]', () => {
       expect.not.objectContaining({ appId: expect.anything() })
     );
     expect(updateOnSheet).toHaveBeenCalledWith(VAMPIRE_ID, 'app-42');
+    expect(updateOnSheets).not.toHaveBeenCalled();
   });
 
   it('returns 500 when the request body is not valid JSON', async () => {
@@ -285,6 +289,7 @@ describe('PATCH /api/vampires/[id]', () => {
       expect.not.objectContaining({ appId: expect.anything() })
     );
     expect(updateOnSheet).toHaveBeenCalledWith(VAMPIRE_ID, 'app-99');
+    expect(updateOnSheets).not.toHaveBeenCalled();
   });
 
   it('returns 500 when the request body is not valid JSON', async () => {
@@ -319,6 +324,18 @@ describe('DELETE /api/vampires/[id]', () => {
     expect(response.status).toBe(401);
   });
 
+  it('returns 403 when the user is not an editor', async () => {
+    mockGetSession(mockSession({ id: 'other-user' }));
+    vi.mocked(db.vampires.isEditor).mockResolvedValue(false);
+
+    const response = await DELETE(
+      createRequest(`/api/vampires/${VAMPIRE_ID}`, { method: 'DELETE' }),
+      routeContext
+    );
+
+    expect(response.status).toBe(403);
+  });
+
   it('calls db.vampires.delete and returns 200 for a valid editor', async () => {
     mockGetSession(mockSession({ id: 'user-1' }));
     vi.mocked(db.vampires.isEditor).mockResolvedValue(true);
@@ -333,5 +350,7 @@ describe('DELETE /api/vampires/[id]', () => {
     expect(response.status).toBe(200);
     expect(body).toEqual({ result: 'ok' });
     expect(db.vampires.delete).toHaveBeenCalledWith(VAMPIRE_ID);
+    expect(updateOnSheet).not.toHaveBeenCalled();
+    expect(updateOnSheets).not.toHaveBeenCalled();
   });
 });
