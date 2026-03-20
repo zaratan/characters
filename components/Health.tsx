@@ -19,7 +19,7 @@ const Health = () => {
   const changeIsExtraBruisable = () =>
     isExtraBruisable.set(!isExtraBruisable.value);
 
-  const offset = isExtraBruisable ? 1 : 0;
+  const offset = isExtraBruisable.value ? 1 : 0;
   const genSetValue = (rank: number) => (value: number) => {
     const newHealth = [...health.value];
     newHealth[rank] = value;
@@ -42,7 +42,7 @@ const Health = () => {
         showError('Erreur lors de la sauvegarde de la santé.');
       }
     },
-    2000,
+    500,
     [healthKey]
   );
   return (

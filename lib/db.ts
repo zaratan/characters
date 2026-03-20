@@ -115,11 +115,11 @@ const vampires = {
 
       const insertResult = await client.query(
         `
-        INSERT INTO vampires (private_sheet, data)
-        VALUES ($1, $2::jsonb)
+        INSERT INTO vampires (private_sheet, data, owner_id)
+        VALUES ($1, $2::jsonb, $3)
         RETURNING id
         `,
-        [privateSheet, data]
+        [privateSheet, data, creatorUserId]
       );
 
       const newId: string = insertResult.rows[0].id;

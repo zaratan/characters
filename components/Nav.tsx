@@ -140,7 +140,11 @@ const LogButton = ({
 
   return (
     <MenuContainer ref={wrapperRef}>
-      <MenuButton onClick={handleClick} onKeyPress={handleKeypress}>
+      <MenuButton
+        data-testid="user-menu-button"
+        onClick={handleClick}
+        onKeyPress={handleKeypress}
+      >
         <UserAvatar
           name={data?.name ?? null}
           image={data?.image ?? null}

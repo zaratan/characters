@@ -60,7 +60,7 @@ const Mind = () => {
         showError('Erreur lors de la sauvegarde de la volonté.');
       }
     },
-    2000,
+    500,
     [tempWillpower.value]
   );
   useDebounce(
@@ -79,7 +79,7 @@ const Mind = () => {
         showError('Erreur lors de la sauvegarde du sang dépensé.');
       }
     },
-    2000,
+    500,
     [bloodSpent.value]
   );
   return (

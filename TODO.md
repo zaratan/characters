@@ -69,24 +69,39 @@
 
 ## Phase 5 — Tests E2E (Playwright)
 
-- [ ] **Setup Playwright** — `playwright.config.ts` avec :
-  - [ ] Projet Desktop Chrome
-  - [ ] Projet Mobile Chrome (Pixel 5)
-  - [ ] Web server : `yarn dev` sur `localhost:3000`
-  - [ ] Retries (2 en CI), HTML reporter, trace on first retry
-- [ ] **Dépendances** — `@playwright/test`, `@axe-core/playwright`
-- [ ] **Tests flows principaux** :
-  - [ ] Création d'un personnage (tous les templates)
-  - [ ] Édition d'une fiche (attributs, abilities, disciplines)
-  - [ ] Configuration d'un personnage (accès, préférences, suppression)
-  - [ ] Navigation (home, fiche, config, profil)
-  - [ ] Authentification (login/logout)
-- [ ] **Tests accessibilité** — Audit axe-core sur chaque page principale
-- [ ] **Script** — Ajouter `yarn test:e2e` et `yarn test:e2e:ui` dans package.json
+- [x] **Setup Playwright** — `playwright.config.ts` avec :
+  - [x] Projet Desktop Chrome
+  - [x] Projet Mobile Chrome (Pixel 5)
+  - [x] Web server : `yarn dev` sur `localhost:3000` (local), `yarn start` (CI)
+  - [x] Retries (2 en CI), HTML reporter, trace on first retry
+- [x] **Dépendances** — `@playwright/test`, `@axe-core/playwright`
+- [x] **Migration `owner_id`** — FK CASCADE sur `vampires` pour simplifier le cleanup E2E
+- [x] **Fixtures E2E** — Auth (seed DB + cookie), DB helpers (seedUser, seedCharacter, cleanup)
+- [x] **Tests flows principaux** :
+  - [x] Création d'un personnage (tous les templates — 6 combos type×era)
+  - [x] Édition d'une fiche (mode jeu/édition, attributs, save/rollback, génération, thaumaturgie)
+  - [x] Configuration d'un personnage (accès, préférences, suppression, permissions)
+  - [x] Navigation (home, fiche, config, profil)
+  - [x] Authentification (login/logout, onboarding gate)
+- [x] **Tests accessibilité** — Audit axe-core sur chaque page principale (5 pages)
+- [x] **Script** — `yarn test:e2e` et `yarn test:e2e:ui` dans package.json
+- [x] **CI** — Job `e2e` dans `.github/workflows/ci.yml` (needs lint+test, PostgreSQL, Chromium)
+- [x] **Bug fix** — `Health.tsx` : `isExtraBruisable` → `isExtraBruisable.value` pour le calcul de l'offset
+- [x] **Amélioration** — Debounce auto-save réduit de 2000ms → 500ms (santé, volonté, sang)
+
+## Phase 5b — Corrections accessibilité (axe-core)
+
+Violations actuellement exclues des tests E2E, à corriger :
+
+- [ ] `color-contrast` — Contraste texte/fond insuffisant
+- [ ] `list` / `listitem` — Structure `<ul>/<li>` incorrecte dans certains composants
+- [ ] `aria-allowed-role` — Rôles ARIA sur des éléments qui ne les supportent pas
+- [ ] `heading-order` — Hiérarchie des headings (sauts de niveaux h1→h3)
+- [ ] `region` — Contenu hors landmark ARIA
 
 ## Phase 6 — Upgrades majeures
 
-- [ ] **Next.js 15** — Migrer depuis 14.2 (vérifier les breaking changes App Router)
+- [ ] **Next.js 15 => 16** — Migrer depuis 14.2 (vérifier les breaking changes App Router)
 - [ ] **React 19** — Migrer depuis 18.2 (nouveau modèle de refs, use(), etc.)
 - [ ] **Auth.js v5** (next-auth 5) — Réécrire `lib/auth.ts` et `lib/auth-adapter.ts` (API très différente)
 - [ ] **styled-components 6** — Migrer (changements SSR, suppression de `@types/styled-components`)
