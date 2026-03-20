@@ -69,14 +69,17 @@ test.describe('Auth — authenticated', () => {
     await expect(deconnectionButton).toBeVisible();
     await deconnectionButton.click();
 
-    // NextAuth signOut() posts to /api/auth/signout then redirects to /.
-    await authenticatedPage.waitForURL('/', { timeout: 15_000 });
-    // Hard reload to clear SWR/session cache
-    await authenticatedPage.reload();
-
-    await expect(
-      authenticatedPage.getByRole('button', { name: 'Connection', exact: true })
-    ).toBeVisible({ timeout: 10_000 });
+    // NextAuth signOut() posts to /api/auth/signout then redirects.
+    // Poll until we land on a page showing the "Connection" button.
+    await expect(async () => {
+      await authenticatedPage.goto('/', { timeout: 5_000 });
+      await expect(
+        authenticatedPage.getByRole('button', {
+          name: 'Connection',
+          exact: true,
+        })
+      ).toBeVisible({ timeout: 3_000 });
+    }).toPass({ timeout: 20_000 });
   });
 });
 

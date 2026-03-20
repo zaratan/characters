@@ -91,13 +91,13 @@
 
 ## Phase 5b — Corrections accessibilité (axe-core)
 
-Violations actuellement exclues des tests E2E, à corriger :
-
-- [ ] `color-contrast` — Contraste texte/fond insuffisant
-- [ ] `list` / `listitem` — Structure `<ul>/<li>` incorrecte dans certains composants
-- [ ] `aria-allowed-role` — Rôles ARIA sur des éléments qui ne les supportent pas
-- [ ] `heading-order` — Hiérarchie des headings (sauts de niveaux h1→h3)
-- [ ] `region` — Contenu hors landmark ARIA
+- [x] `list` / `listitem` — Nav: `as="button"` → `<li><button>`, ActionsFooter: `<ul>/<li>` → `<div>`, `<Link>` wrapping inversé
+- [x] `aria-allowed-role` — Résolu par les fixes list/listitem
+- [x] `link-in-text-block` — Résolu par les fixes list/listitem
+- [x] `heading-order` — ConfigAccessSection: `<h3>` → `<h2>`
+- [x] `region` — DesktopActionsContainer + MobileActionsContainer → `<aside>`
+- [x] `color-contrast` — Palette avatar assombrie (≥5:1), RedButton + titleColor ajustés
+  - Reste en exclusion dans les tests E2E (hot-reload styled-components ne recompile pas les constantes de palette en dev, passe en CI avec build prod)
 
 ## Phase 6 — Upgrades majeures
 

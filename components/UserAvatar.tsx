@@ -1,15 +1,16 @@
 import React from 'react';
 import styled from 'styled-components';
 
+// Colors chosen to guarantee WCAG AA contrast ratio (≥4.5:1) with white text.
 const PALETTE = [
-  '#8b5cf6',
-  '#ef4444',
-  '#f59e0b',
-  '#10b981',
-  '#3b82f6',
-  '#ec4899',
-  '#6366f1',
-  '#14b8a6',
+  '#7c3aed',
+  '#b91c1c',
+  '#b45309',
+  '#047857',
+  '#2563eb',
+  '#be185d',
+  '#4f46e5',
+  '#0f766e',
 ];
 
 function hashToIndex(str: string): number {
@@ -75,7 +76,7 @@ const UserAvatar = ({
       role="img"
       aria-label={name || 'Avatar'}
     >
-      {initials}
+      <span aria-hidden="true">{initials}</span>
     </InitialsCircle>
   );
 };

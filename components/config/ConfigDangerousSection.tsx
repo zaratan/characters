@@ -24,7 +24,7 @@ const ButtonLi = styled.li`
   position: relative;
 `;
 const RedButton = styled.button`
-  background-color: #f2003c;
+  background-color: #c81e3b;
   padding: 1rem;
   border-radius: 2px;
   box-shadow: -1px -1px grey;

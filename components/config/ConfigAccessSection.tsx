@@ -43,7 +43,7 @@ const AccessList = styled.li`
   }
 `;
 
-const AccessTitle = styled.h3`
+const AccessTitle = styled.h2`
   text-align: center;
   margin-bottom: 1rem;
 `;

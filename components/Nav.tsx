@@ -157,20 +157,22 @@ const LogButton = ({
         <MenuDropdownElem>
           <Link href="/profile">Profil</Link>
         </MenuDropdownElem>
-        <MenuDropdownElem
-          as="button"
-          onClick={() => signOut()}
-          style={{
-            cursor: 'pointer',
-            background: 'none',
-            border: 'none',
-            color: 'inherit',
-            font: 'inherit',
-            width: '100%',
-            textAlign: 'left',
-          }}
-        >
-          Déconnection
+        <MenuDropdownElem>
+          <button
+            onClick={() => signOut()}
+            style={{
+              cursor: 'pointer',
+              background: 'none',
+              border: 'none',
+              color: 'inherit',
+              font: 'inherit',
+              width: '100%',
+              textAlign: 'left',
+              padding: 0,
+            }}
+          >
+            Déconnection
+          </button>
         </MenuDropdownElem>
       </MenuDropdown>
     </MenuContainer>

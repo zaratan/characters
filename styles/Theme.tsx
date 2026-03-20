@@ -21,7 +21,7 @@ export const lightTheme = {
   navBackground: '#f8f8f8',
   handTextColor: '#333',
   dotBaseNotSelectColot: '#bbb',
-  titleColor: 'gray',
+  titleColor: '#595959',
   red: 'red',
 };
 
