@@ -1,14 +1,14 @@
 'use client';
 
+import type { ReactNode } from 'react';
 import React, {
   createContext,
-  ReactNode,
   useState,
   useEffect,
   useMemo,
   useRef,
 } from 'react';
-import Pusher from 'pusher-js';
+import type Pusher from 'pusher-js';
 
 const pusher = () => require('../helpers/pusherClient');
 

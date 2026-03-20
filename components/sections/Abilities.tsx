@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { HorizontalSection } from '../../styles/Sections';
 import { maxDot } from '../../helpers/maxLevels';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
-import AbilitiesContext, {
-  AbilitiesListType,
-} from '../../contexts/AbilitiesContext';
+import type { AbilitiesListType } from '../../contexts/AbilitiesContext';
+import AbilitiesContext from '../../contexts/AbilitiesContext';
 import GenerationContext from '../../contexts/GenerationContext';
 import { calcPexAbility, calcPexSpecialty } from '../../helpers/pex';
 import SectionTitle from '../SectionTitle';

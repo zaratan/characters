@@ -5,7 +5,7 @@ import useSWR from 'swr';
 import Footer from '../Footer';
 import Nav from '../Nav';
 import { SectionsProvider } from '../../contexts/SectionsContext';
-import { VampireType } from '../../types/VampireType';
+import type { VampireType } from '../../types/VampireType';
 import SystemContext from '../../contexts/SystemContext';
 import TextFallback from '../../styles/TextFallback';
 import MeContext from '../../contexts/MeContext';

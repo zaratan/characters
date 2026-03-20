@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react';
 import { useDebounce } from 'react-use';
 import styled from 'styled-components';
-import SectionsContext, { SectionsType } from '../../contexts/SectionsContext';
+import type { SectionsType } from '../../contexts/SectionsContext';
+import SectionsContext from '../../contexts/SectionsContext';
 import SystemContext from '../../contexts/SystemContext';
 import { fetcher } from '../../helpers/fetcher';
+import { useToast } from '../../contexts/ToastContext';
 import { Glyph } from '../Glyph';
 
 const YesNoGlyph = ({
@@ -84,6 +86,7 @@ const ConfigPreferencesSection = ({ id }: { id: string }) => {
     useVampireInfos,
   } = useContext(SectionsContext);
   const { appId } = useContext(SystemContext);
+  const { showError } = useToast();
   const [sectionsChanged, setSectionsChanged] = useState(false);
 
   useDebounce(
@@ -107,8 +110,8 @@ const ConfigPreferencesSection = ({ id }: { id: string }) => {
             appId,
           }),
         });
-      } catch (err) {
-        console.error('Failed to save section preferences:', err);
+      } catch {
+        showError('Erreur lors de la sauvegarde des préférences.');
       }
     },
     300,

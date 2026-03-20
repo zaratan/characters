@@ -1,5 +1,6 @@
 'use client';
-import React, { useState, FormEvent, useContext } from 'react';
+import type { FormEvent } from 'react';
+import React, { useState, useContext } from 'react';
 import styled from 'styled-components';
 import { useRouter } from 'next/navigation';
 import Nav from '../../components/Nav';

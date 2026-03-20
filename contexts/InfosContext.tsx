@@ -1,10 +1,11 @@
 'use client';
 
-import React, { createContext, ReactNode } from 'react';
-import { TempElemType } from '../types/TempElemType';
+import type { ReactNode } from 'react';
+import React, { createContext } from 'react';
+import type { TempElemType } from '../types/TempElemType';
 import useStateWithTracker from '../hooks/useStateWithTracker';
 
-export interface InfosType {
+export type InfosType = {
   name: string;
   playerName: string;
   chronicle: string;
@@ -14,7 +15,7 @@ export interface InfosType {
   haven: string;
   sire: string;
   era: number;
-}
+};
 
 const defaultContext: {
   name: TempElemType<string>;

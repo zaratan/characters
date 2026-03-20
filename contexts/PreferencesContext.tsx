@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useState, ReactNode, useEffect } from 'react';
+import type { ReactNode } from 'react';
+import React, { createContext, useState, useEffect } from 'react';
 
 type ContextType = {
   showPex: boolean;

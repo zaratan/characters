@@ -1,6 +1,7 @@
 'use client';
 
-import React, { ReactNode, useContext } from 'react';
+import type { ReactNode } from 'react';
+import React, { useContext } from 'react';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 

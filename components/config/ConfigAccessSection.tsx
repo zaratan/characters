@@ -6,9 +6,10 @@ import useSWR from 'swr';
 import AccessesContext from '../../contexts/AccessesContext';
 import SystemContext from '../../contexts/SystemContext';
 import { fetcher } from '../../helpers/fetcher';
+import { useToast } from '../../contexts/ToastContext';
 import TextFallback from '../../styles/TextFallback';
 import { EmptyLine } from '../../styles/Lines';
-import { UserType } from '../../types/UserType';
+import type { UserType } from '../../types/UserType';
 import AutoCompleteInput from '../AutoCompleteInput';
 import { Glyph } from '../Glyph';
 import SectionTitle from '../SectionTitle';
@@ -62,6 +63,7 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
   const { editors, addEditor, removeEditor, addViewer, removeViewer, viewers } =
     useContext(AccessesContext);
   const { appId } = useContext(SystemContext);
+  const { showError } = useToast();
 
   const { data: usersData } = useSWR('/api/users');
 
@@ -90,8 +92,8 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
           }),
         });
         setAccessChanged(false);
-      } catch (err) {
-        console.error('Failed to save access changes:', err);
+      } catch {
+        showError('Erreur lors de la sauvegarde des accès.');
         setAccessChanged(false);
       }
     },

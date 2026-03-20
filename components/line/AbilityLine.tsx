@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { calcPexDiffAbility, calcPexDiffSpecialty } from '../../helpers/pex';
 import { HandEditableText, HandText } from '../../styles/Texts';
-import { TempElemType } from '../../types/TempElemType';
+import type { TempElemType } from '../../types/TempElemType';
 import { Glyph } from '../Glyph';
 import ButtonGlyphContainer from './ButtonGlyphContainer';
 import Line from './Line';

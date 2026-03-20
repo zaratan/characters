@@ -1,4 +1,4 @@
-import { VampireType } from '../types/VampireType';
+import type { VampireType } from '../types/VampireType';
 
 // Deep merge two objects recursively.
 // Objects are merged key-by-key; arrays and primitives are replaced.

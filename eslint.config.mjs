@@ -19,6 +19,11 @@ const eslintConfig = defineConfig([
         'warn',
         { argsIgnorePattern: '^_', varsIgnorePattern: '^_' },
       ],
+      '@typescript-eslint/consistent-type-imports': [
+        'warn',
+        { prefer: 'type-imports', fixStyle: 'separate-type-imports' },
+      ],
+      '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
       // TODO: Réactiver ces règles React Compiler lors de la migration Next 16
       'react-hooks/set-state-in-effect': 'off',
       'react-hooks/refs': 'off',

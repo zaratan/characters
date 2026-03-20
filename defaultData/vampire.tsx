@@ -1,4 +1,4 @@
-import { SectionsType } from '../contexts/SectionsContext';
+import type { SectionsType } from '../contexts/SectionsContext';
 
 const sections: { sections: SectionsType } = {
   sections: {

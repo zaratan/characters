@@ -1,4 +1,5 @@
-import React, { ComponentType, useContext } from 'react';
+import type { ComponentType } from 'react';
+import React, { useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { BlackLine, EmptyLine } from '../styles/Lines';

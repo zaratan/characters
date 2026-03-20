@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { useDebounce } from 'react-use';
 import { mutate } from 'swr';
+import { useToast } from '../../contexts/ToastContext';
 import { HorizontalSection } from '../../styles/Sections';
 import Line from '../line/Line';
 import {
@@ -42,6 +43,7 @@ const Mind = () => {
   const { appId } = useContext(SystemContext);
   const { editMode, playMode } = useContext(ModeContext);
   const { useBlood, usePath, useGeneration } = useContext(SectionsContext);
+  const { showError } = useToast();
   useDebounce(
     async () => {
       if (tempWillpower.value === tempWillpower.baseValue) return;
@@ -54,8 +56,8 @@ const Mind = () => {
           }),
         });
         mutate(`/api/vampires/${id}`);
-      } catch (err) {
-        console.error('Failed to save temp willpower:', err);
+      } catch {
+        showError('Erreur lors de la sauvegarde de la volonté.');
       }
     },
     2000,
@@ -73,8 +75,8 @@ const Mind = () => {
           }),
         });
         mutate(`/api/vampires/${id}`);
-      } catch (err) {
-        console.error('Failed to save blood spent:', err);
+      } catch {
+        showError('Erreur lors de la sauvegarde du sang dépensé.');
       }
     },
     2000,

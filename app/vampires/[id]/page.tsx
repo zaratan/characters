@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { fetchOneVampire, fetchVampireFromDB } from '../../../lib/queries';
 import SheetClient from '../../../components/pages/SheetClient';

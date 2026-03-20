@@ -1,7 +1,8 @@
 'use client';
 
-import React, { createContext, ReactNode } from 'react';
-import { TempElemType } from '../types/TempElemType';
+import type { ReactNode } from 'react';
+import React, { createContext } from 'react';
+import type { TempElemType } from '../types/TempElemType';
 import useStateWithChanges from '../hooks/useStateWithTracker';
 
 type ContextType = {

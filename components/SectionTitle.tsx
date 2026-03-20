@@ -1,7 +1,7 @@
 import React from 'react';
 
 import styled from 'styled-components';
-import { TempElemType } from '../types/TempElemType';
+import type { TempElemType } from '../types/TempElemType';
 import { Title } from '../styles/Titles';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 import PexElem from './PexElem';

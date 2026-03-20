@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import styled from 'styled-components';
 import PreferencesContext from '../../contexts/PreferencesContext';
 import { HandText, HandEditableText } from '../../styles/Texts';
-import { TempElemType } from '../../types/TempElemType';
+import type { TempElemType } from '../../types/TempElemType';
 import ColumnLine from './ColumnLine';
 import LineTitle from './LineTitle';
 import TextHelper from './TextHelper';
@@ -15,7 +15,7 @@ const TextContainer = styled.div`
   }
 `;
 
-interface LineValueProps<T> {
+type LineValueProps<T> = {
   elem?: TempElemType<number>;
   maxValue?: number;
   title: string;
@@ -28,7 +28,7 @@ interface LineValueProps<T> {
   inactive?: boolean;
   autocomplete?: Array<T>;
   infoLink?: string;
-}
+};
 
 const LineValue = <T extends { name: string }>({
   elem,

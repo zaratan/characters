@@ -1,9 +1,10 @@
-import React, { useState, useRef, ReactNode, useContext } from 'react';
+import type { ReactNode } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useClickAway } from 'react-use';
 import { signIn, signOut } from 'next-auth/react';
-import { MeType } from '../types/MeType';
+import type { MeType } from '../types/MeType';
 import { BlackLine } from '../styles/Lines';
 import {
   generateHandleClick,
@@ -20,13 +21,18 @@ const MenuContainer = styled.div`
   height: 100%;
 `;
 
-const MenuButton = styled.div`
+const MenuButton = styled.button`
   display: flex;
   align-items: center;
   height: 100%;
   cursor: pointer;
   outline: none;
   opacity: 0.8;
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
   transition: opacity 0.2s ease-in-out;
   :hover,
   :focus {
@@ -134,12 +140,7 @@ const LogButton = ({
 
   return (
     <MenuContainer ref={wrapperRef}>
-      <MenuButton
-        onClick={handleClick}
-        onKeyPress={handleKeypress}
-        tabIndex={0}
-        role="button"
-      >
+      <MenuButton onClick={handleClick} onKeyPress={handleKeypress}>
         <UserAvatar
           name={data?.name ?? null}
           image={data?.image ?? null}

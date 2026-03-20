@@ -1,12 +1,13 @@
 import { useContext } from 'react';
 import { mutate } from 'swr';
+import { useToast } from '../contexts/ToastContext';
 import ModificationsContext from '../contexts/ModificationsContext';
 import IdContext from '../contexts/IdContext';
 import SystemContext from '../contexts/SystemContext';
-import InfosContext, { InfosType } from '../contexts/InfosContext';
-import AttributesContext, {
-  AttributesType,
-} from '../contexts/AttributesContext';
+import type { InfosType } from '../contexts/InfosContext';
+import InfosContext from '../contexts/InfosContext';
+import type { AttributesType } from '../contexts/AttributesContext';
+import AttributesContext from '../contexts/AttributesContext';
 import AbilitiesContext from '../contexts/AbilitiesContext';
 import GenerationContext from '../contexts/GenerationContext';
 import MindContext from '../contexts/MindContext';
@@ -14,11 +15,11 @@ import DisciplinesContext from '../contexts/DisciplinesContext';
 import AdvFlawContext from '../contexts/AdvFlawContext';
 import LanguagesContext from '../contexts/LanguagesContext';
 import PexContext from '../contexts/PexContext';
-import SectionsContext, { SectionsType } from '../contexts/SectionsContext';
+import type { SectionsType } from '../contexts/SectionsContext';
+import SectionsContext from '../contexts/SectionsContext';
 import FaithContext from '../contexts/FaithContext';
-import HumanMagicContext, {
-  HumanMagicType,
-} from '../contexts/HumanMagicContext';
+import type { HumanMagicType } from '../contexts/HumanMagicContext';
+import HumanMagicContext from '../contexts/HumanMagicContext';
 import { fetcher } from '../helpers/fetcher';
 import AccessesContext from '../contexts/AccessesContext';
 
@@ -26,6 +27,7 @@ export const useSave = () => {
   const { resetSave } = useContext(ModificationsContext);
   const { id } = useContext(IdContext);
   const { appId } = useContext(SystemContext);
+  const { showError } = useToast();
   const {
     chronicle,
     clan,
@@ -285,8 +287,8 @@ export const useSave = () => {
       });
       resetSave();
       mutate(`/api/vampires/${id}`, data);
-    } catch (err) {
-      console.error('Save failed:', err);
+    } catch {
+      showError('Erreur lors de la sauvegarde du personnage.');
     }
   };
   return action;

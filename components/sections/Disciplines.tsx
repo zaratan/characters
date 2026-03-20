@@ -3,9 +3,8 @@ import styled from 'styled-components';
 import { maxDot } from '../../helpers/maxLevels';
 import { HorizontalSection } from '../../styles/Sections';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
-import DisciplinesContext, {
-  TempThaumaturgyElemType,
-} from '../../contexts/DisciplinesContext';
+import type { TempThaumaturgyElemType } from '../../contexts/DisciplinesContext';
+import DisciplinesContext from '../../contexts/DisciplinesContext';
 import Line from '../line/Line';
 import {
   calcPexDiffThaumaturgyPath,

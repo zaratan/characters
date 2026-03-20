@@ -2,45 +2,46 @@
 
 ## Phase 1 — Fixes critiques (qualité immédiate)
 
-- [ ] **Refactor `helpers/fetcher.ts`** — Vérifier `res.ok`, gérer les erreurs HTTP (4xx/5xx), wrapper le `.json()` dans un try/catch
-- [ ] **Double-submit `app/new/page.tsx`** — Ajouter un state `isLoading`, désactiver le bouton pendant la requête
-- [ ] **Try/catch manquants sur les appels fetcher** :
-  - [ ] `components/config/ConfigDangerousSection.tsx` (destroy + debounce)
-  - [ ] `components/config/ConfigAccessSection.tsx` (debounce)
-  - [ ] `components/config/ConfigPreferencesSection.tsx` (debounce)
-  - [ ] `components/sections/Mind.tsx` (2 debounce callbacks)
-  - [ ] `components/Health.tsx` (debounce)
-  - [ ] `hooks/useSave.ts` (action)
-- [ ] **Fuite mémoire Pusher** (`contexts/SystemContext.tsx`) — Ajouter `client.disconnect()` et unbind des listeners dans le cleanup du `useEffect`
-- [ ] **Feedback utilisateur en cas d'erreur** — Ajouter un mécanisme de notification (toast/banner) pour les erreurs de save silencieuses
-- [ ] **Race condition `SectionsContext.tsx`** — Ne pas écraser le state local si l'utilisateur a des modifications en cours
-- [ ] **`JSON.stringify()` dans les deps useEffect** (`SectionsContext`, `AccessesContext`) — Remplacer par `useMemo` ou deep compare hook
-- [ ] **Supprimer les `console.log`** dans `AutoCompleteInput.tsx` (lignes 71, 255)
-- [ ] **Try/catch `fs.readFileSync`** dans `app/api/data/disciplines/route.ts`
-- [ ] **Accessibilité** — Remplacer les `<a onClick>` par des `<button>` dans `ErrorPage.tsx` et `Nav.tsx`
+- [x] **Refactor `helpers/fetcher.ts`** — Vérifier `res.ok`, gérer les erreurs HTTP (4xx/5xx), wrapper le `.json()` dans un try/catch
+- [x] **Double-submit `app/new/page.tsx`** — Ajouter un state `isLoading`, désactiver le bouton pendant la requête
+- [x] **Try/catch manquants sur les appels fetcher** :
+  - [x] `components/config/ConfigDangerousSection.tsx` (destroy + debounce)
+  - [x] `components/config/ConfigAccessSection.tsx` (debounce)
+  - [x] `components/config/ConfigPreferencesSection.tsx` (debounce)
+  - [x] `components/sections/Mind.tsx` (2 debounce callbacks)
+  - [x] `components/Health.tsx` (debounce)
+  - [x] `hooks/useSave.ts` (action)
+- [x] **Fuite mémoire Pusher** (`contexts/SystemContext.tsx`) — Ajouter `client.disconnect()` et unbind des listeners dans le cleanup du `useEffect`
+- [x] **Feedback utilisateur en cas d'erreur** — `ToastContext` + toast d'erreur dans tous les composants (Health, Mind, ConfigAccess, ConfigPreferences, useSave)
+- [x] **Race condition `SectionsContext.tsx`** — Ne pas écraser le state local si l'utilisateur a des modifications en cours
+- [x] **`JSON.stringify()` dans les deps useEffect** (`SectionsContext`, `AccessesContext`, `Health`) — Remplacé par `isEqual` (lodash) ou `useMemo`
+- [x] **Supprimer les `console.log`** dans `AutoCompleteInput.tsx` (lignes 71, 255)
+- [x] **Try/catch `fs.readFileSync`** dans `app/api/data/disciplines/route.ts`
+- [x] **Accessibilité** — Remplacer les `<a onClick>` / `<div role="button">` par des `<button>` dans `ErrorPage.tsx` et `Nav.tsx`
 
 ## Phase 2 — Tooling moderne
 
-- [ ] **ESLint 9 flat config** — Migrer `.eslintrc.json` vers `eslint.config.mjs` (s'inspirer d'arkham-proba `packages/web/eslint.config.mjs`)
-  - [ ] `typescript-eslint` unifié (remplacer `@typescript-eslint/parser` + `@typescript-eslint/eslint-plugin`)
-  - [ ] `eslint-config-prettier` v10 + `eslint-plugin-prettier` v5
-  - [ ] Ajouter `consistent-type-imports` et `consistent-type-definitions`
-- [ ] **Prettier 3** — Mettre à jour, vérifier la compatibilité des règles existantes
-- [ ] **Husky 9** — Migrer (format du hook simplifié)
-- [ ] **lint-staged** — Mettre à jour vers v16+
-- [ ] **Script `format:check`** — Ajouter dans package.json (`prettier --check .`)
-- [ ] **Script `typecheck`** — Ajouter dans package.json (`tsc --noEmit`)
-- [ ] **Script `check`** — Ajouter un script global qui lance `build + lint + typecheck + format:check + test`
-- [ ] **Pre-push hook** — Renforcer pour lancer `build + lint + typecheck + format:check + test` (comme arkham-proba)
+- [x] **ESLint 9 flat config** — Migré vers `eslint.config.mjs`
+  - [x] `typescript-eslint` unifié via `eslint-config-next/typescript`
+  - [x] `eslint-config-prettier` v10 + `eslint-plugin-prettier` v5
+  - [x] `consistent-type-imports` et `consistent-type-definitions` configurés
+- [x] **Prettier 3** — v3.8.1
+- [x] **Husky 9** — v9.1.7, format simplifié
+- [x] **lint-staged** — v16.2.7
+- [x] **Script `format:check`** — `prettier --check .`
+- [x] **Script `typecheck`** — `tsc --noEmit`
+- [x] **Script `check`** — `yarn build && yarn lint && yarn typecheck && yarn format:check && yarn test`
+- [x] **Pre-push hook** — Lance build + lint + typecheck + format:check + test
 
 ## Phase 3 — CI/CD (GitHub Actions)
 
-- [ ] **`.github/workflows/ci.yml`** — Pipeline sur les PRs vers `master`, 3 jobs parallèles :
-  - [ ] Job `lint-typecheck` : install → lint → typecheck → format:check
-  - [ ] Job `test` : install → vitest run
-  - [ ] Job `e2e` : install → playwright install chromium → playwright test → upload report artifact
-- [ ] **`.github/workflows/claude-code-review.yml`** — Review automatique des PRs par Claude (s'inspirer d'arkham-proba)
-- [ ] **`.github/workflows/claude.yml`** — Claude interactif via `@claude` dans issues/PRs (s'inspirer d'arkham-proba)
+- [x] **`.github/workflows/ci.yml`** — Pipeline sur les PRs vers `main`, 4 jobs parallèles :
+  - [x] Job `lint-typecheck` : install → lint → typecheck → format:check
+  - [x] Job `test` : install → vitest run
+  - [x] Job `build` : install → build (avec service Postgres pour migrations)
+  - [x] Job `migration-check` : vérifie que les migrations PR s'appliquent sur le schéma main
+  - [ ] Job `e2e` : à ajouter en Phase 5 (Playwright)
+- [x] **`.github/workflows/claude.yml`** — Claude interactif via `@claude` dans issues/PRs
 
 ## Phase 4 — Tests unitaires (Vitest + RTL)
 

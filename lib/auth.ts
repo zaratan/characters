@@ -1,4 +1,4 @@
-import { NextAuthOptions } from 'next-auth';
+import type { NextAuthOptions } from 'next-auth';
 import { getServerSession } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';

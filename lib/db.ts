@@ -1,6 +1,6 @@
-import { PoolClient } from 'pg';
+import type { PoolClient } from 'pg';
 import pool from './pool';
-import { VampireType } from '../types/VampireType';
+import type { VampireType } from '../types/VampireType';
 import {
   deepMerge,
   filterUserIds,

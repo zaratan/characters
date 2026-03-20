@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Square, { EmptyGlyph } from './Square';
-import { TempElemType } from '../types/TempElemType';
+import type { TempElemType } from '../types/TempElemType';
 
 const SquareSeparator = styled.span`
   padding: 0.3rem;

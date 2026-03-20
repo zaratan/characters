@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { useContext } from 'react';
 import dynamic from 'next/dynamic';
 import Sheet from '../Sheet';
-import { VampireType } from '../../types/VampireType';
+import type { VampireType } from '../../types/VampireType';
 import SystemContext from '../../contexts/SystemContext';
 import MeContext from '../../contexts/MeContext';
 import { DataProvider } from '../../contexts/DataContext';

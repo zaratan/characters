@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 import { getSession } from '../../../../lib/auth';
 import { db } from '../../../../lib/db';
 import { fetchOneVampire } from '../../../../lib/queries';

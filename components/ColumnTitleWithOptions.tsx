@@ -1,4 +1,5 @@
-import React, { useState, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { Glyph } from './Glyph';
 import {
@@ -7,7 +8,7 @@ import {
 } from '../helpers/handlers';
 import { ActionItem, OptionItem } from '../styles/Items';
 import ColumnTitle from './ColumnTitle';
-import { TempElemType } from '../types/TempElemType';
+import type { TempElemType } from '../types/TempElemType';
 
 const GlyphContainer = styled.span`
   span {

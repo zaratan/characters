@@ -1,12 +1,7 @@
 'use client';
 
-import React, {
-  createContext,
-  useState,
-  useEffect,
-  useRef,
-  ReactNode,
-} from 'react';
+import type { ReactNode } from 'react';
+import React, { createContext, useState, useEffect, useRef } from 'react';
 import produce from 'immer';
 import isEqual from 'lodash/isEqual';
 

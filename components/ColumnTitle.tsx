@@ -1,6 +1,7 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import React from 'react';
 import { StyledColumnTitle } from '../styles/Titles';
-import { TempElemType } from '../types/TempElemType';
+import type { TempElemType } from '../types/TempElemType';
 import PexElem from './PexElem';
 
 const ColumnTitle = ({

@@ -1,13 +1,10 @@
-import React, {
-  useState,
-  useMemo,
-  useRef,
+import type {
   KeyboardEvent,
   ComponentType,
   InputHTMLAttributes,
   DetailedHTMLProps,
-  useEffect,
 } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { useDebounce, useClickAway } from 'react-use';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';
@@ -132,7 +129,7 @@ const generateHandleKeypressSpan =
     }
   };
 
-interface Props<T> {
+type Props<T> = {
   onSubmit: (value: T | string) => void;
   autocompleteOptions: Array<T>;
   display: string | ((item: T) => string);
@@ -143,7 +140,7 @@ interface Props<T> {
     DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
   >;
   submitOnClickOut?: boolean;
-}
+};
 
 const AutoCompleteInput = <T extends Record<string, unknown>>({
   autocompleteOptions,

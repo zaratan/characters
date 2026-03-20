@@ -1,5 +1,5 @@
 /* eslint-disable @next/next/no-page-custom-font */
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import StyledComponentsRegistry from '../lib/registry';
 import Providers from '../lib/providers';
 import '../styles/globals.css';
