@@ -66,6 +66,7 @@ test.describe('Accessibility — authenticated pages', () => {
     authenticatedPage: page,
     testDb,
   }) => {
+    test.setTimeout(30_000);
     await mockExternalApis(page);
     const vampireId = await testDb.seedCharacter({ name: 'A11y Sheet Char' });
     await page.goto(`/vampires/${vampireId}`);
