@@ -2,6 +2,7 @@
   "name": "vampire-char",
   "version": "0.1.0",
   "private": true,
+  "packageManager": "pnpm@10.32.1",
   "scripts": {
     "dev": "next dev",
     "build": "node -e \"if(process.env.POSTGRES_URL && process.env.VERCEL_ENV !== 'preview') { require('child_process').execSync('npx node-pg-migrate up --database-url-var POSTGRES_URL', {stdio:'inherit'}) }\" && next build",
@@ -12,7 +13,7 @@
     "migrate:create": "node-pg-migrate create",
     "db:create": "./scripts/db.sh create",
     "db:drop": "./scripts/db.sh drop",
-    "db:reset": "yarn db:drop && yarn db:create && yarn migrate:up",
+    "db:reset": "pnpm db:drop && pnpm db:create && pnpm migrate:up",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
@@ -20,7 +21,7 @@
     "typecheck": "tsc --noEmit",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
-    "check": "yarn build && yarn lint && yarn typecheck && yarn format:check && yarn test",
+    "check": "pnpm build && pnpm lint && pnpm typecheck && pnpm format:check && pnpm test",
     "prepare": "husky"
   },
   "dependencies": {

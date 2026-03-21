@@ -14,15 +14,15 @@
 - **Database**: PostgreSQL (Neon via Vercel Postgres) — `pg` driver, raw SQL
 - **Auth**: NextAuth.js v4 (`next-auth`) — Email magic link (Resend) + GitHub OAuth
 - **Real-time**: Pusher (WebSocket-based live updates)
-- **Package Manager**: Yarn
+- **Package Manager**: pnpm
 
 ## Commands
 
 ```bash
-yarn dev          # Start development server
-yarn build        # Production build
-yarn start        # Start production server
-yarn lint         # Run ESLint on the entire project
+pnpm dev          # Start development server
+pnpm build        # Production build
+pnpm start        # Start production server
+pnpm lint         # Run ESLint on the entire project
 ```
 
 ## Project Structure
@@ -90,7 +90,7 @@ public/               # Static assets (fonts, images)
 - **ESLint** extends: `next/core-web-vitals`, `prettier`, `plugin:prettier/recommended`
 - **Prettier** rules: single quotes, trailing commas (es5), 80 char print width, semicolons
 - **Pre-commit hook** (Husky + lint-staged): auto-fixes lint issues on staged `.js/.jsx/.ts/.tsx` files
-- **Pre-push hook**: runs full `yarn lint`
+- **Pre-push hook**: runs full `pnpm lint`
 
 ### TypeScript
 

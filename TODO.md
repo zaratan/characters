@@ -135,9 +135,13 @@
 - [x] **`autoprefixer` supprimé** — Intégré dans Tailwind 4
 - [x] **`postcss.config.js`** — Remplacé `tailwindcss` par `@tailwindcss/postcss`
 
-### Phase 6e — Yarn → pnpm (optionnel)
+### Phase 6f — Yarn → pnpm
 
-- [ ] **Yarn → pnpm** — Aligner avec arkham-proba pour la cohérence
+- [x] **Yarn → pnpm** — `pnpm import` depuis yarn.lock, suppression yarn.lock
+- [x] **`package.json`** — `packageManager` field, scripts `yarn` → `pnpm`
+- [x] **CI** — `pnpm/action-setup@v4` ajouté, `cache: pnpm`, commandes pnpm
+- [x] **Husky** — pre-commit et pre-push migrés vers pnpm
+- [x] **CLAUDE.md** — Mis à jour pour pnpm
 
 ## Référence : configs arkham-proba à réutiliser
 

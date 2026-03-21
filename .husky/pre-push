@@ -1,5 +1,5 @@
-yarn build
-yarn lint
-yarn typecheck
-yarn format:check
-yarn test
+pnpm build
+pnpm lint
+pnpm typecheck
+pnpm format:check
+pnpm test
