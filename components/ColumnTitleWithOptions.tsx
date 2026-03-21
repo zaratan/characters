@@ -21,13 +21,16 @@ const GlyphContainer = styled.span`
   height: 100%;
 `;
 
-const OptionsContainer = styled.div<{ elemCount: number; actionCount: number }>`
+const OptionsContainer = styled.div<{
+  $elemCount: number;
+  $actionCount: number;
+}>`
   max-height: 0;
   opacity: 0;
   visibility: hidden;
   &.opened {
     max-height: ${(props) =>
-      `${props.elemCount * 24 + props.actionCount * 41 + 20}px`};
+      `${props.$elemCount * 24 + props.$actionCount * 41 + 20}px`};
     opacity: 1;
     visibility: visible;
   }
@@ -125,8 +128,8 @@ const ColumnTitleWithOptions = ({
       {inactive ? null : (
         <OptionsContainer
           className={open ? 'opened' : ''}
-          elemCount={options.length}
-          actionCount={actions.length}
+          $elemCount={options.length}
+          $actionCount={actions.length}
         >
           <ul>
             {options.map(({ name, value, onClick }) => (

@@ -128,7 +128,12 @@
 
 - [ ] **Auth.js v5** (next-auth 5) — Réécrire `lib/auth.ts` et `lib/auth-adapter.ts` (API très différente)
 
-### ~~Phase 6e — Tailwind CSS 4~~ — SKIP
+### Phase 6e — Tailwind CSS 4
+
+- [x] **Tailwind 3→4** — CSS-first config, `@import 'tailwindcss'`
+- [x] **`tailwind.config.js` supprimé** — Détection automatique du contenu en v4
+- [x] **`autoprefixer` supprimé** — Intégré dans Tailwind 4
+- [x] **`postcss.config.js`** — Remplacé `tailwindcss` par `@tailwindcss/postcss`
 
 ### Phase 6e — Yarn → pnpm (optionnel)
 
