@@ -1,6 +1,6 @@
-import { PoolClient } from 'pg';
+import type { PoolClient } from 'pg';
 import pool from './pool';
-import { VampireType } from '../types/VampireType';
+import type { VampireType } from '../types/VampireType';
 import {
   deepMerge,
   filterUserIds,
@@ -24,7 +24,7 @@ async function withTransaction<T>(
   } catch (err) {
     try {
       await client.query('ROLLBACK');
-    } catch (_) {
+    } catch {
       /* swallow rollback error to preserve original */
     }
     throw err;
@@ -115,11 +115,11 @@ const vampires = {
 
       const insertResult = await client.query(
         `
-        INSERT INTO vampires (private_sheet, data)
-        VALUES ($1, $2::jsonb)
+        INSERT INTO vampires (private_sheet, data, owner_id)
+        VALUES ($1, $2::jsonb, $3)
         RETURNING id
         `,
-        [privateSheet, data]
+        [privateSheet, data, creatorUserId]
       );
 
       const newId: string = insertResult.rows[0].id;
@@ -181,7 +181,7 @@ const vampires = {
         editors,
         viewers,
         privateSheet,
-        appId,
+        appId: _appId,
         id: _id,
         ...rest
       } = partial;
@@ -294,18 +294,35 @@ const vampires = {
 
 const users = {
   async findAllPublic(): Promise<
-    Array<{ id: string; name: string; image: string }>
+    Array<{ id: string; name: string | null; image: string }>
   > {
     const result = await pool.query<{
       id: string;
-      name: string;
+      name: string | null;
       image: string;
     }>(`
       SELECT id, name, image
       FROM users
-      ORDER BY name
+      ORDER BY COALESCE(name, '')
     `);
     return result.rows;
+  },
+
+  async updateName(userId: string, name: string): Promise<void> {
+    await pool.query(
+      `UPDATE users
+       SET name = $1, has_onboarded = true, updated_at = now()
+       WHERE id = $2`,
+      [name, userId]
+    );
+  },
+
+  async isNameTaken(name: string, excludeUserId: string): Promise<boolean> {
+    const result = await pool.query(
+      `SELECT 1 FROM users WHERE name = $1 AND id != $2 LIMIT 1`,
+      [name, excludeUserId]
+    );
+    return result.rows.length > 0;
   },
 };
 

@@ -1,4 +1,4 @@
-import { NextAuthOptions } from 'next-auth';
+import type { NextAuthOptions } from 'next-auth';
 import { getServerSession } from 'next-auth';
 import EmailProvider from 'next-auth/providers/email';
 import GitHubProvider from 'next-auth/providers/github';
@@ -6,14 +6,13 @@ import { Resend } from 'resend';
 
 import { customPgAdapter } from './auth-adapter';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export const authOptions: NextAuthOptions = {
   adapter: customPgAdapter(),
   providers: [
     EmailProvider({
       from: process.env.EMAIL_FROM!,
       sendVerificationRequest: async ({ identifier: email, url }) => {
+        const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
           from: process.env.EMAIL_FROM!,
           to: email,
@@ -32,6 +31,7 @@ export const authOptions: NextAuthOptions = {
     async session({ session, user }) {
       session.user.id = user.id;
       session.user.isAdmin = user.isAdmin ?? false;
+      session.user.hasOnboarded = user.hasOnboarded ?? false;
       return session;
     },
   },

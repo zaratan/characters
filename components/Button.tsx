@@ -1,4 +1,4 @@
-import React, { ReactNode, FormEvent } from 'react';
+import type { ReactNode, FormEvent } from 'react';
 import { ActionItem } from '../styles/Items';
 import {
   generateHandleClick,

@@ -1,16 +1,9 @@
 'use client';
 
-import React, {
-  createContext,
-  ReactNode,
-  useState,
-  useEffect,
-  useMemo,
-  useRef,
-} from 'react';
-import Pusher from 'pusher-js';
+import type { ReactNode } from 'react';
+import { createContext, useState, useEffect, useMemo, useRef } from 'react';
+import type Pusher from 'pusher-js';
 
-// eslint-disable-next-line global-require
 const pusher = () => require('../helpers/pusherClient');
 
 type ContextType = {
@@ -40,16 +33,21 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
         const client: Pusher = pusher().pusherClient();
         setPusherState(client?.connection?.state);
         setNeedPusherFallback(!client);
-        client.connection.bind(
-          'state_change',
-          (states: { previous: string; current: string }) => {
-            setPusherState(states.current);
-            setNeedPusherFallback(
-              states.current !== 'connected' && states.current !== 'connecting'
-            );
-          }
-        );
+
+        const handler = (states: { previous: string; current: string }) => {
+          setPusherState(states.current);
+          setNeedPusherFallback(
+            states.current !== 'connected' && states.current !== 'connecting'
+          );
+        };
+
+        client.connection.bind('state_change', handler);
         pusherClient.current = client;
+
+        return () => {
+          client.connection.unbind('state_change', handler);
+          client.disconnect();
+        };
       }
     },
     []

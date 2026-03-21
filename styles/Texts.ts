@@ -25,7 +25,7 @@ export const HandLargeEditableText = styled.input`
   flex-grow: 1;
   min-width: 0;
   text-indent: 1px;
-  :focus {
+  &:focus {
     outline: none;
   }
   @media screen and (max-width: 500px) {
@@ -50,7 +50,7 @@ export const HandText = styled.span`
   &.low {
     font-size: 1.2rem;
   }
-  :focus {
+  &:focus {
     outline: none;
   }
   @media screen and (max-width: 500px) {
@@ -87,7 +87,7 @@ export const HandEditableText = styled.input`
   &.low {
     font-size: 1.2rem;
   }
-  :focus {
+  &:focus {
     outline: none;
   }
   @media screen and (max-width: 500px) {

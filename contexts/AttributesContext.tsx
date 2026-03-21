@@ -1,11 +1,11 @@
 'use client';
 
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, ReactNode } from 'react';
-import { TempElemType } from '../types/TempElemType';
+import type { ReactNode } from 'react';
+import { createContext } from 'react';
+import type { TempElemType } from '../types/TempElemType';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
-export interface AttributesType {
+export type AttributesType = {
   strength: number;
   dexterity: number;
   stamina: number;
@@ -15,7 +15,7 @@ export interface AttributesType {
   perception: number;
   intelligence: number;
   wits: number;
-}
+};
 const defaultContext: {
   strength: TempElemType<number>;
   dexterity: TempElemType<number>;

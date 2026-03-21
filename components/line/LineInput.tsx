@@ -1,13 +1,12 @@
-import React from 'react';
 import { HandEditableText } from '../../styles/Texts';
 import AutoCompleteInput from '../AutoCompleteInput';
 
-interface InputProps<T> {
+type InputProps<T> = {
   changeName?: (newValue: string) => void;
   title?: string;
   placeholder?: string;
   autocomplete?: Array<T>;
-}
+};
 
 const LineInput = <T extends { name: string }>({
   autocomplete,

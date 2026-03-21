@@ -16,11 +16,11 @@ export const ActionItem = styled.li`
   cursor: pointer;
   outline: none;
   position: relative;
-  :focus,
-  :hover {
+  &:focus,
+  &:hover {
     box-shadow: 1px 1px 1px;
   }
-  :active {
+  &:active {
     box-shadow: none;
     background-color: ${(props) => props.theme.actionItemBackgroundActive};
     top: 1px;

@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
-import PexElem, { PexSpan, pexElemsType, computePexElems } from './PexElem';
+import type { pexElemsType } from './PexElem';
+import PexElem, { PexSpan, computePexElems } from './PexElem';
 import PreferencesContext from '../contexts/PreferencesContext';
 import { HandLargeText } from '../styles/Texts';
 
@@ -30,7 +31,7 @@ const Li = styled.li`
   width: 100%;
   display: flex;
   justify-content: center;
-  :hover {
+  &:hover {
     .hideHover {
       display: none;
     }

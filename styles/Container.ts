@@ -17,8 +17,8 @@ export const Container = styled.div`
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
     }
-    :hover,
-    :focus-within {
+    &:hover,
+    &:focus-within {
       .empty-glyph,
       .open-glyph,
       .line-button,

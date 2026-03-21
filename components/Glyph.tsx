@@ -1,4 +1,4 @@
-import React, { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import styled from 'styled-components';
 import {
   generateHandleClick,
@@ -9,8 +9,8 @@ export const StyledGlyph = styled.span`
   font-size: 21px;
   padding-right: 2px;
   cursor: pointer;
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     color: darkcyan;
     & ~ small {
       display: inline;
@@ -18,8 +18,8 @@ export const StyledGlyph = styled.span`
   }
   &.inactive {
     cursor: default;
-    :hover,
-    :focus {
+    &:hover,
+    &:focus {
       color: black;
     }
   }

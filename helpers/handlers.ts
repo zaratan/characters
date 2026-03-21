@@ -1,4 +1,4 @@
-import { MouseEvent, KeyboardEvent, FormEvent } from 'react';
+import type { MouseEvent, KeyboardEvent, FormEvent } from 'react';
 
 export const generateHandleClick =
   (changeFunc: (e: FormEvent) => void) => (e: MouseEvent<HTMLSpanElement>) => {

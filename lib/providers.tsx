@@ -1,6 +1,6 @@
 'use client';
 
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import { SessionProvider } from 'next-auth/react';
 import { SWRConfig } from 'swr';
 import { ThemeContextProvider } from '../contexts/ThemeContext';
@@ -9,6 +9,8 @@ import GlobalStyle from '../styles/GlobalStyle';
 import { fetcher } from '../helpers/fetcher';
 import { SystemProvider } from '../contexts/SystemContext';
 import { MeProvider } from '../contexts/MeContext';
+import { ToastProvider } from '../contexts/ToastContext';
+import OnboardingGate from '../components/OnboardingGate';
 
 export default function Providers({ children }: { children: ReactNode }) {
   return (
@@ -21,9 +23,13 @@ export default function Providers({ children }: { children: ReactNode }) {
             }}
           >
             <GlobalStyle />
-            <SystemProvider>
-              <MeProvider>{children}</MeProvider>
-            </SystemProvider>
+            <ToastProvider>
+              <SystemProvider>
+                <MeProvider>
+                  <OnboardingGate>{children}</OnboardingGate>
+                </MeProvider>
+              </SystemProvider>
+            </ToastProvider>
           </SWRConfig>
         </SessionProvider>
       </ThemeProvider>

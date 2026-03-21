@@ -1,9 +1,10 @@
-import React, { ReactNode, useContext } from 'react';
+import type { ReactNode } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from '../Dot';
 import { Glyph } from '../Glyph';
-import { TempElemType } from '../../types/TempElemType';
+import type { TempElemType } from '../../types/TempElemType';
 import PreferencesContext from '../../contexts/PreferencesContext';
 import DotSeparator from './DotSeparator';
 import LineTitle from './LineTitle';
@@ -21,12 +22,12 @@ const Value = styled.span`
     justify-self: center;
   }
 
-  :hover svg {
+  &:hover svg {
     fill: transparent;
   }
 `;
 
-interface LineProps<T> {
+type LineProps<T> = {
   elem: TempElemType<number>;
   name: string;
   maxLevel: number;
@@ -44,7 +45,7 @@ interface LineProps<T> {
   dotInactive?: boolean;
   autocomplete?: Array<T>;
   infoLink?: string;
-}
+};
 
 const Line = <T extends { name: string }>({
   elem,

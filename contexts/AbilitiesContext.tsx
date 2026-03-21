@@ -1,7 +1,7 @@
 'use client';
 
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { createContext } from 'react';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
 export type RawAbilitiesListType = Array<{

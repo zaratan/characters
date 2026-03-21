@@ -1,6 +1,7 @@
-import React, { useContext } from 'react';
-import { useDebounce } from 'react-use';
+import { useContext } from 'react';
+import useDebounce from '../../hooks/useDebounce';
 import { mutate } from 'swr';
+import { useToast } from '../../contexts/ToastContext';
 import { HorizontalSection } from '../../styles/Sections';
 import Line from '../line/Line';
 import {
@@ -42,31 +43,43 @@ const Mind = () => {
   const { appId } = useContext(SystemContext);
   const { editMode, playMode } = useContext(ModeContext);
   const { useBlood, usePath, useGeneration } = useContext(SectionsContext);
+  const { showError } = useToast();
   useDebounce(
     async () => {
       if (tempWillpower.value === tempWillpower.baseValue) return;
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          mind: { tempWillpower: tempWillpower.value },
-          appId,
-        }),
-      });
-      mutate(`/api/vampires/${id}`);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            mind: { tempWillpower: tempWillpower.value },
+            appId,
+          }),
+        });
+        mutate(`/api/vampires/${id}`);
+      } catch {
+        showError('Erreur lors de la sauvegarde de la volonté.');
+      }
     },
-    2000,
+    500,
     [tempWillpower.value]
   );
   useDebounce(
     async () => {
       if (bloodSpent.value === bloodSpent.baseValue) return;
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ mind: { bloodSpent: bloodSpent.value }, appId }),
-      });
-      mutate(`/api/vampires/${id}`);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            mind: { bloodSpent: bloodSpent.value },
+            appId,
+          }),
+        });
+        mutate(`/api/vampires/${id}`);
+      } catch {
+        showError('Erreur lors de la sauvegarde du sang dépensé.');
+      }
     },
-    2000,
+    500,
     [bloodSpent.value]
   );
   return (

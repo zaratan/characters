@@ -1,7 +1,8 @@
 'use client';
 
-import React, { createContext, useState, useEffect, ReactNode } from 'react';
-import produce from 'immer';
+import type { ReactNode } from 'react';
+import { createContext, useState, useEffect, useRef } from 'react';
+import isEqual from 'lodash/isEqual';
 
 export type SectionsType = {
   blood: boolean;
@@ -53,17 +54,19 @@ export const SectionsProvider = ({
   const [sectionsState, setSectionsState] = useState(sections);
 
   const toggleSection = (sectionName: string) => () => {
-    setSectionsState(
-      produce(sectionsState, (nextState) => {
-        nextState![sectionName] = !nextState![sectionName];
-      })
-    );
+    setSectionsState((prev) => ({
+      ...prev,
+      [sectionName]: !prev?.[sectionName as keyof typeof prev],
+    }));
   };
 
+  const prevSections = useRef(sections);
   useEffect(() => {
-    setSectionsState(sections);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(sections)]);
+    if (!isEqual(prevSections.current, sections)) {
+      prevSections.current = sections;
+      setSectionsState(sections);
+    }
+  }, [sections]);
 
   const context: ContextType = {
     useBlood: sectionsState?.blood ?? false,

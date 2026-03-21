@@ -1,8 +1,8 @@
 'use client';
 
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, ReactNode } from 'react';
-import { TempElemType } from '../types/TempElemType';
+import type { ReactNode } from 'react';
+import { createContext } from 'react';
+import type { TempElemType } from '../types/TempElemType';
 import useStateWithTracker from '../hooks/useStateWithTracker';
 
 export type AdvFlawType = {
@@ -11,11 +11,11 @@ export type AdvFlawType = {
   value: number;
 };
 
-export interface AdvantagesFlawsType extends TempElemType<number> {
+export type AdvantagesFlawsType = {
   title: string;
   key: string;
   setTitle: (newTitle: string) => void;
-}
+} & TempElemType<number>;
 
 const defaultContext: {
   advantages: Array<AdvantagesFlawsType>;

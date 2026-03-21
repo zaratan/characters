@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import {
   generateHandleClick,
@@ -40,24 +40,24 @@ const TextHelper = styled.small`
 const DotContainer = styled.span`
   position: relative;
   height: 36px;
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     svg {
       fill: ${(props) => props.theme.dotColor} !important;
     }
-    ~ span {
+    & ~ span {
       svg {
         fill: ${(props) => props.theme.dotColor} !important;
       }
     }
-    ~ span.locked {
+    & ~ span.locked {
       svg {
         fill: ${(props) => props.theme.dotColor} !important;
       }
     }
   }
 
-  :focus {
+  &:focus {
     outline: none;
     svg {
       ellipse {
@@ -76,7 +76,7 @@ const DotContainer = styled.span`
     svg.full {
       fill: ${(props) => props.theme.dotColor} !important;
     }
-    :focus {
+    &:focus {
       outline: none;
       svg {
         ellipse {
@@ -94,14 +94,14 @@ const DotContainer = styled.span`
     }
   }
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     small {
       display: inline;
     }
   }
 
-  :not(.selected) {
+  &:not(.selected) {
     cursor: pointer;
   }
 
@@ -198,7 +198,7 @@ const Dot = ({
     ${hidden ? 'hidden' : ''}
   `;
 
-  const clickAction = !inactive ? onClick ?? (() => {}) : () => {};
+  const clickAction = !inactive ? (onClick ?? (() => {})) : () => {};
 
   const handleClick = generateHandleClick(clickAction);
 

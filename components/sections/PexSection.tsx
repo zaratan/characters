@@ -1,11 +1,12 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import AttributesContext from '../../contexts/AttributesContext';
 import SectionTitle from '../SectionTitle';
 import { HorizontalSection } from '../../styles/Sections';
 import { Container } from '../../styles/Container';
 import ColumnTitle from '../ColumnTitle';
-import PexElem, { pexElemsType, computePexElems } from '../PexElem';
+import type { pexElemsType } from '../PexElem';
+import PexElem, { computePexElems } from '../PexElem';
 import {
   calcPexAttribute,
   calcPexAbility,

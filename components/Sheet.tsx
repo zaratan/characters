@@ -1,10 +1,11 @@
-import React, { useContext, useEffect } from 'react';
+import { useContext, useEffect } from 'react';
 import styled from 'styled-components';
 import Image from 'next/image';
-import useBeforeUnload from 'react-use/lib/useBeforeUnload';
+import useBeforeUnload from '../hooks/useBeforeUnload';
 import { AttributesProvider } from '../contexts/AttributesContext';
 import { AbilitiesProvider } from '../contexts/AbilitiesContext';
-import { InfosProvider, InfosType } from '../contexts/InfosContext';
+import type { InfosType } from '../contexts/InfosContext';
+import { InfosProvider } from '../contexts/InfosContext';
 import { MindProvider } from '../contexts/MindContext';
 import { DisciplinesProvider } from '../contexts/DisciplinesContext';
 import Infos from './sections/Infos';
@@ -23,7 +24,7 @@ import { PreferencesProvider } from '../contexts/PreferencesContext';
 import PexSection from './sections/PexSection';
 import { PexProvider } from '../contexts/PexContext';
 import { ModeProvider } from '../contexts/ModeContext';
-import { VampireType } from '../types/VampireType';
+import type { VampireType } from '../types/VampireType';
 import SheetActionsFooter from './SheetActionsFooter';
 import Nav from './Nav';
 import { Title } from '../styles/Titles';
@@ -82,6 +83,7 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
               alt="Vampire Dark Age"
               width={516}
               height={160}
+              priority
             />
           ) : (
             <Title className="victorian-queen">Vampire Ère Victorienne</Title>

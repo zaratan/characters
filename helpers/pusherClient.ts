@@ -3,7 +3,7 @@ import { sheetsChannel, sheetChannel, UPDATE_EVENT } from './pusherConst';
 
 export const pusherClient = () =>
   new PusherClient(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
+    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
   });
 
 export const subscribeToSheets = ({

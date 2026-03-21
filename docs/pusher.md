@@ -21,16 +21,17 @@ User B voit la mise à jour  ←  PusherSheetListener (client)
 
 ### Deux canaux
 
-| Canal | Déclenché par | Écouté par | Effet |
-|-------|--------------|------------|-------|
-| `vampire-sheets` | `POST /api/vampires/create` | `PusherSheetsListener` (page index) | Rafraîchit la liste des fiches |
-| `vampire-sheet-{id}` | `PUT /update`, `PATCH /update_partial` | `PusherSheetListener` (page fiche) | Rafraîchit la fiche en cours |
+| Canal                | Déclenché par                          | Écouté par                          | Effet                          |
+| -------------------- | -------------------------------------- | ----------------------------------- | ------------------------------ |
+| `vampire-sheets`     | `POST /api/vampires/create`            | `PusherSheetsListener` (page index) | Rafraîchit la liste des fiches |
+| `vampire-sheet-{id}` | `PUT /update`, `PATCH /update_partial` | `PusherSheetListener` (page fiche)  | Rafraîchit la fiche en cours   |
 
 Un seul type d'event : `update`. Le payload ne contient que `{ appId }` — le client filtre ses propres updates et re-fetch via SWR.
 
 ### Fichiers concernés
 
 **Serveur (triggers) :**
+
 - `helpers/pusherServer.ts` — init + fonctions `updateOnSheets()`, `updateOnSheet()`
 - `helpers/pusherConst.ts` — noms des canaux et events
 - `pages/api/vampires/create.ts` — trigger après création
@@ -38,6 +39,7 @@ Un seul type d'event : `update`. Le payload ne contient que `{ appId }` — le c
 - `pages/api/vampires/[id]/update_partial.ts` — trigger après update partiel
 
 **Client (listeners) :**
+
 - `helpers/pusherClient.ts` — init client + fonctions `subscribeToSheets()`, `subscribeToSheet()`
 - `components/no-ssr/PusherSheetsListener.tsx` — listener page index
 - `components/no-ssr/PusherSheetListener.tsx` — listener page fiche

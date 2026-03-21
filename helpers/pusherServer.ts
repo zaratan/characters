@@ -11,11 +11,13 @@ export const pusherServer = () =>
   });
 
 export const updateOnSheets = (appId: string) => {
-  pusherServer().trigger(sheetsChannel, UPDATE_EVENT, { appId });
+  pusherServer()
+    .trigger(sheetsChannel, UPDATE_EVENT, { appId })
+    .catch(() => {});
 };
 
 export const updateOnSheet = (id: string, appId: string) => {
-  pusherServer().trigger(sheetChannel(id), UPDATE_EVENT, {
-    appId,
-  });
+  pusherServer()
+    .trigger(sheetChannel(id), UPDATE_EVENT, { appId })
+    .catch(() => {});
 };

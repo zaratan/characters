@@ -1,14 +1,14 @@
 'use client';
 
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, ReactNode } from 'react';
-import { TempElemType } from '../types/TempElemType';
+import type { ReactNode } from 'react';
+import { createContext } from 'react';
+import type { TempElemType } from '../types/TempElemType';
 import useStateWithTracker from '../hooks/useStateWithTracker';
 
 export type RawLanguage = { value: string; key: string };
-interface Language extends TempElemType<string> {
+type Language = {
   key: string;
-}
+} & TempElemType<string>;
 
 const defaultContext: {
   languages: Array<Language>;

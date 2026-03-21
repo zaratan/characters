@@ -1,20 +1,20 @@
 'use client';
 
-import React, { useState } from 'react';
+import type { ReactNode } from 'react';
+import { useState } from 'react';
 import { useServerInsertedHTML } from 'next/navigation';
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
 export default function StyledComponentsRegistry({
   children,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet());
 
   useServerInsertedHTML(() => {
     const styles = styledComponentsStyleSheet.getStyleElement();
-    // clearTag exists on the v5 StyleSheet instance but is not in the type defs
-    (styledComponentsStyleSheet.instance as any).clearTag();
+    styledComponentsStyleSheet.instance.clearTag();
     return <>{styles}</>;
   });
 

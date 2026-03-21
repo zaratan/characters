@@ -1,6 +1,6 @@
 import { useRouter } from 'next/navigation';
-import React, { useContext, useState } from 'react';
-import { useDebounce } from 'react-use';
+import { useContext, useState } from 'react';
+import useDebounce from '../../hooks/useDebounce';
 import styled from 'styled-components';
 import AccessesContext from '../../contexts/AccessesContext';
 import SystemContext from '../../contexts/SystemContext';
@@ -24,7 +24,7 @@ const ButtonLi = styled.li`
   position: relative;
 `;
 const RedButton = styled.button`
-  background-color: #f2003c;
+  background-color: #c81e3b;
   padding: 1rem;
   border-radius: 2px;
   box-shadow: -1px -1px grey;
@@ -59,10 +59,14 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
     )
       return;
 
-    await fetcher(`/api/vampires/${id}`, {
-      method: 'DELETE',
-    });
-    router.push('/');
+    try {
+      await fetcher(`/api/vampires/${id}`, {
+        method: 'DELETE',
+      });
+      router.push('/');
+    } catch {
+      window.alert('Erreur lors de la suppression du personnage.');
+    }
   };
 
   const [visibilityChanged, setVisibilityChanged] = useState(false);
@@ -71,14 +75,19 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
     async () => {
       if (!visibilityChanged) return;
 
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          privateSheet,
-          appId,
-        }),
-      });
-      setVisibilityChanged(false);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            privateSheet,
+            appId,
+          }),
+        });
+        setVisibilityChanged(false);
+      } catch {
+        togglePrivate();
+        setVisibilityChanged(false);
+      }
     },
     300,
     [visibilityChanged, privateSheet]

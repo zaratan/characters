@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import { createContext } from 'react';
 
 const defaultContext: {
   id: string;

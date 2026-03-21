@@ -1,16 +1,19 @@
 'use client';
 
-import React, { createContext, ReactNode, useMemo } from 'react';
+import type { ReactNode } from 'react';
+import { createContext, useMemo } from 'react';
 import { useSession } from 'next-auth/react';
-import { MeType } from '../types/MeType';
+import type { MeType } from '../types/MeType';
 
 type ContextType = {
   me?: MeType;
   connected: boolean;
+  loading: boolean;
 };
 
 const defaultContext: ContextType = {
   connected: false,
+  loading: true,
 };
 const MeContext = createContext(defaultContext);
 export const MeProvider = ({ children }: { children: ReactNode }) => {
@@ -21,13 +24,15 @@ export const MeProvider = ({ children }: { children: ReactNode }) => {
       me: session?.user
         ? {
             id: session.user.id,
-            name: session.user.name ?? '',
+            name: session.user.name ?? null,
             email: session.user.email ?? '',
             image: session.user.image ?? '',
             isAdmin: session.user.isAdmin ?? false,
+            hasOnboarded: session.user.hasOnboarded ?? false,
           }
         : undefined,
       connected: status === 'authenticated',
+      loading: status === 'loading',
     }),
     [session, status]
   );

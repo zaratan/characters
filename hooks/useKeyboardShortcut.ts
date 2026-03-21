@@ -5,6 +5,7 @@ const useKeyboardShortcut = (
   action = (_keyboardEvent?: KeyboardEvent) => {}
 ) => {
   const [keyboardJS, setKeyboardJS] = useState<
+    // eslint-disable-next-line @typescript-eslint/consistent-type-imports
     typeof import('keyboardjs') | null
   >(null);
 

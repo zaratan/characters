@@ -1,15 +1,15 @@
-import { AttributesType } from '../contexts/AttributesContext';
-import { RawAbilitiesListType } from '../contexts/AbilitiesContext';
-import { InfosType } from '../contexts/InfosContext';
-import { MindType } from '../contexts/MindContext';
-import {
+import type { AttributesType } from '../contexts/AttributesContext';
+import type { RawAbilitiesListType } from '../contexts/AbilitiesContext';
+import type { InfosType } from '../contexts/InfosContext';
+import type { MindType } from '../contexts/MindContext';
+import type {
   DisciplinesList,
   CombinedDisciplinesList,
 } from '../contexts/DisciplinesContext';
-import { AdvFlawType } from '../contexts/AdvFlawContext';
-import { RawLanguage } from '../contexts/LanguagesContext';
-import { SectionsType } from '../contexts/SectionsContext';
-import { HumanMagicType } from '../contexts/HumanMagicContext';
+import type { AdvFlawType } from '../contexts/AdvFlawContext';
+import type { RawLanguage } from '../contexts/LanguagesContext';
+import type { SectionsType } from '../contexts/SectionsContext';
+import type { HumanMagicType } from '../contexts/HumanMagicContext';
 
 export type VampireType = {
   id: string;

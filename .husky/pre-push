@@ -1,4 +1,5 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
-
-yarn lint
+pnpm build
+pnpm lint
+pnpm typecheck
+pnpm format:check
+pnpm test

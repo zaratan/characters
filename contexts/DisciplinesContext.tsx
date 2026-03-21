@@ -1,8 +1,8 @@
 'use client';
 
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, ReactNode } from 'react';
-import { TempElemType } from '../types/TempElemType';
+import type { ReactNode } from 'react';
+import { createContext } from 'react';
+import type { TempElemType } from '../types/TempElemType';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
 export type PathType = {
@@ -45,7 +45,7 @@ export type CombinedDisciplineType = {
   value: number;
 };
 
-export interface TempDisciplineElemType extends TempElemType<number> {
+export type TempDisciplineElemType = {
   setTitle: (newTitle: string) => void;
   toggleThaumaturgy: () => void;
   key: string;
@@ -55,9 +55,9 @@ export interface TempDisciplineElemType extends TempElemType<number> {
   rituals?: Array<TempRitualElemType>;
   ritualMulti?: number;
   mainPathName?: string;
-}
+} & TempElemType<number>;
 
-export interface TempThaumaturgyElemType extends TempDisciplineElemType {
+export type TempThaumaturgyElemType = {
   addNewPath: () => void;
   removePath: (key: string) => void;
   addNewRitual: () => void;
@@ -68,25 +68,25 @@ export interface TempThaumaturgyElemType extends TempDisciplineElemType {
   rituals: Array<TempRitualElemType>;
   ritualMulti: number;
   mainPathName: string;
-}
+} & TempDisciplineElemType;
 
-export interface TempPathElemType extends TempElemType<number> {
+export type TempPathElemType = {
   setTitle: (newTitle: string) => void;
   title: string;
   key: string;
-}
+} & TempElemType<number>;
 
-export interface TempRitualElemType extends TempElemType<number> {
+export type TempRitualElemType = {
   setTitle: (newTitle: string) => void;
   title: string;
   key: string;
-}
+} & TempElemType<number>;
 
-export interface TempCombinedDisciplineElemType extends TempElemType<number> {
+export type TempCombinedDisciplineElemType = {
   setTitle: (newTitle: string) => void;
   title: string;
   key: string;
-}
+} & TempElemType<number>;
 
 export type DisciplinesList = Array<DisciplineType | ThaumaturgyType>;
 export type CombinedDisciplinesList = Array<CombinedDisciplineType>;

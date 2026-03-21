@@ -1,7 +1,7 @@
-import React, { FormEvent } from 'react';
+import type { FormEvent } from 'react';
 import { HandLargeEditableText, HandLargeText } from '../styles/Texts';
 import { BlackLine, EmptyLine } from '../styles/Lines';
-import { TempElemType } from '../types/TempElemType';
+import type { TempElemType } from '../types/TempElemType';
 
 const UnderlinedHandLargeEditableText = ({
   elem,

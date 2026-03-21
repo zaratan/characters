@@ -1,4 +1,5 @@
-import React, { ComponentType, useContext } from 'react';
+import type { ComponentType, ReactElement } from 'react';
+import { useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
 import { BlackLine, EmptyLine } from '../styles/Lines';
@@ -28,7 +29,7 @@ type ActionType = {
       componentProps?: null;
     }
   | {
-      component: (any) => JSX.Element;
+      component: (any: any) => ReactElement;
       componentProps?: any;
       active?: null;
       act?: null;
@@ -48,13 +49,10 @@ const GlyphAction = styled.span`
   }
 `;
 
-const DesktopAction = styled.li`
+const desktopActionStyles = `
   border-radius: 40px;
   height: 80px;
   min-width: 80px;
-  background-color: ${(props) => props.theme.actionBackground};
-  border: 1px solid ${(props) => props.theme.borderColor};
-  color: ${(props) => props.theme.color};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -66,7 +64,9 @@ const DesktopAction = styled.li`
   .full-text {
     overflow-x: hidden;
     max-width: 0;
-    transition: max-width 0.3s ease-in-out, padding-left 0.3s ease-in-out;
+    transition:
+      max-width 0.3s ease-in-out,
+      padding-left 0.3s ease-in-out;
     white-space: nowrap;
     padding-left: 0rem;
   }
@@ -76,24 +76,42 @@ const DesktopAction = styled.li`
       outline: none;
       padding: 1.5rem;
       .full-text {
-        max-width: 160px;
+        max-width: 220px;
         padding-left: 1rem;
       }
     }
     &:focus {
-      border-color: ${(props) => props.theme.blue};
+      border-color: ${(props: any) => props.theme.blue};
     }
   }
 `;
 
-const DesktopActions = styled.ul`
+const DesktopAction = styled.div`
+  background-color: ${(props) => props.theme.actionBackground};
+  border: 1px solid ${(props) => props.theme.borderColor};
+  color: ${(props) => props.theme.color};
+  ${desktopActionStyles}
+`;
+
+const DesktopActionLink = styled(Link)`
+  background-color: ${(props) => props.theme.actionBackground};
+  border: 1px solid ${(props) => props.theme.borderColor};
+  color: ${(props) => props.theme.color};
+  text-decoration: none;
+  ${desktopActionStyles}
+  &:hover {
+    color: ${(props) => props.theme.color};
+  }
+`;
+
+const DesktopActions = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: right;
   align-items: flex-end;
 `;
 
-const MobileActionsContainer = styled.div`
+const MobileActionsContainer = styled.aside`
   padding: 1rem;
   width: 100%;
 
@@ -102,12 +120,12 @@ const MobileActionsContainer = styled.div`
   }
 `;
 
-const MobileActions = styled.ul`
+const MobileActions = styled.div`
   display: flex;
   flex-direction: column;
 `;
 
-const MobileAction = styled.li`
+const MobileAction = styled.div`
   text-align: center;
   padding: 1rem;
   background-color: ${(props) => props.theme.actionBackground};
@@ -126,7 +144,7 @@ const MobileAction = styled.li`
   }
 `;
 
-const DesktopActionsContainer = styled.div`
+const DesktopActionsContainer = styled.aside`
   @media screen and (max-width: 680px) {
     display: none;
   }
@@ -140,39 +158,27 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
   <DesktopActionsContainer>
     <DesktopActions>
       {actions.map((action) => {
+        const glyphContent =
+          typeof action.glyph === 'string' ? action.glyph : <action.glyph />;
+
         if (action.link) {
           return (
-            <Link href={action.link} key={action.name}>
-              <DesktopAction>
-                <GlyphAction>
-                  {typeof action.glyph === 'string' ? (
-                    action.glyph
-                  ) : (
-                    <action.glyph />
-                  )}
-                </GlyphAction>
-                <span className="full-text">{action.name}</span>
-              </DesktopAction>
-            </Link>
+            <DesktopActionLink href={action.link} key={action.name}>
+              <GlyphAction>{glyphContent}</GlyphAction>
+              <span className="full-text">{action.name}</span>
+            </DesktopActionLink>
           );
         }
         if (action.component !== undefined) {
           if (action.component === null) return null;
 
           return (
-            // eslint-disable-next-line react/jsx-props-no-spreading
-            <action.component {...action.componentProps} key={action.name}>
-              <DesktopAction>
-                <GlyphAction>
-                  {typeof action.glyph === 'string' ? (
-                    action.glyph
-                  ) : (
-                    <action.glyph />
-                  )}
-                </GlyphAction>
+            <DesktopAction key={action.name}>
+              <action.component {...action.componentProps}>
+                <GlyphAction>{glyphContent}</GlyphAction>
                 <span className="full-text">{action.name}</span>
-              </DesktopAction>
-            </action.component>
+              </action.component>
+            </DesktopAction>
           );
         }
         const handleClick = generateHandleClick(action.act!);
@@ -186,11 +192,7 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
             tabIndex={0}
           >
             <GlyphAction className={action.active ? 'active' : ''}>
-              {typeof action.glyph === 'string' ? (
-                action.glyph
-              ) : (
-                <action.glyph />
-              )}
+              {glyphContent}
             </GlyphAction>
             <span className="full-text">{action.name}</span>
           </DesktopAction>
@@ -209,18 +211,19 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
         {actions?.map((action) => {
           if (action.link) {
             return (
-              <Link href={action.link} key={action.name}>
-                <MobileAction>{action.name}</MobileAction>
-              </Link>
+              <MobileAction key={action.name}>
+                <Link href={action.link}>{action.name}</Link>
+              </MobileAction>
             );
           }
           if (action.component !== undefined) {
             if (action.component === null) return null;
             return (
-              // eslint-disable-next-line react/jsx-props-no-spreading
-              <action.component {...action.componentProps} key={action.name}>
-                <MobileAction>{action.name}</MobileAction>
-              </action.component>
+              <MobileAction key={action.name}>
+                <action.component {...action.componentProps}>
+                  {action.name}
+                </action.component>
+              </MobileAction>
             );
           }
           const handleClick = generateHandleClick(action.act!);

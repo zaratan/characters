@@ -1,10 +1,10 @@
-/* eslint-disable no-nested-ternary */
-import React, { useState, useRef, ReactNode, useContext } from 'react';
+import type { ReactNode } from 'react';
+import { useState, useRef, useContext } from 'react';
 import Link from 'next/link';
 import styled from 'styled-components';
-import { useClickAway } from 'react-use';
+import useClickAway from '../hooks/useClickAway';
 import { signIn, signOut } from 'next-auth/react';
-import { MeType } from '../types/MeType';
+import type { MeType } from '../types/MeType';
 import { BlackLine } from '../styles/Lines';
 import {
   generateHandleClick,
@@ -12,33 +12,30 @@ import {
 } from '../helpers/handlers';
 import { Title } from '../styles/Titles';
 import MeContext from '../contexts/MeContext';
+import UserAvatar from './UserAvatar';
 
-const ProfileImg = styled.img`
-  height: 30px;
-  border-radius: 50%;
-`;
+// ProfileImg replaced by UserAvatar component
 
 const MenuContainer = styled.div`
   position: relative;
   height: 100%;
 `;
 
-const MenuButton = styled.div`
+const MenuButton = styled.button`
   display: flex;
   align-items: center;
   height: 100%;
   cursor: pointer;
   outline: none;
-  opacity: 0.8;
-  transition: opacity 0.2s ease-in-out;
-  :hover,
-  :focus {
-    opacity: 1;
-  }
+  background: none;
+  border: none;
+  color: inherit;
+  font: inherit;
+  padding: 0;
 `;
 
 const NameContainer = styled.li`
-  border-bottom: 1px solid #ccc;
+  border-bottom: 1px solid ${(props) => props.theme.borderColor};
   padding: 0.5rem;
   white-space: nowrap;
   z-index: 3;
@@ -47,13 +44,13 @@ const NameContainer = styled.li`
 const MenuDropdownElem = styled.li`
   cursor: pointer;
   transition: 0.3s ease-in-out;
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     background-color: ${(props) => props.theme.actionBackground};
     outline: none;
   }
   a {
-    color: black;
+    color: ${(props) => props.theme.color};
   }
   white-space: nowrap;
   padding: 0.3rem 0.5rem;
@@ -61,7 +58,7 @@ const MenuDropdownElem = styled.li`
   outline: none;
 
   &.action {
-    color: blue;
+    color: ${(props) => props.theme.blue};
   }
 `;
 
@@ -75,15 +72,18 @@ const MenuDropdown = styled.ul`
   flex-direction: column;
   justify-content: space-around;
   border-radius: 5px;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+  box-shadow:
+    0 10px 15px -3px rgba(0, 0, 0, 0.1),
     0 4px 6px -2px rgba(0, 0, 0, 0.05);
   max-height: 0;
 
-  transition: max-height 0.3s ease-in-out, padding 0.2s ease-in-out;
+  transition:
+    max-height 0.3s ease-in-out,
+    padding 0.2s ease-in-out;
 
   &.open {
     border: 1px solid ${(props) => props.theme.borderColor};
-    max-height: 8rem;
+    max-height: 12rem;
     padding: 0.5rem 0rem;
   }
   z-index: 3;
@@ -112,12 +112,19 @@ const LogButton = ({
   if (!connected) {
     return (
       <MenuContainer className="text-only">
-        <a
+        <button
           onClick={() => signIn(undefined, { callbackUrl: returnTo || '/' })}
-          style={{ cursor: 'pointer' }}
+          style={{
+            cursor: 'pointer',
+            background: 'none',
+            border: 'none',
+            color: 'inherit',
+            font: 'inherit',
+            padding: 0,
+          }}
         >
           Connection
-        </a>
+        </button>
       </MenuContainer>
     );
   }
@@ -128,21 +135,38 @@ const LogButton = ({
   return (
     <MenuContainer ref={wrapperRef}>
       <MenuButton
+        data-testid="user-menu-button"
         onClick={handleClick}
         onKeyPress={handleKeypress}
-        tabIndex={0}
-        role="button"
       >
-        <ProfileImg src={data?.image} alt="P" />
+        <UserAvatar
+          name={data?.name ?? null}
+          image={data?.image ?? null}
+          userId={data?.id}
+          size={30}
+        />
       </MenuButton>
       <MenuDropdown className={menuOpen ? 'open' : ''}>
-        <NameContainer>{data?.name}</NameContainer>
-        <MenuDropdownElem
-          as="a"
-          onClick={() => signOut()}
-          style={{ cursor: 'pointer' }}
-        >
-          Déconnection
+        <NameContainer>{data?.name || data?.email}</NameContainer>
+        <MenuDropdownElem>
+          <Link href="/profile">Profil</Link>
+        </MenuDropdownElem>
+        <MenuDropdownElem>
+          <button
+            onClick={() => signOut()}
+            style={{
+              cursor: 'pointer',
+              background: 'none',
+              border: 'none',
+              color: 'inherit',
+              font: 'inherit',
+              width: '100%',
+              textAlign: 'left',
+              padding: 0,
+            }}
+          >
+            Déconnection
+          </button>
         </MenuDropdownElem>
       </MenuDropdown>
     </MenuContainer>

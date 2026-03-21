@@ -1,8 +1,8 @@
 'use client';
 
-/* eslint-disable react-hooks/exhaustive-deps */
-import React, { createContext, ReactNode } from 'react';
-import { TempElemType } from '../types/TempElemType';
+import type { ReactNode } from 'react';
+import { createContext } from 'react';
+import type { TempElemType } from '../types/TempElemType';
 import { useStateWithChangesAndTracker } from '../hooks/useStateWithTracker';
 
 type ContextType = {
@@ -37,13 +37,13 @@ export type HumanMagicType = {
   theurgy: Array<PowerType>;
 };
 
-export interface TempRitualType extends TempElemType<number> {
+export type TempRitualType = {
   setTitle: (newTitle: string) => void;
   title: string;
   key: string;
-}
+} & TempElemType<number>;
 
-export interface TempPowerType extends TempElemType<number> {
+export type TempPowerType = {
   setTitle: (newTitle: string) => void;
   title: string;
   key: string;
@@ -52,7 +52,7 @@ export interface TempPowerType extends TempElemType<number> {
   toggleRituals: () => void;
   addNewRitual: () => string;
   removeRitual: (id: string) => void;
-}
+} & TempElemType<number>;
 
 const defaultContext: ContextType = {
   psy: [],

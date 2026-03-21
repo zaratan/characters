@@ -1,9 +1,9 @@
 // TODO THIS IS A BUG IN ESLINT
-/* eslint-disable react/prop-types */
-import React, { useContext } from 'react';
+
+import { useContext } from 'react';
 import styled from 'styled-components';
 import PreferencesContext from '../contexts/PreferencesContext';
-import { TempElemType } from '../types/TempElemType';
+import type { TempElemType } from '../types/TempElemType';
 
 export const PexSpan = styled.span`
   font-size: 1rem;
@@ -12,7 +12,7 @@ export const PexSpan = styled.span`
 `;
 
 const PexSpansContainer = styled.span`
-  :hover {
+  &:hover {
     .hideHover {
       display: none;
     }

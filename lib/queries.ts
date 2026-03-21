@@ -7,7 +7,7 @@ export const fetchVampireFromDB = async (
   try {
     const characters = await db.vampires.list(userId, isAdmin);
     return { characters, failed: false };
-  } catch (e) {
+  } catch {
     return { characters: [], failed: true };
   }
 };
@@ -16,7 +16,7 @@ export const fetchUsersFromDB = async () => {
   try {
     const users = await db.users.findAllPublic();
     return { users, failed: false };
-  } catch (e) {
+  } catch {
     return { users: [], failed: true };
   }
 };
@@ -26,7 +26,7 @@ export const fetchOneVampire = async (id: string) => {
     const vampire = await db.vampires.findById(id);
     if (!vampire) return { data: null, failed: true };
     return { data: vampire, failed: false };
-  } catch (e) {
+  } catch {
     return { data: null, failed: true };
   }
 };

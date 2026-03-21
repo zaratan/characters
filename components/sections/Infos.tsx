@@ -1,4 +1,5 @@
-import React, { FormEvent, useContext } from 'react';
+import type { FormEvent } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { HorizontalSection } from '../../styles/Sections';
 import { EmptyLine } from '../../styles/Lines';

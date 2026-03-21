@@ -1,14 +1,13 @@
-import React, {
-  useState,
-  useMemo,
-  useRef,
+import type {
   KeyboardEvent,
   ComponentType,
   InputHTMLAttributes,
   DetailedHTMLProps,
-  useEffect,
+  RefObject,
 } from 'react';
-import { useDebounce, useClickAway } from 'react-use';
+import { useState, useMemo, useRef, useEffect } from 'react';
+import useDebounce from '../hooks/useDebounce';
+import useClickAway from '../hooks/useClickAway';
 import Fuse from 'fuse.js';
 import styled from 'styled-components';
 import { generateHandleClick } from '../helpers/handlers';
@@ -66,9 +65,8 @@ const Suggestion = styled.li`
 `;
 
 const generateHandleKeypressInput =
-  (listRef: React.RefObject<HTMLUListElement>, close: () => void) =>
+  (listRef: RefObject<HTMLUListElement | null>, close: () => void) =>
   (e: KeyboardEvent) => {
-    console.log(e.key);
     if (e.key !== 'ArrowDown' && e.key !== 'Escape' && e.key !== 'Tab') {
       return;
     }
@@ -91,8 +89,8 @@ const generateHandleKeypressInput =
 const generateHandleKeypressSpan =
   (
     changeFunc: (e: KeyboardEvent) => void,
-    listRef: React.RefObject<HTMLUListElement>,
-    inputRef: React.RefObject<HTMLInputElement>,
+    listRef: RefObject<HTMLUListElement | null>,
+    inputRef: RefObject<HTMLInputElement | null>,
     close: () => void
   ) =>
   (e: KeyboardEvent) => {
@@ -133,7 +131,7 @@ const generateHandleKeypressSpan =
     }
   };
 
-interface Props<T> {
+type Props<T> = {
   onSubmit: (value: T | string) => void;
   autocompleteOptions: Array<T>;
   display: string | ((item: T) => string);
@@ -144,7 +142,7 @@ interface Props<T> {
     DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
   >;
   submitOnClickOut?: boolean;
-}
+};
 
 const AutoCompleteInput = <T extends Record<string, unknown>>({
   autocompleteOptions,
@@ -252,7 +250,6 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
                   onClick={clickHandler(match)}
                   onKeyDown={keyHandler(match)}
                   onBlur={() => {
-                    console.log(i);
                     if (
                       i >=
                       Math.min(

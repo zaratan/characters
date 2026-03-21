@@ -1,4 +1,4 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { fetchOneVampire, fetchVampireFromDB } from '../../../../lib/queries';
 import ConfigClient from '../../../../components/pages/ConfigClient';
@@ -15,9 +15,10 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const fetchedData = await fetchOneVampire(params.id);
+  const { id } = await params;
+  const fetchedData = await fetchOneVampire(id);
   const name = fetchedData.data?.infos?.name;
   return {
     title: name ? `${name} - Configuration` : 'Configuration',
@@ -27,9 +28,10 @@ export async function generateMetadata({
 export default async function ConfigPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const fetchedData = await fetchOneVampire(params.id);
+  const { id } = await params;
+  const fetchedData = await fetchOneVampire(id);
   if (fetchedData.failed) redirect('/new');
-  return <ConfigClient initialData={fetchedData.data!} id={params.id} />;
+  return <ConfigClient initialData={fetchedData.data!} id={id} />;
 }

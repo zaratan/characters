@@ -1,14 +1,15 @@
-import { concat } from 'lodash';
-import React, { useContext, useEffect, useState } from 'react';
-import useDebounce from 'react-use/lib/useDebounce';
+import { concat, isEqual } from 'lodash';
+import { useContext, useEffect, useRef, useState } from 'react';
+import useDebounce from '../../hooks/useDebounce';
 import styled from 'styled-components';
 import useSWR from 'swr';
 import AccessesContext from '../../contexts/AccessesContext';
 import SystemContext from '../../contexts/SystemContext';
 import { fetcher } from '../../helpers/fetcher';
+import { useToast } from '../../contexts/ToastContext';
 import TextFallback from '../../styles/TextFallback';
 import { EmptyLine } from '../../styles/Lines';
-import { UserType } from '../../types/UserType';
+import type { UserType } from '../../types/UserType';
 import AutoCompleteInput from '../AutoCompleteInput';
 import { Glyph } from '../Glyph';
 import SectionTitle from '../SectionTitle';
@@ -42,7 +43,7 @@ const AccessList = styled.li`
   }
 `;
 
-const AccessTitle = styled.h3`
+const AccessTitle = styled.h2`
   text-align: center;
   margin-bottom: 1rem;
 `;
@@ -62,30 +63,39 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
   const { editors, addEditor, removeEditor, addViewer, removeViewer, viewers } =
     useContext(AccessesContext);
   const { appId } = useContext(SystemContext);
+  const { showError } = useToast();
 
   const { data: usersData } = useSWR('/api/users');
 
   const [users, setUsers] = useState<Array<UserType>>([]);
   const [accessChanged, setAccessChanged] = useState(false);
 
+  const prevUsers = useRef(usersData?.users);
   useEffect(() => {
-    setUsers(usersData?.users || []);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(usersData?.users)]);
+    if (!isEqual(prevUsers.current, usersData?.users)) {
+      prevUsers.current = usersData?.users;
+      setUsers(usersData?.users || []);
+    }
+  }, [usersData?.users]);
 
   useDebounce(
     async () => {
       if (!accessChanged) return;
 
-      await fetcher(`/api/vampires/${id}`, {
-        method: 'PATCH',
-        body: JSON.stringify({
-          editors,
-          viewers,
-          appId,
-        }),
-      });
-      setAccessChanged(false);
+      try {
+        await fetcher(`/api/vampires/${id}`, {
+          method: 'PATCH',
+          body: JSON.stringify({
+            editors,
+            viewers,
+            appId,
+          }),
+        });
+        setAccessChanged(false);
+      } catch {
+        showError('Erreur lors de la sauvegarde des accès.');
+        setAccessChanged(false);
+      }
     },
     300,
     [editors, accessChanged, viewers]

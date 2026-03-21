@@ -1,4 +1,3 @@
-import React from 'react';
 import styled from 'styled-components';
 import { HandText } from '../../styles/Texts';
 import { SubTitle } from '../../styles/Titles';
@@ -61,7 +60,7 @@ const InfoLink = styled.a`
   }
 `;
 
-interface LineTitleProps<T> {
+type LineTitleProps<T> = {
   custom?: boolean;
   changeName?: (newValue: string) => void;
   remove?: () => void;
@@ -71,7 +70,7 @@ interface LineTitleProps<T> {
   inactive?: boolean;
   autocomplete?: Array<T>;
   infoLink?: string;
-}
+};
 
 const LineTitle = <T extends { name: string }>({
   custom,

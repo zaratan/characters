@@ -1,11 +1,10 @@
-import React, { useContext } from 'react';
+import { useContext } from 'react';
 import styled from 'styled-components';
 import { HorizontalSection } from '../../styles/Sections';
 import { maxDot } from '../../helpers/maxLevels';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
-import AbilitiesContext, {
-  AbilitiesListType,
-} from '../../contexts/AbilitiesContext';
+import type { AbilitiesListType } from '../../contexts/AbilitiesContext';
+import AbilitiesContext from '../../contexts/AbilitiesContext';
 import GenerationContext from '../../contexts/GenerationContext';
 import { calcPexAbility, calcPexSpecialty } from '../../helpers/pex';
 import SectionTitle from '../SectionTitle';
@@ -26,8 +25,8 @@ const Container = styled.div`
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
     }
-    :hover,
-    :focus-within {
+    &:hover,
+    &:focus-within {
       .empty-glyph,
       .line-button,
       .remove-glyph,

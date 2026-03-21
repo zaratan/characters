@@ -5,20 +5,20 @@ const DotSeparator = styled.span`
   height: 100%;
   outline: none;
 
-  :hover ~ span {
+  &:hover ~ span {
     svg {
       fill: ${(props) => props.theme.glyphGray} !important;
     }
   }
 
-  :hover + span {
+  &:hover + span {
     small {
       display: inline;
     }
   }
 
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     svg.full {
       fill: transparent;
     }

@@ -1,4 +1,4 @@
-import { HumanMagicType } from '../contexts/HumanMagicContext';
+import type { HumanMagicType } from '../contexts/HumanMagicContext';
 
 const attributes = {
   strength: 1,
