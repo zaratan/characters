@@ -14,7 +14,7 @@ const FooterLink = styled.a`
 const Heart = styled.span`
   transition: color 4s ease-in-out;
   cursor: grab;
-  :hover {
+  &:hover {
     transition: color 0.2s ease-in-out;
     color: ${(props) => props.theme.red};
   }

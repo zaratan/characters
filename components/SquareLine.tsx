@@ -38,7 +38,7 @@ const SquareLineContainer = styled.div`
       width: calc(10 * 24px + 0.6rem);
     }
   }
-  :not(.must-wrap) {
+  &:not(.must-wrap) {
     display: flex;
     justify-content: center;
   }
@@ -46,9 +46,9 @@ const SquareLineContainer = styled.div`
     opacity: 0;
     transition: opacity 0.2s ease-in-out;
   }
-  :not(.inactive) {
-    :hover,
-    :focus-within {
+  &:not(.inactive) {
+    &:hover,
+    &:focus-within {
       .empty-glyph {
         opacity: 1;
       }

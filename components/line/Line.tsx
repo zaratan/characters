@@ -22,7 +22,7 @@ const Value = styled.span`
     justify-self: center;
   }
 
-  :hover svg {
+  &:hover svg {
     fill: transparent;
   }
 `;

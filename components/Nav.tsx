@@ -44,8 +44,8 @@ const NameContainer = styled.li`
 const MenuDropdownElem = styled.li`
   cursor: pointer;
   transition: 0.3s ease-in-out;
-  :hover,
-  :focus {
+  &:hover,
+  &:focus {
     background-color: ${(props) => props.theme.actionBackground};
     outline: none;
   }

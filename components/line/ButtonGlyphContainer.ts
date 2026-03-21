@@ -14,17 +14,17 @@ const ButtonGlyphContainer = styled.span`
     color: green;
   }
   @media screen and (max-width: 500px) {
-    :not(.no-reposition) {
+    &:not(.no-reposition) {
       right: 3rem;
     }
   }
   @media screen and (max-width: 410px) {
-    :not(.no-reposition) {
+    &:not(.no-reposition) {
       right: 2rem;
     }
   }
   @media screen and (max-width: 310px) {
-    :not(.no-reposition) {
+    &:not(.no-reposition) {
       right: 1rem;
     }
   }

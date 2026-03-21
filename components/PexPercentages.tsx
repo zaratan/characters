@@ -31,7 +31,7 @@ const Li = styled.li`
   width: 100%;
   display: flex;
   justify-content: center;
-  :hover {
+  &:hover {
     .hideHover {
       display: none;
     }

@@ -12,7 +12,7 @@ export const PexSpan = styled.span`
 `;
 
 const PexSpansContainer = styled.span`
-  :hover {
+  &:hover {
     .hideHover {
       display: none;
     }

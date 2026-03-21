@@ -10,13 +10,13 @@ import { Glyph } from './Glyph';
 
 const SquareContainer = styled.span`
   height: 36px;
-  :focus,
-  :hover {
+  &:focus,
+  &:hover {
     outline: none;
   }
-  :not(.inactive) {
+  &:not(.inactive) {
     cursor: pointer;
-    :hover {
+    &:hover {
       svg.hover-check {
         path.first,
         path.second {
@@ -24,8 +24,8 @@ const SquareContainer = styled.span`
         }
       }
     }
-    :focus,
-    :hover {
+    &:focus,
+    &:hover {
       outline: none;
       rect {
         stroke: darkcyan;

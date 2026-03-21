@@ -27,8 +27,8 @@ export const HorizontalSection = styled.div<{ $count?: number }>`
       opacity: 0;
       transition: opacity 0.2s ease-in-out;
     }
-    :hover,
-    :focus-within {
+    &:hover,
+    &:focus-within {
       .open-col-glyph {
         opacity: 1;
       }
