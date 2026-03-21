@@ -41,7 +41,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: process.env.CI ? 'yarn start' : 'yarn dev',
+    command: process.env.CI ? 'pnpm start' : 'pnpm dev',
     url: 'http://localhost:3000',
     reuseExistingServer: !process.env.CI,
   },
