@@ -98,10 +98,10 @@ const DesktopActionLink = styled(Link)`
   border: 1px solid ${(props) => props.theme.borderColor};
   color: ${(props) => props.theme.color};
   text-decoration: none;
+  ${desktopActionStyles}
   &:hover {
     color: ${(props) => props.theme.color};
   }
-  ${desktopActionStyles}
 `;
 
 const DesktopActions = styled.div`

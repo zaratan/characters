@@ -37,7 +37,7 @@
     "react-dom": "19",
     "resend": "^6.9.3",
     "slugify": "^1.6.5",
-    "styled-components": "^5.3.5",
+    "styled-components": "^6",
     "swr": "^2.4.1"
   },
   "devDependencies": {
@@ -71,8 +71,5 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": "eslint --cache --fix",
     "*.{json,md}": "prettier --write"
-  },
-  "resolutions": {
-    "@types/react": "^19"
   }
 }

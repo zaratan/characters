@@ -120,8 +120,9 @@
 
 ### Phase 6c — styled-components 6
 
-- [ ] **styled-components 5→6** — Réécrire `lib/registry.tsx`, vérifier `compiler.styledComponents`
-- [ ] **Types** — Types bundlés en v6, retirer `resolutions` si possible
+- [x] **styled-components 5→6** — Upgrade, `clearTag()` toujours valide en v6, suppression du cast `as any`
+- [x] **Types** — Types bundlés en v6, `@types/styled-components` supprimé (6b), `resolutions` retiré
+- [x] **`compiler.styledComponents`** — Fonctionne toujours avec Next 16
 
 ### Phase 6d — Auth.js v5
 

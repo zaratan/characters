@@ -116,7 +116,7 @@ a {
   color: ${(props) => props.theme.color};
   transition: color 0.2s ease-in-out;
 
-  :hover {
+  &:hover {
     color: darkcyan;
   }
 }
