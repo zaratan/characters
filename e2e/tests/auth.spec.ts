@@ -101,7 +101,7 @@ baseTest.describe('Auth — onboarding', () => {
 
       try {
         await page.goto('/');
-        await page.waitForURL('/profile', { timeout: 10_000 });
+        await page.waitForURL('/profile');
         await expect(page).toHaveURL('/profile');
       } finally {
         await context.close();
@@ -132,7 +132,7 @@ baseTest.describe('Auth — onboarding', () => {
         await expect(saveButton).toBeEnabled();
         await saveButton.click();
 
-        await page.waitForURL('/', { timeout: 10_000 });
+        await page.waitForURL('/');
         await expect(page).toHaveURL('/');
       } finally {
         await context.close();

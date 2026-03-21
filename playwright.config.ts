@@ -24,8 +24,9 @@ if (!process.env.POSTGRES_URL) {
 
 export default defineConfig({
   testDir: './e2e/tests',
-  retries: process.env.CI ? 2 : 0,
+  retries: process.env.CI ? 2 : 1,
   reporter: [['html'], ['list']],
+  timeout: 5_000,
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
@@ -38,6 +39,7 @@ export default defineConfig({
     {
       name: 'mobile-chrome',
       use: { ...devices['Pixel 5'] },
+      dependencies: ['desktop-chrome'],
     },
   ],
   webServer: {

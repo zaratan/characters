@@ -54,16 +54,13 @@ test.describe('Play Mode', () => {
     const patchPromise = page.waitForResponse(
       (res) =>
         res.url().includes(`/api/vampires/${vampireId}`) &&
-        res.request().method() === 'PATCH',
-      { timeout: 10_000 }
+        res.request().method() === 'PATCH'
     );
 
     await contusionSquare.click();
 
     // After click: SVG path.first should gain "checked" class (value >= 1)
-    await expect(contusionSquare.locator('path.first')).toHaveClass(/checked/, {
-      timeout: 5_000,
-    });
+    await expect(contusionSquare.locator('path.first')).toHaveClass(/checked/);
 
     // Auto-save fires after 500ms debounce
     const patchResponse = await patchPromise;
@@ -220,8 +217,7 @@ test.describe('Edit Mode', () => {
     const putPromise = page.waitForResponse(
       (res) =>
         res.url().includes(`/api/vampires/${vampireId}`) &&
-        res.request().method() === 'PUT',
-      { timeout: 10_000 }
+        res.request().method() === 'PUT'
     );
 
     await saveButton.click();
