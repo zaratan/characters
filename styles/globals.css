@@ -58,7 +58,31 @@ input[type='number']::-webkit-outer-spin-button {
   margin: 0;
 }
 
+/* ===== Footer heart animation ===== */
+
+.heart-transition {
+  transition: color 4s ease-in-out;
+}
+.heart-transition:hover {
+  transition: color 0.2s ease-in-out;
+}
+
 /* ===== Hover-reveal patterns (any-hover) ===== */
+
+@media (any-hover: hover) {
+  .pex-hover-container .hideHover {
+    display: none;
+  }
+  .pex-hover-container .showHover {
+    display: inline;
+  }
+  .pex-hover-container:hover .hideHover {
+    display: inline;
+  }
+  .pex-hover-container:hover .showHover {
+    display: none;
+  }
+}
 
 @media (any-hover: hover) {
   .horizontal-section .open-col-glyph {
@@ -113,6 +137,19 @@ input[type='number']::-webkit-outer-spin-button {
     transition-duration: 0.01ms !important;
     scroll-behavior: auto !important;
   }
+}
+
+/* ===== ButtonGlyphContainer nested span styling ===== */
+
+.button-glyph-container span {
+  color: #525252; /* neutral-600 */
+  font-family: 'CloisterBlack', serif;
+}
+.dark .button-glyph-container span {
+  color: #a3a3a3; /* neutral-400 */
+}
+.button-glyph-container.active span {
+  color: #16a34a; /* green-600 */
 }
 
 /* ===== Keyframes ===== */

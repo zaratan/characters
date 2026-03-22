@@ -325,18 +325,25 @@ Le CSS est mieux : cacheable, ne bloque pas le parsing JS, pas d'hydration néce
 
 **Validation** : build + lint + tests E2E + test manuel OK.
 
-### Phase 3 : Composants autonomes (2-3 jours) — Taille M
+### Phase 3 : Composants autonomes (2-3 jours) — Taille M ✅
 
-- [ ] `components/Footer.tsx`
-- [ ] `components/SectionTitle.tsx`
-- [ ] `components/line/TextHelper.ts`
-- [ ] `components/line/ButtonGlyphContainer.ts`
-- [ ] `components/PexElem.tsx`
-- [ ] `components/PexPercentages.tsx`
-- [ ] `components/UserAvatar.tsx` (styles dynamiques inline)
-- [ ] `app/new/page.tsx`
+- [x] `components/Footer.tsx` — 4 styled → inline, animation cœur asymétrique (0.2s in / 4s out) en CSS
+- [x] `components/SectionTitle.tsx` — déjà migré en Phase 2
+- [x] `components/line/TextHelper.tsx` (renommé) — composant React avec modifier `.closer`
+- [x] `components/line/ButtonGlyphContainer.tsx` (renommé) — composant React, nested span styling en CSS globals
+- [x] `components/PexElem.tsx` — 3 styled → composants React, hover show/hide en CSS globals
+- [x] `components/PexPercentages.tsx` — 4 styled → composants React, `[&_span]:text-[1.5rem]` pour nested
+- [x] `components/UserAvatar.tsx` — 2 styled → inline + `style={{}}` dynamique
+- [x] `app/new/page.tsx` — 11 styled → inline, bouton "Créer" stylé comme ActionItem
 
-**Validation** : tests E2E + screenshots.
+**Leçons apprises :**
+
+- Animations asymétriques (hover in/out différents) → CSS custom dans globals.css
+- `[&>span]` (enfant direct) vs `[&_span]` (tous descendants) — attention au sélecteur
+- Nested span styling sur enfants qu'on ne contrôle pas → CSS dans globals.css
+- `styled(Component)` qui wrap un composant React migré → remplacer par composition className
+
+**Validation** : build + lint + test manuel OK.
 
 ### Phase 4 : Composants interactifs complexes (4-5 jours) — Taille XL
 

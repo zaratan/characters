@@ -1,34 +1,7 @@
-import styled from 'styled-components';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 
-const FooterStyle = styled.footer`
-  font-style: italic;
-  font-size: 1.2rem;
-  text-align: center;
-`;
-
-const FooterLink = styled.a`
-  padding-left: 0.3rem;
-`;
-
-const Heart = styled.span`
-  transition: color 4s ease-in-out;
-  cursor: grab;
-  &:hover {
-    transition: color 0.2s ease-in-out;
-    color: ${(props) => props.theme.red};
-  }
-`;
-
-const FooterText = styled.span`
-  height: 3rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
-
 const Footer = ({ withoutEmptyLines }: { withoutEmptyLines?: boolean }) => (
-  <FooterStyle>
+  <footer className="italic text-[1.2rem] text-center">
     {withoutEmptyLines ? null : (
       <>
         <EmptyLine />
@@ -36,14 +9,24 @@ const Footer = ({ withoutEmptyLines }: { withoutEmptyLines?: boolean }) => (
       </>
     )}
     <BlackLine />
-    <FooterText>
+    <span className="h-12 flex items-center justify-center w-full">
       <span>
-        Made with <Heart>♥</Heart> by
+        Made with{' '}
+        <span className="heart-transition cursor-grab hover:text-red-600 dark:hover:text-red-500">
+          ♥
+        </span>{' '}
+        by
       </span>
-      <FooterLink href="https://twitter.com/zaratan"> @zaratan</FooterLink>.
-      <FooterLink href="https://ko-fi.com/zaratan">Buy me a tea</FooterLink>.
-    </FooterText>
-  </FooterStyle>
+      <a className="pl-[0.3rem]" href="https://twitter.com/zaratan">
+        @zaratan
+      </a>
+      .
+      <a className="pl-[0.3rem]" href="https://ko-fi.com/zaratan">
+        Buy me a tea
+      </a>
+      .
+    </span>
+  </footer>
 );
 
 export default Footer;

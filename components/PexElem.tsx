@@ -1,36 +1,24 @@
 // TODO THIS IS A BUG IN ESLINT
 
+import type { HTMLAttributes } from 'react';
 import { useContext } from 'react';
-import styled from 'styled-components';
 import PreferencesContext from '../contexts/PreferencesContext';
+import classNames from '../helpers/classNames';
 import type { TempElemType } from '../types/TempElemType';
 
-export const PexSpan = styled.span`
-  font-size: 1rem;
-  padding-left: 0.3rem;
-  white-space: nowrap;
-`;
+export const PexSpan = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLSpanElement>) => (
+  <span
+    className={classNames('text-base pl-[0.3rem] whitespace-nowrap', className)}
+    {...props}
+  />
+);
 
-const PexSpansContainer = styled.span`
-  &:hover {
-    .hideHover {
-      display: none;
-    }
-    .showHover {
-      display: inherit;
-    }
-  }
-  .hideHover {
-    display: inherit;
-  }
-  .showHover {
-    display: none;
-  }
-`;
-
-export const RedSpan = styled.span`
-  color: ${(props) => props.theme.red};
-`;
+export const RedSpan = ({ ...props }: HTMLAttributes<HTMLSpanElement>) => (
+  <span className="text-red-600 dark:text-red-500" {...props} />
+);
 
 export const computePexElems = (
   pexElems: Array<{
@@ -105,7 +93,7 @@ const PexElem = ({
   }
   return (showPex || alwaysShow) &&
     (calcPex.current !== undefined || calcPex.diff !== undefined) ? (
-    <PexSpansContainer>
+    <span className="pex-hover-container">
       <PexSpan
         className={
           hover !== undefined && hover !== calcPex.current ? 'hideHover' : ''
@@ -135,7 +123,7 @@ const PexElem = ({
           </RedSpan>
         </PexSpan>
       ) : null}
-    </PexSpansContainer>
+    </span>
   ) : null;
 };
 
