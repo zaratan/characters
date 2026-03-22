@@ -8,7 +8,7 @@ import type { TempElemType } from '../../types/TempElemType';
 import PreferencesContext from '../../contexts/PreferencesContext';
 import DotSeparator from './DotSeparator';
 import LineTitle from './LineTitle';
-import ColumnLine from './ColumnLine';
+
 import TextHelper from './TextHelper';
 import ButtonGlyphContainer from './ButtonGlyphContainer';
 
@@ -77,7 +77,7 @@ const Line = <T extends { name: string }>({
 
   return (
     <ul>
-      <ColumnLine>
+      <li className="flex relative justify-between max-md:flex-col max-md:items-center">
         <LineTitle
           custom={custom}
           changeName={changeName}
@@ -239,7 +239,7 @@ const Line = <T extends { name: string }>({
             </Glyph>
           </ButtonGlyphContainer>
         ) : null}
-      </ColumnLine>
+      </li>
       {children}
     </ul>
   );

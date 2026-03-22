@@ -7,7 +7,7 @@ import AccessesContext from '../../contexts/AccessesContext';
 import SystemContext from '../../contexts/SystemContext';
 import { fetcher } from '../../helpers/fetcher';
 import { useToast } from '../../contexts/ToastContext';
-import TextFallback from '../../styles/TextFallback';
+
 import { EmptyLine } from '../../styles/Lines';
 import type { UserType } from '../../types/UserType';
 import AutoCompleteInput from '../AutoCompleteInput';
@@ -106,7 +106,9 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
       <MainContainer>
         <SectionTitle title="Access" />
         <EmptyLine />
-        <TextFallback>Chargement…</TextFallback>;
+        <strong className="h-full grow flex justify-center items-center">
+          Chargement…
+        </strong>
       </MainContainer>
     );
 

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import PreferencesContext from '../../contexts/PreferencesContext';
 import { HandText, HandEditableText } from '../../styles/Texts';
 import type { TempElemType } from '../../types/TempElemType';
-import ColumnLine from './ColumnLine';
+
 import LineTitle from './LineTitle';
 import TextHelper from './TextHelper';
 
@@ -47,7 +47,7 @@ const LineValue = <T extends { name: string }>({
   const { showPex } = useContext(PreferencesContext);
   return (
     <ul>
-      <ColumnLine>
+      <li className="flex relative justify-between max-md:flex-col max-md:items-center">
         <LineTitle
           custom
           changeName={changeName}
@@ -83,7 +83,7 @@ const LineValue = <T extends { name: string }>({
             ) : null}
           </TextContainer>
         ) : null}
-      </ColumnLine>
+      </li>
     </ul>
   );
 };

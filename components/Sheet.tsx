@@ -16,7 +16,7 @@ import Disciplines from './sections/Disciplines';
 import Footer from './Footer';
 import { GenerationProvider } from '../contexts/GenerationContext';
 import { IdProvider } from '../contexts/IdContext';
-import SheetContainer from '../styles/SheetContainer';
+
 import { AdvFlawProvider } from '../contexts/AdvFlawContext';
 import Misc from './sections/Misc';
 import { LanguagesProvider } from '../contexts/LanguagesContext';
@@ -75,7 +75,7 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
         confirmNavigation={unsavedChanges}
         confirmText={UnsavedChangeCloseText}
       />
-      <SheetContainer>
+      <main className="w-4/5 max-4xl:w-[95%] max-3xl:w-4/5 max-2xl:w-[95%] max-xl:w-4/5 max-md-plus:w-[90%] mx-auto mt-5 h-auto max-w-[2000px] relative">
         <PageTitle>
           {infos.era === 0 ? (
             <Image
@@ -99,7 +99,7 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
         <HumanMagic />
         <Misc />
         <PexSection />
-      </SheetContainer>
+      </main>
       <SheetActionsFooter />
       <Footer />
     </>

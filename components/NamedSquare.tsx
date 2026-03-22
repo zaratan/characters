@@ -1,36 +1,5 @@
-import styled from 'styled-components';
 import Square, { EmptyGlyph } from './Square';
 import { SubTitle } from '../styles/Titles';
-
-const NamedSquareContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0 3rem;
-  @media screen and (max-width: 400px) {
-    padding: 0;
-  }
-`;
-
-const Separator = styled.span`
-  width: 4rem;
-`;
-
-const Container = styled.span`
-  display: flex;
-  justify-content: space-between;
-  width: 70%;
-`;
-
-const Indicator = styled.span`
-  position: relative;
-  top: 9px;
-`;
-
-const SquareContainer = styled.span`
-  position: relative;
-  top: 3px;
-`;
 
 const NamedSquare = ({
   value,
@@ -49,13 +18,13 @@ const NamedSquare = ({
     setValue(value < 3 ? value + 1 : 3);
   };
   return (
-    <NamedSquareContainer>
-      <Container>
+    <div className="flex justify-between w-full px-12 max-sm:px-0">
+      <span className="flex justify-between w-[70%]">
         <SubTitle>{title}</SubTitle>
-        <Separator />
-        <Indicator>{subtitle}</Indicator>
-      </Container>
-      <SquareContainer>
+        <span className="w-16" />
+        <span className="relative top-[9px]">{subtitle}</span>
+      </span>
+      <span className="relative top-[3px]">
         <EmptyGlyph
           type={title}
           onClick={() => setValue(0)}
@@ -67,8 +36,8 @@ const NamedSquare = ({
           inactive={value === 3 || !!inactive}
           name={`${title}`}
         />
-      </SquareContainer>
-    </NamedSquareContainer>
+      </span>
+    </div>
   );
 };
 

@@ -7,7 +7,7 @@ import Nav from '../Nav';
 import { SectionsProvider } from '../../contexts/SectionsContext';
 import type { VampireType } from '../../types/VampireType';
 import SystemContext from '../../contexts/SystemContext';
-import TextFallback from '../../styles/TextFallback';
+
 import MeContext from '../../contexts/MeContext';
 import { AccessesProvider } from '../../contexts/AccessesContext';
 import Config from '../config/Config';
@@ -51,9 +51,9 @@ const ConfigClient = ({
     return (
       <OuterContainer>
         <Nav />
-        <TextFallback>
+        <strong className="h-full grow flex justify-center items-center">
           Vous n&apos;avez pas accès à la configuration de ce personnage.
-        </TextFallback>
+        </strong>
         <Footer />
       </OuterContainer>
     );

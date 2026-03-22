@@ -291,15 +291,17 @@ Le CSS est mieux : cacheable, ne bloque pas le parsing JS, pas d'hydration néce
 
 **Validation** : l'app est visuellement identique. Build + lint + tests E2E passent.
 
-### Phase 1 : Composants feuilles sans thème (1-2 jours) — Taille S
+### Phase 1 : Composants feuilles sans thème (1-2 jours) — Taille S ✅
 
-- [ ] `styles/TextFallback.ts`
-- [ ] `components/line/ColumnLine.ts`
-- [ ] `components/NamedSquare.tsx`
-- [ ] `styles/SheetContainer.ts`
-- [ ] `components/ErrorPage.tsx`
+- [x] `components/ErrorPage.tsx` — 3 styled → classes Tailwind inline
+- [x] `styles/TextFallback.ts` — supprimé, remplacé par `<strong>` + classes dans `ConfigClient.tsx` et `ConfigAccessSection.tsx`
+- [x] `components/line/ColumnLine.ts` — supprimé, remplacé par `<li>` + classes dans `Line.tsx` et `LineValue.tsx`
+- [x] `components/NamedSquare.tsx` — 5 styled internes → classes Tailwind inline
+- [x] `styles/SheetContainer.ts` — supprimé, remplacé par `<main>` + classes dans `Sheet.tsx`, `HomeClient.tsx`
 
-**Validation** : tests E2E + comparaison screenshots.
+**Note** : `max-*:` (desktop-first) utilisé pour les breakpoints, fidèle au CSS original. `grow` ajouté sur le `<main>` de HomeClient pour le layout flex full-height.
+
+**Validation** : build + lint + 96 tests E2E passent + test manuel OK.
 
 ### Phase 2 : Fichiers partagés `styles/` (3-4 jours) — Taille L
 
