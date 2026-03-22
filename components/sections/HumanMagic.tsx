@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import SectionsContext from '../../contexts/SectionsContext';
 import SectionTitle from '../SectionTitle';
 import { HorizontalSection } from '../../styles/Sections';
-import { Container } from '../../styles/Container';
 import HumanMagicContext from '../../contexts/HumanMagicContext';
 import {
   calcPexHumanMagic,
@@ -47,7 +46,7 @@ const HumanMagic = () => {
         ]}
       />
       <HorizontalSection>
-        <Container>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Pouvoirs Psy"
             button={{ glyph: '+', value: addNewPsy }}
@@ -78,8 +77,8 @@ const HumanMagic = () => {
               </li>
             ))}
           </ul>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Magie Statique"
             button={{ glyph: '+', value: addNewStatic }}
@@ -110,8 +109,8 @@ const HumanMagic = () => {
               </li>
             ))}
           </ul>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Théurgie"
             button={{ glyph: '+', value: addNewTheurgy }}
@@ -142,11 +141,14 @@ const HumanMagic = () => {
               </li>
             ))}
           </ul>
-        </Container>
+        </div>
         {[...psy, ...staticMagic, ...theurgy]
           .filter((power) => power.hasRitual)
           .map((power) => (
-            <Container key={`${power.key}-rituals`}>
+            <div
+              key={`${power.key}-rituals`}
+              className="container-hover-reveal"
+            >
               <ColumnTitleWithOptions
                 title={`Rituels de ${power.title}`}
                 button={{ glyph: '+', value: power.addNewRitual }}
@@ -173,7 +175,7 @@ const HumanMagic = () => {
                   </li>
                 ))}
               </ul>
-            </Container>
+            </div>
           ))}
       </HorizontalSection>
     </>

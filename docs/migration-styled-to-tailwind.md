@@ -116,10 +116,10 @@ Pas de CSS custom properties pour les couleurs du thème. Chaque élément porte
 | `navBackground`              | `#f8f8f8`   | `#070707`  | `bg-neutral-50 dark:bg-neutral-950`          |
 | `handTextColor`              | `#333`      | `#bbb`     | `text-neutral-700 dark:text-neutral-400`     |
 | `dotBaseNotSelectColot`      | `#bbb`      | `#fff`     | `fill-neutral-400 dark:fill-white`           |
-| `titleColor`                 | `#595959`   | `#ccc`     | `text-neutral-500 dark:text-neutral-300`     |
+| `titleColor`                 | `#595959`   | `#ccc`     | `text-neutral-600 dark:text-neutral-300`     |
 | `red`                        | `red`       | `#e62a2a`  | `text-red-600 dark:text-red-500`             |
 
-> **Note** : Ce mapping utilise la palette Tailwind la plus proche. Lors de la migration de chaque composant, vérifier visuellement que le rendu est fidèle. Pour les couleurs sans équivalent Tailwind exact, utiliser les valeurs arbitraires (`[#8bcbe0]`).
+> **Note** : Utiliser les tokens Tailwind les plus proches. Vérifier visuellement le contraste, surtout sur les fonts fines (Bilbo Swash Caps, CloisterBlack). Pour les couleurs sans équivalent Tailwind proche, utiliser les valeurs arbitraires (`[#8bcbe0]`).
 
 ### Modification de `ThemeContext` (fait en Phase 0)
 
@@ -303,18 +303,27 @@ Le CSS est mieux : cacheable, ne bloque pas le parsing JS, pas d'hydration néce
 
 **Validation** : build + lint + 96 tests E2E passent + test manuel OK.
 
-### Phase 2 : Fichiers partagés `styles/` (3-4 jours) — Taille L
+### Phase 2 : Fichiers partagés `styles/` (3-4 jours) — Taille L ✅
 
 **Blast radius élevé — ces fichiers sont importés partout.**
 
-- [ ] `styles/Lines.tsx` (`EmptyLine`, `BlackLine`)
-- [ ] `styles/Items.ts` (`OptionItem`, `ActionItem`)
-- [ ] `styles/Titles.tsx` (`Title`, `StyledColumnTitle`, `SubTitle`)
-- [ ] `styles/Texts.ts` (`HandLargeText`, `HandEditableText`, etc.) — créer `lib/tw.ts`
-- [ ] `styles/Sections.tsx` (`HorizontalSection` avec grid dynamique)
-- [ ] `styles/Container.ts` (hover-reveal pattern)
+- [x] `styles/Lines.tsx` — composants React avec `classNames()`, modifiers `.thin`/`.mobile-only`
+- [x] `styles/Items.tsx` (renommé) — composants React, ActionItem avec `dark:` pour les thèmes
+- [x] `styles/Titles.tsx` — composants React, `justify-self-center` pour centrage grid, `!important` pour `.victorian-queen`
+- [x] `styles/Texts.tsx` (renommé) — composants React, `bg-transparent` pour les inputs, `border-solid` explicite pour les underlines
+- [x] `styles/Sections.tsx` — composant React polymorphique (`as` prop), CSS `any-hover` dans `globals.css`
+- [x] `styles/Container.ts` — **supprimé**, CSS `.container-hover-reveal` dans `globals.css`
 
-**Validation** : tests E2E + screenshots + test manuel light/dark sur chaque page.
+**Leçons apprises :**
+
+- Tailwind v4 nécessite `@custom-variant dark` pour le dark mode par classe (pas par défaut)
+- `border: none` du reset empêche `border-b` → remplacé par Preflight
+- `font: inherit` empêche `font-bilbo` sur inputs → décomposé en propriétés individuelles
+- `gap-y-0` doit être `gap-y-0!` pour overrider `gap-y-8` (même spécificité Tailwind)
+- `justify-self-center` nécessaire pour centrer un `w-fit` dans une grid cell
+- Utiliser `bg-transparent` plutôt que `bg-white dark:bg-X` pour les inputs (hérite du parent)
+
+**Validation** : build + lint + tests E2E + test manuel OK.
 
 ### Phase 3 : Composants autonomes (2-3 jours) — Taille M
 

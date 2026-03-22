@@ -18,7 +18,6 @@ import {
 } from '../../helpers/pex';
 import { HandEditableText, HandText } from '../../styles/Texts';
 import GenerationContext from '../../contexts/GenerationContext';
-import { Container } from '../../styles/Container';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
@@ -82,7 +81,7 @@ const Disciplines = () => {
         ]}
       />
       <HorizontalSection>
-        <Container>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Clan"
             button={{ glyph: '+', value: addNewClanDiscipline }}
@@ -119,8 +118,8 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Hors Clan"
             button={{ glyph: '+', value: addNewOutClanDiscipline }}
@@ -157,8 +156,8 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Disciplines Combinées"
             button={{ glyph: '+', value: addNewCombinedDiscipline }}
@@ -189,11 +188,11 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </Container>
+        </div>
         {[...clanDisciplines, ...outClanDisciplines]
           .filter((disc) => disc.isThaumaturgy)
           .map((thau: TempThaumaturgyElemType) => [
-            <Container key={`${thau.key}-paths`}>
+            <div key={`${thau.key}-paths`} className="container-hover-reveal">
               <ColumnTitleWithOptions
                 title={`Voies de ${thau.title}`}
                 button={{ glyph: '+', value: thau.addNewPath }}
@@ -238,8 +237,8 @@ const Disciplines = () => {
                   </li>
                 ))}
               </ul>
-            </Container>,
-            <Container key={`${thau.key}-rituals`}>
+            </div>,
+            <div key={`${thau.key}-rituals`} className="container-hover-reveal">
               <ColumnTitleWithOptions
                 title={`Rituels de ${thau.title}`}
                 button={{ glyph: '+', value: thau.addNewRitual }}
@@ -290,7 +289,7 @@ const Disciplines = () => {
                   </li>
                 ))}
               </ul>
-            </Container>,
+            </div>,
           ])}
       </HorizontalSection>
     </>

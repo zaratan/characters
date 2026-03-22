@@ -3,7 +3,6 @@ import AdvFlawContext from '../../contexts/AdvFlawContext';
 import { HorizontalSection } from '../../styles/Sections';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
 import { calcPexDiffAdvFlaw, calcPexAdvFlaw } from '../../helpers/pex';
-import { Container } from '../../styles/Container';
 import LanguagesContext from '../../contexts/LanguagesContext';
 import AbilitiesContext from '../../contexts/AbilitiesContext';
 import { maxLanguages } from '../../helpers/maxLevels';
@@ -49,7 +48,7 @@ const Misc = () => {
         ]}
       />
       <HorizontalSection>
-        <Container>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Avantages"
             button={{ glyph: '+', value: addNewAdvantage }}
@@ -78,8 +77,8 @@ const Misc = () => {
               </li>
             ))}
           </ul>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Inconvénients"
             button={{ glyph: '+', value: addNewFlaw }}
@@ -105,8 +104,8 @@ const Misc = () => {
               </li>
             ))}
           </ul>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Langues"
             button={{
@@ -132,7 +131,7 @@ const Misc = () => {
               ) : null
             )}
           </ul>
-        </Container>
+        </div>
       </HorizontalSection>
     </>
   );

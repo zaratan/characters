@@ -3,7 +3,6 @@ import styled from 'styled-components';
 import AttributesContext from '../../contexts/AttributesContext';
 import SectionTitle from '../SectionTitle';
 import { HorizontalSection } from '../../styles/Sections';
-import { Container } from '../../styles/Container';
 import ColumnTitle from '../ColumnTitle';
 import type { pexElemsType } from '../PexElem';
 import PexElem, { computePexElems } from '../PexElem';
@@ -239,7 +238,7 @@ const PexSection = () => {
     <>
       <SectionTitle title="Expérience" />
       <HorizontalSection>
-        <Container>
+        <div className="container-hover-reveal">
           <ColumnTitle title="Restant" />
           <TextContainer>
             {editMode ? (
@@ -252,8 +251,8 @@ const PexSection = () => {
               <HandText>{leftOver.value === 0 ? '' : leftOver.value}</HandText>
             )}
           </TextContainer>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitle title="Total" />
           <HandText>
             <PexElem
@@ -264,9 +263,9 @@ const PexSection = () => {
               withSpaces
             />
           </HandText>
-        </Container>
+        </div>
         {showPex ? (
-          <Container>
+          <div className="container-hover-reveal">
             <ColumnTitle title="Statistiques" />
             <PexPercentage
               pexElemsAttributes={attributesPexElems}
@@ -275,7 +274,7 @@ const PexSection = () => {
               pexElemsPowers={powersPexElems}
               totalPex={totalPex}
             />
-          </Container>
+          </div>
         ) : null}
       </HorizontalSection>
     </>
