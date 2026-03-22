@@ -1,25 +1,9 @@
-import styled from 'styled-components';
 import { calcPexDiffAbility, calcPexDiffSpecialty } from '../../helpers/pex';
 import { HandEditableText, HandText } from '../../styles/Texts';
 import type { TempElemType } from '../../types/TempElemType';
 import { Glyph } from '../Glyph';
 import ButtonGlyphContainer from './ButtonGlyphContainer';
 import Line from './Line';
-
-const SpecialtyContainer = styled.li`
-  width: 80%;
-  display: flex;
-  position: relative;
-  @media screen and (max-width: 500px) {
-    margin: auto;
-  }
-`;
-
-const SpecialtiesContainer = styled.ul`
-  display: grid;
-  position: relative;
-  grid-template-columns: repeat(3, 1fr);
-`;
 
 const AbilityLine = ({
   elem,
@@ -69,10 +53,13 @@ const AbilityLine = ({
     inactive={inactive}
   >
     <li>
-      <SpecialtiesContainer>
+      <ul className="grid relative grid-cols-3">
         {specialties &&
           specialties.map((specialty) => (
-            <SpecialtyContainer key={specialty.key}>
+            <li
+              key={specialty.key}
+              className="w-4/5 flex relative max-md:mx-auto"
+            >
               {inactive ? (
                 <HandText>{specialty.name}</HandText>
               ) : (
@@ -94,9 +81,9 @@ const AbilityLine = ({
                   </Glyph>
                 </ButtonGlyphContainer>
               )}
-            </SpecialtyContainer>
+            </li>
           ))}
-      </SpecialtiesContainer>
+      </ul>
     </li>
   </Line>
 );

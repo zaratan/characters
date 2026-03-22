@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { useContext } from 'react';
-import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from '../Dot';
 import { Glyph } from '../Glyph';
@@ -11,21 +10,7 @@ import LineTitle from './LineTitle';
 
 import TextHelper from './TextHelper';
 import ButtonGlyphContainer from './ButtonGlyphContainer';
-
-const Value = styled.span`
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: center;
-
-  &.only-dots {
-    width: 100%;
-    justify-self: center;
-  }
-
-  &:hover svg {
-    fill: transparent;
-  }
-`;
+import classNames from '../../helpers/classNames';
 
 type LineProps<T> = {
   elem: TempElemType<number>;
@@ -88,7 +73,13 @@ const Line = <T extends { name: string }>({
           autocomplete={autocomplete}
           infoLink={infoLink}
         />
-        <Value role="radiogroup" className={title || custom ? '' : 'only-dots'}>
+        <span
+          role="radiogroup"
+          className={classNames(
+            'dot-value flex flex-row-reverse justify-center',
+            !(title || custom) && 'w-full justify-self-center'
+          )}
+        >
           <Dot
             onClick={onClickHandle(10)}
             full={elem.value >= 10}
@@ -226,7 +217,7 @@ const Line = <T extends { name: string }>({
               name={name}
             />
           ) : null}
-        </Value>
+        </span>
         {endNumber !== undefined && showPex && (
           <TextHelper className="closer">{endNumber}</TextHelper>
         )}

@@ -139,9 +139,364 @@ input[type='number']::-webkit-outer-spin-button {
   }
 }
 
+/* ===== Glyph ===== */
+
+.glyph {
+  font-size: 21px;
+  padding-right: 2px;
+  cursor: pointer;
+  z-index: 1;
+  outline: none;
+}
+.glyph:hover,
+.glyph:focus {
+  color: darkcyan;
+}
+.glyph:hover ~ small,
+.glyph:focus ~ small {
+  display: inline;
+}
+.glyph.inactive {
+  cursor: default;
+}
+.glyph.inactive:hover,
+.glyph.inactive:focus {
+  color: black;
+}
+.dark .glyph.inactive:hover,
+.dark .glyph.inactive:focus {
+  color: #ccc;
+}
+.glyph.absolute-position {
+  position: absolute;
+  left: -1rem;
+}
+@media screen and (max-width: 500px) {
+  .glyph.absolute-position {
+    left: -1.5rem;
+  }
+}
+
+/* ===== DotSeparator ===== */
+
+.dot-separator {
+  padding: 0.3rem;
+  height: 100%;
+  outline: none;
+}
+.dot-separator:hover ~ span svg {
+  fill: #525252 !important;
+}
+.dark .dot-separator:hover ~ span svg {
+  fill: #a3a3a3 !important;
+}
+.dot-separator:hover + span small {
+  display: inline;
+}
+.dot-separator:hover svg.full,
+.dot-separator:focus svg.full {
+  fill: transparent;
+}
+.dot-separator svg.full {
+  color: #525252;
+}
+.dark .dot-separator svg.full {
+  color: #a3a3a3;
+}
+.dot-separator.hidden {
+  display: none;
+}
+
+/* ===== Line (dot-value) ===== */
+
+.dot-value:hover svg {
+  fill: transparent;
+}
+
+/* ===== LineTitle (custom-title) ===== */
+
+.custom-title input {
+  flex-grow: 1;
+  text-indent: 1px;
+}
+@media screen and (max-width: 500px) {
+  .custom-title input {
+    text-align: center;
+    text-indent: 0;
+    padding-left: 1rem;
+    margin-left: 1rem;
+  }
+}
+
+/* ===== Dot component ===== */
+
+.dot-svg {
+  color: #000000;
+  padding: 0 0.05rem;
+  fill: transparent;
+  width: 24px;
+  height: 36px;
+  transition: fill 0.2s ease-in-out;
+}
+.dark .dot-svg {
+  color: #cccccc;
+}
+.dot-svg.full {
+  fill: #555555;
+}
+.dark .dot-svg.full {
+  fill: #999999;
+}
+
+.dot-text-helper {
+  position: absolute;
+  top: -6px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.6rem;
+  display: none;
+  transition: display 0.2s ease-in-out;
+}
+.dot-text-helper.left-aligned {
+  left: -1rem;
+}
+@media screen and (max-width: 500px) {
+  .dot-text-helper.left-aligned {
+    left: -1.5rem;
+  }
+}
+
+.dot-container {
+  position: relative;
+  height: 36px;
+}
+
+.dot-container:not(.disabled):hover svg,
+.dot-container:not(.disabled):focus svg {
+  fill: #000000 !important;
+}
+.dark .dot-container:not(.disabled):hover svg,
+.dark .dot-container:not(.disabled):focus svg {
+  fill: #aaaaaa !important;
+}
+.dot-container:not(.disabled):hover ~ span svg,
+.dot-container:not(.disabled):focus ~ span svg {
+  fill: #000000 !important;
+}
+.dark .dot-container:not(.disabled):hover ~ span svg,
+.dark .dot-container:not(.disabled):focus ~ span svg {
+  fill: #aaaaaa !important;
+}
+.dot-container:not(.disabled):hover ~ span.locked svg,
+.dot-container:not(.disabled):focus ~ span.locked svg {
+  fill: #000000 !important;
+}
+.dark .dot-container:not(.disabled):hover ~ span.locked svg,
+.dark .dot-container:not(.disabled):focus ~ span.locked svg {
+  fill: #aaaaaa !important;
+}
+
+.dot-container:focus {
+  outline: none;
+}
+.dot-container:not(.disabled):focus svg ellipse {
+  stroke: darkcyan;
+  stroke-width: 3px;
+}
+
+.dot-container.locked {
+  cursor: auto;
+}
+.dot-container.locked svg {
+  fill: #000000 !important;
+}
+.dark .dot-container.locked svg {
+  fill: #aaaaaa !important;
+}
+
+.dot-container.disabled {
+  cursor: auto !important;
+}
+.dot-container.disabled svg.full {
+  fill: #000000 !important;
+}
+.dark .dot-container.disabled svg.full {
+  fill: #aaaaaa !important;
+}
+.dot-container.disabled:focus {
+  outline: none;
+}
+.dot-container.disabled:focus svg ellipse {
+  stroke: #000000 !important;
+  stroke-width: 2px !important;
+}
+.dark .dot-container.disabled:focus svg ellipse {
+  stroke: #aaaaaa !important;
+  stroke-width: 2px !important;
+}
+.dot-container.disabled svg.not-full {
+  fill: transparent !important;
+}
+.dot-container.disabled small {
+  display: none !important;
+}
+
+.dot-container:not(.disabled):hover small,
+.dot-container:not(.disabled):focus small {
+  display: inline;
+}
+
+.dot-container:not(.selected) {
+  cursor: pointer;
+}
+
+.dot-container.base.selected small {
+  display: none;
+  color: #ff0000;
+}
+.dark .dot-container.base.selected small {
+  color: #e62a2a;
+}
+
+.dot-container.selected small {
+  display: inline;
+  color: #ff0000;
+}
+.dark .dot-container.selected small {
+  color: #e62a2a;
+}
+
+.dot-container.hidden {
+  display: none;
+}
+
+.dot-container.base:not(.selected) svg {
+  fill: #bbbbbb !important;
+}
+.dark .dot-container.base:not(.selected) svg {
+  fill: #ffffff !important;
+}
+
+.dot-glyph-container {
+  position: relative;
+}
+.dot-glyph-container.base.selected small {
+  display: none;
+  color: #ff0000;
+}
+.dark .dot-glyph-container.base.selected small {
+  color: #e62a2a;
+}
+.dot-glyph-container.selected small {
+  display: inline;
+  color: #ff0000;
+}
+.dark .dot-glyph-container.selected small {
+  color: #e62a2a;
+}
+
+/* ===== Square component ===== */
+
+.square-container {
+  height: 36px;
+}
+.square-container:focus,
+.square-container:hover {
+  outline: none;
+}
+.square-container:not(.inactive) {
+  cursor: pointer;
+}
+.square-container:not(.inactive):hover svg.hover-check path.first,
+.square-container:not(.inactive):hover svg.hover-check path.second {
+  stroke-dashoffset: 0 !important;
+}
+.square-container:not(.inactive):focus rect,
+.square-container:not(.inactive):hover rect {
+  stroke: darkcyan;
+  stroke-width: 3px;
+}
+
+.square-svg {
+  width: 24px;
+  height: 36px;
+  fill: transparent;
+}
+.square-svg path {
+  stroke-dasharray: 33.95, 33.95;
+  stroke-dashoffset: 33.95;
+}
+.square-svg path.first.checked {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s ease-in-out;
+}
+.square-svg path.second.checked {
+  stroke-dashoffset: 0;
+}
+.square-svg path.second.checked:not(.slow-checked) {
+  transition: stroke-dashoffset 0.2s ease-in-out;
+}
+.square-svg path.second.checked.slow-checked {
+  transition: stroke-dashoffset 0.2s ease-in-out 0.2s;
+}
+.square-svg path.third.checked {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s ease-in-out;
+}
+
+/* ===== SquareLine component ===== */
+
+.square-separator {
+  padding: 0.3rem;
+  height: 100%;
+  outline: none;
+}
+.square-separator.xs-visible {
+  display: none;
+}
+@media screen and (max-width: 500px) {
+  .square-separator.xs-visible {
+    display: inherit;
+  }
+  .square-separator.xs-invisible {
+    display: none;
+  }
+}
+
+.square-line-container {
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+}
+.square-line-container.must-wrap {
+  display: grid;
+  grid-template-columns: repeat(5, 24px) 0.6rem repeat(5, 24px) 0.6rem repeat(5, 24px);
+  width: calc(15 * 24px + 1.2rem);
+  margin: 0 auto;
+}
+@media screen and (max-width: 500px) {
+  .square-line-container.must-wrap {
+    grid-template-columns: repeat(5, 24px) 0.6rem repeat(5, 24px);
+    width: calc(10 * 24px + 0.6rem);
+  }
+}
+.square-line-container:not(.must-wrap) {
+  display: flex;
+  justify-content: center;
+}
+.square-line-container .empty-glyph {
+  opacity: 0;
+  transition: opacity 0.2s ease-in-out;
+}
+.square-line-container:not(.inactive):hover .empty-glyph,
+.square-line-container:not(.inactive):focus-within .empty-glyph {
+  opacity: 1;
+}
+
 /* ===== ButtonGlyphContainer nested span styling ===== */
 
 .button-glyph-container span {
+  font-size: 1rem;
   color: #525252; /* neutral-600 */
   font-family: 'CloisterBlack', serif;
 }
@@ -150,6 +505,10 @@ input[type='number']::-webkit-outer-spin-button {
 }
 .button-glyph-container.active span {
   color: #16a34a; /* green-600 */
+}
+.button-glyph-container span:hover,
+.button-glyph-container span:focus {
+  color: darkcyan;
 }
 
 /* ===== Keyframes ===== */

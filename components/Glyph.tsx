@@ -1,38 +1,16 @@
-import type { ReactNode } from 'react';
-import styled from 'styled-components';
+import type { HTMLAttributes, ReactNode } from 'react';
 import {
   generateHandleClick,
   generateHandleKeypress,
 } from '../helpers/handlers';
+import classNames from '../helpers/classNames';
 
-export const StyledGlyph = styled.span`
-  font-size: 21px;
-  padding-right: 2px;
-  cursor: pointer;
-  &:hover,
-  &:focus {
-    color: darkcyan;
-    & ~ small {
-      display: inline;
-    }
-  }
-  &.inactive {
-    cursor: default;
-    &:hover,
-    &:focus {
-      color: black;
-    }
-  }
-  z-index: 1;
-  outline: none;
-  &.absolute-position {
-    position: absolute;
-    left: -1rem;
-    @media screen and (max-width: 500px) {
-      left: -1.5rem;
-    }
-  }
-`;
+export const StyledGlyph = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLSpanElement>) => (
+  <span className={classNames('glyph', className)} {...props} />
+);
 
 export const Glyph = ({
   onClick,
@@ -59,9 +37,11 @@ export const Glyph = ({
       onKeyPress={handleKeypress}
       role="button"
       tabIndex={inactive ? -1 : 0}
-      className={`${className || ''} ${inactive ? 'inactive' : ''} ${
-        absolutePosition ? 'absolute-position' : ''
-      }`}
+      className={classNames(
+        className,
+        inactive && 'inactive',
+        absolutePosition && 'absolute-position'
+      )}
     >
       {children}
     </StyledGlyph>

@@ -1,5 +1,5 @@
+import classNames from '../helpers/classNames';
 import { useContext } from 'react';
-import styled from 'styled-components';
 import ThemeContext from '../contexts/ThemeContext';
 import {
   generateHandleClick,
@@ -7,66 +7,6 @@ import {
 } from '../helpers/handlers';
 import { darkTheme, lightTheme } from '../styles/Theme';
 import { Glyph } from './Glyph';
-
-const SquareContainer = styled.span`
-  height: 36px;
-  &:focus,
-  &:hover {
-    outline: none;
-  }
-  &:not(.inactive) {
-    cursor: pointer;
-    &:hover {
-      svg.hover-check {
-        path.first,
-        path.second {
-          stroke-dashoffset: 0 !important;
-        }
-      }
-    }
-    &:focus,
-    &:hover {
-      outline: none;
-      rect {
-        stroke: darkcyan;
-        stroke-width: 3px;
-      }
-    }
-  }
-`;
-
-const SquareStyle = styled.svg`
-  width: 24px;
-  height: 36px;
-  fill: transparent;
-  path {
-    stroke-dasharray: 33.95, 33.95;
-    stroke-dashoffset: 33.95;
-  }
-  path.first {
-    &.checked {
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 0.2s ease-in-out;
-    }
-  }
-  path.second {
-    &.checked {
-      stroke-dashoffset: 0;
-    }
-    &.checked:not(.slow-checked) {
-      transition: stroke-dashoffset 0.2s ease-in-out;
-    }
-    &.checked.slow-checked {
-      transition: stroke-dashoffset 0.2s ease-in-out 0.2s;
-    }
-  }
-  path.third {
-    &.checked {
-      stroke-dashoffset: 0;
-      transition: stroke-dashoffset 0.2s ease-in-out;
-    }
-  }
-`;
 
 export const EmptyGlyph = ({
   onClick,
@@ -111,15 +51,15 @@ const Square = ({
   const handleKeypress = generateHandleKeypress(inactive ? () => {} : onClick);
   const { darkMode } = useContext(ThemeContext);
   return (
-    <SquareContainer
+    <span
       aria-label={name}
       onClick={handleClick}
       onKeyPress={handleKeypress}
       role="button"
       tabIndex={inactive ? -1 : 0}
-      className={inactive ? 'inactive' : ''}
+      className={classNames('square-container', inactive && 'inactive')}
     >
-      <SquareStyle className={hoverCheck ? 'hover-check' : ''}>
+      <svg className={classNames('square-svg', hoverCheck && 'hover-check')}>
         <rect
           x="3"
           y="9"
@@ -148,8 +88,8 @@ const Square = ({
           stroke={darkMode ? darkTheme.color : lightTheme.color}
           strokeWidth="2"
         />
-      </SquareStyle>
-    </SquareContainer>
+      </svg>
+    </span>
   );
 };
 
