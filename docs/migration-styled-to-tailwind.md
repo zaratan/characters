@@ -345,19 +345,30 @@ Le CSS est mieux : cacheable, ne bloque pas le parsing JS, pas d'hydration néce
 
 **Validation** : build + lint + test manuel OK.
 
-### Phase 4 : Composants interactifs complexes (4-5 jours) — Taille XL
+### Phase 4 : Composants interactifs complexes (4-5 jours) — Taille XL ✅
 
 **Phase la plus risquée. Les composants Dot/Square/Glyph sont le cœur de l'UI.**
 
-- [ ] `components/Glyph.tsx`
-- [ ] `components/Square.tsx` + CSS module pour animation SVG
-- [ ] `components/Dot.tsx` + CSS module pour sélecteurs siblings
-- [ ] `components/line/DotSeparator.ts`
-- [ ] `components/SquareLine.tsx` + CSS module pour grid calc
-- [ ] `components/line/Line.tsx`
-- [ ] `components/line/LineTitle.tsx`, `LineValue.tsx`, `AbilityLine.tsx`
+- [x] `components/Glyph.tsx` — CSS `.glyph` dans globals.css (sibling `~ small`, hover darkcyan)
+- [x] `components/line/DotSeparator.tsx` (renommé) — CSS `.dot-separator` dans globals.css (sibling selectors, theme)
+- [x] `components/line/Line.tsx` — `Value` styled → inline + CSS `.dot-value`
+- [x] `components/line/LineValue.tsx` — `TextContainer` → inline
+- [x] `components/line/AbilityLine.tsx` — 2 styled → inline
+- [x] `components/line/LineTitle.tsx` — 4 styled → mix inline + CSS `.custom-title`, InfoLink + RemoveContainer en flow (plus absolute)
+- [x] `components/Dot.tsx` — 4 styled → CSS globals (`.dot-container`, `.dot-svg`, `.dot-text-helper`, `.dot-glyph-container`). Sibling cascade limitée avec `:not(.disabled)`
+- [x] `components/Square.tsx` — 2 styled → CSS globals (`.square-container`, `.square-svg`). Animation SVG stroke-dash préservée
+- [x] `components/SquareLine.tsx` — 3 styled → CSS globals (`.square-line-container`, `.square-separator`) + inline
 
-**Validation** : tests E2E + screenshots + **test manuel exhaustif** de toutes les interactions (hover dots, click squares, états locked/disabled/base/selected, animations).
+**Leçons apprises :**
+
+- Sibling selectors (`~ span svg`) → 100% CSS dans globals.css, pas de Tailwind possible
+- SVG stroke-dash animations → CSS dans globals.css
+- Hover cascade doit exclure `.disabled` : `:not(.disabled):hover ~ span svg`
+- Nested span styling (`.button-glyph-container span`) nécessite CSS globals quand on ne contrôle pas les enfants
+- InfoLink en `absolute` superpose le texte long → refacto en flow `flex items-baseline` avec `shrink-0`
+- `font-size: 1rem` manquant dans `.button-glyph-container span` causait des glyphes trop grands
+
+**Validation** : build + lint + test manuel OK.
 
 ### Phase 5 : Navigation et Actions (2-3 jours) — Taille M
 

@@ -255,7 +255,6 @@ input[type='number']::-webkit-outer-spin-button {
   text-align: center;
   font-size: 0.6rem;
   display: none;
-  transition: display 0.2s ease-in-out;
 }
 .dot-text-helper.left-aligned {
   left: -1rem;
@@ -346,7 +345,7 @@ input[type='number']::-webkit-outer-spin-button {
   display: inline;
 }
 
-.dot-container:not(.selected) {
+.dot-container:not(.selected):not(.locked):not(.disabled) {
   cursor: pointer;
 }
 
@@ -511,18 +510,3 @@ input[type='number']::-webkit-outer-spin-button {
   color: darkcyan;
 }
 
-/* ===== Keyframes ===== */
-
-@keyframes fill-stroke {
-  0% {
-    stroke-dashoffset: 1000;
-  }
-
-  50% {
-    stroke-dashoffset: 1000;
-  }
-
-  100% {
-    stroke-dashoffset: 0;
-  }
-}
