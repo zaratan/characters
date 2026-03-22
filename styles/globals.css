@@ -1,1 +1,136 @@
 @import 'tailwindcss';
+
+@theme {
+  /* Breakpoints custom (max-width utilisés dans le codebase) */
+  --breakpoint-xs: 310px;
+  --breakpoint-sm: 400px;
+  --breakpoint-sm-plus: 410px;
+  --breakpoint-md: 500px;
+  --breakpoint-md-plus: 600px;
+  --breakpoint-lg: 680px;
+  --breakpoint-lg-plus: 750px;
+  --breakpoint-xl: 859px;
+  --breakpoint-xl-plus: 930px;
+  --breakpoint-2xl: 1022px;
+  --breakpoint-3xl: 1304px;
+  --breakpoint-4xl: 1500px;
+
+  /* Fonts custom */
+  --font-cloister: 'CloisterBlack', serif;
+  --font-victorian: 'VictorianQ', serif;
+  --font-bilbo: 'Bilbo Swash Caps', cursive;
+}
+
+/* ===== Font Faces ===== */
+
+@font-face {
+  font-family: CloisterBlack;
+  src: url(/CloisterBlack.ttf);
+  font-display: swap;
+}
+
+@font-face {
+  font-family: VictorianQ;
+  src: url(/GreatVictorianQ.otf);
+  font-display: swap;
+  font-weight: 100;
+}
+
+/* ===== CSS Reset ===== */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+ul,
+ol {
+  padding: 0;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul,
+ol,
+li,
+figure,
+figcaption,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+body {
+  scroll-behavior: smooth;
+  text-rendering: optimizeSpeed;
+  line-height: 1.5;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a:not([class]) {
+  text-decoration-skip-ink: auto;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+article > * + * {
+  margin-top: 1em;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+  border: none;
+  border-radius: 0;
+  padding: 0;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* ===== Accessibility ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===== Keyframes ===== */
+
+@keyframes fill-stroke {
+  0% {
+    stroke-dashoffset: 1000;
+  }
+
+  50% {
+    stroke-dashoffset: 1000;
+  }
+
+  100% {
+    stroke-dashoffset: 0;
+  }
+}

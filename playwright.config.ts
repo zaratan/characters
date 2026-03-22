@@ -24,9 +24,13 @@ if (!process.env.POSTGRES_URL) {
 
 export default defineConfig({
   testDir: './e2e/tests',
+  workers: process.env.CI ? undefined : 3,
   retries: process.env.CI ? 2 : 1,
   reporter: [['html'], ['list']],
   timeout: 5_000,
+  expect: {
+    toHaveScreenshot: { maxDiffPixelRatio: 0.02 },
+  },
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
