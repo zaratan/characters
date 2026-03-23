@@ -5,8 +5,8 @@ import {
 } from '../helpers/handlers';
 import { Glyph } from './Glyph';
 import PreferencesContext from '../contexts/PreferencesContext';
-import ThemeContext from '../contexts/ThemeContext';
-import { darkTheme } from '../styles/Theme';
+import styles from './Dot.module.css';
+import classNames from '../helpers/classNames';
 
 export const EmptyGlyph = ({
   pexValue,
@@ -21,16 +21,20 @@ export const EmptyGlyph = ({
   onClick: () => void;
   name: string;
 }) => {
-  const containerClass = `dot-glyph-container empty-glyph
-    ${selected ? 'selected' : ''}
-    ${baseValue ? 'base' : ''}
-  `;
+  const containerClass = classNames(
+    styles.dotGlyphContainer,
+    'empty-glyph',
+    selected && styles.selected,
+    baseValue && styles.base
+  );
   return (
     <span className={containerClass}>
       <Glyph onClick={onClick} name={`${name} 0`} absolutePosition>
         ø
       </Glyph>
-      <small className="dot-text-helper left-aligned">{pexValue}</small>
+      <small className={classNames(styles.dotTextHelper, styles.leftAligned)}>
+        {pexValue}
+      </small>
     </span>
   );
 };
@@ -58,13 +62,14 @@ const Dot = ({
   onClick?: () => void;
   inactive?: boolean;
 }) => {
-  const containerClass = `dot-container
-    ${selectedValue ? 'selected' : ''}
-    ${locked ? 'locked' : ''}
-    ${!inactive ? '' : 'disabled'}
-    ${baseValue ? 'base' : ''}
-    ${hidden ? 'hidden' : ''}
-  `;
+  const containerClass = classNames(
+    styles.dotContainer,
+    selectedValue && styles.selected,
+    locked && styles.locked,
+    inactive && styles.disabled,
+    baseValue && styles.base,
+    hidden && styles.hidden
+  );
 
   const clickAction = !inactive ? (onClick ?? (() => {})) : () => {};
 
@@ -72,7 +77,6 @@ const Dot = ({
 
   const handleKeyPress = generateHandleKeypress(clickAction);
   const { showPex } = useContext(PreferencesContext);
-  const { darkMode } = useContext(ThemeContext);
 
   return (
     <span
@@ -84,16 +88,18 @@ const Dot = ({
       aria-checked={full}
       aria-label={`${name} ${value}`}
     >
-      {showPex ? <small className="dot-text-helper">{pexValue}</small> : null}
-      <svg className={`dot-svg ${full ? 'full' : 'not-full'}`}>
-        <ellipse
-          cx="50%"
-          cy="50%"
-          rx="40%"
-          ry="30%"
-          stroke={darkMode ? darkTheme.dotColor : 'black'}
-          strokeWidth="2"
-        />
+      {showPex ? (
+        <small className={styles.dotTextHelper}>{pexValue}</small>
+      ) : null}
+      <svg
+        className={classNames(
+          styles.dotSvg,
+          full
+            ? classNames(styles.full, 'full')
+            : classNames(styles.notFull, 'not-full')
+        )}
+      >
+        <ellipse cx="50%" cy="50%" rx="40%" ry="30%" strokeWidth="2" />
       </svg>
     </span>
   );

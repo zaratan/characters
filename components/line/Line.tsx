@@ -11,6 +11,7 @@ import LineTitle from './LineTitle';
 import TextHelper from './TextHelper';
 import ButtonGlyphContainer from './ButtonGlyphContainer';
 import classNames from '../../helpers/classNames';
+import styles from './Line.module.css';
 
 type LineProps<T> = {
   elem: TempElemType<number>;
@@ -76,7 +77,8 @@ const Line = <T extends { name: string }>({
         <span
           role="radiogroup"
           className={classNames(
-            'dot-value flex flex-row-reverse justify-center',
+            styles.dotValue,
+            'flex flex-row-reverse justify-center',
             !(title || custom) && 'w-full justify-self-center'
           )}
         >

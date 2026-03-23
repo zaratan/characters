@@ -1,0 +1,12 @@
+.buttonGlyphContainer span {
+  font-size: 1rem;
+  color: var(--glyph-gray);
+  font-family: 'CloisterBlack', serif;
+}
+.buttonGlyphContainer span:hover,
+.buttonGlyphContainer span:focus {
+  color: darkcyan;
+}
+.buttonGlyphContainer.active span {
+  color: #16a34a; /* green-600 */
+}

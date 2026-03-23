@@ -1,3 +1,5 @@
+import Image from 'next/image';
+
 // Colors chosen to guarantee WCAG AA contrast ratio (≥4.5:1) with white text.
 const PALETTE = [
   '#7c3aed',
@@ -40,11 +42,13 @@ const UserAvatar = ({
 }) => {
   if (image) {
     return (
-      <img
+      <Image
         src={image}
         alt={name || ''}
+        width={size}
+        height={size}
         className="rounded-full object-cover"
-        style={{ width: size, height: size }}
+        unoptimized
       />
     );
   }

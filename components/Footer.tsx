@@ -1,4 +1,6 @@
 import { BlackLine, EmptyLine } from '../styles/Lines';
+import styles from './Footer.module.css';
+import classNames from '../helpers/classNames';
 
 const Footer = ({ withoutEmptyLines }: { withoutEmptyLines?: boolean }) => (
   <footer className="italic text-[1.2rem] text-center">
@@ -12,7 +14,12 @@ const Footer = ({ withoutEmptyLines }: { withoutEmptyLines?: boolean }) => (
     <span className="h-12 flex items-center justify-center w-full">
       <span>
         Made with{' '}
-        <span className="heart-transition cursor-grab hover:text-red-600 dark:hover:text-red-500">
+        <span
+          className={classNames(
+            styles.heartTransition,
+            'cursor-grab hover:text-red-600 dark:hover:text-red-500'
+          )}
+        >
           ♥
         </span>{' '}
         by

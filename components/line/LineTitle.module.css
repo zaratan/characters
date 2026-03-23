@@ -1,0 +1,12 @@
+.customTitle input {
+  flex-grow: 1;
+  text-indent: 1px;
+}
+@media screen and (max-width: 500px) {
+  .customTitle input {
+    text-align: center;
+    text-indent: 0;
+    padding-left: 1rem;
+    margin-left: 1rem;
+  }
+}

@@ -4,12 +4,13 @@ import {
   generateHandleKeypress,
 } from '../helpers/handlers';
 import classNames from '../helpers/classNames';
+import styles from './Glyph.module.css';
 
 export const StyledGlyph = ({
   className,
   ...props
 }: HTMLAttributes<HTMLSpanElement>) => (
-  <span className={classNames('glyph', className)} {...props} />
+  <span className={classNames(styles.glyph, className)} {...props} />
 );
 
 export const Glyph = ({
@@ -39,8 +40,8 @@ export const Glyph = ({
       tabIndex={inactive ? -1 : 0}
       className={classNames(
         className,
-        inactive && 'inactive',
-        absolutePosition && 'absolute-position'
+        inactive && styles.inactive,
+        absolutePosition && styles.absolutePosition
       )}
     >
       {children}

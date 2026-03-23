@@ -1,0 +1,23 @@
+.glyphContainer {
+  position: absolute;
+  right: -1.5rem;
+  top: 0;
+  height: 100%;
+}
+.glyphContainer span {
+  font-size: 1rem;
+  color: var(--glyph-gray);
+}
+
+.optionsContainer {
+  max-height: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    max-height 0.3s ease-in-out,
+    opacity 0.3s ease-in-out;
+}
+.optionsContainer:global(.opened) {
+  opacity: 1;
+  visibility: visible;
+}

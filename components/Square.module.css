@@ -1,0 +1,50 @@
+.squareContainer {
+  height: 36px;
+}
+.squareContainer:focus,
+.squareContainer:hover {
+  outline: none;
+}
+.squareContainer:not(.inactive) {
+  cursor: pointer;
+}
+.squareContainer:not(.inactive):hover .squareSvg.hoverCheck .first,
+.squareContainer:not(.inactive):hover .squareSvg.hoverCheck .second {
+  stroke-dashoffset: 0 !important;
+}
+.squareContainer:not(.inactive):focus rect,
+.squareContainer:not(.inactive):hover rect {
+  stroke: darkcyan;
+  stroke-width: 3px;
+}
+
+.squareSvg {
+  width: 24px;
+  height: 36px;
+  fill: transparent;
+}
+.squareSvg rect,
+.squareSvg path {
+  stroke: var(--text-color);
+}
+.squareSvg path {
+  stroke-dasharray: 33.95, 33.95;
+  stroke-dashoffset: 33.95;
+}
+.squareSvg .first.checked {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s ease-in-out;
+}
+.squareSvg .second.checked {
+  stroke-dashoffset: 0;
+}
+.squareSvg .second.checked:not(.slowChecked) {
+  transition: stroke-dashoffset 0.2s ease-in-out;
+}
+.squareSvg .second.checked.slowChecked {
+  transition: stroke-dashoffset 0.2s ease-in-out 0.2s;
+}
+.squareSvg .third.checked {
+  stroke-dashoffset: 0;
+  transition: stroke-dashoffset 0.2s ease-in-out;
+}

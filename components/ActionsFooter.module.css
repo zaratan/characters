@@ -1,0 +1,74 @@
+.glyphAction {
+  display: flex;
+  align-items: center;
+  font-size: 2rem;
+}
+.glyphAction svg {
+  width: 30px;
+}
+.glyphAction:global(.active) {
+  color: green;
+}
+
+.desktopAction {
+  background-color: var(--action-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-color);
+  border-radius: 40px;
+  height: 80px;
+  min-width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1.5rem 0;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  transition: padding 0.3s ease-in-out;
+  text-decoration: none;
+}
+.desktopAction:hover {
+  color: var(--text-color);
+}
+.desktopAction .fullText {
+  overflow-x: hidden;
+  max-width: 0;
+  transition:
+    max-width 0.3s ease-in-out,
+    padding-left 0.3s ease-in-out;
+  white-space: nowrap;
+  padding-left: 0;
+}
+@media screen and (any-hover: hover) {
+  .desktopAction:hover,
+  .desktopAction:focus {
+    outline: none;
+    padding: 1.5rem;
+  }
+  .desktopAction:hover .fullText,
+  .desktopAction:focus .fullText {
+    max-width: 220px;
+    padding-left: 1rem;
+  }
+  .desktopAction:focus {
+    border-color: var(--blue);
+  }
+}
+
+.mobileAction {
+  text-align: center;
+  padding: 1rem;
+  background-color: var(--action-bg);
+  border-radius: 5px;
+  border: 1px solid var(--action-border) !important;
+  color: var(--text-color);
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+.mobileAction:hover {
+  background-color: var(--action-active-bg);
+}

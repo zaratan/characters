@@ -1,0 +1,35 @@
+.glyph {
+  font-size: 21px;
+  padding-right: 2px;
+  cursor: pointer;
+  z-index: 1;
+  outline: none;
+}
+.glyph:hover,
+.glyph:focus {
+  color: darkcyan;
+}
+.glyph:hover ~ small,
+.glyph:focus ~ small {
+  display: inline;
+}
+.inactive {
+  cursor: default;
+}
+.glyph.inactive:hover,
+.glyph.inactive:focus {
+  color: black;
+}
+:global(.dark) .glyph.inactive:hover,
+:global(.dark) .glyph.inactive:focus {
+  color: var(--text-color);
+}
+.absolutePosition {
+  position: absolute;
+  left: -1rem;
+}
+@media screen and (max-width: 500px) {
+  .absolutePosition {
+    left: -1.5rem;
+  }
+}

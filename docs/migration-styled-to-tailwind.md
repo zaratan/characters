@@ -370,14 +370,26 @@ Le CSS est mieux : cacheable, ne bloque pas le parsing JS, pas d'hydration néce
 
 **Validation** : build + lint + test manuel OK.
 
-### Phase 5 : Navigation et Actions (2-3 jours) — Taille M
+### Phase 5 : Navigation, Actions + Migration CSS Modules (2-3 jours) — Taille M ✅
 
-- [ ] `components/Nav.tsx` (dropdown, transitions)
-- [ ] `components/ActionsFooter.tsx` (desktop/mobile split, `styled(Link)`)
-- [ ] `components/AutoCompleteInput.tsx` (dropdown, focus states)
-- [ ] `components/ColumnTitleWithOptions.tsx` (max-height dynamique)
+**Changement architectural : CSS Modules au lieu de globals.css pour les composants complexes.**
 
-**Validation** : tests E2E + screenshots + test manuel navigation mobile/desktop.
+- [x] **5-pre** : CSS custom properties pour le thème dans globals.css + migration CSS Phase 4 vers CSS Modules (Dot, Square, Glyph, etc.)
+- [x] `components/Nav.tsx` — 10 styled → Tailwind + `Nav.module.css` (dropdown animation, theme colors)
+- [x] `components/ColumnTitleWithOptions.tsx` — 3 styled → Tailwind + CSS Module + `style={{}}` pour hauteur dynamique
+- [x] `components/ActionsFooter.tsx` — 9 styled → Tailwind + `ActionsFooter.module.css` (desktop expand, any-hover, mobile action)
+- [x] `components/AutoCompleteInput.tsx` — 5 styled → Tailwind + `AutoCompleteInput.module.css` (input focus, suggestions hover)
+
+**Leçons apprises :**
+
+- CSS Modules > globals.css pour CSS composant (scoped, co-localisé, pas de collision)
+- CSS custom properties (`var(--token)`) dans les CSS Modules pour les couleurs du thème
+- `:global(.dark)` pour le dark mode dans les CSS Modules
+- `:global(.open)` pour les classes d'état ajoutées via className
+- `styled(Link)` → simplement `<Link className={styles.xxx}>` (pas de wrapper)
+- `forwardRef` nécessaire quand on remplace un styled input par un composant React
+
+**Validation** : build + lint + test manuel OK.
 
 ### Phase 6 : Config et Toast (1-2 jours) — Taille S
 

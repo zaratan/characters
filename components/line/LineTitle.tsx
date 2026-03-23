@@ -4,6 +4,7 @@ import { Glyph } from '../Glyph';
 import DotSeparator from './DotSeparator';
 import LineInput from './LineInput';
 import classNames from '../../helpers/classNames';
+import styles from './LineTitle.module.css';
 
 type LineTitleProps<T> = {
   custom?: boolean;
@@ -36,7 +37,12 @@ const LineTitle = <T extends { name: string }>({
         full && 'max-w-full!'
       )}
     >
-      <span className="custom-title relative flex flex-col grow max-w-[90%]">
+      <span
+        className={classNames(
+          styles.customTitle,
+          'relative flex flex-col grow max-w-[90%]'
+        )}
+      >
         <span className="flex items-baseline">
           {inactive ? (
             <HandText>{title}</HandText>

@@ -1,6 +1,7 @@
 import classNames from '../helpers/classNames';
 import Square, { EmptyGlyph } from './Square';
 import type { TempElemType } from '../types/TempElemType';
+import styles from './SquareLine.module.css';
 
 const SquareLine = ({
   type,
@@ -16,9 +17,9 @@ const SquareLine = ({
   <div className="relative">
     <div
       className={classNames(
-        'square-line-container',
-        number > 15 && 'must-wrap',
-        inactive && 'inactive'
+        styles.squareLineContainer,
+        number > 15 && styles.mustWrap,
+        inactive && styles.inactive
       )}
     >
       <EmptyGlyph
@@ -39,9 +40,9 @@ const SquareLine = ({
         i % 5 === 4 && i !== number - 1 ? (
           <span
             className={classNames(
-              'square-separator',
-              i % 10 === 9 && 'xs-invisible',
-              i % 15 === 14 && 'xs-visible'
+              styles.squareSeparator,
+              i % 10 === 9 && styles.xsInvisible,
+              i % 15 === 14 && styles.xsVisible
             )}
             key={`type-${i}`}
           />
