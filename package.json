@@ -38,7 +38,6 @@
     "react-dom": "19",
     "resend": "^6.9.4",
     "slugify": "^1.6.8",
-    "styled-components": "^6",
     "swr": "^2.4.1"
   },
   "devDependencies": {

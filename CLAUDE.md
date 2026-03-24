@@ -6,14 +6,15 @@
 
 ## Tech Stack
 
-- **Framework**: Next.js 14.2 (App Router — fully migrated)
-- **Language**: TypeScript 5.9 (strict mode disabled)
-- **UI**: React 18.2, Styled-Components 5.3, Tailwind CSS 3.1
+- **Framework**: Next.js 16 (App Router — fully migrated)
+- **Language**: TypeScript 5 (strict mode disabled)
+- **UI**: React 19, Tailwind CSS 4, CSS Modules (for complex selectors)
 - **State Management**: React Context API (21 context files in `contexts/`)
-- **Data Fetching**: SWR 1.3
+- **Data Fetching**: SWR 2
 - **Database**: PostgreSQL (Neon via Vercel Postgres) — `pg` driver, raw SQL
 - **Auth**: NextAuth.js v4 (`next-auth`) — Email magic link (Resend) + GitHub OAuth
 - **Real-time**: Pusher (WebSocket-based live updates)
+- **Testing**: Vitest (unit), Playwright (E2E + visual regression), @testing-library/react
 - **Package Manager**: pnpm
 
 ## Commands
@@ -23,6 +24,9 @@ pnpm dev          # Start development server
 pnpm build        # Production build
 pnpm start        # Start production server
 pnpm lint         # Run ESLint on the entire project
+pnpm test         # Run Vitest unit tests
+pnpm test:e2e     # Run Playwright E2E tests
+pnpm test:e2e:ui  # Run Playwright with UI
 ```
 
 ## Project Structure
@@ -34,6 +38,7 @@ components/           # React components
   line/               # Line-based UI components (dots, text inputs)
   config/             # Configuration UI components
   no-ssr/             # Client-side only components (Pusher listeners)
+  *.module.css        # CSS Modules for complex component styles
 contexts/             # React Context providers (21 files, one per domain)
 lib/                  # Database & auth infrastructure
   pool.ts             # Shared pg Pool (serverless-optimized, max:1)
@@ -42,9 +47,8 @@ lib/                  # Database & auth infrastructure
   auth-adapter.ts     # Custom NextAuth PostgreSQL adapter
   queries.ts          # DB query wrappers (vampires list, users list, etc.)
   providers.tsx       # Client-side context providers (Session, SWR, Theme, etc.)
-  registry.tsx        # Styled-components SSR support
-app/                  # App Router (Next.js 14) — routing only
-  layout.tsx          # Root layout (metadata, providers, styled-components)
+app/                  # App Router (Next.js 16) — routing only
+  layout.tsx          # Root layout (metadata, providers, globals.css)
   page.tsx            # Home page (server component → HomeClient)
   new/                # Create character page
   vampires/[id]/      # Character sheet + config pages
@@ -55,13 +59,14 @@ app/                  # App Router (Next.js 14) — routing only
     users/            # Users list
 components/pages/     # Client components for App Router pages (HomeClient, SheetClient, ConfigClient)
 hooks/                # Custom React hooks (useSave, useScroll, etc.)
-helpers/              # Utility functions (fetcher, pex calculations, pusher)
+helpers/              # Utility functions (fetcher, pex calculations, pusher, classNames)
 migrations/           # PostgreSQL schema migrations (node-pg-migrate)
 types/                # TypeScript type definitions (VampireType, MeType, etc.)
 data/                 # Static JSON data (disciplines, combo disciplines)
 defaultData/          # Default character templates (vampire, ghoul, human, darkAge, victorian)
-styles/               # Global styles, theme provider (light/dark mode)
+styles/               # Shared UI components (Lines, Texts, Titles, Sections, Items) + globals.css
 public/               # Static assets (fonts, images)
+e2e/                  # Playwright E2E tests (tests, fixtures, helpers)
 ```
 
 ## Code Conventions
@@ -73,14 +78,19 @@ public/               # Static assets (fonts, images)
 - **Hooks**: camelCase with `use` prefix (`useSave.ts`)
 - **Type files**: PascalCase with `Type` suffix (`VampireType.ts`)
 - **Helpers**: camelCase (`fetcher.ts`, `pusherClient.ts`)
+- **CSS Modules**: ComponentName.module.css, co-located with the component
 
 ### Patterns
 
 - State management via React Context (not Redux/Zustand) — each domain has its own context
-- Immer for immutable state updates inside contexts
 - SWR for all server data fetching with automatic caching
 - Dynamic imports with `next/dynamic` for client-only components (no-ssr pattern)
-- Styled-components with a theme provider for theming; Tailwind for utility classes
+- **Styling**: Three-tier approach:
+  - Tailwind CSS utility classes for simple layout/spacing/typography
+  - CSS Modules (`.module.css`) for complex patterns (sibling selectors, SVG animations, `any-hover`, nested selectors)
+  - CSS custom properties (`:root` / `.dark`) in `globals.css` for theme tokens
+- **Dark mode**: Class-based via `@custom-variant dark` in Tailwind v4. `ThemeContext` toggles `.dark` on `<html>`. CSS custom properties switch automatically.
+- `helpers/classNames.ts` for conditional class composition
 - API routes are RESTful Route Handlers under `app/api/` (GET/PUT/PATCH/DELETE)
 - Server/client component split: server component pages fetch data + pass to `'use client'` components with SWR `fallbackData`
 - `app/` directory contains **only routing files** (pages, layouts, route handlers, loading). All other code lives at root level.
@@ -119,7 +129,7 @@ Copy `.env.sample` to `.env.local` and fill in values:
 
 ## Key Architectural Notes
 
-- **No test suite** — there are no tests or test runner configured
+- **Testing** — Vitest for unit tests, Playwright for E2E (6 spec files + visual regression screenshots)
 - **Deployment** — hosted on Vercel (`.vercel` in `.gitignore`)
 - **Real-time collaboration** — Pusher enables multiple users to edit the same character sheet simultaneously
 - **Character types** — supports Vampire, Ghoul, Human, Dark Ages, and Victorian era templates in `defaultData/`

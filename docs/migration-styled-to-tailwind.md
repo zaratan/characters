@@ -408,19 +408,22 @@ Le CSS est mieux : cacheable, ne bloque pas le parsing JS, pas d'hydration néce
 
 **Validation** : build + lint + test manuel OK.
 
-### Phase 7 : Cleanup (1-2 jours) — Taille M
+### Phase 7 : Cleanup (1-2 jours) — Taille M ✅
 
-- [ ] Supprimer `styles/GlobalStyle.ts`
-- [ ] Supprimer `styles/Theme.tsx`
-- [ ] Supprimer `lib/registry.tsx`
-- [ ] Retirer `<StyledComponentsRegistry>` de `app/layout.tsx`
-- [ ] Retirer `<ThemeProvider>` (styled-components) de `lib/providers.tsx`
-- [ ] Retirer `compiler.styledComponents` de `next.config.js` (si présent)
-- [ ] `pnpm remove styled-components`
-- [ ] Vérifier : `grep -r "styled-components" --include="*.ts" --include="*.tsx" .` → 0 résultats
-- [ ] Supprimer tous les fichiers `styles/*.ts(x)` migrés
+- [x] Supprimer `styles/GlobalStyle.ts` — règles migrées vers globals.css (html/body bg/color, link styles)
+- [x] Supprimer `styles/Theme.tsx` — remplacé par CSS custom properties dans globals.css
+- [x] Supprimer `lib/registry.tsx` — plus besoin de SSR styled-components
+- [x] Supprimer `styles.d.ts` — types styled-components
+- [x] Retirer `<StyledComponentsRegistry>` de `app/layout.tsx`
+- [x] Retirer `<ThemeProvider>` et `<GlobalStyle>` de `lib/providers.tsx`
+- [x] Retirer `compiler.styledComponents` de `next.config.ts`
+- [x] Retirer `StyledThemeProvider` de `__tests__/test-utils.tsx`
+- [x] `pnpm remove styled-components` — **-12 packages**
+- [x] Vérifier : `grep -r "styled-components"` → 0 résultats dans le code source
+- [x] Mettre à jour `CLAUDE.md` (versions, tech stack, patterns, structure)
+- [x] Fix test E2E "health squares" — classes CSS Modules hashées → ajout classes globales en double
 
-**Validation** : `pnpm build` clean + tests E2E complets + screenshots finaux.
+**Validation** : build + lint + 96/96 tests E2E + reviews Lead + UX + Architecte OK.
 
 ---
 

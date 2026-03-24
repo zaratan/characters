@@ -56,7 +56,7 @@ const Square = ({
       tabIndex={inactive ? -1 : 0}
       className={classNames(
         styles.squareContainer,
-        inactive && styles.inactive
+        inactive && classNames(styles.inactive, 'inactive')
       )}
     >
       <svg
@@ -70,7 +70,8 @@ const Square = ({
           d="M6 12 L18 24 Z"
           className={classNames(
             styles.first,
-            timeChecked >= 1 && styles.checked
+            'first',
+            timeChecked >= 1 && classNames(styles.checked, 'checked')
           )}
           strokeWidth="2"
         />
@@ -78,8 +79,9 @@ const Square = ({
           d="M18 12 L6 24 Z"
           className={classNames(
             styles.second,
-            timeChecked >= 2 && styles.checked,
-            hoverCheck && styles.slowChecked
+            'second',
+            timeChecked >= 2 && classNames(styles.checked, 'checked'),
+            hoverCheck && classNames(styles.slowChecked, 'slow-checked')
           )}
           strokeWidth="2"
         />
@@ -87,7 +89,8 @@ const Square = ({
           d="M12 11 L12 25 Z"
           className={classNames(
             styles.third,
-            timeChecked >= 3 && styles.checked
+            'third',
+            timeChecked >= 3 && classNames(styles.checked, 'checked')
           )}
           strokeWidth="2"
         />

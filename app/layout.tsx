@@ -1,6 +1,5 @@
 /* eslint-disable @next/next/no-page-custom-font */
 import type { ReactNode } from 'react';
-import StyledComponentsRegistry from '../lib/registry';
 import Providers from '../lib/providers';
 import '../styles/globals.css';
 
@@ -27,9 +26,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
       </head>
       <body>
-        <StyledComponentsRegistry>
-          <Providers>{children}</Providers>
-        </StyledComponentsRegistry>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
