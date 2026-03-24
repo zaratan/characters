@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import styled from 'styled-components';
 import { HorizontalSection } from '../../styles/Sections';
 import { maxDot } from '../../helpers/maxLevels';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
@@ -11,32 +10,6 @@ import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
 import AbilityLine from '../line/AbilityLine';
-
-const Container = styled.div`
-  .col-button {
-    font-size: 1.5rem;
-  }
-  @media screen and (any-hover: hover) {
-    .empty-glyph,
-    .line-button,
-    .remove-glyph,
-    .remove-spec-button,
-    .col-button {
-      opacity: 0;
-      transition: opacity 0.2s ease-in-out;
-    }
-    &:hover,
-    &:focus-within {
-      .empty-glyph,
-      .line-button,
-      .remove-glyph,
-      .remove-spec-button,
-      .col-button {
-        opacity: 1;
-      }
-    }
-  }
-`;
 
 const AbilitiesColumn = ({
   abilities,
@@ -57,7 +30,7 @@ const AbilitiesColumn = ({
   changeCustomAbilityTitle: (key: string) => (newTitle: string) => void;
   inactive?: boolean;
 }) => (
-  <Container>
+  <div className="container-hover-reveal">
     <ColumnTitleWithOptions
       title={title}
       button={{ glyph: '+', value: addNewCustomAbility }}
@@ -123,7 +96,7 @@ const AbilitiesColumn = ({
         inactive={inactive}
       />
     ))}
-  </Container>
+  </div>
 );
 
 const Abilities = () => {

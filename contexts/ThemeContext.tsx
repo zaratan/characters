@@ -24,17 +24,21 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
     );
     if (lsDarkMode !== undefined && lsDarkMode !== null) {
       setDarkMode(lsDarkMode);
+      document.documentElement.classList.toggle('dark', lsDarkMode);
     } else if (
       window.matchMedia &&
       window.matchMedia('(prefers-color-scheme: dark)').matches
     ) {
       setDarkMode(true);
+      document.documentElement.classList.add('dark');
     }
   }, []);
 
   const toggleDarkMode = () => {
-    localStorage.setItem('ThemeContext:darkMode', String(!darkMode));
-    setDarkMode(!darkMode);
+    const next = !darkMode;
+    localStorage.setItem('ThemeContext:darkMode', String(next));
+    setDarkMode(next);
+    document.documentElement.classList.toggle('dark', next);
   };
 
   const context: ContextType = {

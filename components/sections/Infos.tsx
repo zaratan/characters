@@ -1,6 +1,5 @@
 import type { FormEvent } from 'react';
 import { useContext } from 'react';
-import styled from 'styled-components';
 import { HorizontalSection } from '../../styles/Sections';
 import { EmptyLine } from '../../styles/Lines';
 import { Title } from '../../styles/Titles';
@@ -9,17 +8,6 @@ import InfosContext from '../../contexts/InfosContext';
 import GenerationContext from '../../contexts/GenerationContext';
 import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
-
-const InfoContainer = styled.div`
-  display: flex;
-  @media screen and (max-width: 500px) {
-    display: block;
-  }
-`;
-
-const Separator = styled.span`
-  width: 1rem;
-`;
 
 const Infos = () => {
   const { name, playerName, chronicle, clan, demeanor, haven, nature, sire } =
@@ -41,9 +29,9 @@ const Infos = () => {
       <EmptyLine />
 
       <HorizontalSection className="compact">
-        <InfoContainer>
+        <div className="flex max-md:block">
           <Title>Nom:</Title>
-          <Separator />
+          <span className="w-4" />
           {editMode ? (
             <HandLargeEditableText
               type="text"
@@ -53,10 +41,10 @@ const Infos = () => {
           ) : (
             <HandLargeText className="label">{name.value}</HandLargeText>
           )}
-        </InfoContainer>
-        <InfoContainer>
+        </div>
+        <div className="flex max-md:block">
           <Title>Joueur: </Title>
-          <Separator />
+          <span className="w-4" />
           {editMode ? (
             <HandLargeEditableText
               type="text"
@@ -66,10 +54,10 @@ const Infos = () => {
           ) : (
             <HandLargeText className="label">{playerName.value}</HandLargeText>
           )}
-        </InfoContainer>
-        <InfoContainer>
+        </div>
+        <div className="flex max-md:block">
           <Title>Chronique: </Title>
-          <Separator />
+          <span className="w-4" />
           {editMode ? (
             <HandLargeEditableText
               type="text"
@@ -79,10 +67,10 @@ const Infos = () => {
           ) : (
             <HandLargeText className="label">{chronicle.value}</HandLargeText>
           )}
-        </InfoContainer>
-        <InfoContainer>
+        </div>
+        <div className="flex max-md:block">
           <Title>Nature: </Title>
-          <Separator />
+          <span className="w-4" />
           {editMode ? (
             <HandLargeEditableText
               type="text"
@@ -92,10 +80,10 @@ const Infos = () => {
           ) : (
             <HandLargeText className="label">{nature.value}</HandLargeText>
           )}
-        </InfoContainer>
-        <InfoContainer>
+        </div>
+        <div className="flex max-md:block">
           <Title>Attitude: </Title>
-          <Separator />
+          <span className="w-4" />
           {editMode ? (
             <HandLargeEditableText
               type="text"
@@ -105,11 +93,11 @@ const Infos = () => {
           ) : (
             <HandLargeText className="label">{demeanor.value}</HandLargeText>
           )}
-        </InfoContainer>
+        </div>
         {useVampireInfos ? (
-          <InfoContainer>
+          <div className="flex max-md:block">
             <Title>Clan: </Title>
-            <Separator />
+            <span className="w-4" />
             {editMode ? (
               <HandLargeEditableText
                 type="text"
@@ -119,12 +107,12 @@ const Infos = () => {
             ) : (
               <HandLargeText className="label">{clan.value}</HandLargeText>
             )}
-          </InfoContainer>
+          </div>
         ) : null}
         {useGeneration ? (
-          <InfoContainer>
+          <div className="flex max-md:block">
             <Title>Génération: </Title>
-            <Separator />
+            <span className="w-4" />
             {editMode ? (
               <HandLargeEditableText
                 type="number"
@@ -138,11 +126,11 @@ const Infos = () => {
                 {generation.value}
               </HandLargeText>
             )}
-          </InfoContainer>
+          </div>
         ) : null}
-        <InfoContainer>
+        <div className="flex max-md:block">
           <Title>Refuge: </Title>
-          <Separator />
+          <span className="w-4" />
           {editMode ? (
             <HandLargeEditableText
               type="text"
@@ -152,11 +140,11 @@ const Infos = () => {
           ) : (
             <HandLargeText className="label">{haven.value}</HandLargeText>
           )}
-        </InfoContainer>
+        </div>
         {useVampireInfos ? (
-          <InfoContainer>
+          <div className="flex max-md:block">
             <Title>Sire: </Title>
-            <Separator />
+            <span className="w-4" />
             {editMode ? (
               <HandLargeEditableText
                 type="text"
@@ -166,7 +154,7 @@ const Infos = () => {
             ) : (
               <HandLargeText className="label">{sire.value}</HandLargeText>
             )}
-          </InfoContainer>
+          </div>
         ) : null}
       </HorizontalSection>
     </>

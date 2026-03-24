@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { useContext } from 'react';
-import styled from 'styled-components';
 
 import Dot, { EmptyGlyph } from '../Dot';
 import { Glyph } from '../Glyph';
@@ -8,24 +7,11 @@ import type { TempElemType } from '../../types/TempElemType';
 import PreferencesContext from '../../contexts/PreferencesContext';
 import DotSeparator from './DotSeparator';
 import LineTitle from './LineTitle';
-import ColumnLine from './ColumnLine';
+
 import TextHelper from './TextHelper';
 import ButtonGlyphContainer from './ButtonGlyphContainer';
-
-const Value = styled.span`
-  display: flex;
-  flex-direction: row-reverse;
-  justify-content: center;
-
-  &.only-dots {
-    width: 100%;
-    justify-self: center;
-  }
-
-  &:hover svg {
-    fill: transparent;
-  }
-`;
+import classNames from '../../helpers/classNames';
+import styles from './Line.module.css';
 
 type LineProps<T> = {
   elem: TempElemType<number>;
@@ -77,7 +63,7 @@ const Line = <T extends { name: string }>({
 
   return (
     <ul>
-      <ColumnLine>
+      <li className="flex relative justify-between max-md:flex-col max-md:items-center">
         <LineTitle
           custom={custom}
           changeName={changeName}
@@ -88,7 +74,14 @@ const Line = <T extends { name: string }>({
           autocomplete={autocomplete}
           infoLink={infoLink}
         />
-        <Value role="radiogroup" className={title || custom ? '' : 'only-dots'}>
+        <span
+          role="radiogroup"
+          className={classNames(
+            styles.dotValue,
+            'flex flex-row-reverse justify-center',
+            !(title || custom) && 'w-full justify-self-center'
+          )}
+        >
           <Dot
             onClick={onClickHandle(10)}
             full={elem.value >= 10}
@@ -226,7 +219,7 @@ const Line = <T extends { name: string }>({
               name={name}
             />
           ) : null}
-        </Value>
+        </span>
         {endNumber !== undefined && showPex && (
           <TextHelper className="closer">{endNumber}</TextHelper>
         )}
@@ -239,7 +232,7 @@ const Line = <T extends { name: string }>({
             </Glyph>
           </ButtonGlyphContainer>
         ) : null}
-      </ColumnLine>
+      </li>
       {children}
     </ul>
   );

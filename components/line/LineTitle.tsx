@@ -1,64 +1,10 @@
-import styled from 'styled-components';
 import { HandText } from '../../styles/Texts';
 import { SubTitle } from '../../styles/Titles';
 import { Glyph } from '../Glyph';
 import DotSeparator from './DotSeparator';
 import LineInput from './LineInput';
-
-const CustomTitleContainer = styled.span`
-  display: flex;
-  flex-grow: 1;
-  max-width: 70%;
-  &.full-size {
-    max-width: 100%;
-  }
-  @media screen and (max-width: 500px) {
-    width: 100%;
-  }
-`;
-
-const RemoveContainer = styled.span`
-  position: absolute;
-  right: 0;
-  top: 4px;
-  z-index: 1;
-  transition: visibility 0.3s ease-in-out;
-`;
-const CustomTitle = styled.span`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  flex-grow: 1;
-  max-width: 90%;
-  input {
-    flex-grow: 1;
-    text-indent: 1px;
-  }
-  @media screen and (max-width: 500px) {
-    input {
-      text-align: center;
-      padding: 0;
-      text-indent: 0;
-    }
-    margin: 0 auto;
-  }
-`;
-
-const InfoLink = styled.a`
-  font-size: 1rem;
-  border: 1px solid ${(props) => props.theme.borderColor};
-  display: inline;
-  position: absolute;
-  right: 0;
-  top: 4px;
-  width: 1.5rem;
-  text-align: center;
-  border-radius: 100%;
-  &:hover {
-    background-color: ${(props) => props.theme.actionBackground};
-    color: ${(props) => props.theme.color};
-  }
-`;
+import classNames from '../../helpers/classNames';
+import styles from './LineTitle.module.css';
 
 type LineTitleProps<T> = {
   custom?: boolean;
@@ -85,37 +31,50 @@ const LineTitle = <T extends { name: string }>({
 }: LineTitleProps<T>) => {
   if (title === undefined) return null;
   return custom ? (
-    <CustomTitleContainer className={full ? `full-size` : ''}>
-      <CustomTitle>
-        {inactive ? (
-          <HandText>{title}</HandText>
-        ) : (
-          <LineInput
-            autocomplete={autocomplete}
-            changeName={changeName}
-            placeholder={placeholder}
-            title={title}
-          />
+    <span
+      className={classNames(
+        'flex grow max-w-[70%] max-md:w-full',
+        full && 'max-w-full!'
+      )}
+    >
+      <span
+        className={classNames(
+          styles.customTitle,
+          'relative flex flex-col grow max-w-[90%]'
         )}
-        {infoLink && inactive ? (
-          <InfoLink
-            rel="noopener noreferrer nofollow"
-            target="_blank"
-            href={infoLink}
-          >
-            ?
-          </InfoLink>
-        ) : null}
-        {!inactive && remove ? (
-          <RemoveContainer className="remove-glyph">
-            <Glyph onClick={remove} name={`Remove ${title}`}>
-              ✘
-            </Glyph>
-          </RemoveContainer>
-        ) : null}
-      </CustomTitle>
+      >
+        <span className="flex items-baseline">
+          {inactive ? (
+            <HandText>{title}</HandText>
+          ) : (
+            <LineInput
+              autocomplete={autocomplete}
+              changeName={changeName}
+              placeholder={placeholder}
+              title={title}
+            />
+          )}
+          {infoLink && inactive ? (
+            <a
+              rel="noopener noreferrer nofollow"
+              target="_blank"
+              href={infoLink}
+              className="text-base border border-[#d3d3d3] dark:border-[#a9a9a9] ml-1 shrink-0 w-[1.5rem] text-center rounded-full hover:bg-[#eeeeee] dark:hover:bg-[#444444] text-inherit"
+            >
+              ?
+            </a>
+          ) : null}
+          {!inactive && remove ? (
+            <span className="remove-glyph shrink-0 ml-1 z-[1] transition-[visibility] duration-300">
+              <Glyph onClick={remove} name={`Remove ${title}`}>
+                ✘
+              </Glyph>
+            </span>
+          ) : null}
+        </span>
+      </span>
       <DotSeparator />
-    </CustomTitleContainer>
+    </span>
   ) : (
     <span>
       <SubTitle>{title}</SubTitle>

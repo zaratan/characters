@@ -1,32 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import styled from 'styled-components';
 import { signIn } from 'next-auth/react';
 import Footer from './Footer';
 import Nav from './Nav';
-
-const MainContainer = styled.main`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const ErrorMessage = styled.div`
-  text-align: center;
-`;
-
-const LinkButton = styled.button`
-  margin-left: 0.25rem;
-  text-decoration: underline;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: inherit;
-  font: inherit;
-  padding: 0;
-`;
 
 export const LoginRedirectLSKey = 'Characters:PostLogin:Redirect';
 
@@ -38,18 +15,19 @@ const ErrorPage = () => {
   }, []);
 
   return (
-    <MainContainer>
+    <main className="flex justify-between flex-col h-full">
       <Nav returnTo={returnUrl} />
-      <ErrorMessage>
+      <div className="text-center">
         Vous n&apos;êtes pas autorisé à voir cette page.
-        <LinkButton
+        <button
+          className="ml-1 underline bg-transparent cursor-pointer text-inherit"
           onClick={() => signIn(undefined, { callbackUrl: returnUrl })}
         >
           Connectez-vous s&apos;il vous plaît.
-        </LinkButton>
-      </ErrorMessage>
+        </button>
+      </div>
       <Footer withoutEmptyLines />
-    </MainContainer>
+    </main>
   );
 };
 

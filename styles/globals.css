@@ -1,1 +1,219 @@
 @import 'tailwindcss';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Breakpoints custom (max-width utilisés dans le codebase) */
+  --breakpoint-xs: 310px;
+  --breakpoint-sm: 400px;
+  --breakpoint-sm-plus: 410px;
+  --breakpoint-md: 500px;
+  --breakpoint-md-plus: 600px;
+  --breakpoint-lg: 680px;
+  --breakpoint-lg-plus: 750px;
+  --breakpoint-xl: 859px;
+  --breakpoint-xl-plus: 930px;
+  --breakpoint-2xl: 1022px;
+  --breakpoint-3xl: 1304px;
+  --breakpoint-4xl: 1500px;
+
+  /* Fonts custom */
+  --font-cloister: 'CloisterBlack', serif;
+  --font-victorian: 'VictorianQ', serif;
+  --font-bilbo: 'Bilbo Swash Caps', cursive;
+}
+
+/* ===== Font Faces ===== */
+
+@font-face {
+  font-family: CloisterBlack;
+  src: url(/CloisterBlack.ttf);
+  font-display: swap;
+}
+
+@font-face {
+  font-family: VictorianQ;
+  src: url(/GreatVictorianQ.otf);
+  font-display: swap;
+  font-weight: 100;
+}
+
+/* ===== Theme tokens ===== */
+
+:root {
+  --bg: white;
+  --text-color: black;
+  --dot-color: black;
+  --border-color: lightgray;
+  --action-border: #ccc;
+  --action-active-bg: #f7f7f7;
+  --focus-border: #8bcbe0;
+  --focus-bg: #b4dae7;
+  --hover-bg: #8bcbe0;
+  --action-bg: #eee;
+  --glyph-gray: #555;
+  --blue: #1e4ed1;
+  --nav-bg: #f8f8f8;
+  --hand-text: #333;
+  --dot-unselected: #bbb;
+  --title-color: #595959;
+  --red: red;
+}
+.dark {
+  --bg: #333;
+  --text-color: #ccc;
+  --dot-color: #aaa;
+  --border-color: darkgray;
+  --action-border: #666;
+  --action-active-bg: #555;
+  --focus-border: #8bcbe0;
+  --focus-bg: #1d718d;
+  --hover-bg: #1b5c72;
+  --action-bg: #444;
+  --glyph-gray: #999;
+  --blue: #1e4ed1;
+  --nav-bg: #070707;
+  --hand-text: #bbb;
+  --dot-unselected: #fff;
+  --title-color: #ccc;
+  --red: #e62a2a;
+}
+
+/* ===== Global element styles (ex-GlobalStyle.ts) ===== */
+
+html,
+body {
+  min-height: 100%;
+  height: 100%;
+  background-color: var(--bg);
+  color: var(--text-color);
+}
+
+a {
+  text-decoration: none;
+  color: var(--text-color);
+  transition: color 0.2s ease-in-out;
+}
+a:hover {
+  color: darkcyan;
+}
+
+/* ===== Compléments au Preflight Tailwind ===== */
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+body {
+  scroll-behavior: smooth;
+}
+
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  margin: 0;
+}
+
+/* ===== DotSeparator cross-component sibling selectors ===== */
+
+.dot-separator:hover ~ span svg {
+  fill: var(--glyph-gray) !important;
+}
+.dark .dot-separator:hover ~ span svg {
+  fill: var(--dot-color) !important;
+}
+.dot-separator:hover + span small {
+  display: inline;
+}
+.dot-separator:hover svg.full,
+.dot-separator:focus svg.full {
+  fill: transparent;
+}
+.dot-separator svg.full {
+  color: var(--glyph-gray);
+}
+.dark .dot-separator svg.full {
+  color: var(--dot-color);
+}
+.dot-separator.hidden {
+  display: none;
+}
+
+/* ===== Hover-reveal patterns (any-hover) ===== */
+
+@media (any-hover: hover) {
+  .pex-hover-container .hideHover {
+    display: none;
+  }
+  .pex-hover-container .showHover {
+    display: inline;
+  }
+  .pex-hover-container:hover .hideHover {
+    display: inline;
+  }
+  .pex-hover-container:hover .showHover {
+    display: none;
+  }
+}
+
+@media (any-hover: hover) {
+  .horizontal-section .open-col-glyph {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .horizontal-section:hover .open-col-glyph,
+  .horizontal-section:focus-within .open-col-glyph {
+    opacity: 1;
+  }
+}
+
+.container-hover-reveal .col-button {
+  font-size: 1.5rem;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+
+@media (any-hover: hover) {
+  .container-hover-reveal .empty-glyph,
+  .container-hover-reveal .open-glyph,
+  .container-hover-reveal .line-button,
+  .container-hover-reveal .remove-glyph,
+  .container-hover-reveal .remove-spec-button,
+  .container-hover-reveal .ritual-multiplicator,
+  .container-hover-reveal .col-button {
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+  }
+  .container-hover-reveal:hover .empty-glyph,
+  .container-hover-reveal:hover .open-glyph,
+  .container-hover-reveal:hover .line-button,
+  .container-hover-reveal:hover .remove-glyph,
+  .container-hover-reveal:hover .remove-spec-button,
+  .container-hover-reveal:hover .ritual-multiplicator,
+  .container-hover-reveal:hover .col-button,
+  .container-hover-reveal:focus-within .empty-glyph,
+  .container-hover-reveal:focus-within .open-glyph,
+  .container-hover-reveal:focus-within .line-button,
+  .container-hover-reveal:focus-within .remove-glyph,
+  .container-hover-reveal:focus-within .remove-spec-button,
+  .container-hover-reveal:focus-within .ritual-multiplicator,
+  .container-hover-reveal:focus-within .col-button {
+    opacity: 1;
+  }
+}
+
+/* ===== Accessibility ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

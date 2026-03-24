@@ -1,7 +1,6 @@
 import type { ComponentType, ReactElement } from 'react';
 import { useContext } from 'react';
 import Link from 'next/link';
-import styled from 'styled-components';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 import MeContext from '../contexts/MeContext';
 import {
@@ -9,6 +8,8 @@ import {
   generateHandleKeypress,
 } from '../helpers/handlers';
 import AccessesContext from '../contexts/AccessesContext';
+import classNames from '../helpers/classNames';
+import styles from './ActionsFooter.module.css';
 
 type ActionType = {
   name: string;
@@ -37,211 +38,105 @@ type ActionType = {
     }
 );
 
-const GlyphAction = styled.span`
-  display: flex;
-  align-items: center;
-  svg {
-    width: 30px;
-  }
-  font-size: 2rem;
-  &.active {
-    color: green;
-  }
-`;
-
-const desktopActionStyles = `
-  border-radius: 40px;
-  height: 80px;
-  min-width: 80px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 1.5rem 0;
-  cursor: pointer;
-  margin-bottom: 1rem;
-  transition: padding 0.3s ease-in-out;
-
-  .full-text {
-    overflow-x: hidden;
-    max-width: 0;
-    transition:
-      max-width 0.3s ease-in-out,
-      padding-left 0.3s ease-in-out;
-    white-space: nowrap;
-    padding-left: 0rem;
-  }
-  @media screen and (any-hover: hover) {
-    &:hover,
-    &:focus {
-      outline: none;
-      padding: 1.5rem;
-      .full-text {
-        max-width: 220px;
-        padding-left: 1rem;
-      }
-    }
-    &:focus {
-      border-color: ${(props: any) => props.theme.blue};
-    }
-  }
-`;
-
-const DesktopAction = styled.div`
-  background-color: ${(props) => props.theme.actionBackground};
-  border: 1px solid ${(props) => props.theme.borderColor};
-  color: ${(props) => props.theme.color};
-  ${desktopActionStyles}
-`;
-
-const DesktopActionLink = styled(Link)`
-  background-color: ${(props) => props.theme.actionBackground};
-  border: 1px solid ${(props) => props.theme.borderColor};
-  color: ${(props) => props.theme.color};
-  text-decoration: none;
-  ${desktopActionStyles}
-  &:hover {
-    color: ${(props) => props.theme.color};
-  }
-`;
-
-const DesktopActions = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: right;
-  align-items: flex-end;
-`;
-
-const MobileActionsContainer = styled.aside`
-  padding: 1rem;
-  width: 100%;
-
-  @media screen and (min-width: 681px) {
-    display: none;
-  }
-`;
-
-const MobileActions = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const MobileAction = styled.div`
-  text-align: center;
-  padding: 1rem;
-  background-color: ${(props) => props.theme.actionBackground};
-  border-radius: 5px;
-  border: 1px solid ${(props) => props.theme.actionItemBorderColor} !important;
-  color: ${(props) => props.theme.color};
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  margin-top: 0.5rem;
-  &:hover {
-    background-color: ${(props) => props.theme.actionItemBackgroundActive};
-  }
-`;
-
-const DesktopActionsContainer = styled.aside`
-  @media screen and (max-width: 680px) {
-    display: none;
-  }
-  position: fixed;
-  bottom: 5rem;
-  right: 1rem;
-  z-index: 2;
-`;
-
 const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
-  <DesktopActionsContainer>
-    <DesktopActions>
+  <aside className="max-lg:hidden fixed bottom-20 right-4 z-[2]">
+    <div className="flex flex-col items-end">
       {actions.map((action) => {
         const glyphContent =
           typeof action.glyph === 'string' ? action.glyph : <action.glyph />;
 
         if (action.link) {
           return (
-            <DesktopActionLink href={action.link} key={action.name}>
-              <GlyphAction>{glyphContent}</GlyphAction>
-              <span className="full-text">{action.name}</span>
-            </DesktopActionLink>
+            <Link
+              href={action.link}
+              key={action.name}
+              className={styles.desktopAction}
+            >
+              <span className={styles.glyphAction}>{glyphContent}</span>
+              <span className={styles.fullText}>{action.name}</span>
+            </Link>
           );
         }
         if (action.component !== undefined) {
           if (action.component === null) return null;
 
           return (
-            <DesktopAction key={action.name}>
+            <div key={action.name} className={styles.desktopAction}>
               <action.component {...action.componentProps}>
-                <GlyphAction>{glyphContent}</GlyphAction>
-                <span className="full-text">{action.name}</span>
+                <span className={styles.glyphAction}>{glyphContent}</span>
+                <span className={styles.fullText}>{action.name}</span>
               </action.component>
-            </DesktopAction>
+            </div>
           );
         }
         const handleClick = generateHandleClick(action.act!);
         const handleKeypress = generateHandleKeypress(action.act!);
         return (
-          <DesktopAction
+          <div
             key={action.name}
+            className={styles.desktopAction}
             role="button"
             onClick={handleClick}
             onKeyPress={handleKeypress}
             tabIndex={0}
           >
-            <GlyphAction className={action.active ? 'active' : ''}>
+            <span
+              className={classNames(
+                styles.glyphAction,
+                action.active ? 'active' : null
+              )}
+            >
               {glyphContent}
-            </GlyphAction>
-            <span className="full-text">{action.name}</span>
-          </DesktopAction>
+            </span>
+            <span className={styles.fullText}>{action.name}</span>
+          </div>
         );
       })}
-    </DesktopActions>
-  </DesktopActionsContainer>
+    </div>
+  </aside>
 );
 
 const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
   <>
-    <MobileActionsContainer>
+    <aside className="lg:hidden p-4 w-full">
       <BlackLine className="thin mobile-only" />
       <EmptyLine className="thin mobile-only" />
-      <MobileActions>
+      <div className="flex flex-col">
         {actions?.map((action) => {
           if (action.link) {
             return (
-              <MobileAction key={action.name}>
+              <div key={action.name} className={styles.mobileAction}>
                 <Link href={action.link}>{action.name}</Link>
-              </MobileAction>
+              </div>
             );
           }
           if (action.component !== undefined) {
             if (action.component === null) return null;
             return (
-              <MobileAction key={action.name}>
+              <div key={action.name} className={styles.mobileAction}>
                 <action.component {...action.componentProps}>
                   {action.name}
                 </action.component>
-              </MobileAction>
+              </div>
             );
           }
           const handleClick = generateHandleClick(action.act!);
           const handleKeypress = generateHandleKeypress(action.act!);
           return (
-            <MobileAction
+            <div
               key={action.name}
+              className={styles.mobileAction}
               role="button"
               onClick={handleClick}
               onKeyPress={handleKeypress}
               tabIndex={0}
             >
               {action.name}
-            </MobileAction>
+            </div>
           );
         })}
-      </MobileActions>
-    </MobileActionsContainer>
+      </div>
+    </aside>
   </>
 );
 

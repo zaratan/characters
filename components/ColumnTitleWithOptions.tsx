@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { useState } from 'react';
-import styled from 'styled-components';
 import { Glyph } from './Glyph';
 import {
   generateHandleKeypress,
@@ -9,38 +8,8 @@ import {
 import { ActionItem, OptionItem } from '../styles/Items';
 import ColumnTitle from './ColumnTitle';
 import type { TempElemType } from '../types/TempElemType';
-
-const GlyphContainer = styled.span`
-  span {
-    font-size: 1rem;
-    color: ${(props) => props.theme.glyphGray};
-  }
-  position: absolute;
-  right: -1.5rem;
-  top: 0;
-  height: 100%;
-`;
-
-const OptionsContainer = styled.div<{
-  $elemCount: number;
-  $actionCount: number;
-}>`
-  max-height: 0;
-  opacity: 0;
-  visibility: hidden;
-  &.opened {
-    max-height: ${(props) =>
-      `${props.$elemCount * 24 + props.$actionCount * 41 + 20}px`};
-    opacity: 1;
-    visibility: visible;
-  }
-  transition:
-    max-height 0.3s ease-in-out,
-    opacity 0.3s ease-in-out;
-`;
-const OptionsSeparator = styled.div`
-  height: 20px;
-`;
+import classNames from '../helpers/classNames';
+import styles from './ColumnTitleWithOptions.module.css';
 
 const ColumnButton = ({
   value,
@@ -103,7 +72,7 @@ const ColumnTitleWithOptions = ({
       >
         {children}
         {inactive ? null : (
-          <GlyphContainer>
+          <span className={styles.glyphContainer}>
             {button ? (
               <ColumnButton
                 glyph={button.glyph}
@@ -122,14 +91,19 @@ const ColumnTitleWithOptions = ({
                 {open ? '▼' : '\u25b6\ufe0e'}
               </Glyph>
             )}
-          </GlyphContainer>
+          </span>
         )}
       </ColumnTitle>
       {inactive ? null : (
-        <OptionsContainer
-          className={open ? 'opened' : ''}
-          $elemCount={options.length}
-          $actionCount={actions.length}
+        <div
+          className={classNames(styles.optionsContainer, open ? 'opened' : '')}
+          style={
+            open
+              ? {
+                  maxHeight: `${options.length * 24 + actions.length * 41 + 20}px`,
+                }
+              : undefined
+          }
         >
           <ul>
             {options.map(({ name, value, onClick }) => (
@@ -176,8 +150,8 @@ const ColumnTitleWithOptions = ({
               );
             })}
           </ul>
-          <OptionsSeparator />
-        </OptionsContainer>
+          <div className="h-5" />
+        </div>
       )}
     </div>
   );

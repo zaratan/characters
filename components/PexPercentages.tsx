@@ -1,51 +1,27 @@
 import { useContext } from 'react';
-import styled from 'styled-components';
 import type { pexElemsType } from './PexElem';
 import PexElem, { PexSpan, computePexElems } from './PexElem';
 import PreferencesContext from '../contexts/PreferencesContext';
-import { HandLargeText } from '../styles/Texts';
 
-const HandText = styled(HandLargeText)`
-  display: flex;
-  justify-content: center;
-  span {
-    font-size: 1.5rem;
-  }
-`;
+const PexHandText = ({ children }: { children: React.ReactNode }) => (
+  <span className="font-bilbo text-[2rem] text-neutral-700 dark:text-neutral-300 flex justify-center [&_span]:text-[1.5rem]">
+    {children}
+  </span>
+);
 
-const StyledPexSpan = styled(PexSpan)`
-  width: 60%;
-  max-width: 20rem;
-  display: flex;
-  justify-content: space-between;
-`;
+const StyledPexSpan = ({ children }: { children: React.ReactNode }) => (
+  <PexSpan className="w-[60%] max-w-[20rem] flex justify-between">
+    {children}
+  </PexSpan>
+);
 
-const Ul = styled.ul`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-`;
+const Ul = ({ children }: { children: React.ReactNode }) => (
+  <ul className="w-full flex flex-col items-center">{children}</ul>
+);
 
-const Li = styled.li`
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  &:hover {
-    .hideHover {
-      display: none;
-    }
-    .showHover {
-      display: inherit;
-    }
-  }
-  .hideHover {
-    display: inherit;
-  }
-  .showHover {
-    display: none;
-  }
-`;
+const Li = ({ children }: { children: React.ReactNode }) => (
+  <li className="pex-hover-container w-full flex justify-center">{children}</li>
+);
 
 const computePercentPex = (
   pexElems: pexElemsType,
@@ -101,7 +77,7 @@ const PexPercentage = ({
     nextPex
   );
   return (
-    <HandText>
+    <PexHandText>
       <Ul>
         <Li>
           <StyledPexSpan>
@@ -160,7 +136,7 @@ const PexPercentage = ({
           </StyledPexSpan>
         </Li>
       </Ul>
-    </HandText>
+    </PexHandText>
   );
 };
 

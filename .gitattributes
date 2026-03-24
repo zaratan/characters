@@ -1,0 +1,11 @@
+e2e/tests/visual.spec.ts-snapshots/config-dark-mobile-chrome-darwin.png filter=lfs diff=lfs merge=lfs -text
+e2e/tests/visual.spec.ts-snapshots/config-light-desktop-chrome-darwin.png filter=lfs diff=lfs merge=lfs -text
+e2e/tests/visual.spec.ts-snapshots/config-light-mobile-chrome-darwin.png filter=lfs diff=lfs merge=lfs -text
+e2e/tests/visual.spec.ts-snapshots/sheet-dark-desktop-chrome-darwin.png filter=lfs diff=lfs merge=lfs -text
+e2e/tests/visual.spec.ts-snapshots/sheet-dark-mobile-chrome-darwin.png filter=lfs diff=lfs merge=lfs -text
+e2e/tests/visual.spec.ts-snapshots/sheet-light-desktop-chrome-darwin.png filter=lfs diff=lfs merge=lfs -text
+public/title.png filter=lfs diff=lfs merge=lfs -text
+e2e/tests/visual.spec.ts-snapshots/config-dark-desktop-chrome-darwin.png filter=lfs diff=lfs merge=lfs -text
+e2e/tests/visual.spec.ts-snapshots/sheet-light-mobile-chrome-darwin.png filter=lfs diff=lfs merge=lfs -text
+node_modules/playwright-core/lib/server/chromium/appIcon.png filter=lfs diff=lfs merge=lfs -text
+public/title_dark.png filter=lfs diff=lfs merge=lfs -text

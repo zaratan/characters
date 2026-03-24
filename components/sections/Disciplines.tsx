@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import styled from 'styled-components';
 import { maxDot } from '../../helpers/maxLevels';
 import { HorizontalSection } from '../../styles/Sections';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
@@ -18,17 +17,11 @@ import {
 } from '../../helpers/pex';
 import { HandEditableText, HandText } from '../../styles/Texts';
 import GenerationContext from '../../contexts/GenerationContext';
-import { Container } from '../../styles/Container';
 import SectionTitle from '../SectionTitle';
 import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
 import DataContext from '../../contexts/DataContext';
 import LineValue from '../line/LineValue';
-
-const RitualMultiplicatorContainer = styled.span`
-  font-size: 1rem;
-  white-space: nowrap;
-`;
 
 const Disciplines = () => {
   const generation = useContext(GenerationContext);
@@ -82,7 +75,7 @@ const Disciplines = () => {
         ]}
       />
       <HorizontalSection>
-        <Container>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Clan"
             button={{ glyph: '+', value: addNewClanDiscipline }}
@@ -119,8 +112,8 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Hors Clan"
             button={{ glyph: '+', value: addNewOutClanDiscipline }}
@@ -157,8 +150,8 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </Container>
-        <Container>
+        </div>
+        <div className="container-hover-reveal">
           <ColumnTitleWithOptions
             title="Disciplines Combinées"
             button={{ glyph: '+', value: addNewCombinedDiscipline }}
@@ -189,11 +182,11 @@ const Disciplines = () => {
               </li>
             ))}
           </ul>
-        </Container>
+        </div>
         {[...clanDisciplines, ...outClanDisciplines]
           .filter((disc) => disc.isThaumaturgy)
           .map((thau: TempThaumaturgyElemType) => [
-            <Container key={`${thau.key}-paths`}>
+            <div key={`${thau.key}-paths`} className="container-hover-reveal">
               <ColumnTitleWithOptions
                 title={`Voies de ${thau.title}`}
                 button={{ glyph: '+', value: thau.addNewPath }}
@@ -238,8 +231,8 @@ const Disciplines = () => {
                   </li>
                 ))}
               </ul>
-            </Container>,
-            <Container key={`${thau.key}-rituals`}>
+            </div>,
+            <div key={`${thau.key}-rituals`} className="container-hover-reveal">
               <ColumnTitleWithOptions
                 title={`Rituels de ${thau.title}`}
                 button={{ glyph: '+', value: thau.addNewRitual }}
@@ -249,7 +242,7 @@ const Disciplines = () => {
                 }
                 inactive={!editMode}
               >
-                <RitualMultiplicatorContainer className="ritual-multiplicator">
+                <span className="ritual-multiplicator text-base whitespace-nowrap">
                   (x
                   {editMode ? (
                     <HandEditableText
@@ -269,7 +262,7 @@ const Disciplines = () => {
                     </HandText>
                   )}
                   )
-                </RitualMultiplicatorContainer>
+                </span>
               </ColumnTitleWithOptions>
               <ul>
                 {thau.rituals.map((ritual) => (
@@ -290,7 +283,7 @@ const Disciplines = () => {
                   </li>
                 ))}
               </ul>
-            </Container>,
+            </div>,
           ])}
       </HorizontalSection>
     </>

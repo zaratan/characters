@@ -1,64 +1,7 @@
-import styled from 'styled-components';
+import classNames from '../helpers/classNames';
 import Square, { EmptyGlyph } from './Square';
 import type { TempElemType } from '../types/TempElemType';
-
-const SquareSeparator = styled.span`
-  padding: 0.3rem;
-  height: 100%;
-  outline: none;
-  &.xs-visible {
-    display: none;
-  }
-  @media screen and (max-width: 500px) {
-    &.xs-visible {
-      display: inherit;
-    }
-    &.xs-invisible {
-      display: none;
-    }
-  }
-`;
-
-const SquareLineContainer = styled.div`
-  position: relative;
-  width: fit-content;
-  margin: 0 auto;
-  &.must-wrap {
-    display: grid;
-    grid-template-columns:
-      repeat(5, 24px) 0.6rem
-      repeat(5, 24px) 0.6rem
-      repeat(5, 24px);
-    width: calc(15 * 24px + 1.2rem);
-    margin: 0 auto;
-    @media screen and (max-width: 500px) {
-      grid-template-columns:
-        repeat(5, 24px) 0.6rem
-        repeat(5, 24px);
-      width: calc(10 * 24px + 0.6rem);
-    }
-  }
-  &:not(.must-wrap) {
-    display: flex;
-    justify-content: center;
-  }
-  .empty-glyph {
-    opacity: 0;
-    transition: opacity 0.2s ease-in-out;
-  }
-  &:not(.inactive) {
-    &:hover,
-    &:focus-within {
-      .empty-glyph {
-        opacity: 1;
-      }
-    }
-  }
-`;
-
-const Container = styled.div`
-  position: relative;
-`;
+import styles from './SquareLine.module.css';
 
 const SquareLine = ({
   type,
@@ -71,11 +14,13 @@ const SquareLine = ({
   numberChecked: TempElemType<number>;
   inactive?: boolean;
 }) => (
-  <Container>
-    <SquareLineContainer
-      className={`${number > 15 ? 'must-wrap' : ''} ${
-        inactive ? 'inactive' : ''
-      }`}
+  <div className="relative">
+    <div
+      className={classNames(
+        styles.squareLineContainer,
+        number > 15 && styles.mustWrap,
+        inactive && styles.inactive
+      )}
     >
       <EmptyGlyph
         type={type}
@@ -93,17 +38,18 @@ const SquareLine = ({
           key={`${type} ${i}`}
         />,
         i % 5 === 4 && i !== number - 1 ? (
-          <SquareSeparator
-            className={`
-              ${i % 10 === 9 ? 'xs-invisible' : ''} 
-              ${i % 15 === 14 ? 'xs-visible' : ''}
-              `}
+          <span
+            className={classNames(
+              styles.squareSeparator,
+              i % 10 === 9 && styles.xsInvisible,
+              i % 15 === 14 && styles.xsVisible
+            )}
             key={`type-${i}`}
           />
         ) : null,
       ])}
-    </SquareLineContainer>
-  </Container>
+    </div>
+  </div>
 );
 
 export default SquareLine;

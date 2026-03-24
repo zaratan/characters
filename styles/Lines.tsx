@@ -1,30 +1,31 @@
-import styled from 'styled-components';
+'use client';
+import type { HTMLAttributes } from 'react';
+import classNames from '../helpers/classNames';
 
-export const EmptyLine = styled.div`
-  height: 3rem;
-  display: flex;
-  align-items: center;
-  width: 100%;
-  &.thin {
-    height: 1rem;
-  }
-  &.mobile-only {
-    @media screen and (min-width: 681px) {
-      display: none;
-    }
-  }
-`;
+export const EmptyLine = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={classNames(
+      className?.includes('thin') ? 'h-4' : 'h-12',
+      'flex items-center w-full',
+      className?.includes('mobile-only') && 'lg:hidden'
+    )}
+    {...props}
+  />
+);
 
-export const BlackLine = styled.div`
-  background-color: ${(props) => props.theme.color};
-  height: 3px;
-  width: 100%;
-  &.thin {
-    height: 1px;
-  }
-  &.mobile-only {
-    @media screen and (min-width: 681px) {
-      display: none;
-    }
-  }
-`;
+export const BlackLine = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLDivElement>) => (
+  <div
+    className={classNames(
+      className?.includes('thin') ? 'h-px' : 'h-[3px]',
+      'w-full bg-black dark:bg-neutral-300',
+      className?.includes('mobile-only') && 'lg:hidden'
+    )}
+    {...props}
+  />
+);

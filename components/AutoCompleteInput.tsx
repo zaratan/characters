@@ -5,64 +5,19 @@ import type {
   DetailedHTMLProps,
   RefObject,
 } from 'react';
-import { useState, useMemo, useRef, useEffect } from 'react';
+import { useState, useMemo, useRef, useEffect, forwardRef } from 'react';
 import useDebounce from '../hooks/useDebounce';
 import useClickAway from '../hooks/useClickAway';
 import Fuse from 'fuse.js';
-import styled from 'styled-components';
 import { generateHandleClick } from '../helpers/handlers';
+import classNames from '../helpers/classNames';
+import styles from './AutoCompleteInput.module.css';
 
-const SuggestionContainer = styled.span`
-  /* margin-top: -0.25rem; */
-  left: 0;
-  display: none;
-  &.open {
-    width: 100%;
-    display: inherit;
-    position: absolute;
-    z-index: 2;
-    background-color: ${(props) => props.theme.background};
-  }
-`;
-
-const Form = styled.form`
-  position: relative;
-`;
-
-const Input = styled.input`
-  border: 1px solid ${(props) => props.theme.borderColor};
-  background-color: ${(props) => props.theme.background};
-  color: ${(props) => props.theme.color};
-  padding: 0.5rem;
-  width: 100%;
-  &:focus {
-    outline: none;
-    border-color: ${(props) => props.theme.focusBorderColor};
-    border-width: 1px;
-  }
-`;
-
-const SuggestionList = styled.ul`
-  border: 1px solid ${(props) => props.theme.borderColor};
-`;
-
-const Suggestion = styled.li`
-  span {
-    cursor: pointer;
-    padding: 0.5rem;
-    width: 100%;
-    height: 100%;
-    display: inline-block;
-    color: ${(props) => props.theme.color};
-    &:hover {
-      background-color: ${(props) => props.theme.hoverBackgroundColor};
-    }
-    &:focus {
-      outline: none;
-      background-color: ${(props) => props.theme.focusBackgroundColor};
-    }
-  }
-`;
+const DefaultInput = forwardRef<
+  HTMLInputElement,
+  DetailedHTMLProps<InputHTMLAttributes<HTMLInputElement>, HTMLInputElement>
+>((props, ref) => <input className={styles.input} {...props} ref={ref} />);
+DefaultInput.displayName = 'DefaultInput';
 
 const generateHandleKeypressInput =
   (listRef: RefObject<HTMLUListElement | null>, close: () => void) =>
@@ -151,7 +106,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
   baseValue = '',
   placeholder,
   searchKeys,
-  StyledInput = Input,
+  StyledInput = DefaultInput,
   submitOnClickOut,
 }: Props<T>) => {
   const [inputValue, setInputValue] = useState(baseValue);
@@ -211,7 +166,8 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
   });
 
   return (
-    <Form
+    <form
+      className="relative"
       onSubmit={(e) => {
         e.preventDefault();
         submitAction(inputValue);
@@ -229,12 +185,13 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
         )}
         ref={inputRef}
       />
-      <SuggestionContainer
-        className={
-          isOpen && autocompleteMatchingOptions.length > 0 ? 'open' : ''
-        }
+      <span
+        className={classNames(
+          styles.suggestionContainer,
+          isOpen && autocompleteMatchingOptions.length > 0 ? 'open' : null
+        )}
       >
-        <SuggestionList ref={suggestionListRef}>
+        <ul className={styles.suggestionList} ref={suggestionListRef}>
           {autocompleteMatchingOptions.slice(0, 5).map((match, i) => {
             let displayName: string;
             if (typeof display === 'string') {
@@ -244,7 +201,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
             }
 
             return (
-              <Suggestion key={displayName}>
+              <li key={displayName} className={styles.suggestion}>
                 <span
                   tabIndex={0}
                   onClick={clickHandler(match)}
@@ -264,12 +221,12 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
                 >
                   {displayName}
                 </span>
-              </Suggestion>
+              </li>
             );
           })}
-        </SuggestionList>
-      </SuggestionContainer>
-    </Form>
+        </ul>
+      </span>
+    </form>
   );
 };
 

@@ -2,7 +2,6 @@ import { useContext } from 'react';
 import SectionTitle from '../SectionTitle';
 import FaithContext from '../../contexts/FaithContext';
 import { calcPexTrueFaith, calcPexDiffTrueFaith } from '../../helpers/pex';
-import { Container } from '../../styles/Container';
 import ColumnTitle from '../ColumnTitle';
 import Line from '../line/Line';
 import ModeContext from '../../contexts/ModeContext';
@@ -21,7 +20,7 @@ const Faith = () => {
         pexElems={[{ elemArray: [trueFaith], pexCalc: calcPexTrueFaith }]}
       />
       <HorizontalSection>
-        <Container>
+        <div className="container-hover-reveal">
           <ColumnTitle
             title="Vraie Foi"
             elemArray={[trueFaith]}
@@ -34,7 +33,7 @@ const Faith = () => {
             name="Vraie Foi"
             inactive={!editMode}
           />
-        </Container>
+        </div>
       </HorizontalSection>
     </>
   );

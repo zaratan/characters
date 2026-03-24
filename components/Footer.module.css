@@ -1,0 +1,6 @@
+.heartTransition {
+  transition: color 4s ease-in-out;
+}
+.heartTransition:hover {
+  transition: color 0.2s ease-in-out;
+}

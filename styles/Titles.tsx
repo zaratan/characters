@@ -1,28 +1,38 @@
-import styled from 'styled-components';
+'use client';
+import type { HTMLAttributes } from 'react';
+import classNames from '../helpers/classNames';
 
-export const Title = styled.h1`
-  font-family: CloisterBlack;
-  font-size: 2rem;
-  &.victorian-queen {
-    font-family: VictorianQ;
-    font-size: 6rem;
-    font-weight: 100;
-  }
-`;
+export const Title = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLHeadingElement>) => (
+  <h1
+    className={classNames(
+      'font-cloister text-[2rem]',
+      className?.includes('victorian-queen') &&
+        'font-victorian! text-[6rem]! font-thin!',
+      className
+    )}
+    {...props}
+  />
+);
 
-export const StyledColumnTitle = styled(Title)`
-  position: relative;
-  margin: 0 auto;
-  width: fit-content;
-  @media screen and (max-width: 500px) {
-    max-width: 70%;
-  }
-`;
+export const StyledColumnTitle = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLHeadingElement>) => (
+  <Title
+    className={classNames(
+      'relative mx-auto w-fit max-md:max-w-[70%] justify-self-center',
+      className
+    )}
+    {...props}
+  />
+);
 
-export const SubTitle = styled.h2`
-  font-family: CloisterBlack;
-  font-size: 1.6rem;
-  color: ${(props) => props.theme.titleColor};
-  display: inline;
-  white-space: nowrap;
-`;
+export const SubTitle = (props: HTMLAttributes<HTMLHeadingElement>) => (
+  <h2
+    className="font-cloister text-[1.6rem] text-neutral-600 dark:text-neutral-300 inline whitespace-nowrap"
+    {...props}
+  />
+);

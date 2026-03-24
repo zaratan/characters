@@ -1,5 +1,4 @@
 import { useContext, useEffect } from 'react';
-import styled from 'styled-components';
 import Image from 'next/image';
 import useBeforeUnload from '../hooks/useBeforeUnload';
 import { AttributesProvider } from '../contexts/AttributesContext';
@@ -16,7 +15,7 @@ import Disciplines from './sections/Disciplines';
 import Footer from './Footer';
 import { GenerationProvider } from '../contexts/GenerationContext';
 import { IdProvider } from '../contexts/IdContext';
-import SheetContainer from '../styles/SheetContainer';
+
 import { AdvFlawProvider } from '../contexts/AdvFlawContext';
 import Misc from './sections/Misc';
 import { LanguagesProvider } from '../contexts/LanguagesContext';
@@ -40,11 +39,6 @@ import useKeyboardShortcut from '../hooks/useKeyboardShortcut';
 import { useSave } from '../hooks/useSave';
 import { AccessesProvider } from '../contexts/AccessesContext';
 import ThemeContext from '../contexts/ThemeContext';
-
-const PageTitle = styled.div`
-  display: flex;
-  justify-content: center;
-`;
 
 const UnsavedChangeCloseText =
   'Il y a des changements sur la page, êtes vous sur de vouloir la quitter sans sauvegarder ?';
@@ -75,8 +69,8 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
         confirmNavigation={unsavedChanges}
         confirmText={UnsavedChangeCloseText}
       />
-      <SheetContainer>
-        <PageTitle>
+      <main className="w-4/5 max-4xl:w-[95%] max-3xl:w-4/5 max-2xl:w-[95%] max-xl:w-4/5 max-md-plus:w-[90%] mx-auto mt-5 h-auto max-w-[2000px] relative">
+        <div className="flex justify-center">
           {infos.era === 0 ? (
             <Image
               src={darkMode ? '/title_dark.png' : '/title.png'}
@@ -88,7 +82,7 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
           ) : (
             <Title className="victorian-queen">Vampire Ère Victorienne</Title>
           )}
-        </PageTitle>
+        </div>
 
         <Infos />
         <Attributes />
@@ -99,7 +93,7 @@ const Sheet = ({ infos }: { infos: InfosType }) => {
         <HumanMagic />
         <Misc />
         <PexSection />
-      </SheetContainer>
+      </main>
       <SheetActionsFooter />
       <Footer />
     </>

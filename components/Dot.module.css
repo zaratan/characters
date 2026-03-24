@@ -1,0 +1,123 @@
+.dotSvg {
+  color: var(--text-color);
+  padding: 0 0.05rem;
+  fill: transparent;
+  width: 24px;
+  height: 36px;
+  transition: fill 0.2s ease-in-out;
+}
+.dotSvg ellipse {
+  stroke: var(--dot-color);
+}
+.dotSvg.full {
+  fill: var(--glyph-gray);
+}
+
+.dotTextHelper {
+  position: absolute;
+  top: -6px;
+  width: 100%;
+  text-align: center;
+  font-size: 0.6rem;
+  display: none;
+}
+.dotTextHelper.leftAligned {
+  left: -1rem;
+}
+@media screen and (max-width: 500px) {
+  .dotTextHelper.leftAligned {
+    left: -1.5rem;
+  }
+}
+
+.dotContainer {
+  position: relative;
+  height: 36px;
+}
+
+.dotContainer:not(.disabled):hover svg,
+.dotContainer:not(.disabled):focus svg {
+  fill: var(--dot-color) !important;
+}
+.dotContainer:not(.disabled):hover ~ span svg,
+.dotContainer:not(.disabled):focus ~ span svg {
+  fill: var(--dot-color) !important;
+}
+.dotContainer:not(.disabled):hover ~ span.locked svg,
+.dotContainer:not(.disabled):focus ~ span.locked svg {
+  fill: var(--dot-color) !important;
+}
+
+.dotContainer:focus {
+  outline: none;
+}
+.dotContainer:not(.disabled):focus svg ellipse {
+  stroke: darkcyan;
+  stroke-width: 3px;
+}
+
+.dotContainer.locked {
+  cursor: auto;
+}
+.dotContainer.locked svg {
+  fill: var(--dot-color) !important;
+}
+
+.dotContainer.disabled {
+  cursor: auto !important;
+}
+.dotContainer.disabled svg.full {
+  fill: var(--dot-color) !important;
+}
+.dotContainer.disabled:focus {
+  outline: none;
+}
+.dotContainer.disabled:focus svg ellipse {
+  stroke: var(--dot-color) !important;
+  stroke-width: 2px !important;
+}
+.dotContainer.disabled svg.notFull {
+  fill: transparent !important;
+}
+.dotContainer.disabled small {
+  display: none !important;
+}
+
+.dotContainer:not(.disabled):hover small,
+.dotContainer:not(.disabled):focus small {
+  display: inline;
+}
+
+.dotContainer:not(.selected):not(.locked):not(.disabled) {
+  cursor: pointer;
+}
+
+.dotContainer.base.selected small {
+  display: none;
+  color: var(--red);
+}
+
+.dotContainer.selected small {
+  display: inline;
+  color: var(--red);
+}
+
+.dotContainer.hidden {
+  display: none;
+}
+
+.dotContainer.base:not(.selected) svg {
+  fill: var(--dot-unselected) !important;
+}
+
+.dotGlyphContainer {
+  position: relative;
+}
+.dotGlyphContainer.base.selected small {
+  display: none;
+  color: var(--red);
+}
+.dotGlyphContainer.selected small {
+  display: inline;
+  color: var(--red);
+}

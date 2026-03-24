@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import Image from 'next/image';
 
 // Colors chosen to guarantee WCAG AA contrast ratio (≥4.5:1) with white text.
 const PALETTE = [
@@ -29,27 +29,6 @@ function getInitials(name: string | null): string {
   return parts[0][0]?.toUpperCase() || '?';
 }
 
-const Img = styled.img<{ $size: number }>`
-  height: ${(props) => props.$size}px;
-  width: ${(props) => props.$size}px;
-  border-radius: 50%;
-  object-fit: cover;
-`;
-
-const InitialsCircle = styled.div<{ $size: number; $bg: string }>`
-  height: ${(props) => props.$size}px;
-  width: ${(props) => props.$size}px;
-  border-radius: 50%;
-  background-color: ${(props) => props.$bg};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
-  font-size: ${(props) => props.$size * 0.4}px;
-  font-weight: 600;
-  user-select: none;
-`;
-
 const UserAvatar = ({
   name,
   image,
@@ -62,21 +41,35 @@ const UserAvatar = ({
   size?: number;
 }) => {
   if (image) {
-    return <Img src={image} alt={name || ''} $size={size} />;
+    return (
+      <Image
+        src={image}
+        alt={name || ''}
+        width={size}
+        height={size}
+        className="rounded-full object-cover"
+        unoptimized
+      />
+    );
   }
 
   const bg = PALETTE[hashToIndex(userId || name || '')];
   const initials = getInitials(name);
 
   return (
-    <InitialsCircle
-      $size={size}
-      $bg={bg}
+    <div
+      className="rounded-full flex items-center justify-center text-white font-semibold select-none"
+      style={{
+        width: size,
+        height: size,
+        fontSize: size * 0.4,
+        backgroundColor: bg,
+      }}
       role="img"
       aria-label={name || 'Avatar'}
     >
       <span aria-hidden="true">{initials}</span>
-    </InitialsCircle>
+    </div>
   );
 };
 

@@ -1,19 +1,11 @@
 import { useContext } from 'react';
-import styled from 'styled-components';
 import PreferencesContext from '../../contexts/PreferencesContext';
 import { HandText, HandEditableText } from '../../styles/Texts';
 import type { TempElemType } from '../../types/TempElemType';
-import ColumnLine from './ColumnLine';
+
 import LineTitle from './LineTitle';
 import TextHelper from './TextHelper';
-
-const TextContainer = styled.div`
-  position: relative;
-  &.inactive {
-    display: flex;
-    justify-content: center;
-  }
-`;
+import classNames from '../../helpers/classNames';
 
 type LineValueProps<T> = {
   elem?: TempElemType<number>;
@@ -47,7 +39,7 @@ const LineValue = <T extends { name: string }>({
   const { showPex } = useContext(PreferencesContext);
   return (
     <ul>
-      <ColumnLine>
+      <li className="flex relative justify-between max-md:flex-col max-md:items-center">
         <LineTitle
           custom
           changeName={changeName}
@@ -60,7 +52,12 @@ const LineValue = <T extends { name: string }>({
           infoLink={infoLink}
         />
         {elem ? (
-          <TextContainer className={inactive ? 'inactive' : ''}>
+          <div
+            className={classNames(
+              'relative flex',
+              inactive ? 'justify-center' : ''
+            )}
+          >
             {inactive ? (
               <HandText className="small">
                 {elem.value === 0 ? '' : elem.value}
@@ -81,9 +78,9 @@ const LineValue = <T extends { name: string }>({
             {elem.baseValue !== elem.value && showPex ? (
               <TextHelper>{diffPexCalc(elem.baseValue, elem.value)}</TextHelper>
             ) : null}
-          </TextContainer>
+          </div>
         ) : null}
-      </ColumnLine>
+      </li>
     </ul>
   );
 };

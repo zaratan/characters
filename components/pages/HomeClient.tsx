@@ -2,10 +2,9 @@
 
 import useSWR from 'swr';
 import Link from 'next/link';
-import styled from 'styled-components';
 import { useContext } from 'react';
 import dynamic from 'next/dynamic';
-import SheetContainer from '../../styles/SheetContainer';
+
 import { HorizontalSection } from '../../styles/Sections';
 import { HandLargeText } from '../../styles/Texts';
 import Nav from '../Nav';
@@ -22,18 +21,6 @@ const PusherSheetsListener = dynamic(
   () => import('../no-ssr/PusherSheetsListener'),
   { ssr: false }
 );
-
-const TitleContainer = styled.li`
-  display: flex;
-  justify-content: center;
-  position: relative;
-`;
-
-const MainContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-`;
 
 type HomeClientProps = {
   initialData: {
@@ -53,22 +40,22 @@ const HomeClient = ({ initialData }: HomeClientProps) => {
   const characters = data?.characters ?? [];
   characters.sort((a, b) => (a.name < b.name ? -1 : 1));
   return (
-    <MainContainer>
+    <div className="flex flex-col h-full">
       <PusherSheetsListener callback={() => mutate()} />
       <Nav />
       <EmptyLine />
       <EmptyLine />
-      <SheetContainer>
+      <main className="w-4/5 max-4xl:w-[95%] max-3xl:w-4/5 max-2xl:w-[95%] max-xl:w-4/5 max-md-plus:w-[90%] mx-auto mt-5 grow max-w-[2000px] relative">
         <HorizontalSection as="ul">
           {characters.map((character) => (
-            <TitleContainer key={character.key}>
+            <li key={character.key} className="flex justify-center relative">
               <Link href={`/vampires/${character.key}`}>
                 <HandLargeText>{character.name || 'Pasdnom'}</HandLargeText>
               </Link>
-            </TitleContainer>
+            </li>
           ))}
         </HorizontalSection>
-      </SheetContainer>
+      </main>
       <ActionsFooter
         actions={[
           {
@@ -82,7 +69,7 @@ const HomeClient = ({ initialData }: HomeClientProps) => {
         ]}
       />
       <Footer withoutEmptyLines />
-    </MainContainer>
+    </div>
   );
 };
 

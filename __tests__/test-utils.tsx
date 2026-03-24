@@ -1,8 +1,6 @@
 import type { ReactElement, ReactNode } from 'react';
 import { render } from '@testing-library/react';
 import type { RenderOptions } from '@testing-library/react';
-import { ThemeProvider as StyledThemeProvider } from 'styled-components';
-import { lightTheme } from '../styles/Theme';
 import MeContext from '../contexts/MeContext';
 import SystemContext from '../contexts/SystemContext';
 import { ToastProvider } from '../contexts/ToastContext';
@@ -53,13 +51,11 @@ function AllProviders({
   };
 
   return (
-    <StyledThemeProvider theme={lightTheme}>
-      <MeContext.Provider value={meValue}>
-        <SystemContext.Provider value={systemValue}>
-          <ToastProvider>{children}</ToastProvider>
-        </SystemContext.Provider>
-      </MeContext.Provider>
-    </StyledThemeProvider>
+    <MeContext.Provider value={meValue}>
+      <SystemContext.Provider value={systemValue}>
+        <ToastProvider>{children}</ToastProvider>
+      </SystemContext.Provider>
+    </MeContext.Provider>
   );
 }
 

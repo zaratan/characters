@@ -1,13 +1,19 @@
-import styled from 'styled-components';
+import type { HTMLAttributes } from 'react';
 import type { TempElemType } from '../types/TempElemType';
 import { Title } from '../styles/Titles';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 import PexElem from './PexElem';
+import classNames from '../helpers/classNames';
 
-export const StyledTitle = styled(Title)`
-  padding: 0 1rem;
-  white-space: nowrap;
-`;
+export const StyledTitle = ({
+  className,
+  ...props
+}: HTMLAttributes<HTMLHeadingElement>) => (
+  <Title
+    className={classNames('px-4 whitespace-nowrap', className)}
+    {...props}
+  />
+);
 
 const SectionTitle = ({
   title,
