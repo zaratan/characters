@@ -45,6 +45,17 @@ export const test = base.extend<AuthFixtures>({
     await injectSessionCookie(context, sessionToken);
     const page = await context.newPage();
 
+    // Warm up: wait for the session endpoint to return 200.
+    // First hit triggers Next.js dev-mode compilation + PG pool reconnect,
+    // which can fail. Retry until the server is truly ready.
+    for (let i = 0; i < 3; i++) {
+      const res = await page.request
+        .get('http://localhost:3000/api/auth/session')
+        .catch(() => null);
+      if (res?.ok()) break;
+      await new Promise((r) => setTimeout(r, 500));
+    }
+
     await use({ userId, sessionToken, context, page });
 
     await context.close();

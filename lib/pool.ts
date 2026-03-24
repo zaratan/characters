@@ -14,9 +14,13 @@ const isServerless = !!process.env.VERCEL;
 const pool = new Pool({
   connectionString,
   max: isServerless ? 1 : 5,
-  idleTimeoutMillis: 10_000,
+  idleTimeoutMillis: isServerless ? 10_000 : 60_000,
   connectionTimeoutMillis: 5_000,
   ...(needsSsl ? { ssl: { rejectUnauthorized: false } } : {}),
 });
+
+if (process.env.NODE_ENV !== 'production') {
+  pool.query('SELECT 1').catch(() => {});
+}
 
 export default pool;
