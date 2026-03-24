@@ -3,6 +3,7 @@ import { test as base } from '@playwright/test';
 import type { Page, BrowserContext } from '@playwright/test';
 import { seedUser, seedCharacter, cleanup } from './db';
 import type { SeedCharacterOptions } from './db';
+import { mockExternalApis } from '../helpers/mocks';
 
 type DbHelpers = {
   seedCharacter: (options?: SeedCharacterOptions) => Promise<string>;
@@ -58,6 +59,8 @@ export const test = base.extend<AuthFixtures>({
         await new Promise((r) => setTimeout(r, 500));
       }
     }
+
+    await mockExternalApis(page);
 
     await use({ userId, sessionToken, context, page });
 
