@@ -391,15 +391,22 @@ Le CSS est mieux : cacheable, ne bloque pas le parsing JS, pas d'hydration néce
 
 **Validation** : build + lint + test manuel OK.
 
-### Phase 6 : Config et Toast (1-2 jours) — Taille S
+### Phase 6 : Config, Toast, Sections restantes, Pages (1-2 jours) — Taille S ✅
 
-- [ ] `components/config/ConfigAccessSection.tsx`
-- [ ] `components/config/ConfigDangerousSection.tsx`
-- [ ] `components/config/ConfigPreferencesSection.tsx`
-- [ ] `components/pages/HomeClient.tsx`, `ConfigClient.tsx`, `ProfileClient.tsx`
-- [ ] `contexts/ToastContext.tsx` (keyframes → classes conditionnelles)
+- [x] `components/sections/Abilities.tsx` — Container → `container-hover-reveal` + `.remove-spec-button` ajouté
+- [x] `components/sections/Disciplines.tsx` — 1 styled → inline
+- [x] `components/sections/Infos.tsx` — 2 styled → inline
+- [x] `components/sections/PexSection.tsx` — 2 styled → composants React
+- [x] `components/Sheet.tsx` — 1 styled → inline
+- [x] `components/config/ConfigAccessSection.tsx` — 6 styled → inline Tailwind
+- [x] `components/config/ConfigPreferencesSection.tsx` — 2 styled → inline
+- [x] `components/config/ConfigDangerousSection.tsx` — 5 styled → inline + CSS Module (RedButton)
+- [x] `components/pages/HomeClient.tsx` — 2 styled → inline
+- [x] `components/pages/ConfigClient.tsx` — 2 styled → inline (supprimé `justify-center` sur MainContainer)
+- [x] `components/pages/ProfileClient.tsx` — 9 styled → Tailwind + `ProfileClient.module.css`
+- [x] `contexts/ToastContext.tsx` — 2 styled + 2 keyframes → `ToastContext.module.css`
 
-**Validation** : tests E2E + screenshots.
+**Validation** : build + lint + test manuel OK.
 
 ### Phase 7 : Cleanup (1-2 jours) — Taille M
 

@@ -1,7 +1,6 @@
 import { concat, isEqual } from 'lodash';
 import { useContext, useEffect, useRef, useState } from 'react';
 import useDebounce from '../../hooks/useDebounce';
-import styled from 'styled-components';
 import useSWR from 'swr';
 import AccessesContext from '../../contexts/AccessesContext';
 import SystemContext from '../../contexts/SystemContext';
@@ -13,51 +12,6 @@ import type { UserType } from '../../types/UserType';
 import AutoCompleteInput from '../AutoCompleteInput';
 import { Glyph } from '../Glyph';
 import SectionTitle from '../SectionTitle';
-
-const MainContainer = styled.section`
-  width: 70%;
-  margin: 0 auto;
-  @media screen and (max-width: 930px) {
-    width: 80%;
-  }
-`;
-
-const AccessLists = styled.ul`
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
-  @media screen and (max-width: 930px) {
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-`;
-
-const AccessList = styled.li`
-  width: 100%;
-  max-width: 20rem;
-  @media screen and (max-width: 930px) {
-    &:not(:first-child) {
-      margin-top: 2rem;
-    }
-  }
-`;
-
-const AccessTitle = styled.h2`
-  text-align: center;
-  margin-bottom: 1rem;
-`;
-
-const AccessUsers = styled.ul`
-  list-style: inside;
-  padding-bottom: 2rem;
-`;
-
-const AccessUser = styled.li`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-`;
 
 const ConfigAccessSection = ({ id }: { id: string }) => {
   const { editors, addEditor, removeEditor, addViewer, removeViewer, viewers } =
@@ -103,13 +57,13 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
 
   if (!usersData || users.length === 0)
     return (
-      <MainContainer>
+      <section className="w-[70%] mx-auto max-xl-plus:w-4/5">
         <SectionTitle title="Access" />
         <EmptyLine />
         <strong className="h-full grow flex justify-center items-center">
           Chargement…
         </strong>
-      </MainContainer>
+      </section>
     );
 
   const editorsWithData = concat(
@@ -147,14 +101,14 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
   };
 
   return (
-    <MainContainer>
+    <section className="w-[70%] mx-auto max-xl-plus:w-4/5">
       <SectionTitle title="Access" />
-      <AccessLists>
-        <AccessList>
-          <AccessTitle>Éditeurs</AccessTitle>
-          <AccessUsers>
+      <ul className="flex justify-around w-full max-xl-plus:flex-col max-xl-plus:justify-center max-xl-plus:items-center">
+        <li className="w-full max-w-[20rem] max-xl-plus:[&:not(:first-child)]:mt-8">
+          <h2 className="text-center mb-4">Éditeurs</h2>
+          <ul className="list-inside pb-8">
             {editorsWithData.map((user) => (
-              <AccessUser key={user.id}>
+              <li key={user.id} className="flex justify-between w-full">
                 {user.name}
                 {editors.length > 1 ? (
                   <Glyph
@@ -166,9 +120,9 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
                 ) : (
                   <span />
                 )}
-              </AccessUser>
+              </li>
             ))}
-          </AccessUsers>
+          </ul>
           <AutoCompleteInput
             autocompleteOptions={users.filter(
               (user) => !editors.includes(user.id)
@@ -178,12 +132,12 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
             placeholder="Ajouter un éditeur"
             searchKeys={['name']}
           />
-        </AccessList>
-        <AccessList>
-          <AccessTitle>Viewer</AccessTitle>
-          <AccessUsers>
+        </li>
+        <li className="w-full max-w-[20rem] max-xl-plus:[&:not(:first-child)]:mt-8">
+          <h2 className="text-center mb-4">Viewer</h2>
+          <ul className="list-inside pb-8">
             {viewersWithData.map((user) => (
-              <AccessUser key={user.id}>
+              <li key={user.id} className="flex justify-between w-full">
                 {user.name}
                 {viewers.length > 1 ? (
                   <Glyph
@@ -195,9 +149,9 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
                 ) : (
                   <span />
                 )}
-              </AccessUser>
+              </li>
             ))}
-          </AccessUsers>
+          </ul>
           <AutoCompleteInput
             autocompleteOptions={users.filter(
               (user) => !viewers.includes(user.id)
@@ -207,9 +161,9 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
             placeholder="Ajouter un viewer"
             searchKeys={['name']}
           />
-        </AccessList>
-      </AccessLists>
-    </MainContainer>
+        </li>
+      </ul>
+    </section>
   );
 };
 

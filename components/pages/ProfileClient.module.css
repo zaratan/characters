@@ -1,0 +1,43 @@
+.label {
+  display: block;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  color: var(--title-color);
+}
+
+.readOnlyValue {
+  display: block;
+  padding: 0.5rem;
+  color: var(--glyph-gray);
+  background-color: var(--bg);
+}
+
+.input {
+  border: 1px solid var(--border-color);
+  background-color: var(--bg);
+  color: var(--text-color);
+  padding: 0.5rem;
+  width: 100%;
+}
+.input:focus {
+  outline: none;
+  border-color: var(--focus-border);
+}
+
+.saveButton {
+  padding: 0.5rem 1.5rem;
+  border: 1px solid var(--border-color);
+  background-color: var(--action-bg);
+  color: var(--text-color);
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+}
+.saveButton:hover,
+.saveButton:focus {
+  background-color: var(--hover-bg);
+  outline: none;
+}
+.saveButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

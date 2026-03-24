@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import styled from 'styled-components';
 import AttributesContext from '../../contexts/AttributesContext';
 import SectionTitle from '../SectionTitle';
 import { HorizontalSection } from '../../styles/Sections';
@@ -35,21 +34,12 @@ import HumanMagicContext from '../../contexts/HumanMagicContext';
 import PexPercentage from '../PexPercentages';
 import PreferencesContext from '../../contexts/PreferencesContext';
 
-const HandText = styled(HandLargeText)`
-  display: flex;
-  justify-content: center;
-  span {
-    font-size: 1.5rem;
-  }
-`;
-
-const TextContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  input {
-    text-align: center;
-  }
-`;
+const PexHandText = (props) => (
+  <HandLargeText
+    className="flex justify-center [&_span]:text-[1.5rem]"
+    {...props}
+  />
+);
 
 const PexSection = () => {
   const { leftOver } = useContext(PexContext);
@@ -240,7 +230,7 @@ const PexSection = () => {
       <HorizontalSection>
         <div className="container-hover-reveal">
           <ColumnTitle title="Restant" />
-          <TextContainer>
+          <div className="flex justify-center [&>input]:text-center">
             {editMode ? (
               <HandEditableText
                 onChange={(e) => leftOver.set(Number(e.target.value))}
@@ -248,13 +238,15 @@ const PexSection = () => {
                 placeholder="PEX restant"
               />
             ) : (
-              <HandText>{leftOver.value === 0 ? '' : leftOver.value}</HandText>
+              <PexHandText>
+                {leftOver.value === 0 ? '' : leftOver.value}
+              </PexHandText>
             )}
-          </TextContainer>
+          </div>
         </div>
         <div className="container-hover-reveal">
           <ColumnTitle title="Total" />
-          <HandText>
+          <PexHandText>
             <PexElem
               currentPex={totalPex.current}
               diffPex={totalPex.diff}
@@ -262,7 +254,7 @@ const PexSection = () => {
               hideParentheses
               withSpaces
             />
-          </HandText>
+          </PexHandText>
         </div>
         {showPex ? (
           <div className="container-hover-reveal">

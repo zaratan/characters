@@ -3,7 +3,6 @@
 import { useContext, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import styled from 'styled-components';
 import MeContext from '../../contexts/MeContext';
 import Nav from '../Nav';
 import Footer from '../Footer';
@@ -11,89 +10,7 @@ import ErrorPage from '../ErrorPage';
 import UserAvatar from '../UserAvatar';
 import { BlackLine, EmptyLine } from '../../styles/Lines';
 import { Title } from '../../styles/Titles';
-
-const MainContainer = styled.main`
-  display: flex;
-  justify-content: space-between;
-  flex-direction: column;
-  height: 100%;
-`;
-
-const FormContainer = styled.section`
-  width: 100%;
-  max-width: 24rem;
-  margin: 0 auto;
-  padding: 0 1rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const FieldGroup = styled.div`
-  width: 100%;
-  margin-bottom: 1.5rem;
-`;
-
-const Label = styled.label`
-  display: block;
-  font-size: 0.875rem;
-  margin-bottom: 0.5rem;
-  color: ${(props) => props.theme.titleColor};
-`;
-
-const ReadOnlyValue = styled.span`
-  display: block;
-  padding: 0.5rem;
-  color: ${(props) => props.theme.glyphGray};
-  font-size: 1rem;
-`;
-
-const Input = styled.input`
-  border: 1px solid ${(props) => props.theme.borderColor};
-  background-color: ${(props) => props.theme.background};
-  color: ${(props) => props.theme.color};
-  padding: 0.5rem;
-  width: 100%;
-  &:focus {
-    outline: none;
-    border-color: ${(props) => props.theme.focusBorderColor};
-  }
-`;
-
-const SaveButton = styled.button`
-  padding: 0.5rem 1.5rem;
-  border: 1px solid ${(props) => props.theme.borderColor};
-  background-color: ${(props) => props.theme.actionBackground};
-  color: ${(props) => props.theme.color};
-  cursor: pointer;
-  transition: background-color 0.2s ease-in-out;
-  &:hover,
-  &:focus {
-    background-color: ${(props) => props.theme.hoverBackgroundColor};
-    outline: none;
-  }
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-`;
-
-const ErrorMessage = styled.p`
-  color: ${(props) => props.theme.red};
-  font-size: 0.875rem;
-  margin-top: 0.5rem;
-`;
-
-const WelcomeMessage = styled.p`
-  text-align: center;
-  margin-bottom: 1.5rem;
-  color: ${(props) => props.theme.color};
-  line-height: 1.5;
-`;
-
-const AvatarWrapper = styled.div`
-  margin-bottom: 1.5rem;
-`;
+import styles from './ProfileClient.module.css';
 
 const ProfileClient = () => {
   const { me, connected, loading } = useContext(MeContext);
@@ -148,7 +65,7 @@ const ProfileClient = () => {
   };
 
   return (
-    <MainContainer>
+    <main className="flex justify-between flex-col h-full">
       <div>
         <Nav />
         <EmptyLine />
@@ -160,49 +77,59 @@ const ProfileClient = () => {
           <BlackLine />
         </EmptyLine>
         <EmptyLine />
-        <FormContainer>
+        <section className="w-full max-w-[24rem] mx-auto flex flex-col items-center">
           {isOnboarding && (
-            <WelcomeMessage>
+            <p className="text-center mb-6 leading-normal">
               Bienvenue ! Choisissez un nom d&apos;affichage pour que les autres
               joueurs puissent vous identifier.
-            </WelcomeMessage>
+            </p>
           )}
-          <AvatarWrapper>
+          <div className="mb-6">
             <UserAvatar
               name={me.name}
               image={me.image}
               userId={me.id}
               size={64}
             />
-          </AvatarWrapper>
-          <FieldGroup>
-            <Label>Email</Label>
-            <ReadOnlyValue>{me.email}</ReadOnlyValue>
-          </FieldGroup>
-          <FieldGroup>
-            <Label htmlFor="profile-name">Nom</Label>
-            <Input
+          </div>
+          <div className="w-full mb-6">
+            <label className={styles.label}>Email</label>
+            <span className={styles.readOnlyValue}>{me.email}</span>
+          </div>
+          <div className="w-full mb-6">
+            <label htmlFor="profile-name" className={styles.label}>
+              Nom
+            </label>
+            <input
               id="profile-name"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Ex: Sombre Nosferatu"
               maxLength={100}
+              className={styles.input}
             />
-            {error && <ErrorMessage>{error}</ErrorMessage>}
-          </FieldGroup>
-          <SaveButton onClick={handleSave} disabled={!canSave}>
-            {}
+            {error && (
+              <p className="text-red-600 dark:text-red-500 text-sm mt-2">
+                {error}
+              </p>
+            )}
+          </div>
+          <button
+            onClick={handleSave}
+            disabled={!canSave}
+            className={styles.saveButton}
+          >
             {saving
               ? 'Sauvegarde...'
               : isOnboarding
                 ? 'Continuer'
                 : 'Enregistrer'}
-          </SaveButton>
-        </FormContainer>
+          </button>
+        </section>
       </div>
       <Footer />
-    </MainContainer>
+    </main>
   );
 };
 

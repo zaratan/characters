@@ -1,0 +1,13 @@
+.redButton {
+  background-color: #c81e3b;
+  padding: 1rem;
+  border-radius: 2px;
+  box-shadow: -1px -1px grey;
+  outline: none;
+  color: white;
+  cursor: pointer;
+}
+.redButton:hover,
+.redButton:focus {
+  background-color: #c40233;
+}

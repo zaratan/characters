@@ -164,6 +164,7 @@ input[type='number']::-webkit-outer-spin-button {
   .container-hover-reveal .open-glyph,
   .container-hover-reveal .line-button,
   .container-hover-reveal .remove-glyph,
+  .container-hover-reveal .remove-spec-button,
   .container-hover-reveal .ritual-multiplicator,
   .container-hover-reveal .col-button {
     opacity: 0;
@@ -173,12 +174,14 @@ input[type='number']::-webkit-outer-spin-button {
   .container-hover-reveal:hover .open-glyph,
   .container-hover-reveal:hover .line-button,
   .container-hover-reveal:hover .remove-glyph,
+  .container-hover-reveal:hover .remove-spec-button,
   .container-hover-reveal:hover .ritual-multiplicator,
   .container-hover-reveal:hover .col-button,
   .container-hover-reveal:focus-within .empty-glyph,
   .container-hover-reveal:focus-within .open-glyph,
   .container-hover-reveal:focus-within .line-button,
   .container-hover-reveal:focus-within .remove-glyph,
+  .container-hover-reveal:focus-within .remove-spec-button,
   .container-hover-reveal:focus-within .ritual-multiplicator,
   .container-hover-reveal:focus-within .col-button {
     opacity: 1;

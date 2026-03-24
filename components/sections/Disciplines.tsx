@@ -1,5 +1,4 @@
 import { useContext } from 'react';
-import styled from 'styled-components';
 import { maxDot } from '../../helpers/maxLevels';
 import { HorizontalSection } from '../../styles/Sections';
 import ColumnTitleWithOptions from '../ColumnTitleWithOptions';
@@ -23,11 +22,6 @@ import ModeContext from '../../contexts/ModeContext';
 import SectionsContext from '../../contexts/SectionsContext';
 import DataContext from '../../contexts/DataContext';
 import LineValue from '../line/LineValue';
-
-const RitualMultiplicatorContainer = styled.span`
-  font-size: 1rem;
-  white-space: nowrap;
-`;
 
 const Disciplines = () => {
   const generation = useContext(GenerationContext);
@@ -248,7 +242,7 @@ const Disciplines = () => {
                 }
                 inactive={!editMode}
               >
-                <RitualMultiplicatorContainer className="ritual-multiplicator">
+                <span className="ritual-multiplicator text-base whitespace-nowrap">
                   (x
                   {editMode ? (
                     <HandEditableText
@@ -268,7 +262,7 @@ const Disciplines = () => {
                     </HandText>
                   )}
                   )
-                </RitualMultiplicatorContainer>
+                </span>
               </ColumnTitleWithOptions>
               <ul>
                 {thau.rituals.map((ritual) => (

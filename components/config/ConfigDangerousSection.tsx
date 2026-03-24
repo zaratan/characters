@@ -1,49 +1,12 @@
 import { useRouter } from 'next/navigation';
 import { useContext, useState } from 'react';
 import useDebounce from '../../hooks/useDebounce';
-import styled from 'styled-components';
 import AccessesContext from '../../contexts/AccessesContext';
 import SystemContext from '../../contexts/SystemContext';
 import { fetcher } from '../../helpers/fetcher';
 import { EmptyLine } from '../../styles/Lines';
 import SectionTitle from '../SectionTitle';
-
-const ButtonList = styled.ul`
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(3, 1fr);
-  grid-auto-rows: minmax(4rem, 1fr);
-`;
-const DangerousSection = styled.section`
-  width: 80%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-const ButtonLi = styled.li`
-  position: relative;
-`;
-const RedButton = styled.button`
-  background-color: #c81e3b;
-  padding: 1rem;
-  border-radius: 2px;
-  box-shadow: -1px -1px grey;
-  outline: none;
-  color: white;
-  cursor: pointer;
-
-  &:hover,
-  &:focus {
-    background-color: #c40233;
-  }
-`;
-
-const DangerousActionsContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  width: 100%;
-`;
+import styles from './ConfigDangerousSection.module.css';
 
 const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
   const router = useRouter();
@@ -94,19 +57,20 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
   );
 
   return (
-    <DangerousSection>
+    <section className="w-4/5 flex flex-col items-center">
       <SectionTitle title="Danger" />
       <h2>Attention, les actions ci-dessous sont dangereuses et définitives</h2>
       <EmptyLine />
-      <DangerousActionsContainer>
-        <ButtonList>
-          <ButtonLi>
-            <RedButton onClick={destroyFunction}>
+      <div className="flex justify-around w-full">
+        <ul className="grid gap-4 grid-cols-3 auto-rows-[minmax(4rem,1fr)]">
+          <li className="relative">
+            <button className={styles.redButton} onClick={destroyFunction}>
               Supprimer le personnage
-            </RedButton>
-          </ButtonLi>
-          <ButtonLi>
-            <RedButton
+            </button>
+          </li>
+          <li className="relative">
+            <button
+              className={styles.redButton}
               onClick={() => {
                 setVisibilityChanged(true);
                 togglePrivate();
@@ -115,12 +79,12 @@ const ConfigDangerousSection = ({ id, name }: { id: string; name: string }) => {
               {privateSheet
                 ? 'Rendre la feuille publique'
                 : 'Rendre la feuille privée'}
-            </RedButton>
-          </ButtonLi>
-        </ButtonList>
-      </DangerousActionsContainer>
+            </button>
+          </li>
+        </ul>
+      </div>
       <EmptyLine />
-    </DangerousSection>
+    </section>
   );
 };
 

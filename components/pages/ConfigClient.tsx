@@ -1,6 +1,5 @@
 'use client';
 import { useContext } from 'react';
-import styled from 'styled-components';
 import useSWR from 'swr';
 import Footer from '../Footer';
 import Nav from '../Nav';
@@ -12,21 +11,6 @@ import MeContext from '../../contexts/MeContext';
 import { AccessesProvider } from '../../contexts/AccessesContext';
 import Config from '../config/Config';
 import ErrorPage from '../ErrorPage';
-
-const OuterContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-`;
-
-const MainContainer = styled.main`
-  flex-grow: 1;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`;
 
 const ConfigClient = ({
   initialData,
@@ -49,20 +33,20 @@ const ConfigClient = ({
 
   if (!me!.isAdmin && !(data!.editors || []).includes(me!.id)) {
     return (
-      <OuterContainer>
+      <div className="flex flex-col min-h-full">
         <Nav />
         <strong className="h-full grow flex justify-center items-center">
           Vous n&apos;avez pas accès à la configuration de ce personnage.
         </strong>
         <Footer />
-      </OuterContainer>
+      </div>
     );
   }
 
   return (
-    <OuterContainer>
+    <div className="flex flex-col min-h-full">
       <Nav returnTo={`/vampires/${id}/config`} />
-      <MainContainer>
+      <main className="grow flex flex-col items-center">
         <SectionsProvider sections={data!.sections}>
           <AccessesProvider
             editors={data!.editors || []}
@@ -72,9 +56,9 @@ const ConfigClient = ({
             <Config id={id} name={data!.infos.name} />
           </AccessesProvider>
         </SectionsProvider>
-      </MainContainer>
+      </main>
       <Footer />
-    </OuterContainer>
+    </div>
   );
 };
 

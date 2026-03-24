@@ -1,6 +1,5 @@
 import { useContext, useState } from 'react';
 import useDebounce from '../../hooks/useDebounce';
-import styled from 'styled-components';
 import type { SectionsType } from '../../contexts/SectionsContext';
 import SectionsContext from '../../contexts/SectionsContext';
 import SystemContext from '../../contexts/SystemContext';
@@ -44,12 +43,6 @@ const YesNoGlyph = ({
   </>
 );
 
-const StyledLi = styled.li`
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-`;
-
 const SectionLi = ({
   displayName,
   name,
@@ -61,18 +54,13 @@ const SectionLi = ({
   value: boolean;
   onClick: (name: string) => () => void;
 }) => (
-  <StyledLi>
+  <li className="flex justify-between w-full">
     <span>
       {displayName} : {value ? 'Oui' : 'Non'}{' '}
     </span>
     <YesNoGlyph name={name} value={value} onClick={onClick(name)} />
-  </StyledLi>
+  </li>
 );
-
-const OptionList = styled.ul`
-  width: 80%;
-  max-width: 30rem;
-`;
 
 const ConfigPreferencesSection = ({ id }: { id: string }) => {
   const {
@@ -133,7 +121,7 @@ const ConfigPreferencesSection = ({ id }: { id: string }) => {
   return (
     <>
       <h2>Sections disponibles sur la fiche</h2>
-      <OptionList>
+      <ul className="w-4/5 max-w-[30rem]">
         <SectionLi
           displayName="Sang"
           name="blood"
@@ -176,7 +164,7 @@ const ConfigPreferencesSection = ({ id }: { id: string }) => {
           value={useVampireInfos}
           onClick={changeSection}
         />
-      </OptionList>
+      </ul>
     </>
   );
 };
