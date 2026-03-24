@@ -20,7 +20,7 @@
   /* Fonts custom */
   --font-cloister: 'CloisterBlack', serif;
   --font-victorian: 'VictorianQ', serif;
-  --font-bilbo: 'Bilbo Swash Caps', cursive;
+  --font-bilbo: var(--font-bilbo-face, 'Bilbo Swash Caps'), cursive;
 }
 
 /* ===== Font Faces ===== */

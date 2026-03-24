@@ -1,7 +1,14 @@
-/* eslint-disable @next/next/no-page-custom-font */
 import type { ReactNode } from 'react';
+import { Bilbo_Swash_Caps } from 'next/font/google';
 import Providers from '../lib/providers';
 import '../styles/globals.css';
+
+const bilbo = Bilbo_Swash_Caps({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+  variable: '--font-bilbo-face',
+});
 
 export const metadata = {
   title: 'Char - Feuilles de perso',
@@ -18,13 +25,7 @@ export const viewport = {
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="fr">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Bilbo+Swash+Caps&display=swap"
-          rel="stylesheet"
-        />
-      </head>
+    <html lang="fr" className={bilbo.variable}>
       <body>
         <Providers>{children}</Providers>
       </body>

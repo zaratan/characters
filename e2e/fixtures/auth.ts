@@ -3,6 +3,7 @@ import { test as base } from '@playwright/test';
 import type { Page, BrowserContext } from '@playwright/test';
 import { seedUser, seedCharacter, cleanup } from './db';
 import type { SeedCharacterOptions } from './db';
+import { mockExternalApis } from '../helpers/mocks';
 
 type DbHelpers = {
   seedCharacter: (options?: SeedCharacterOptions) => Promise<string>;
@@ -44,6 +45,22 @@ export const test = base.extend<AuthFixtures>({
     const context = await browser.newContext();
     await injectSessionCookie(context, sessionToken);
     const page = await context.newPage();
+
+    // In dev mode, the first hit triggers on-demand compilation + PG pool
+    // cold-start, which can 500. Warm up with a retry loop so the real
+    // test navigation always hits a ready server.
+    // In CI (production build), routes are pre-compiled — skip the warm-up.
+    if (!process.env.CI) {
+      for (let i = 0; i < 3; i++) {
+        const res = await page.request
+          .get('http://localhost:3000/api/auth/session')
+          .catch(() => null);
+        if (res?.ok()) break;
+        await new Promise((r) => setTimeout(r, 500));
+      }
+    }
+
+    await mockExternalApis(page);
 
     await use({ userId, sessionToken, context, page });
 
