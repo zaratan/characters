@@ -28,9 +28,6 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 1,
   reporter: [['html'], ['list']],
   timeout: 5_000,
-  expect: {
-    toHaveScreenshot: { maxDiffPixelRatio: 0.02 },
-  },
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
