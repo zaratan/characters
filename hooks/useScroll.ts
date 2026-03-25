@@ -26,6 +26,7 @@ export const useScroll = ({
   const [currentScroll, setCurrentScroll] = useState(0);
   const [scrollingUp, setScrollingUp] = useState(false);
   const onScrollRef = useRef(onScroll);
+  // eslint-disable-next-line react-hooks/refs -- latest callback pattern
   onScrollRef.current = onScroll;
 
   useEffect(() => {

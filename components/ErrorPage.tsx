@@ -11,6 +11,7 @@ const ErrorPage = () => {
   const [returnUrl, setReturnUrl] = useState('/');
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync browser-only value at mount
     setReturnUrl(window.location.pathname);
   }, []);
 

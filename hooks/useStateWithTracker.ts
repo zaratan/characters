@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef } from 'react';
+/* eslint-disable react-compiler/react-compiler -- JSON.stringify for deep comparison in deps */
+import { useState, useEffect } from 'react';
 import useChangeWatcher from './useChangeWatcher';
 
 type useStateWithChangesAndTrackerType = <T>(
@@ -28,14 +29,10 @@ const useStateWithTracker: useStateWithTrackerType = (
 ) => {
   const [tmpValue, setTmpValue] = useState(defaultValue);
 
-  const defaultRef = useRef(defaultValue);
-  if (JSON.stringify(defaultRef.current) !== JSON.stringify(defaultValue)) {
-    defaultRef.current = defaultValue;
-  }
-
   useEffect(() => {
-    setTmpValue(defaultRef.current);
-  }, [defaultRef.current]); // eslint-disable-line react-hooks/exhaustive-deps
+    setTmpValue(defaultValue);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- deep comparison for object props
+  }, [JSON.stringify(defaultValue)]);
 
   const setter = setTmpValue;
 
@@ -60,15 +57,11 @@ export const useStateWithChangesAndTracker: useStateWithChangesAndTrackerType =
       changed: false,
     });
 
-    const defaultRef = useRef(defaultValue);
-    if (JSON.stringify(defaultRef.current) !== JSON.stringify(defaultValue)) {
-      defaultRef.current = defaultValue;
-    }
-
     useEffect(() => {
       if (tmpValue.changed) return;
-      setTmpValue({ val: defaultRef.current, changed: false });
-    }, [defaultRef.current, tmpValue.changed]); // eslint-disable-line react-hooks/exhaustive-deps
+      setTmpValue({ val: defaultValue, changed: false });
+      // eslint-disable-next-line react-hooks/exhaustive-deps -- deep comparison for object props
+    }, [JSON.stringify(defaultValue), tmpValue.changed]);
 
     const setter = setTmpValue;
 

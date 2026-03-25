@@ -78,9 +78,7 @@ const SheetClient = ({ initialData, id }: Props) => {
   }
 
   // default era
-  if (infos.era === undefined) {
-    infos.era = 0;
-  }
+  const safeInfos = infos.era === undefined ? { ...infos, era: 0 } : infos;
 
   return (
     <DataProvider>
@@ -88,7 +86,7 @@ const SheetClient = ({ initialData, id }: Props) => {
       <Sheet
         id={id}
         generation={generation}
-        infos={infos}
+        infos={safeInfos}
         attributes={attributes}
         talents={talents}
         customTalents={customTalents}

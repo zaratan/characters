@@ -64,6 +64,7 @@ export const SectionsProvider = ({
   useEffect(() => {
     if (!isEqual(prevSections.current, sections)) {
       prevSections.current = sections;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync props into state on deep change
       setSectionsState(sections);
     }
   }, [sections]);

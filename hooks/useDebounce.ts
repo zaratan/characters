@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler -- deps are caller-controlled */
 import { useEffect, useRef } from 'react';
 
 const useDebounce = (

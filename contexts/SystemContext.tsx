@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler -- pusherClient ref intentionally omitted from deps */
 'use client';
 
 import type { ReactNode } from 'react';

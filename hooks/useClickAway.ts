@@ -6,6 +6,7 @@ const useClickAway = (
   callback: (event: Event) => void
 ) => {
   const callbackRef = useRef(callback);
+  // eslint-disable-next-line react-hooks/refs -- latest callback pattern
   callbackRef.current = callback;
 
   useEffect(() => {

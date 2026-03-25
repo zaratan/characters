@@ -30,6 +30,7 @@ export const PreferencesProvider = ({ children }: { children: ReactNode }) => {
       localStorage.getItem('PreferencesContext:showPex') ?? 'null'
     );
     if (lsShowPex) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- read localStorage at mount
       setShowPex(lsShowPex);
     }
   }, []);

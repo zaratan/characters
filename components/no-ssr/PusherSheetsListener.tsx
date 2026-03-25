@@ -1,3 +1,4 @@
+/* eslint-disable react-compiler/react-compiler -- callback intentionally omitted from deps */
 import { useEffect, useContext } from 'react';
 import { subscribeToSheets } from '../../helpers/pusherClient';
 import { sheetsChannel } from '../../helpers/pusherConst';

@@ -28,6 +28,7 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
   useEffect(() => {
     if (!isEqual(prevUsers.current, usersData?.users)) {
       prevUsers.current = usersData?.users;
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- sync SWR data into local state
       setUsers(usersData?.users || []);
     }
   }, [usersData?.users]);

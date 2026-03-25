@@ -165,6 +165,33 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
     setIsOpen(false);
   });
 
+  const topMatches = autocompleteMatchingOptions.slice(0, 5);
+  // eslint-disable-next-line react-hooks/refs -- refs passed to key/click handlers, not read during render
+  const suggestionItems = topMatches.map((match, i) => {
+    let displayName: string;
+    if (typeof display === 'string') {
+      displayName = String(match[display]);
+    } else {
+      displayName = display(match);
+    }
+
+    return (
+      <li key={displayName} className={styles.suggestion}>
+        <span
+          tabIndex={0}
+          onClick={clickHandler(match)}
+          onKeyDown={keyHandler(match)}
+          onBlur={() => {
+            if (i >= Math.min(5, topMatches.length) - 1) setIsOpen(false);
+          }}
+          role="button"
+        >
+          {displayName}
+        </span>
+      </li>
+    );
+  });
+
   return (
     <form
       className="relative"
@@ -180,6 +207,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
         onChange={(e) => setInputValue(e.currentTarget.value)}
         placeholder={placeholder}
         onFocus={() => setIsOpen(inputValue !== '')}
+        // eslint-disable-next-line react-hooks/refs -- ref passed to keyboard handler, not accessed in render
         onKeyDown={generateHandleKeypressInput(suggestionListRef, () =>
           setIsOpen(false)
         )}
@@ -192,38 +220,7 @@ const AutoCompleteInput = <T extends Record<string, unknown>>({
         )}
       >
         <ul className={styles.suggestionList} ref={suggestionListRef}>
-          {autocompleteMatchingOptions.slice(0, 5).map((match, i) => {
-            let displayName: string;
-            if (typeof display === 'string') {
-              displayName = String(match[display]);
-            } else {
-              displayName = display(match);
-            }
-
-            return (
-              <li key={displayName} className={styles.suggestion}>
-                <span
-                  tabIndex={0}
-                  onClick={clickHandler(match)}
-                  onKeyDown={keyHandler(match)}
-                  onBlur={() => {
-                    if (
-                      i >=
-                      Math.min(
-                        5,
-                        autocompleteMatchingOptions.slice(0, 5).length
-                      ) -
-                        1
-                    )
-                      setIsOpen(false);
-                  }}
-                  role="button"
-                >
-                  {displayName}
-                </span>
-              </li>
-            );
-          })}
+          {suggestionItems}
         </ul>
       </span>
     </form>

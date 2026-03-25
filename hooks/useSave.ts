@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useRef } from 'react';
 import { mutate } from 'swr';
 import { useToast } from '../contexts/ToastContext';
 import ModificationsContext from '../contexts/ModificationsContext';
@@ -28,6 +28,7 @@ export const useSave = () => {
   const { id } = useContext(IdContext);
   const { appId } = useContext(SystemContext);
   const { showError } = useToast();
+  const isSubmitting = useRef(false);
   const {
     chronicle,
     clan,
@@ -279,6 +280,9 @@ export const useSave = () => {
       viewers,
       privateSheet,
     };
+    if (isSubmitting.current) return;
+    isSubmitting.current = true;
+
     const url = `/api/vampires/${id}`;
     try {
       await fetcher(url, {
@@ -289,6 +293,8 @@ export const useSave = () => {
       mutate(`/api/vampires/${id}`, data);
     } catch {
       showError('Erreur lors de la sauvegarde du personnage.');
+    } finally {
+      isSubmitting.current = false;
     }
   };
   return action;

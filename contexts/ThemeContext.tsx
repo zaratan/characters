@@ -23,6 +23,7 @@ export const ThemeContextProvider = ({ children }: { children: ReactNode }) => {
       localStorage.getItem('ThemeContext:darkMode') ?? 'null'
     );
     if (lsDarkMode !== undefined && lsDarkMode !== null) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- read localStorage at mount
       setDarkMode(lsDarkMode);
       document.documentElement.classList.toggle('dark', lsDarkMode);
     } else if (

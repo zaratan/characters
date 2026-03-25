@@ -38,6 +38,7 @@ export const ModeProvider = ({
   );
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- sync props into state on auth change
     setEditMode(false);
     setPlayMode(connected && editors.includes(me?.id ?? ''));
   }, [connected, editors, me?.id]);
