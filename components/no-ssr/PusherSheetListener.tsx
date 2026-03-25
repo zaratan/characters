@@ -16,7 +16,7 @@ const PusherSheetListener = ({
     const { client, channel } = subscribeToSheet({
       id,
       callback: (data) => {
-        if (data.appId === appId) return;
+        if ((data as Record<string, unknown>).appId === appId) return;
         callback();
       },
       client: pusherClient,

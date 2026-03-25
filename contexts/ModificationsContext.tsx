@@ -2,7 +2,6 @@
 
 import type { ReactNode } from 'react';
 import { createContext, useState, useMemo, useRef } from 'react';
-import some from 'lodash/some';
 
 type ContextType = {
   unsavedChanges: boolean;
@@ -15,8 +14,8 @@ type ContextType = {
 
 export type ChangeType = {
   key: string;
-  value: any;
-  baseValue?: any;
+  value: unknown;
+  baseValue?: unknown;
   pexCost: number;
   rollback: () => void;
 };
@@ -32,11 +31,16 @@ const defaultContext: ContextType = {
 
 const ModificationsContext = createContext(defaultContext);
 
+type ChangedValue = { changed: boolean; val: unknown };
+
+const isChangedValue = (v: unknown): v is ChangedValue =>
+  v !== null && typeof v === 'object' && 'changed' in v;
+
 const anyChanges = (changesArray: Array<ChangeType>) => {
   const ignoreList: string[] = [];
-  return some(changesArray, (change) => {
+  return changesArray.some((change) => {
     if (ignoreList.find((e) => e === change.key)) return false;
-    if (change.value.changed) {
+    if (isChangedValue(change.value) && change.value.changed) {
       if (JSON.stringify(change.baseValue) !== JSON.stringify(change.value.val))
         return true;
     } else if (

@@ -7,7 +7,7 @@ import type { MeType } from '../types/MeType';
 import { BlackLine } from '../styles/Lines';
 import {
   generateHandleClick,
-  generateHandleKeypress,
+  generateHandleKeyDown,
 } from '../helpers/handlers';
 import { Title } from '../styles/Titles';
 import MeContext from '../contexts/MeContext';
@@ -57,7 +57,7 @@ const LogButton = ({
   }
 
   const handleClick = generateHandleClick(action);
-  const handleKeypress = generateHandleKeypress(action);
+  const handleKeyDown = generateHandleKeyDown(action);
 
   return (
     <div className="relative h-full" ref={wrapperRef}>
@@ -73,7 +73,7 @@ const LogButton = ({
         }}
         data-testid="user-menu-button"
         onClick={handleClick}
-        onKeyPress={handleKeypress}
+        onKeyDown={handleKeyDown}
       >
         <UserAvatar
           name={data?.name ?? null}

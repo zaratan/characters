@@ -1,11 +1,11 @@
-import type { ComponentType, ReactElement } from 'react';
+import type { ComponentType } from 'react';
 import { useContext } from 'react';
 import Link from 'next/link';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 import MeContext from '../contexts/MeContext';
 import {
   generateHandleClick,
-  generateHandleKeypress,
+  generateHandleKeyDown,
 } from '../helpers/handlers';
 import AccessesContext from '../contexts/AccessesContext';
 import classNames from '../helpers/classNames';
@@ -30,8 +30,8 @@ type ActionType = {
       componentProps?: null;
     }
   | {
-      component: (any: any) => ReactElement;
-      componentProps?: any;
+      component: ComponentType<Record<string, unknown>>;
+      componentProps?: Record<string, unknown>;
       active?: null;
       act?: null;
       link?: null;
@@ -70,14 +70,14 @@ const DesktopActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
           );
         }
         const handleClick = generateHandleClick(action.act!);
-        const handleKeypress = generateHandleKeypress(action.act!);
+        const handleKeyDown = generateHandleKeyDown(action.act!);
         return (
           <div
             key={action.name}
             className={styles.desktopAction}
             role="button"
             onClick={handleClick}
-            onKeyPress={handleKeypress}
+            onKeyDown={handleKeyDown}
             tabIndex={0}
           >
             <span
@@ -121,14 +121,14 @@ const MobileActionsFooter = ({ actions }: { actions: Array<ActionType> }) => (
             );
           }
           const handleClick = generateHandleClick(action.act!);
-          const handleKeypress = generateHandleKeypress(action.act!);
+          const handleKeyDown = generateHandleKeyDown(action.act!);
           return (
             <div
               key={action.name}
               className={styles.mobileAction}
               role="button"
               onClick={handleClick}
-              onKeyPress={handleKeypress}
+              onKeyDown={handleKeyDown}
               tabIndex={0}
             >
               {action.name}

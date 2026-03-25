@@ -1,7 +1,7 @@
 import classNames from '../helpers/classNames';
 import {
   generateHandleClick,
-  generateHandleKeypress,
+  generateHandleKeyDown,
 } from '../helpers/handlers';
 import { Glyph } from './Glyph';
 import styles from './Square.module.css';
@@ -46,12 +46,12 @@ const Square = ({
   const timeChecked = checked === true ? 2 : Number(checked);
   const hoverCheck = checked === true || checked === false;
   const handleClick = generateHandleClick(inactive ? () => {} : onClick);
-  const handleKeypress = generateHandleKeypress(inactive ? () => {} : onClick);
+  const handleKeyDown = generateHandleKeyDown(inactive ? () => {} : onClick);
   return (
     <span
       aria-label={name}
       onClick={handleClick}
-      onKeyPress={handleKeypress}
+      onKeyDown={handleKeyDown}
       role="button"
       tabIndex={inactive ? -1 : 0}
       className={classNames(

@@ -8,12 +8,14 @@ import type {
 import pool from './pool';
 import { generateRandomName } from '../helpers/randomName';
 
-function toAdapterUser(row: any): AdapterUser {
+function toAdapterUser(row: Record<string, unknown>): AdapterUser {
   return {
     id: row.id,
     name: row.name,
     email: row.email,
-    emailVerified: row.emailVerified ? new Date(row.emailVerified) : null,
+    emailVerified: row.emailVerified
+      ? new Date(row.emailVerified as string)
+      : null,
     image: row.image,
     isAdmin: row.is_admin,
     hasOnboarded: row.has_onboarded ?? false,
@@ -44,8 +46,14 @@ export function customPgAdapter(): Adapter {
             ]
           );
           return toAdapterUser(rows[0]);
-        } catch (err: any) {
-          if (err?.code === '23505' && !hasName && attempt < MAX_RETRIES - 1) {
+        } catch (err: unknown) {
+          if (
+            err !== null &&
+            typeof err === 'object' &&
+            (err as Record<string, unknown>).code === '23505' &&
+            !hasName &&
+            attempt < MAX_RETRIES - 1
+          ) {
             continue;
           }
           throw err;

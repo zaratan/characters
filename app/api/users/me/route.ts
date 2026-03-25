@@ -38,8 +38,12 @@ export async function PATCH(request: NextRequest) {
   try {
     await db.users.updateName(session.user.id, name);
     return NextResponse.json({ ok: true });
-  } catch (err: any) {
-    if (err?.code === '23505') {
+  } catch (err: unknown) {
+    if (
+      err !== null &&
+      typeof err === 'object' &&
+      (err as Record<string, unknown>).code === '23505'
+    ) {
       return NextResponse.json(
         { error: 'Ce nom est déjà pris.' },
         { status: 409 }

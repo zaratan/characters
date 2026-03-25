@@ -38,7 +38,7 @@ const NewCharPage = () => {
     return <ErrorPage />;
   }
 
-  const onSubmit = async (e: FormEvent) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (saving) return;
 

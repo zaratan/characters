@@ -1,7 +1,7 @@
 import type { HTMLAttributes, ReactNode } from 'react';
 import {
   generateHandleClick,
-  generateHandleKeypress,
+  generateHandleKeyDown,
 } from '../helpers/handlers';
 import classNames from '../helpers/classNames';
 import styles from './Glyph.module.css';
@@ -29,13 +29,13 @@ export const Glyph = ({
   className?: string;
 }) => {
   const handleClick = generateHandleClick(onClick);
-  const handleKeypress = generateHandleKeypress(onClick);
+  const handleKeyDown = generateHandleKeyDown(onClick);
 
   return (
     <StyledGlyph
       aria-label={name}
       onClick={handleClick}
-      onKeyPress={handleKeypress}
+      onKeyDown={handleKeyDown}
       role="button"
       tabIndex={inactive ? -1 : 0}
       className={classNames(

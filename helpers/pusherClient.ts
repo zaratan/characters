@@ -10,7 +10,7 @@ export const subscribeToSheets = ({
   callback,
   client = pusherClient(),
 }: {
-  callback: (data: any) => void;
+  callback: (data: unknown) => void;
   client?: PusherClient;
 }) => {
   const channel = client.subscribe(sheetsChannel);
@@ -25,7 +25,7 @@ export const subscribeToSheet = ({
   client = pusherClient(),
 }: {
   id: string;
-  callback: (data: any) => void;
+  callback: (data: unknown) => void;
   client?: PusherClient;
 }) => {
   const channel = client.subscribe(sheetChannel(id));

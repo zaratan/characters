@@ -1,4 +1,4 @@
-import { concat, isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import { useContext, useEffect, useRef, useState } from 'react';
 import useDebounce from '../../hooks/useDebounce';
 import useSWR from 'swr';
@@ -66,13 +66,13 @@ const ConfigAccessSection = ({ id }: { id: string }) => {
       </section>
     );
 
-  const editorsWithData = concat(
-    editors.map((e) => users.find((user) => user.id === e))
-  ).filter((u): u is UserType => u !== undefined);
+  const editorsWithData = editors
+    .map((e) => users.find((user) => user.id === e))
+    .filter((u): u is UserType => u !== undefined);
 
-  const viewersWithData = concat(
-    viewers.map((e) => users.find((user) => user.id === e))
-  ).filter((u): u is UserType => u !== undefined);
+  const viewersWithData = viewers
+    .map((e) => users.find((user) => user.id === e))
+    .filter((u): u is UserType => u !== undefined);
 
   const addEditorAction = (user: UserType | string) => {
     if (typeof user === 'string') return;

@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import {
   generateHandleClick,
-  generateHandleKeypress,
+  generateHandleKeyDown,
 } from '../helpers/handlers';
 import { Glyph } from './Glyph';
 import PreferencesContext from '../contexts/PreferencesContext';
@@ -75,14 +75,14 @@ const Dot = ({
 
   const handleClick = generateHandleClick(clickAction);
 
-  const handleKeyPress = generateHandleKeypress(clickAction);
+  const handleKeyDown = generateHandleKeyDown(clickAction);
   const { showPex } = useContext(PreferencesContext);
 
   return (
     <span
       className={containerClass}
       onClick={handleClick}
-      onKeyPress={handleKeyPress}
+      onKeyDown={handleKeyDown}
       role="radio"
       tabIndex={selectedValue || inactive ? -1 : 0}
       aria-checked={full}

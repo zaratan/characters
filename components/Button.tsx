@@ -1,8 +1,8 @@
-import type { ReactNode, FormEvent } from 'react';
+import type { ReactNode } from 'react';
 import { ActionItem } from '../styles/Items';
 import {
   generateHandleClick,
-  generateHandleKeypress,
+  generateHandleKeyDown,
 } from '../helpers/handlers';
 
 const Button = ({
@@ -10,16 +10,16 @@ const Button = ({
   onClick,
 }: {
   children: ReactNode;
-  onClick: (e: FormEvent) => void;
+  onClick: () => void;
 }) => {
   const handleClick = generateHandleClick(onClick);
-  const handleKeypress = generateHandleKeypress(onClick);
+  const handleKeyDown = generateHandleKeyDown(onClick);
   return (
     <ActionItem
       role="button"
       tabIndex={0}
       onClick={handleClick}
-      onKeyPress={handleKeypress}
+      onKeyDown={handleKeyDown}
     >
       {children}
     </ActionItem>

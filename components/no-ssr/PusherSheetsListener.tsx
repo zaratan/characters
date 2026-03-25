@@ -9,7 +9,7 @@ const PusherSheetsListener = ({ callback }: { callback: () => void }) => {
     if (pusherClient === null) return;
     const { channel, client } = subscribeToSheets({
       callback: (data) => {
-        if (data.appId === appId) return;
+        if ((data as Record<string, unknown>).appId === appId) return;
 
         callback();
       },

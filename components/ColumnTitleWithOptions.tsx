@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import { useState } from 'react';
 import { Glyph } from './Glyph';
 import {
-  generateHandleKeypress,
+  generateHandleKeyDown,
   generateHandleClick,
 } from '../helpers/handlers';
 import { ActionItem, OptionItem } from '../styles/Items';
@@ -136,11 +136,11 @@ const ColumnTitleWithOptions = ({
             ))}
             {actions.map((action) => {
               const handleClick = generateHandleClick(action.value);
-              const handleKeypress = generateHandleKeypress(action.value);
+              const handleKeyDown = generateHandleKeyDown(action.value);
               return (
                 <ActionItem
                   onClick={handleClick}
-                  onKeyPress={handleKeypress}
+                  onKeyDown={handleKeyDown}
                   role="button"
                   tabIndex={0}
                   key={action.name}

@@ -144,7 +144,7 @@ const Line = <T extends { name: string }>({
           />
           <DotSeparator
             onClick={onClickHandle(5)}
-            onKeyPress={onClickHandle(5)}
+            onKeyDown={onClickHandle(5)}
             tabIndex={-1}
             aria-label={`${name} dot separator`}
             role="button"

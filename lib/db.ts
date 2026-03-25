@@ -102,14 +102,19 @@ const vampires = {
 
       const row = result.rows[0];
       return rowToVampire(row, row.editors, row.viewers);
-    } catch (err: any) {
+    } catch (err: unknown) {
       // PostgreSQL error 22P02 = invalid_text_representation (bad UUID format).
-      if (err?.code === '22P02') return null;
+      if (
+        err !== null &&
+        typeof err === 'object' &&
+        (err as Record<string, unknown>).code === '22P02'
+      )
+        return null;
       throw err;
     }
   },
 
-  async create(vampire: any, creatorUserId: string): Promise<string> {
+  async create(vampire: VampireType, creatorUserId: string): Promise<string> {
     return withTransaction(async (client) => {
       const { privateSheet, data } = vampireToRow(vampire);
 
@@ -136,7 +141,7 @@ const vampires = {
     });
   },
 
-  async update(id: string, vampire: any): Promise<void> {
+  async update(id: string, vampire: VampireType): Promise<void> {
     return withTransaction(async (client) => {
       const { privateSheet, editors, viewers, data } = vampireToRow(vampire);
 
@@ -175,16 +180,12 @@ const vampires = {
     });
   },
 
-  async updatePartial(id: string, partial: any): Promise<void> {
+  async updatePartial(
+    id: string,
+    partial: Partial<VampireType>
+  ): Promise<void> {
     return withTransaction(async (client) => {
-      const {
-        editors,
-        viewers,
-        privateSheet,
-        appId: _appId,
-        id: _id,
-        ...rest
-      } = partial;
+      const { editors, viewers, privateSheet, id: _id, ...rest } = partial;
 
       if (editors !== undefined) {
         await client.query(
@@ -230,7 +231,10 @@ const vampires = {
           [id]
         );
         if (current.rows.length > 0) {
-          const merged = deepMerge(current.rows[0].data, rest);
+          const merged = deepMerge(
+            current.rows[0].data as Record<string, unknown>,
+            rest as Record<string, unknown>
+          );
           await client.query(
             `
             UPDATE vampires

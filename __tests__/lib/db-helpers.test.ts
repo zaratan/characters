@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import type { VampireType } from '../../types/VampireType';
 import {
   deepMerge,
   filterUserIds,
@@ -165,13 +166,12 @@ describe('vampireToRow', () => {
   it('extracts privateSheet, editors, viewers and stringifies the rest as data', () => {
     const vampire = {
       id: 'abc-123',
-      appId: 'app-1',
       privateSheet: true,
       editors: ['editor1'],
       viewers: ['viewer1'],
       name: 'Dracula',
       generation: 8,
-    };
+    } as unknown as VampireType;
     const result = vampireToRow(vampire);
     expect(result.privateSheet).toBe(true);
     expect(result.editors).toEqual(['editor1']);
@@ -181,29 +181,28 @@ describe('vampireToRow', () => {
   });
 
   it('defaults privateSheet to false when undefined', () => {
-    const result = vampireToRow({ name: 'Test' });
+    const result = vampireToRow({ name: 'Test' } as unknown as VampireType);
     expect(result.privateSheet).toBe(false);
   });
 
   it('defaults editors to empty array when undefined', () => {
-    const result = vampireToRow({ name: 'Test' });
+    const result = vampireToRow({ name: 'Test' } as unknown as VampireType);
     expect(result.editors).toEqual([]);
   });
 
   it('defaults viewers to empty array when undefined', () => {
-    const result = vampireToRow({ name: 'Test' });
+    const result = vampireToRow({ name: 'Test' } as unknown as VampireType);
     expect(result.viewers).toEqual([]);
   });
 
-  it('data JSON does not contain id, appId, editors, viewers, or privateSheet', () => {
+  it('data JSON does not contain id, editors, viewers, or privateSheet', () => {
     const vampire = {
       id: 'abc-123',
-      appId: 'app-1',
       privateSheet: false,
       editors: ['editor1'],
       viewers: ['viewer1'],
       name: 'Lestat',
-    };
+    } as unknown as VampireType;
     const result = vampireToRow(vampire);
     const data = JSON.parse(result.data);
     expect(data).not.toHaveProperty('id');

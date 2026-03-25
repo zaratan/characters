@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { useContext } from 'react';
 import { HorizontalSection } from '../../styles/Sections';
 import { EmptyLine } from '../../styles/Lines';
@@ -18,10 +18,10 @@ const Infos = () => {
   const { useGeneration, useVampireInfos } = useContext(SectionsContext);
   const handleChange =
     (changeFunction: (val: string) => void) =>
-    (event: FormEvent<HTMLInputElement>) => {
+    (event: ChangeEvent<HTMLInputElement>) => {
       changeFunction(event.currentTarget.value);
     };
-  const handleChangeGeneration = (event: FormEvent<HTMLInputElement>) => {
+  const handleChangeGeneration = (event: ChangeEvent<HTMLInputElement>) => {
     generation.set(Number(event.currentTarget.value));
   };
   return (

@@ -1,4 +1,4 @@
-import type { FormEvent } from 'react';
+import type { ChangeEvent } from 'react';
 import { HandLargeEditableText, HandLargeText } from '../styles/Texts';
 import { BlackLine, EmptyLine } from '../styles/Lines';
 import type { TempElemType } from '../types/TempElemType';
@@ -15,7 +15,7 @@ const UnderlinedHandLargeEditableText = ({
       <HandLargeText className="left-padded">{elem.value}</HandLargeText>
     ) : (
       <HandLargeEditableText
-        onChange={(e: FormEvent<HTMLInputElement>) => {
+        onChange={(e: ChangeEvent<HTMLInputElement>) => {
           elem.set(e.currentTarget.value);
         }}
         value={elem.value}
