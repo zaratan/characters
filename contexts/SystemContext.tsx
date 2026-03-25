@@ -59,8 +59,9 @@ export const SystemProvider = ({ children }: { children: ReactNode }) => {
       pusherState,
       needPusherFallback,
     }),
+    // pusherClient is a ref — ref mutations don't trigger re-renders by design
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [pusherState]
+    [pusherState, needPusherFallback]
   );
   return (
     <SystemContext.Provider value={context}>{children}</SystemContext.Provider>

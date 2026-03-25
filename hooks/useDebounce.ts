@@ -21,6 +21,7 @@ const useDebounce = (
     }, delay);
 
     return () => clearTimeout(timer);
+    // deps is caller-controlled; callback is stabilized via ref above
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
 };

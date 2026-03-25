@@ -1,5 +1,4 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import throttle from 'lodash/throttle';
 
 // Watch scroll updates on the page
@@ -26,6 +25,9 @@ export const useScroll = ({
 } = {}) => {
   const [currentScroll, setCurrentScroll] = useState(0);
   const [scrollingUp, setScrollingUp] = useState(false);
+  const onScrollRef = useRef(onScroll);
+  onScrollRef.current = onScroll;
+
   useEffect(() => {
     // Vars
     let prevScroll = window.pageYOffset;
@@ -39,7 +41,7 @@ export const useScroll = ({
       // browser re-rendering
       window.requestAnimationFrame(function () {
         // Action
-        onScroll({ prevScroll, nextScroll });
+        onScrollRef.current({ prevScroll, nextScroll });
         // Update state
         setCurrentScroll(nextScroll);
         setScrollingUp(nextScroll < prevScroll);

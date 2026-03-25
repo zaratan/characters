@@ -1,7 +1,7 @@
 'use client';
 
 import type { ReactNode } from 'react';
-import { createContext, useState, useMemo, useRef } from 'react';
+import { createContext, useState, useMemo, useCallback, useRef } from 'react';
 
 type ContextType = {
   unsavedChanges: boolean;
@@ -59,7 +59,7 @@ export const ModificationsProvider = ({
   const [unsavedChanges, setUnsavedChanges] = useState(false);
   const [changePexDuringPlay, setChangePexDuringPlay] = useState(0);
   const changes = useRef<ChangeType[]>([]);
-  const addChange = (change: ChangeType) => {
+  const addChange = useCallback((change: ChangeType) => {
     if (
       JSON.stringify(change.value) ===
       JSON.stringify(
@@ -68,18 +68,18 @@ export const ModificationsProvider = ({
     )
       return;
     changes.current = [change, ...changes.current];
-    setChangePexDuringPlay(changePexDuringPlay + change.pexCost);
+    setChangePexDuringPlay((prev) => prev + change.pexCost);
     setUnsavedChanges(anyChanges([change, ...changes.current]));
-  };
-  const rollback = () => {
+  }, []);
+  const rollback = useCallback(() => {
     const [changeToRollback, ...otherChanges] = changes.current;
     if (changeToRollback) {
       changeToRollback.rollback();
-      setChangePexDuringPlay(changePexDuringPlay - changeToRollback.pexCost);
+      setChangePexDuringPlay((prev) => prev - changeToRollback.pexCost);
     }
     changes.current = otherChanges;
     setUnsavedChanges(anyChanges(otherChanges));
-  };
+  }, []);
   const context: ContextType = useMemo(
     () => ({
       unsavedChanges,
@@ -93,8 +93,7 @@ export const ModificationsProvider = ({
       changePexDuringPlay,
       setChangePexDuringPlay,
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [unsavedChanges, changePexDuringPlay]
+    [unsavedChanges, changePexDuringPlay, addChange, rollback]
   );
   return (
     <ModificationsContext.Provider value={context}>

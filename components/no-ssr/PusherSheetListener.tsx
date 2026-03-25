@@ -25,6 +25,8 @@ const PusherSheetListener = ({
       channel.unbind(undefined, callback);
       client.unsubscribe(sheetChannel(id));
     };
+    // callback is intentionally omitted: re-subscribing on every render would
+    // create subscription churn; the latest callback is always called directly
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, appId, pusherClient]);
   return <></>;

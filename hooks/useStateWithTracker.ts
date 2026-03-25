@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import useChangeWatcher from './useChangeWatcher';
 
 type useStateWithChangesAndTrackerType = <T>(
@@ -27,10 +27,15 @@ const useStateWithTracker: useStateWithTrackerType = (
   }
 ) => {
   const [tmpValue, setTmpValue] = useState(defaultValue);
+
+  const defaultRef = useRef(defaultValue);
+  if (JSON.stringify(defaultRef.current) !== JSON.stringify(defaultValue)) {
+    defaultRef.current = defaultValue;
+  }
+
   useEffect(() => {
-    setTmpValue(defaultValue);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [JSON.stringify(defaultValue)]);
+    setTmpValue(defaultRef.current);
+  }, [defaultRef.current]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const setter = setTmpValue;
 
@@ -54,11 +59,16 @@ export const useStateWithChangesAndTracker: useStateWithChangesAndTrackerType =
       val: defaultValue,
       changed: false,
     });
+
+    const defaultRef = useRef(defaultValue);
+    if (JSON.stringify(defaultRef.current) !== JSON.stringify(defaultValue)) {
+      defaultRef.current = defaultValue;
+    }
+
     useEffect(() => {
       if (tmpValue.changed) return;
-      setTmpValue({ val: defaultValue, changed: false });
-      // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [JSON.stringify(defaultValue)]);
+      setTmpValue({ val: defaultRef.current, changed: false });
+    }, [defaultRef.current, tmpValue.changed]); // eslint-disable-line react-hooks/exhaustive-deps
 
     const setter = setTmpValue;
 
